@@ -10,8 +10,7 @@
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
   </head>
 
-  <body>
-    <div>Controller: <%= controller.controller_name %> </div>
+  <body data-turbo="<%= !controller.class.to_s.include?('Devise') %>">
     <p class="notice"><%= notice %></p>  
     <p class="alert"><%= alert %></p>
     <%= yield %>

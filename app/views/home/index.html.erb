@@ -1,7 +1,7 @@
 <div data-controller="hello">
-  <div> text </div>
   <h1>Home#index</h1>
   <h1 class="text-3xl font-bold underline">
     Hello world!
   </h1>
+  <%=button_to 'Logout', destroy_user_session_path, data: { turbo: false }, method: :delete %>
 </div>
