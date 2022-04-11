@@ -67,3 +67,5 @@ gem 'turbo-rails'
 gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 
 gem "strong_migrations", "~> 1.0"
+
+gem "simple_form", "~> 5.1"
