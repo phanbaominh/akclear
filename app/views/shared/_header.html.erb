@@ -1,24 +1,23 @@
+<% left_items = [
+  { name: 'Videos', path: videos_path, class: 'mr-2' },
+  { name: 'Upload', path: new_video_path }
+] %>
 <header class="w-full flex bg-primary-900 text-white p-4 shadow-[0px_4px_4px_rgba(0, 0, 0, 0.25)]">
   <%= link_to root_path do%>
     <image src="/logo.svg"></image>
   <% end %>
   <nav class="flex">
     <ul class="flex text-xl">
-      <li class="flex items-center"><%= link_to 'Videos', videos_path, class: 'hover:bg-primary-100 p-2 rounded-sm' %></li>
-      <li class="flex items-center"><%= link_to 'Upload', new_video_path, class: 'hover:bg-primary-100 p-2 rounded-sm' %></li>
+      <%= render partial: 'shared/header_item', collection: left_items %>
     </ul>
   </nav>
   <div class="grow"></div>
   <nav class="flex">
     <ul class="flex text-xl">
       <% if user_signed_in? %>
-        <li class="flex items-center">
-          <%= link_to 'Sign out', destroy_user_session_path, method: :delete, class: 'hover:bg-primary-100 p-2 rounded-sm' %>
-        </li>
+        <%= render partial: 'shared/header_item', object: { name: 'Sign out', path: destroy_user_session_path, method: :delete } %>
       <% else %>
-        <li class="flex items-center">
-          <%= link_to 'Sign in', new_user_session_path, class: 'hover:bg-primary-100 p-2 rounded-sm' %>
-        </li>
+        <%= render partial: 'shared/header_item', object: { name: 'Sign in', path: new_user_session_path } %>
       <% end %>
     </ul>
   </nav>

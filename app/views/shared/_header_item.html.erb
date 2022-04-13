@@ -1,0 +1,12 @@
+<li class="flex items-center <%= header_item[:class] %>">
+  <%= link_to header_item[:name],
+    header_item[:path],
+    method: header_item[:method],
+    class: 'hover:bg-primary-100 p-2 rounded-sm',
+    data: { 
+      controller: 'header-item',
+      header_item_active_class: 'bg-primary-100',
+      header_item_current_page_value: current_page?(header_item[:path])
+    }
+  %>
+</li>
