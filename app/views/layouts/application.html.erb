@@ -8,10 +8,10 @@
     <%= stylesheet_pack_tag 'wind', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
   </head>
-  <body  class="bg-primary-100 text-white" data-turbo="<%= !controller.class.to_s.include?('Devise') %>">
+  <body  class="bg-primary-400 text-white flex flex-col h-screen" data-turbo="<%= !controller.class.to_s.include?('Devise') %>">
     <p class="notice"><%= notice %></p>
     <p class="alert"><%= alert %></p>
-    <%= render "shared/header" %>
-    <main><%= yield %></main>
+    <%= render "shared/header"  if controller_name != 'sessions' %>
+    <main class="grow flex flex-col"><%= yield %></main>
   </body>
 </html>
