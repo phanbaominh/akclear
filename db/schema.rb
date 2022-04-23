@@ -10,11 +10,40 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_04_07_152335) do
+ActiveRecord::Schema.define(version: 2022_04_19_165115) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
+
+  create_table "contigency_contracts", force: :cascade do |t|
+    t.string "name"
+    t.string "logo"
+    t.integer "number"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "risk_conflict_relations", force: :cascade do |t|
+    t.bigint "risk_id", null: false
+    t.bigint "conflicted_risk_id", null: false
+    t.integer "kind"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["conflicted_risk_id"], name: "index_risk_conflict_relations_on_conflicted_risk_id"
+    t.index ["risk_id", "conflicted_risk_id"], name: "index_risk_conflict_relations_on_risk_id_and_conflicted_risk_id", unique: true
+    t.index ["risk_id"], name: "index_risk_conflict_relations_on_risk_id"
+  end
+
+  create_table "risks", force: :cascade do |t|
+    t.string "description"
+    t.string "icon"
+    t.integer "level"
+    t.bigint "contigency_contract_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["contigency_contract_id"], name: "index_risks_on_contigency_contract_id"
+  end
 
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "email", null: false
@@ -38,5 +67,8 @@ ActiveRecord::Schema.define(version: 2022_04_07_152335) do
     t.index ["user_id"], name: "index_videos_on_user_id"
   end
 
+  add_foreign_key "risk_conflict_relations", "risks"
+  add_foreign_key "risk_conflict_relations", "risks", column: "conflicted_risk_id"
+  add_foreign_key "risks", "contigency_contracts"
   add_foreign_key "videos", "users"
 end
