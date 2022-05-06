@@ -1,0 +1,8 @@
+en:
+  dry_validation:
+    errors:
+      not_found: 'must exist'
+      rules:
+        contigency_contract_id:
+          field_name: 'Error message'
+    macro_name: 'Error message'
