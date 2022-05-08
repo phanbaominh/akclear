@@ -1,0 +1,7 @@
+<% content_for :title, t('videos.view.title.index') %>
+<%= turbo_frame_tag 'videos_frame' do %>
+  <h1>Videos page</h1>
+  <ul>
+    <%= render @videos %>
+  </ul>
+<% end %>
