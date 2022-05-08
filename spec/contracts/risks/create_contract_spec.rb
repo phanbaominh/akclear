@@ -33,7 +33,7 @@ describe Risks::CreateContract do
       ]
     )
     include_examples(
-      'schema field', :contigency_contract_id,
+      'schema field', :contingency_contract_id,
       required: true,
       valid_value: 1,
       failures: [
@@ -41,29 +41,29 @@ describe Risks::CreateContract do
         [nil, 'is not filled', 'must be filled']
       ]
     ) do
-      before { create(:contigency_contract, id: 1) }
+      before { create(:contingency_contract, id: 1) }
     end
   end
 
   describe 'rules' do
-    describe 'r.contigency_contract_id' do
-      let(:params) { { contigency_contract_id: 1 } }
+    describe 'r.contingency_contract_id' do
+      let(:params) { { contingency_contract_id: 1 } }
 
       context 'when not found' do
         it 'fails' do
-          expect(errors[:contigency_contract_id]).to eq(['must exist'])
+          expect(errors[:contingency_contract_id]).to eq(['must exist'])
         end
       end
 
       context 'when found' do
-        let!(:contigency_contract) { create(:contigency_contract, id: 1) }
+        let!(:contingency_contract) { create(:contingency_contract, id: 1) }
 
         it 'succeed' do
-          expect(errors[:contigency_contract_id]).to be_nil
+          expect(errors[:contingency_contract_id]).to be_nil
         end
 
-        it 'stores contigency contract record in context' do
-          expect(context[:contigency_contract]).to eq contigency_contract
+        it 'stores contingency contract record in context' do
+          expect(context[:contingency_contract]).to eq contingency_contract
         end
       end
     end

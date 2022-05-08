@@ -10,13 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_05_08_084014) do
+ActiveRecord::Schema.define(version: 2022_05_08_084347) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
 
-  create_table "contigency_contracts", force: :cascade do |t|
+  create_table "contingency_contracts", force: :cascade do |t|
     t.string "name"
     t.string "logo"
     t.integer "number"
@@ -28,10 +28,12 @@ ActiveRecord::Schema.define(version: 2022_05_08_084014) do
     t.string "description"
     t.string "icon"
     t.integer "level"
-    t.bigint "contigency_contract_id", null: false
+    t.bigint "contingency_contract_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["contigency_contract_id"], name: "index_risks_on_contigency_contract_id"
+    t.integer "conflict_id"
+    t.integer "type_id"
+    t.index ["contingency_contract_id"], name: "index_risks_on_contingency_contract_id"
   end
 
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -56,6 +58,6 @@ ActiveRecord::Schema.define(version: 2022_05_08_084014) do
     t.index ["user_id"], name: "index_videos_on_user_id"
   end
 
-  add_foreign_key "risks", "contigency_contracts"
+  add_foreign_key "risks", "contingency_contracts"
   add_foreign_key "videos", "users"
 end

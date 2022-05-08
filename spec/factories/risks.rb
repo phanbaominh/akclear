@@ -3,6 +3,6 @@ FactoryBot.define do
     description { "A risk" }
     icon { "icon.png" }
     level { 1 }
-    contigency_contract
+    contingency_contract
   end
 end
