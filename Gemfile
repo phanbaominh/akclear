@@ -67,11 +67,8 @@ gem 'net-smtp', require: false
 gem 'stimulus-rails'
 gem 'turbo-rails'
 gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
-
 gem "strong_migrations", "~> 1.0"
-
 gem "simple_form", "~> 5.1"
-
 gem "dry-validation", "~> 1.8"
-
 gem "dry-monads", "~> 1.4"
+gem 'rails_admin', '~> 3.0'
