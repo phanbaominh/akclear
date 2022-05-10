@@ -72,3 +72,4 @@ gem "simple_form", "~> 5.1"
 gem "dry-validation", "~> 1.8"
 gem "dry-monads", "~> 1.4"
 gem 'rails_admin', '~> 3.0'
+gem "pundit", "~> 2.2"
