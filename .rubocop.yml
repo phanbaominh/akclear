@@ -2,3 +2,5 @@ require:
   - rubocop-performance
   - rubocop-rails
   - rubocop-rspec
+Style/Documentation:
+  Enabled: false
