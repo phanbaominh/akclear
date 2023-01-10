@@ -4,3 +4,17 @@ require:
   - rubocop-rspec
 Style/Documentation:
   Enabled: false
+Metrics/MethodLength:
+  Enabled: false
+Metrics/AbcSize:
+  Enabled: false
+RSpec:
+  Severity: info
+RSpec/MultipleExpectations:
+  Enabled: false
+Lint/MissingSuper:
+  Enabled: false
+Style/FrozenStringLiteralComment:
+  Exclude:
+    - "spec/**/*"
+    - "db/**/*"
