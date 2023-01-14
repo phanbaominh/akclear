@@ -243,6 +243,8 @@ GEM
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
+    shoulda-matchers (5.3.0)
+      activesupport (>= 5.2.0)
     solargraph (0.48.0)
       backport (~> 1.2)
       benchmark
@@ -330,6 +332,7 @@ DEPENDENCIES
   rubocop-rspec
   ruby-lsp
   selenium-webdriver
+  shoulda-matchers
   solargraph
   sprockets-rails
   stimulus-rails
