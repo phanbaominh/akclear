@@ -82,8 +82,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_14_101838) do
     t.integer "zone"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "event_id", null: false
-    t.index ["event_id"], name: "index_stages_on_event_id"
+    t.string "stageable_type", null: false
+    t.bigint "stageable_id", null: false
+    t.index ["stageable_type", "stageable_id"], name: "index_stages_on_stageable"
   end
 
   create_table "users", force: :cascade do |t|
@@ -100,5 +101,4 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_14_101838) do
   add_foreign_key "email_verification_tokens", "users"
   add_foreign_key "password_reset_tokens", "users"
   add_foreign_key "sessions", "users"
-  add_foreign_key "stages", "events"
 end
