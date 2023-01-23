@@ -1,7 +1,9 @@
 FactoryBot.define do
   factory :event do
-    name { "MyString" }
-    game_id { "MyString" }
     latest { false }
+
+    trait :latest do
+      latest { true }
+    end
   end
 end
