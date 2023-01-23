@@ -1,14 +1,13 @@
 require 'rails_helper'
 
 describe FetchLatestOperatorsData do
-  let(:file_double) { double(read: file_content) }
-  let(:file_content) { { "char_102_texas": { 'name' => 'Texas' } }.to_json }
+  let(:file_content) { { "char_102_texas": { 'name' => 'Texas' } } }
   let(:service) { described_class.new }
 
   before do
-    allow(URI)
-      .to receive(:parse)
-      .and_return(instance_double(URI::HTTPS, open: file_double))
+    allow(FetchJson)
+      .to receive(:call)
+      .and_return(Dry::Monads::Success(file_content))
   end
 
   it 'creates operator correctly' do
@@ -18,8 +17,8 @@ describe FetchLatestOperatorsData do
 
   it 'fetches from correct link' do
     service.call
-    expect(URI)
-      .to have_received(:parse)
+    expect(FetchJson)
+      .to have_received(:call)
       .with('https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/en_US/gamedata/excel/character_table.json')
   end
 end

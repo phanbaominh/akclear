@@ -9,12 +9,7 @@ class FetchLatestOperatorsData < ApplicationService
   end
 
   def call
-    log_info('Fetching file...')
-    file = URI.parse(source).open
-    log_info('Reading data...')
-    raw_data = file.read
-    log_info('Parsing data...')
-    operator_table = JSON.parse(raw_data)
+    operator_table = yield FetchJson.call(source)
     count = 0
 
     operator_table.each do |game_id, operator|
@@ -33,8 +28,4 @@ class FetchLatestOperatorsData < ApplicationService
   private
 
   attr_reader :source
-
-  def log_info(info)
-    Rails.logger.info(info)
-  end
 end
