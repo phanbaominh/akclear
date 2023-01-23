@@ -51,7 +51,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_14_164919) do
     t.string "name"
     t.integer "number"
     t.string "game_id"
-    t.boolean "latest", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

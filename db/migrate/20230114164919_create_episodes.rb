@@ -4,7 +4,6 @@ class CreateEpisodes < ActiveRecord::Migration[7.0]
       t.string :name
       t.integer :number
       t.string :game_id
-      t.boolean :latest, default: false
 
       t.timestamps
     end

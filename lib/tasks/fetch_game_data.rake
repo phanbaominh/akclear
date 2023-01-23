@@ -6,4 +6,8 @@ namespace :fetch_game_data do
   task fetch_latest_events_data: :environment do
     FetchLatestEventsData.call
   end
+
+  task fetch_latest_episodes_data: :environment do
+    FetchLatestEpisodesData.call
+  end
 end
