@@ -29,7 +29,6 @@ class FetchLatestEventsData < ApplicationService
       is_first_event = false
     rescue StandardError
       log_info("Failed to create event #{name}: #{event.error_message}")
-      Failure('Failed to create event')
     end
     log_info("Fetching completed! #{count} new events were created!")
 

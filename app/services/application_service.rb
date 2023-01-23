@@ -9,6 +9,10 @@ class ApplicationService
 
   def initialize(*args); end
 
+  def call
+    raise NotImplementedError
+  end
+
   private
 
   def log_info(info)
