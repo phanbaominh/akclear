@@ -1,17 +1,17 @@
 namespace :fetch_game_data do
   task fetch_latest_operator_table: :environment do
-    FetchLatestOperatorsData.call
+    FetchGameData::FetchLatestOperatorsData.call
   end
 
   task fetch_latest_events_data: :environment do
-    FetchLatestEventsData.call
+    FetchGameData::FetchLatestEventsData.call
   end
 
   task fetch_latest_episodes_data: :environment do
-    FetchLatestEpisodesData.call
+    FetchGameData::FetchLatestEpisodesData.call
   end
 
   task fetch_latest_stages_data: :environment do
-    FetchLatestStagesData.call
+    FetchGameData::FetchLatestStagesData.call
   end
 end

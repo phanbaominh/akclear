@@ -1,7 +1,7 @@
 require 'rails_helper'
 require 'dry/monads'
 
-describe FetchLatestStagesData do
+describe FetchGameData::FetchLatestStagesData do
   let(:story_stage) do
     {
       'isStoryOnly' => true,
@@ -75,56 +75,54 @@ describe FetchLatestStagesData do
   let(:service) { described_class.new }
 
   before do
-    allow(FetchJson)
+    allow(FetchGameData::FetchJson)
       .to receive(:call)
       .with('https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/en_US/gamedata/excel/stage_table.json')
       .and_return(Dry::Monads::Success(stages_data))
   end
 
-  describe 'creating stages' do
-    it 'create stages for existing episode' do
-      service.call
+  it 'create stages for existing episode' do
+    service.call
 
-      expect(episode.stages.first).to have_attributes(
-        code: '10-1',
-        game_id: 'main_10-01',
-        zone: 1
-      )
-      expect(episode.stages.second).to have_attributes(
-        code: 'H10-1',
-        game_id: 'hard_10-01',
-        zone: 1
-      )
-    end
+    expect(episode.stages.first).to have_attributes(
+      code: '10-1',
+      game_id: 'main_10-01',
+      zone: 1
+    )
+    expect(episode.stages.second).to have_attributes(
+      code: 'H10-1',
+      game_id: 'hard_10-01',
+      zone: 1
+    )
+  end
 
-    it 'create stages for existing event' do
-      service.call
+  it 'create stages for existing event' do
+    service.call
 
-      expect(event.stages.first).to have_attributes(
-        code: 'IC-EX-1',
-        game_id: 'act20side_ex01',
-        zone: 2
-      )
-    end
+    expect(event.stages.first).to have_attributes(
+      code: 'IC-EX-1',
+      game_id: 'act20side_ex01',
+      zone: 2
+    )
+  end
 
-    it 'does not create tutorial stages' do
-      service.call
+  it 'does not create tutorial stages' do
+    service.call
 
-      expect(Stage.find_by(game_id: 'act17side_tr01')).not_to be_present
-      expect(Stage.find_by(game_id: 'tr_20')).not_to be_present
-    end
+    expect(Stage.find_by(game_id: 'act17side_tr01')).not_to be_present
+    expect(Stage.find_by(game_id: 'tr_20')).not_to be_present
+  end
 
-    it 'does not create story stages' do
-      service.call
+  it 'does not create story stages' do
+    service.call
 
-      expect(Stage.find_by(game_id: 'act18side_st01')).not_to be_present
-    end
+    expect(Stage.find_by(game_id: 'act18side_st01')).not_to be_present
+  end
 
-    it 'does not create stages for non-existing stageable' do
-      service.call
+  it 'does not create stages for non-existing stageable' do
+    service.call
 
-      expect(Stage.count).to eq(3)
-      expect(Stage.find_by(game_id: '')).not_to be_present
-    end
+    expect(Stage.count).to eq(3)
+    expect(Stage.find_by(game_id: '')).not_to be_present
   end
 end

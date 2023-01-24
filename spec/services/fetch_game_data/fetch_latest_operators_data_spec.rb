@@ -1,11 +1,11 @@
 require 'rails_helper'
 
-describe FetchLatestOperatorsData do
+describe FetchGameData::FetchLatestOperatorsData do
   let(:file_content) { { "char_102_texas": { 'name' => 'Texas' } } }
   let(:service) { described_class.new }
 
   before do
-    allow(FetchJson)
+    allow(FetchGameData::FetchJson)
       .to receive(:call)
       .and_return(Dry::Monads::Success(file_content))
   end
@@ -17,7 +17,7 @@ describe FetchLatestOperatorsData do
 
   it 'fetches from correct link' do
     service.call
-    expect(FetchJson)
+    expect(FetchGameData::FetchJson)
       .to have_received(:call)
       .with('https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/en_US/gamedata/excel/character_table.json')
   end

@@ -1,7 +1,7 @@
 require 'rails_helper'
 require 'dry/monads'
 
-describe FetchLatestEpisodesData do
+describe FetchGameData::FetchLatestEpisodesData do
   let(:mainline_zone) do
     {
       'zoneID' => 'main_0',
@@ -28,27 +28,25 @@ describe FetchLatestEpisodesData do
   let(:service) { described_class.new }
 
   before do
-    allow(FetchJson)
+    allow(FetchGameData::FetchJson)
       .to receive(:call)
       .with('https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/en_US/gamedata/excel/zone_table.json')
       .and_return(Dry::Monads::Success(episodes_data))
   end
 
-  describe 'creating episodes' do
-    it 'creates episodes for MAINLINE zones' do
-      service.call
+  it 'creates episodes for MAINLINE zones' do
+    service.call
 
-      expect(Episode.find_by(game_id: 'main_0')).to have_attributes(
-        number: 0,
-        name: 'Evil Time Part 1'
-      )
-    end
+    expect(Episode.find_by(game_id: 'main_0')).to have_attributes(
+      number: 0,
+      name: 'Evil Time Part 1'
+    )
+  end
 
-    it 'does not create episodes for non-MAINLINE zones' do
-      service.call
+  it 'does not create episodes for non-MAINLINE zones' do
+    service.call
 
-      expect(Episode.count).to be(1)
-      expect(Episode.find_by(game_id: 'weekly_1')).not_to be_present
-    end
+    expect(Episode.count).to be(1)
+    expect(Episode.find_by(game_id: 'weekly_1')).not_to be_present
   end
 end
