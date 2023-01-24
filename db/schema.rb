@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_01_24_081802) do
+ActiveRecord::Schema[7.0].define(version: 2023_01_24_090115) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -40,6 +40,19 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_24_081802) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "clears", force: :cascade do |t|
+    t.bigint "submitter_id", null: false
+    t.string "link"
+    t.bigint "stage_id", null: false
+    t.string "player_name"
+    t.bigint "player_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["player_id"], name: "index_clears_on_player_id"
+    t.index ["stage_id"], name: "index_clears_on_stage_id"
+    t.index ["submitter_id"], name: "index_clears_on_submitter_id"
   end
 
   create_table "email_verification_tokens", force: :cascade do |t|
@@ -107,6 +120,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_24_081802) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "clears", "stages"
+  add_foreign_key "clears", "users", column: "player_id"
+  add_foreign_key "clears", "users", column: "submitter_id"
   add_foreign_key "email_verification_tokens", "users"
   add_foreign_key "password_reset_tokens", "users"
   add_foreign_key "sessions", "users"
