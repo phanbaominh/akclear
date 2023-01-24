@@ -17,6 +17,8 @@ console.log(
 );
 
 import "flowbite";
+import "@hotwired/turbo-rails"
+import "~/controllers"
 // Example: Load Rails libraries in Vite.
 //
 // import * as Turbo from '@hotwired/turbo'
