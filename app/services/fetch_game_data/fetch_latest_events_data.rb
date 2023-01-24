@@ -11,7 +11,6 @@ module FetchGameData
       is_first_event = true
       count = 0
       events_data.each do |event_id, event_data|
-        # debugger
         next unless valid_event?(event_data)
 
         name = event_data['name']
