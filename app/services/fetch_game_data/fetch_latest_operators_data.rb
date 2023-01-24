@@ -15,8 +15,9 @@ module FetchGameData
 
       operator_table.each do |game_id, operator|
         name = operator['name']
+        rarity = operator['rarity']
         log_info("Creating operator #{name}... ")
-        Operator.where(name:, game_id:).first_or_create!
+        Operator.create_with(name:, rarity:).find_or_create_by!(game_id:)
         log_info("Operator #{name} created sucessfully!")
         count += 1
       rescue ActiveRecord::RecordInvalid

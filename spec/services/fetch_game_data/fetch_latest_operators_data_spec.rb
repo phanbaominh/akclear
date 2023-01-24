@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe FetchGameData::FetchLatestOperatorsData do
-  let(:file_content) { { "char_102_texas": { 'name' => 'Texas' } } }
+  let(:file_content) { { "char_102_texas": { 'name' => 'Texas', 'rarity' => 4 } } }
   let(:service) { described_class.new }
 
   before do
@@ -12,7 +12,7 @@ describe FetchGameData::FetchLatestOperatorsData do
 
   it 'creates operator correctly' do
     expect { service.call }.to change(Operator, :count).from(0).to(1)
-    expect(Operator.find_by(name: 'Texas', game_id: 'char_102_texas')).to be_present
+    expect(Operator.find_by(name: 'Texas', game_id: 'char_102_texas', rarity: 4)).to be_present
   end
 
   it 'fetches from correct link' do

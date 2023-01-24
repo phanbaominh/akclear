@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_01_14_164919) do
+ActiveRecord::Schema[7.0].define(version: 2023_01_24_081802) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -68,6 +68,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_14_164919) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "game_id"
+    t.integer "rarity"
   end
 
   create_table "password_reset_tokens", force: :cascade do |t|
