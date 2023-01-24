@@ -16,6 +16,7 @@ console.log(
   "https://vite-ruby.netlify.app/guide/rails"
 );
 
+import "flowbite";
 // Example: Load Rails libraries in Vite.
 //
 // import * as Turbo from '@hotwired/turbo'
