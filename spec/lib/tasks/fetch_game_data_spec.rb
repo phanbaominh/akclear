@@ -35,3 +35,15 @@ describe 'fetch_game_data:fetch_latest_episodes_data' do
     expect(FetchLatestEpisodesData).to have_received(:call)
   end
 end
+
+describe 'fetch_game_data:fetch_latest_stages_data' do
+  include_context 'rake'
+
+  it 'calls the correct service' do
+    allow(FetchLatestStagesData).to receive(:call)
+
+    subject.invoke
+
+    expect(FetchLatestStagesData).to have_received(:call)
+  end
+end

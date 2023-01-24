@@ -18,3 +18,9 @@ Style/FrozenStringLiteralComment:
   Exclude:
     - "spec/**/*"
     - "db/**/*"
+RSpec/MultipleMemoizedHelpers:
+  Enabled: false
+Rspec/VerifiedDoubles:
+  Enabled: false
+Rspec/ExampleLength:
+  Enabled: false
