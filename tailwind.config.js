@@ -19,8 +19,10 @@ module.exports = {
   },
   plugins: [
     require("flowbite/plugin"),
+    require("flowbite-typography"),
     // require("@tailwindcss/forms"),
     // require("@tailwindcss/aspect-ratio"),
     // require("@tailwindcss/typography"),
   ],
+  darkMode: "class",
 };

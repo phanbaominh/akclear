@@ -1,14 +1,13 @@
 <!DOCTYPE html>
-<html>
+<html class="dark">
   <head>
     <title>Akclear</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <%# <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
-
-    <%# <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %> 
-    <%# <%= javascript_importmap_tags %> 
+    <%# <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%# <%= javascript_importmap_tags %>
     <%= vite_client_tag %>
     <%= vite_javascript_tag 'application' %>
     <%= vite_stylesheet_tag 'tailwind.css' %>
@@ -21,12 +20,10 @@
 
       Visit the guide for more information: https://vite-ruby.netlify.app/guide/rails
     -->
-
   </head>
-
-  <body>
+  <body class="bg-gray-900">
     <%= render 'layouts/navbar', layout: false %>
-    <main class="container mx-auto mt-28 px-5 flex">
+    <main class="container mx-auto mt-28 px-5 flex flex-col format dark:format-invert">
       <%= yield %>
     </main>
   </body>
