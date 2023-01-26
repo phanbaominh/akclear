@@ -64,6 +64,7 @@ end
 
 group :development do
   gem "better_html", require: false
+  gem 'htmlbeautifier', require: false
   gem 'erb-formatter', require: false
   gem 'erb_lint', require: false
   gem 'solargraph', require: false
