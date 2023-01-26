@@ -63,7 +63,9 @@ group :development, :test do
 end
 
 group :development do
+  gem "better_html", require: false
   gem 'erb-formatter', require: false
+  gem 'erb_lint', require: false
   gem 'solargraph', require: false
   gem 'rubocop', require: false
   gem 'rubocop-performance', require: false
