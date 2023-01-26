@@ -11,19 +11,25 @@
     <%= vite_client_tag %>
     <%= vite_javascript_tag 'application' %>
     <%= vite_stylesheet_tag 'tailwind.css' %>
-    <!--
-      If using a TypeScript entrypoint file:
-        vite_typescript_tag 'application'
-
-      If using a .jsx or .tsx entrypoint, add the extension:
-        vite_javascript_tag 'application.jsx'
-
-      Visit the guide for more information: https://vite-ruby.netlify.app/guide/rails
-    -->
+    <!-- If using a TypeScript entrypoint file: vite_typescript_tag
+    'application' If using a .jsx or .tsx entrypoint, add the extension:
+    vite_javascript_tag 'application.jsx' Visit the guide for more information:
+    https://vite-ruby.netlify.app/guide/rails -->
   </head>
   <body class="bg-gray-900">
-    <%= render 'layouts/navbar', layout: false %>
-    <main class="container mx-auto mt-28 px-5 flex flex-col format dark:format-invert">
+    <%= render NavbarComponent.new %>
+    <main
+      class="
+        container
+        mx-auto
+        mt-28
+        px-5
+        flex
+        flex-col
+        format
+        dark:format-invert
+      "
+    >
       <%= yield %>
     </main>
   </body>

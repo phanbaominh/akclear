@@ -24,3 +24,6 @@ Rspec/VerifiedDoubles:
   Enabled: false
 Rspec/ExampleLength:
   Enabled: false
+Style/ClassAndModuleChildren:
+  Exclude:
+    - "app/components/**/*"
