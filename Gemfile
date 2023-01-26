@@ -63,7 +63,7 @@ group :development, :test do
 end
 
 group :development do
-  gem 'htmlbeautifier', require: false
+  gem 'erb-formatter', require: false
   gem 'solargraph', require: false
   gem 'rubocop', require: false
   gem 'rubocop-performance', require: false
