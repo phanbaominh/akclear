@@ -30,7 +30,10 @@
         <%= render Navbar::LinkComponent.new(link: '#').with_content('Stats') %>
       </ul>
     </nav>
-    <div class="flex items-center order-1">
+    <%= link_to new_clear_path, class: 'order-1' do %>
+      <%= render Primer::Button::IconComponent.new(icon: 'plus', sr_description: 'New clear') %>
+    <% end%>
+    <div class="flex items-center">
       <%= render Primer::DropdownComponent.new do |component| %>
         <% component.with_target do %>
           <button
