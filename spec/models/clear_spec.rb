@@ -1,5 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe Clear, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  describe 'associations' do
+    it { is_expected.to belong_to(:submitter) }
+    it { is_expected.to belong_to(:stage) }
+    it { is_expected.to belong_to(:player) }
+  end
 end
