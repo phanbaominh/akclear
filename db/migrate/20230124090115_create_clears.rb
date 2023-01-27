@@ -6,6 +6,7 @@ class CreateClears < ActiveRecord::Migration[7.0]
       t.references :stage, null: false, foreign_key: true
       t.string :player_name
       t.references :player, foreign_key: { to_table: :users }
+      t.string :name
 
       t.timestamps
     end

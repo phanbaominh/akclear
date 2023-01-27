@@ -48,6 +48,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_24_090115) do
     t.bigint "stage_id", null: false
     t.string "player_name"
     t.bigint "player_id"
+    t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["player_id"], name: "index_clears_on_player_id"
