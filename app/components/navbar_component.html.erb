@@ -36,18 +36,18 @@
           <button
             type="button"
             class="
-              inline-flex items-center justify-center px-4 py-2 text-sm text-gray-500 rounded-lg cursor-pointer
+              inline-flex items-center justify-center px-4 py-2 text-sm text-gray-400 rounded-lg cursor-pointer
              hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white
             "
           >
-            <img src="<%= vite_asset_path 'images/flag-gb.svg' %>" class="w-6 mr-2"/>
+            <%= vite_image_tag 'images/flag-gb.svg', class: 'w-6 mr-2'  %>
             English
           </button>
         <% end %>
         <% component.with_menu_items do %>
           <%= render Primer::Dropdown::ItemComponent.new do %>
             <div class="inline-flex items-center">
-              <%= vite_image_tag 'images/flag-jp.svg', class: 'w-6'  %>
+              <%= vite_image_tag 'images/flag-jp.svg', class: 'w-6 mr-2'  %>
               日本語
             </div>
           <% end %>
