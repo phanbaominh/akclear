@@ -1,0 +1,24 @@
+<%= render Primer::DropdownComponent.new do |component| %>
+  <% component.with_target do %>
+    <button
+            type="button"
+            class="
+              inline-flex items-center justify-center px-4 py-2 text-sm text-gray-400 rounded-lg cursor-pointer
+             hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white
+            "
+          >
+      <%= vite_image_tag icon(current_locale), class: 'w-6 mr-2'  %>
+      <%= name(current_locale) %>
+    </button>
+  <% end %>
+  <% component.with_menu_items do %>
+    <% locale_options.each do |locale| %>
+      <%= render Primer::Dropdown::ItemComponent.new(link: url_for(locale: locale.to_s), hreflang: locale, rel: 'alternate') do %>
+        <div class="inline-flex items-center">
+          <%= vite_image_tag icon(locale), class: 'w-6 mr-2'  %>
+          <%= name(locale) %>
+        </div>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>

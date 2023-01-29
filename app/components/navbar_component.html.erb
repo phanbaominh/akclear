@@ -34,28 +34,7 @@
       <%= render Primer::Button::IconComponent.new(icon: 'plus', sr_description: 'New clear') %>
     <% end%>
     <div class="flex items-center order-2">
-      <%= render Primer::DropdownComponent.new do |component| %>
-        <% component.with_target do %>
-          <button
-            type="button"
-            class="
-              inline-flex items-center justify-center px-4 py-2 text-sm text-gray-400 rounded-lg cursor-pointer
-             hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white
-            "
-          >
-            <%= vite_image_tag 'images/flag-gb.svg', class: 'w-6 mr-2'  %>
-            English
-          </button>
-        <% end %>
-        <% component.with_menu_items do %>
-          <%= render Primer::Dropdown::ItemComponent.new do %>
-            <div class="inline-flex items-center">
-              <%= vite_image_tag 'images/flag-jp.svg', class: 'w-6 mr-2'  %>
-              日本語
-            </div>
-          <% end %>
-        <% end %>
-      <% end %>
+      <%= render Navbar::LanguageDropdownComponent.new %>
     </div>
   </div>
 </header>
