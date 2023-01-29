@@ -1,8 +1,7 @@
 FactoryBot.define do
   factory :clear do
-    uploader { nil }
-    link { "MyString" }
-    stage { nil }
-    player { nil }
+    submitter factory: :user
+    player factory: :user
+    stage factory: :event_stage
   end
 end
