@@ -1,4 +1,5 @@
 namespace :fetch_game_data do
+  # TODO: Use https://github.com/shioyama/mobility to fetch and store data from other languages (jp, ch, kr)
   task fetch_latest_operator_table: :environment do
     FetchGameData::FetchLatestOperatorsData.call
   end

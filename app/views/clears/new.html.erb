@@ -1,0 +1,14 @@
+<%= form_with model: @clear do |form| %>
+  <%= form.label :link, "Youtube link:" %>
+  <%= form.text_field :link %>
+
+  <%= form.label :name, "Title:" %>
+  <%= form.text_field :name %>
+
+  <%= form.label :stage, "Stage:" %>
+  <%= form.select :Stage %>
+
+
+ 
+  <%= form.submit "Submit" %>
+<% end %>
