@@ -1,0 +1,5 @@
+<%= turbo_frame_tag "operations" do %>
+  <%= turbo_stream.prepend "operators" do %>
+    <%= render Clears::OperatorBadgeComponent.new(operator: @operator) %>
+  <%  end %>
+<% end %>

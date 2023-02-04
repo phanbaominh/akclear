@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get 'operators/show'
   localized do
     get  'sign_in', to: 'sessions#new'
     post 'sign_in', to: 'sessions#create'
@@ -16,5 +17,6 @@ Rails.application.routes.draw do
     # Defines the root path route ("/")
     root 'home#index'
     resources :clears
+    resources :operators
   end
 end
