@@ -1,14 +1,6 @@
-<%= form_with model: @clear do |form| %>
-  <%= form.label :link, "Youtube link:" %>
-  <%= form.text_field :link %>
-
-  <%= form.label :name, "Title:" %>
-  <%= form.text_field :name %>
-
-  <%= form.label :stage, "Stage:" %>
-  <%= form.select :Stage %>
-
-
- 
-  <%= form.submit "Submit" %>
+<%= simple_form_for @clear do |f| %>
+  <%= f.input :link %>
+  <%= f.input :name %>
+  <%= render Clears::OperatorsSelectComponent.new(clear: @clear, form: f) %>
+  <%= f.button :submit %>
 <% end %>
