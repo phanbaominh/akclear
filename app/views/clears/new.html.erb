@@ -1,6 +1,12 @@
-<%= simple_form_for @clear do |f| %>
-  <%= f.input :link %>
-  <%= f.input :name %>
-  <%= render Clears::OperatorsSelectComponent.new(clear: @clear, form: f) %>
-  <%= f.button :submit %>
+<%= turbo_frame_tag @clear do %>
+  <%= simple_form_for @clear, html: { class: 'space-y-2', data: { controller: 'clears--form', clears__form_url_value: new_clear_path } } do |f| %>
+    <%= f.input :link %>
+    <%= f.input :name %>
+    <%= f.association :stage, collection: Stage.first(5).map { |stage| [stage.code, stage.id] } %>
+    <div data-action="addItem->clears--form#addOperator">
+      <%= render Clears::OperatorsSelectComponent.new(clear: @clear, form: f) %>
+    </div>
+    <%= link_to '#', '#', class: 'hidden', data: { clears__form_target: 'getSubmitButton'} %>
+    <%= f.button :submit %>
+  <% end %>
 <% end %>
