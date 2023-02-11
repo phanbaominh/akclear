@@ -4,8 +4,7 @@
 
 import { application } from "./application"
 
-import Clears__OperatorsSelectComponentController from "@components/clears/operators_select_component_controller"
-application.register("clears--operators-select-component", Clears__OperatorsSelectComponentController)
+import { registerControllers } from 'stimulus-vite-helpers'
 
-import HelloController from "./hello_controller"
-application.register("hello", HelloController)
+const controllers = import.meta.globEager(['./**/*_controller.js', '@components/**/*_controller.js'])
+registerControllers(application, controllers)
