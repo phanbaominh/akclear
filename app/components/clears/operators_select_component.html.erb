@@ -1,10 +1,14 @@
-<%= turbo_frame_tag "operations" %>
-<div data-controller="clears--operators-select-component" data-action="addItem->clears--operators-select-component#addOperator">
-  <%= link_to '#', '#', data: { turbo_frame: 'operations'}, class: 'hidden', id: 'cool-link'  %>
-  <%= @form.association :used_operators,
-   input_html: { id: 'clear-form__operators-select' },
-   collection: Operator.first(5).map { |op| [ op.name, op.id ] }
-   %>
-  <%= turbo_frame_tag "operators" %>
+<div data-controller="clears--operators-select-component"
+  data-clears--operators-select-component-operators-value= "<%= operators_select_data %>"
+  >
+  <select id='clear-form__operators-select' multiple>
+  </select>
+  <div id="operators">
+    <%= @form.simple_fields_for :used_operators do |operator_form| %>
+      <div class="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+        <%= operator_form.input :id, as: :hidden %>
+        <%= operator_form.input :operator_id %>
+      </div>
+    <% end %>
+  </div>
 </div>
-<%# use Choice js lib, hid the items list and add own element to display selected operators? %>

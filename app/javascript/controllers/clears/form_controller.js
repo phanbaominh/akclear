@@ -4,23 +4,38 @@ import { get } from "@rails/request.js";
 export default class extends Controller {
   static values = {
     url: String,
+    initialUsedOperatorsCount: Number,
   };
   static targets = ["getSubmitButton"];
   connect() {
-    console.log("FORM!");
-    console.log(this.urlValue);
+    this.usedOperatorsCount = this.initialUsedOperatorsCountValue || 0;
   }
 
   addOperator(event) {
+    console.log(event);
     const formData = new FormData(this.element);
-    formData.append("clear[used_operators_attributes][0][operator_id]", "1");
-    const queryString = new URLSearchParams(formData).toString();
-    console.log({ queryString, hastarget: this.hasGetSubmitButtonTarget });
-    console.log(this.getSubmitButtonTarget);
-    this.getSubmitButtonTarget.setAttribute(
-      "href",
-      `${this.urlValue}?${queryString}`
+    formData.append(
+      `clear[used_operators_attributes][${this.usedOperatorsCount}][operator_id]`,
+      event.detail.value
     );
-    this.getSubmitButtonTarget.click();
+    this.usedOperatorsCount += 1;
+    const response = get(this.urlValue, {
+      query: formData,
+      responseKind: "turbo-stream",
+    });
+    if (response.ok) this.usedOperatorsCount += 1;
+  }
+
+  removeOperator(event) {
+    console.log(event);
+    const formData = new FormData(this.element);
+    formData.set(
+      `clear[used_operators_attributes][${event.detail.index}][need_to_be_destroyed]`,
+      true
+    );
+    get(this.urlValue, {
+      query: formData,
+      responseKind: "turbo-stream",
+    });
   }
 }

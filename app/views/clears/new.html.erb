@@ -3,10 +3,9 @@
     <%= f.input :link %>
     <%= f.input :name %>
     <%= f.association :stage, collection: Stage.first(5).map { |stage| [stage.code, stage.id] } %>
-    <div data-action="addItem->clears--form#addOperator">
+    <div data-action="addItem->clears--form#addOperator clears--form--operator-card-component:clickDismissOperator->clears--form#removeOperator">
       <%= render Clears::OperatorsSelectComponent.new(clear: @clear, form: f) %>
     </div>
-    <%= link_to '#', '#', class: 'hidden', data: { clears__form_target: 'getSubmitButton'} %>
     <%= f.button :submit %>
   <% end %>
 <% end %>
