@@ -1,0 +1,9 @@
+<div data-controller="clears--form--operator-card-component">
+  <div class="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+    <%= @form.input :operator_id %>
+    <%= @form.input :level %>
+    <button data-action="click->clears--form--operator-card-component#emitEvent:prevent" data-clears--form--operator-card-component-index-param="<%=  @form.index %>">
+      X
+    </button>
+  </div>
+</div>
