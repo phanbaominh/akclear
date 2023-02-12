@@ -1,7 +1,6 @@
 {
   "devDependencies": {
     "autoprefixer": "^10.4.13",
-    "flowbite-typography": "^1.0.3",
     "postcss": "^8.4.21",
     "stimulus-vite-helpers": "^3.0.1",
     "tailwindcss": "^3.2.4",
@@ -12,7 +11,6 @@
     "@hotwired/stimulus": "^3.2.1",
     "@hotwired/turbo-rails": "^7.2.4",
     "@rails/request.js": "^0.0.8",
-    "choices.js": "^10.2.0",
-    "flowbite": "^1.6.3"
+    "choices.js": "^10.2.0"
   }
 }

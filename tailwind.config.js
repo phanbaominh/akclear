@@ -8,7 +8,6 @@ module.exports = {
     "./app/javascript/**/*.js",
     "./app/views/**/*.{erb,haml,html,slim}",
     "./app/components/**/*.{erb,html}",
-    "./node_modules/flowbite/**/*.js",
   ],
   theme: {
     extend: {
@@ -18,8 +17,6 @@ module.exports = {
     },
   },
   plugins: [
-    require("flowbite/plugin"),
-    require("flowbite-typography"),
     // require("@tailwindcss/forms"),
     // require("@tailwindcss/aspect-ratio"),
     // require("@tailwindcss/typography"),
