@@ -18,18 +18,17 @@
     https://vite-ruby.netlify.app/guide/rails -->
     <%# <script src="https://kit.fontawesome.com/3bcd340270.js" crossorigin="anonymous"></script> %>
   </head>
-  <body class="bg-gray-900">
+  <body>
     <%= render NavbarComponent.new %>
     <main
       class="
+      
         container
         mx-auto
         mt-28
         px-5
         flex
         flex-col
-        format
-        dark:format-invert
       "
     >
       <%= yield %>
