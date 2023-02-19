@@ -3,35 +3,41 @@
 @tailwind utilities;
 
 .simple_form__input {
-  @apply bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500;
+  @apply input input-bordered;
 }
 
 .simple_form__label {
-  @apply block mb-2 text-sm font-medium text-gray-900 dark:text-white;
+  @apply label;
 }
 
 .simple_form__btn {
-  @apply cursor-pointer text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800;
+  @apply btn btn-primary;
+}
+
+select.simple_form__input {
+  @apply select select-bordered;
 }
 .choices__inner {
-  @apply bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 !important;
+  @apply input input-bordered p-0 !important;
 }
 .is-focused .choices__inner {
-  @apply ring-blue-500 border-blue-500 !important;
+  outline: 2px solid hsla(var(--bc) / 0.2) !important;
+  outline-offset: 2px !important;
 }
 .choices__input {
-  @apply bg-gray-50  text-gray-900 text-sm inline-block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white focus:shadow-none ring-0 !important;
+  @apply input mb-0 focus:outline-none !important;
 }
 .choices__item--choice {
-  @apply bg-gray-50 text-gray-900 text-sm block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white !important;
+  @apply bg-base-200 text-sm block w-full p-2.5 !important;
 }
 .choices__list--dropdown .choices__item--selectable.is-highlighted,
 .choices__list[aria-expanded] .choices__item--selectable.is-highlighted {
-  @apply bg-gray-100 dark:bg-gray-600 !important;
+  @apply bg-base-content opacity-90;
 }
 
 .choices__list--dropdown.is-active {
-  @apply ring-blue-500 border-blue-500 !important;
+  /* outline: 2px solid hsla(var(--bc) / 0.2) !important; */
+  @apply outline-none border-none !important;
 }
 
 /* .choices__list--multiple {

@@ -9,7 +9,7 @@ class Clears::OperatorsSelectComponent < ApplicationComponent
   end
 
   def operators_select_data
-    Operator.all.map do |operator|
+    Operator.first(5).map do |operator|
       {
         value: operator.id,
         label: operator.name,
