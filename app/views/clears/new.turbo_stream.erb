@@ -1,6 +1,6 @@
 <%= fields model: @clear do |f| %>
   <%= turbo_stream.replace "operators" do %>
-    <div id="operators">
+    <div id="operators" class="space-y-2">
       <%= f.simple_fields_for :used_operators do |operator_form| %>
         <% if operator_form.object.need_to_be_destroyed? %>
           <% if operator_form.object.persisted? %>

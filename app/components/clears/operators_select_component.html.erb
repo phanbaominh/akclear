@@ -1,9 +1,12 @@
 <div data-controller="clears--operators-select-component"
   data-clears--operators-select-component-operators-value= "<%= operators_select_data %>"
   >
-  <select id='clear-form__operators-select' multiple>
-  </select>
-  <div id="operators">
+  <div class="mb-2">
+    <%= @form.label :operators, for: 'clear-form__operators-select', class: 'label' %>
+    <select id='clear-form__operators-select' multiple>
+    </select>
+  </div>
+  <div id="operators" class="space-y-2">
     <%= @form.simple_fields_for :used_operators do |operator_form| %>
       <div class="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
         <%= operator_form.input :id, as: :hidden %>
