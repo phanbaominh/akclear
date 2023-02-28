@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_01_29_071109) do
+ActiveRecord::Schema[7.0].define(version: 2023_02_28_150547) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -150,6 +150,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_29_071109) do
     t.integer "elite"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "skill_mastery"
     t.index ["clear_id"], name: "index_used_operators_on_clear_id"
     t.index ["operator_id"], name: "index_used_operators_on_operator_id"
   end
