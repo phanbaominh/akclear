@@ -14,6 +14,8 @@ module FetchGameData
       count = 0
 
       operator_table.each do |game_id, operator|
+        next unless valid_operator?(operator)
+
         name = operator['name']
         rarity = operator['rarity']
         log_info("Creating operator #{name}... ")
@@ -30,5 +32,9 @@ module FetchGameData
     private
 
     attr_reader :source
+
+    def valid_operator?(operator)
+      !operator['subProfessionId'].start_with?('notchar')
+    end
   end
 end

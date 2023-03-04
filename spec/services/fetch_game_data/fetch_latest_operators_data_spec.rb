@@ -1,7 +1,14 @@
 require 'rails_helper'
 
 describe FetchGameData::FetchLatestOperatorsData do
-  let(:file_content) { { "char_102_texas": { 'name' => 'Texas', 'rarity' => 4 } } }
+  let(:file_content) do
+    {
+      "char_102_texas": {
+        'name' => 'Texas', 'rarity' => 4, 'subProfessionId' => 'pioneer'
+      },
+      'token_10000_silent_healrb': { 'name' => 'Medic Drone', 'subProfessionId' => 'notchar1' }
+    }
+  end
   let(:service) { described_class.new }
 
   before do
@@ -20,5 +27,11 @@ describe FetchGameData::FetchLatestOperatorsData do
     expect(FetchGameData::FetchJson)
       .to have_received(:call)
       .with('https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/en_US/gamedata/excel/character_table.json')
+  end
+
+  it 'does not create notchar operator' do
+    service.call
+
+    expect(Operator.find_by(game_id: 'token_10000_silent_healrb')).not_to be_present
   end
 end
