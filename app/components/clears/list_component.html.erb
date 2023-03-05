@@ -1,0 +1,33 @@
+<%= turbo_frame_tag Clear.new do %>
+  <div class="space-y-2">
+    <% @clears.each do |clear| %>
+      <div>
+        <div class="card bg-base-100 shadow-xl cursor-pointer">
+          <div class="badge absolute p-3 badge-lg rounded-sm <%= 'badge-warning' if clear.event? %>">
+            <%= stageable_name(clear) %>
+          </div>
+          <div class="card-body md:flex-row">
+            <div class="w-48">
+              <h2 class="card-title"><%= clear.stage.code %></h2>
+              <div>by <%= clear.player_name %></div>
+              <div><%= time_ago_in_words clear.created_at %> ago</div>
+              <div>
+              </div>
+            </div>
+            <div class="grid grid-cols-7">
+              <div class="border border-neutral-content flex items-center justify-center text-2xl"><%= clear.used_operators.size %></div>
+              <% 13.times do |i| %>
+                <% if (operator = clear.used_operators[i]) %>
+                  <%# TODO: When hover expand and display stat? %>
+                  <%= image_tag operator.avatar, class: 'w-16 border border-neutral-content', alt: operator.name %>
+                <% else %>
+                  <div class="w-16 h-16 rounded-full"></div>
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    <%  end %>
+  </div>
+<%  end %>

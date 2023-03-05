@@ -27,3 +27,5 @@ Rspec/ExampleLength:
 Style/ClassAndModuleChildren:
   Exclude:
     - "app/components/**/*"
+Style/LambdaCall:
+  Enabled: false
