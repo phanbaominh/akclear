@@ -2,8 +2,10 @@
 
 class Clears::ListComponent < ApplicationComponent
   include Turbo::FramesHelper
-  def post_initialize(clears:)
+  include Pagy::Frontend
+  def post_initialize(clears:, pagy:)
     @clears = clears
+    @pagy = pagy
   end
 
   def stageable_name(clear)

@@ -1,5 +1,5 @@
-<%= turbo_frame_tag Clear.new do %>
-  <div class="space-y-2 xl:space-y-0 xl:grid xl:grid-cols-2 xl:gap-2 ">
+<%= turbo_frame_tag 'clears', data: { turbo_action: 'advance'} do %>
+  <div class="space-y-4 xl:space-y-0 xl:grid xl:grid-cols-2 xl:gap-2 ">
     <% @clears.each do |clear| %>
       <div class="">
         <div class="card bg-base-200 shadow-xl cursor-pointer hover:outline hover:outline-primary hover:bg-base-content hover:bg-opacity-10">
@@ -47,4 +47,5 @@
       </div>
     <%  end %>
   </div>
+  <div class="mt-4 w-full flex justify-end"><%== render Primer::PagyComponent.new(pagy: @pagy) %></div>
 <%  end %>

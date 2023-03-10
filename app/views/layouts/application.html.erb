@@ -16,7 +16,7 @@
     'application' If using a .jsx or .tsx entrypoint, add the extension:
     vite_javascript_tag 'application.jsx' Visit the guide for more information:
     https://vite-ruby.netlify.app/guide/rails -->
-    <%# <script src="https://kit.fontawesome.com/3bcd340270.js" crossorigin="anonymous"></script> %>
+    <script src="https://kit.fontawesome.com/3bcd340270.js" crossorigin="anonymous"></script>
   </head>
   <body>
     <%= render NavbarComponent.new %>
@@ -29,6 +29,7 @@
         px-5
         flex
         flex-col
+        pb-8
       "
     >
       <%= yield %>
