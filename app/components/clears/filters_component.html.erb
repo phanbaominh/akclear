@@ -1,0 +1,24 @@
+<div class="card mb-4 shadow-xl">
+  <div class="card-body bg-base-200">
+    <%= simple_form_for searched_clear, url: clears_path, method: :get, html: {
+      data: {
+        controller: 'clears--filters',
+        turbo_frame: 'clears',
+        clears__filters_url_value: 'hehe',
+        clears__filters_initial_operators_value: initial_operators_ids
+      }
+    } do |f| %>
+      <div data-controller="clears--operators-select-component"
+        data-clears--operators-select-component-operators-value= "<%= operators_select_data %>"
+        data-action="addItem->clears--filters#addOperator"
+        >
+        <div class="mb-2">
+          <%= f.label :operators, for: 'clear-form__operators-select', class: 'label' %>
+          <select id='clear-form__operators-select' multiple>
+          </select>
+        </div>
+      </div>
+      <%= f.button :submit, "Apply filters", data: { action: 'clears--filters#applyFilters:prevent'}, class: 'btn btn-secondary'%>
+    <% end %>
+  </div>
+</div>

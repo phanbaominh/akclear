@@ -7,11 +7,15 @@ export default class extends Controller {
     operators: Array,
   };
   connect() {
+    const selectedItems = this.operatorsValue
+      .filter((operator) => operator.customProperties.selected)
+      .map((operator) => operator.value);
     this.choicesElement = new Choices("#clear-form__operators-select", {
       allowHTML: true,
       removeItemButton: true,
       placeholderValue: "Add operator to squad",
+      choices: this.operatorsValue,
     });
-    this.choicesElement.setChoices(this.operatorsValue);
+    this.choicesElement.setChoiceByValue(selectedItems);
   }
 }
