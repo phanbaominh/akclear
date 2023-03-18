@@ -1,14 +1,32 @@
 # frozen_string_literal: true
 
 class Clears::FiltersComponent < ApplicationComponent
-  attr_reader :searched_clear
+  include Turbo::StreamsHelper
+  include Turbo::FramesHelper
 
-  def post_initialize(searched_clear:)
+  attr_reader :searched_clear, :stageable
+
+  def post_initialize(searched_clear:, stageable:)
     @searched_clear = searched_clear
+    @stageable = stageable
   end
 
   def initial_operators_ids
     searched_clear.used_operators.map(&:operator_id)
+  end
+
+  def all_stageables
+    [Episode.all, Event.all].flatten.map do |stageable|
+      [stageable.name, [stageable.id, stageable.class.name]]
+    end
+  end
+
+  def selected_stageable
+    [stageable.id, stageable.class.name].to_s if stageable.present?
+  end
+
+  def selectable_stages
+    stageable.stages
   end
 
   def operators_select_data

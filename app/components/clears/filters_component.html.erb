@@ -4,10 +4,19 @@
       data: {
         controller: 'clears--filters',
         turbo_frame: 'clears',
-        clears__filters_url_value: 'hehe',
         clears__filters_initial_operators_value: initial_operators_ids
       }
     } do |f| %>
+      <fieldset>
+        <%= f.input :stageable, label: t('.stageable_label'), as: :select, collection: all_stageables, selected: selected_stageable, input_html: { 'data-action' => 'clears--filters#updateStages' } %>
+        <button class="hidden" formmethod="GET" formaction="<%= clears_path %>" data-turbo-frame="filters" data-clears--filters-target="stageableButton">
+        </button>
+      </fieldset>
+      <%= turbo_frame_tag 'filters' do %>
+        <% if stageable %>
+          <%= f.association :stage, collection: selectable_stages, required: false, label_method: :code %>
+        <% end %>
+      <% end %>
       <div data-controller="clears--operators-select-component"
         data-clears--operators-select-component-operators-value= "<%= operators_select_data %>"
         data-action="addItem->clears--filters#addOperator"

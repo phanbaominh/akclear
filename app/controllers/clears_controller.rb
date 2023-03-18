@@ -5,6 +5,7 @@ class ClearsController < ApplicationController
 
   def index
     @pagy, @clears = pagy(Clear.all.includes(used_operators: :operator, stage: :stageable))
+    @stageable = stageable
     @searched_clear = Clear.new(clear_params)
   end
 
@@ -27,18 +28,30 @@ class ClearsController < ApplicationController
 
   private
 
+  def stageable
+    return unless stageable_params
+
+    stageable_id, stageable_type = JSON.parse(stageable_params)
+    stageable_type&.constantize&.find_by(id: stageable_id)
+  end
+
+  def stageable_params
+    clear_params&.delete(:stageable)
+  end
+
   def index_params
     params.permit(:stage_id, :operators, :tags)
   end
 
   def clear_params
+    return @clear_params if @clear_params
     return nil if action_name != 'create' && params[:clear].nil?
 
     @clear_params = params
                     .require(:clear)
-                    .permit(:name, :link, :stage_id, used_operators_attributes: %i[id operator_id _destroy
-                                                                                   need_to_be_destroyed level elite
-                                                                                   skill_level skill_mastery skill])
+                    .permit(:name, :link, :stage_id, :stageable, used_operators_attributes: %i[id operator_id _destroy
+                                                                                               need_to_be_destroyed level elite
+                                                                                               skill_level skill_mastery skill])
 
     @clear_params.merge(submitter_id: Current.user.id)
   end

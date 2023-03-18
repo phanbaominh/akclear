@@ -4,6 +4,7 @@ export default class extends Controller {
     url: String,
     initialOperators: Array,
   };
+  static targets = ["stageableButton"];
 
   connect() {
     this.operators = this.initialOperatorsValue || [];
@@ -41,5 +42,9 @@ export default class extends Controller {
     this.operators = this.operators.filter(
       (value) => value === event.detail.value
     );
+  }
+
+  updateStages() {
+    this.stageableButtonTarget.click();
   }
 }

@@ -1,6 +1,4 @@
-<%= turbo_frame_tag 'filters' do %>
-  <%= render Clears::FiltersComponent.new(searched_clear: @searched_clear) %>
-<%  end %>
+<%= render Clears::FiltersComponent.new(searched_clear: @searched_clear, stageable: @stageable) %>
 <%= turbo_frame_tag 'clears', data: { turbo_action: 'advance'} do %>
   <%= render Clears::ListComponent.new(clears: @clears, pagy: @pagy) %>
 <%  end %>
