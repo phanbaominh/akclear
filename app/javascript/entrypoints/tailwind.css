@@ -24,20 +24,33 @@ select.simple_form__input {
   outline: 2px solid hsla(var(--bc) / 0.2) !important;
   outline-offset: 2px !important;
 }
-.choices__input {
-  @apply input mb-0 focus:outline-none !important;
+
+/* search input for multi-select */
+.choices__inner > .choices__input {
+  @apply input mb-0 rounded-none focus:outline-none !important;
+}
+
+/* search input for single select */
+.choices__list--dropdown.is-active > .choices__input {
+  @apply input rounded-none bg-base-200 border-b border-base-content/20 !important;
+}
+.choices__placeholder {
+  @apply opacity-100 !important;
+}
+.choices__list--single {
+  @apply flex items-center pl-4 h-full !important;
 }
 .choices__item--choice {
   @apply bg-base-200 text-sm block w-full p-2.5 !important;
 }
 .choices__list--dropdown .choices__item--selectable.is-highlighted,
 .choices__list[aria-expanded] .choices__item--selectable.is-highlighted {
-  @apply bg-base-content opacity-90;
+  @apply opacity-90 !important;
 }
 
 .choices__list--dropdown.is-active {
   /* outline: 2px solid hsla(var(--bc) / 0.2) !important; */
-  @apply outline-none border-none !important;
+  @apply outline-none border border-opacity-90 mt-2 !important;
 }
 
 /* .choices__list--multiple {

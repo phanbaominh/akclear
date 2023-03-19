@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus";
+import Choices from "choices.js";
 export default class extends Controller {
   static values = {
     url: String,
@@ -9,6 +10,10 @@ export default class extends Controller {
   connect() {
     this.operators = this.initialOperatorsValue || [];
     this.element.addEventListener("formdata", this.applyOperatorFilters);
+    this.choicesElement = new Choices("#stageable__select", {
+      allowHTML: true,
+      removeItemButton: true,
+    });
   }
 
   disconnect() {
