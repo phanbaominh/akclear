@@ -2,9 +2,7 @@
   <div class="card-body bg-base-200">
     <%= simple_form_for searched_clear, url: clears_path, method: :get, html: {
       data: {
-        controller: 'clears--filters',
-        turbo_frame: 'clears',
-        clears__filters_initial_operators_value: initial_operators_ids
+        controller: 'clears--filters', turbo_frame: 'clears'
       }
     } do |f| %>
       <fieldset>
@@ -19,19 +17,8 @@
       <%= turbo_frame_tag 'filters' do %>
         <% if stageable %>
           <%= f.association :stage, collection: selectable_stages, prompt: 'Select stage', required: false, label_method: :code %>
-        <% end %>
-      <% end %>
-      <div data-controller="clears--operators-select-component"
-        data-clears--operators-select-component-operators-value= "<%= operators_select_data %>"
-        data-action="addItem->clears--filters#addOperator"
-        >
-        <div class="mb-2">
-          <%= f.label :operators, for: 'clear-form__operators-select', class: 'label' %>
-          <select id='clear-form__operators-select' multiple>
-          </select>
-        </div>
-      </div>
-      <%= f.button :submit, "Apply filters", data: { action: 'clears--filters#applyFilters:prevent'}, class: 'btn btn-secondary'%>
+      <%= f.input :operator_ids, as: :select, collection: selectable_operators, selected: operator_ids, input_html: { id: 'operators__select', 'data-action' => 'addItem->clears--filters#addOperator', multiple: true } %>
+      <%= f.button :submit, "Apply filters", class: 'btn btn-secondary'%>
     <% end %>
   </div>
 </div>

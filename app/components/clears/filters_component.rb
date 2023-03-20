@@ -4,15 +4,12 @@ class Clears::FiltersComponent < ApplicationComponent
   include Turbo::StreamsHelper
   include Turbo::FramesHelper
 
-  attr_reader :searched_clear, :stageable
+  attr_reader :searched_clear, :stageable, :operator_ids
 
-  def post_initialize(searched_clear:, stageable:)
+  def post_initialize(searched_clear:, stageable:, operator_ids:)
     @searched_clear = searched_clear
     @stageable = stageable
-  end
-
-  def initial_operators_ids
-    searched_clear.used_operators.map(&:operator_id)
+    @operator_ids = operator_ids
   end
 
   def all_stageables
@@ -29,6 +26,10 @@ class Clears::FiltersComponent < ApplicationComponent
     stageable.stages
   end
 
+  def selected_stage
+    searched_clear&.stage
+  end
+
   def operators_select_data
     Operator.first(5).map do |operator|
       {
@@ -40,5 +41,8 @@ class Clears::FiltersComponent < ApplicationComponent
         }
       }
     end.to_json
+
+  def selectable_operators
+    Operator.all
   end
 end
