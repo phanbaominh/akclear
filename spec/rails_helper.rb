@@ -6,6 +6,8 @@ require_relative '../config/environment'
 abort('The Rails environment is running in production mode!') if Rails.env.production?
 require 'rspec/rails'
 require 'support/factory_bot'
+require 'test_prof/recipes/rspec/before_all'
+require 'test_prof/recipes/rspec/let_it_be'
 # Add additional requires below this line. Rails is not loaded until this point!
 
 # Requires supporting ruby files with custom matchers and macros, etc, in

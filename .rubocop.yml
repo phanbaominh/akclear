@@ -2,6 +2,8 @@ require:
   - rubocop-performance
   - rubocop-rails
   - rubocop-rspec
+inherit_gem:
+  test-prof: config/rubocop-rspec.yml
 Style/Documentation:
   Enabled: false
 Metrics/MethodLength:

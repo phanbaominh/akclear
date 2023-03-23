@@ -57,6 +57,8 @@ gem 'simple_form'
 gem 'route_translator'
 gem 'pagy'
 gem 'faker', require: false
+gem 'dry-initializer-rails'
+gem 'dry-types'
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
@@ -76,7 +78,6 @@ group :development do
   gem 'rubocop-performance', require: false
   gem 'rubocop-rails', require: false
   gem 'rubocop-rspec', require: false
-  gem 'ruby-lsp', require: false
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem 'web-console'
 
@@ -92,4 +93,5 @@ group :test do
   gem 'capybara'
   gem 'selenium-webdriver'
   gem 'webdrivers'
+  gem "test-prof"
 end
