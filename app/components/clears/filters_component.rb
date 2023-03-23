@@ -4,12 +4,12 @@ class Clears::FiltersComponent < ApplicationComponent
   include Turbo::StreamsHelper
   include Turbo::FramesHelper
 
-  attr_reader :searched_clear, :stageable, :operator_ids
+  attr_reader :clear_spec
 
-  def post_initialize(searched_clear:, stageable:, operator_ids:)
-    @searched_clear = searched_clear
-    @stageable = stageable
-    @operator_ids = operator_ids
+  delegate :stageable, :operator_ids, to: :clear_spec
+
+  def post_initialize(clear_spec:)
+    @clear_spec = clear_spec
   end
 
   def all_stageables
@@ -23,24 +23,16 @@ class Clears::FiltersComponent < ApplicationComponent
   end
 
   def selectable_stages
-    stageable.stages
+    stageable.stages.non_challenge_mode
   end
 
   def selected_stage
-    searched_clear&.stage
+    clear_spec.stage
   end
 
-  def operators_select_data
-    Operator.first(5).map do |operator|
-      {
-        value: operator.id.to_s,
-        label: operator.name,
-        customProperties: {
-          avatar: operator.avatar,
-          selected: initial_operators_ids.include?(operator.id)
-        }
-      }
-    end.to_json
+  def challenge_mode?
+    selected_stage&.challenge_mode? || false
+  end
 
   def selectable_operators
     Operator.all

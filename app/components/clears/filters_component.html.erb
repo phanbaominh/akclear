@@ -1,6 +1,6 @@
 <div class="card mb-4 shadow-xl">
   <div class="card-body bg-base-200">
-    <%= simple_form_for searched_clear, url: clears_path, method: :get, html: {
+    <%= simple_form_for Clear.new, url: clears_path, method: :get, html: {
       data: {
         controller: 'clears--filters', turbo_frame: 'clears'
       }
@@ -11,13 +11,13 @@
         <% else %>
           <%= f.input :stageable, label: t('.stageable_label'), as: :select, prompt: 'Select event/episode', collection: all_stageables, input_html: { id: 'stageable__select', 'data-action' => 'clears--filters#updateStages' } %>
         <% end %>
-        <button class="hidden" formmethod="GET" formaction="<%= clears_path %>" data-turbo-frame="filters" data-clears--filters-target="stageableButton">
+        <button class="hidden" formmethod="GET" formaction="<%= clears_filters_path %>" data-turbo-frame="filters" data-clears--filters-target="stageableButton">
         </button>
       </fieldset>
-      <%= turbo_frame_tag 'filters' do %>
-        <% if stageable %>
-          <%= f.association :stage, collection: selectable_stages, prompt: 'Select stage', required: false, label_method: :code %>
-      <%= f.input :operator_ids, as: :select, collection: selectable_operators, selected: operator_ids, input_html: { id: 'operators__select', 'data-action' => 'addItem->clears--filters#addOperator', multiple: true } %>
+      <% if stageable %>
+        <%= f.association :stage, collection: selectable_stages, prompt: 'Select stage', required: false, label_method: :code %>
+      <% end %>
+      <%= f.input :operator_ids, as: :select, collection: selectable_operators, selected: operator_ids, input_html: { id: 'operators__select', 'data-action' => 'addItem->clears--filters#addOperator', multiple: true }, include_hidden: false %>
       <%= f.button :submit, "Apply filters", class: 'btn btn-secondary'%>
     <% end %>
   </div>

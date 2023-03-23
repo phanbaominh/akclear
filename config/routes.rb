@@ -16,6 +16,9 @@ Rails.application.routes.draw do
 
     # Defines the root path route ("/")
     root 'home#index'
+    namespace :clears do
+      resources :filters, only: %i[index]
+    end
     resources :clears
     resources :operators
   end
