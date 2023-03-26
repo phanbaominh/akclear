@@ -27,7 +27,6 @@ Rspec/VerifiedDoubles:
 Rspec/ExampleLength:
   Enabled: false
 Style/ClassAndModuleChildren:
-  Exclude:
-    - "app/components/**/*"
+  Enabled: false
 Style/LambdaCall:
   Enabled: false

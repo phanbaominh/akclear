@@ -8,5 +8,5 @@ class Clear < ApplicationRecord
   has_many :used_operators, dependent: :destroy
   accepts_nested_attributes_for :used_operators, allow_destroy: true
 
-  delegate :event?, :stageable, to: :stage, allow_nil: true
+  delegate :event?, :stageable, :challenge_mode?, to: :stage, allow_nil: true
 end

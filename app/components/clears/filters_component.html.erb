@@ -2,23 +2,28 @@
   <div class="card-body bg-base-200">
     <%= simple_form_for Clear.new, url: clears_path, method: :get, html: {
       data: {
-        controller: 'clears--filters', turbo_frame: 'clears'
+        controller: 'clears--filters', turbo_frame: 'clears', clears__filters_stageable_value: stageable&.id,
       }
     } do |f| %>
       <fieldset>
-        <% if selected_stageable %>
-          <%= f.input :stageable, label: t('.stageable_label'), as: :select, collection: all_stageables, selected: selected_stageable, input_html: { id: 'stageable__select', 'data-action' => 'clears--filters#updateStages' } %>
-        <% else %>
-          <%= f.input :stageable, label: t('.stageable_label'), as: :select, prompt: 'Select event/episode', collection: all_stageables, input_html: { id: 'stageable__select', 'data-action' => 'clears--filters#updateStages' } %>
-        <% end %>
-        <button class="hidden" formmethod="GET" formaction="<%= clears_filters_path %>" data-turbo-frame="filters" data-clears--filters-target="stageableButton">
+        <%= f.input :stageable, label: t('.stageable_label'), as: :select, collection: all_stageables, prompt: 'Select event/episode', selected: selected_stageable,
+          input_html: { id: 'stageable__select', data: { action: 'clears--filters#updateStages', clears__filters_from_stageable_select_param: 'true' } } %>
+        <button class="hidden" formmethod="GET" formaction="<%= clears_filters_path %>" data-turbo-frame="filters__stage" data-clears--filters-target="stageableButton">
         </button>
       </fieldset>
-      <% if stageable %>
-        <%= f.association :stage, collection: selectable_stages, prompt: 'Select stage', required: false, label_method: :code %>
+      <%= turbo_frame_tag 'filters__stage' do %>
+        <% if stageable %>
+          <fieldset>
+            <label class="label cursor-pointer justify-start pb-0">
+              <%= f.input_field :challenge_mode, as: :boolean, checked: challenge_mode?, data: { action: 'clears--filters#updateStages'} %>
+              <%= f.label 'Challenge mode?', class: 'label-text ml-2 text-base' %>
+            </label>
+            <%= f.association :stage, collection: selectable_stages, prompt: 'Select stage', required: false, label_method: :code, input_html: { id: 'stage_select' }, wrapper_html: { data: { controller: 'choices' } } %>
+          </fieldset>
+        <% end %>
       <% end %>
-      <%= f.input :operator_ids, as: :select, collection: selectable_operators, selected: operator_ids, input_html: { id: 'operators__select', 'data-action' => 'addItem->clears--filters#addOperator', multiple: true }, include_hidden: false %>
-      <%= f.button :submit, "Apply filters", class: 'btn btn-secondary'%>
+      <%= f.input :operator_ids, as: :select, collection: selectable_operators, selected: operator_ids, input_html: { id: 'operators__select', multiple: true }, include_hidden: false %>
+      <%= f.button :submit, "Apply filters", class: 'btn btn-secondary mt-4'%>
     <% end %>
   </div>
 </div>

@@ -2,7 +2,9 @@
   <button class="btn">Hover me</button>
 </div>
 <%= turbo_frame_tag @clear do %>
-  <%= simple_form_for @clear, format: :html, html: { class: 'space-y-2 form-control', data: { controller: 'clears--form', clears__form_url_value: new_clear_path } } do |f| %>
+  <%= simple_form_for @clear, format: :html, html: {
+    class: 'space-y-2 form-control', data: { controller: 'clears--form', clears__form_url_value: new_clear_path }
+  } do |f| %>
     <%= f.input :link %>
     <%= f.input :name %>
     <%= f.association :stage, collection: Stage.first(5).map { |stage| [stage.code, stage.id] }, required: false %>

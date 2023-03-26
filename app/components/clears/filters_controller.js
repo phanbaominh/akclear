@@ -4,11 +4,9 @@ export default class extends Controller {
   static targets = ["stageableButton"];
 
   connect() {
-    this.choicesElement = new Choices("#stageable__select", {
-      allowHTML: true,
+    this.stageableSelect = new Choices("#stageable__select", {
     });
-    this.choicesElement = new Choices("#operators__select", {
-      allowHTML: true,
+    new Choices("#operators__select", {
       removeItemButton: true,
     });
   }
