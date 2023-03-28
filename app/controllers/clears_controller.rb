@@ -30,7 +30,7 @@ class ClearsController < ApplicationController
   def clear_spec_params
     return {} if params[:clear].nil?
 
-    params.require(:clear).permit(:stageable, :stage_id, operator_ids: [])
+    params.require(:clear).permit(:stageable, :stage_id, :challenge_mode, operator_ids: [])
   end
 
   def clear_params

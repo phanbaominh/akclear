@@ -31,7 +31,7 @@ class Clears::FiltersComponent < ApplicationComponent
   end
 
   def challenge_mode?
-    selected_stage&.challenge_mode? || clear_spec.challenge_mode? || false
+    clear_spec.challenge_mode? || false
   end
 
   def selectable_operators

@@ -7,7 +7,7 @@
 }
 
 .simple_form__label {
-  @apply label;
+  @apply label w-fit;
 }
 
 .simple_form__btn {
@@ -20,14 +20,13 @@ select.simple_form__input {
 .choices__inner {
   @apply input input-bordered p-0 !important;
 }
-.is-focused .choices__inner {
-  outline: 2px solid hsla(var(--bc) / 0.2) !important;
-  outline-offset: 2px !important;
+.choices.is-focused {
+  @apply outline-base-content/20 outline outline-2 outline-offset-2 rounded !important;
 }
 
 /* search input for multi-select */
 .choices__inner > .choices__input {
-  @apply input mb-0 rounded-none focus:outline-none !important;
+  @apply input p-0 mb-0 rounded-none focus:outline-none !important;
 }
 
 /* search input for single select */
@@ -53,6 +52,21 @@ select.simple_form__input {
   @apply outline-none border border-opacity-90 mt-2 !important;
 }
 
+.choices__list--multiple .choices__item.is-highlighted {
+  @apply bg-secondary-focus border-secondary-focus !important;
+}
+
+.choices__list--multiple .choices__item {
+  @apply bg-secondary border border-secondary hover:bg-secondary-focus hover:border-secondary-focus !important;
+}
+
+.choices__list--multiple {
+  @apply pl-4 !important;
+}
+
+.choices[data-type*="select-multiple"] .choices__button {
+  @apply border-l-secondary-content !important;
+}
 /* .choices__list--multiple {
   @apply hidden !important;
 } */

@@ -3,8 +3,10 @@
     <%= simple_form_for Clear.new, url: clears_path, method: :get, html: {
       data: {
         controller: 'clears--filters', turbo_frame: 'clears', clears__filters_stageable_value: stageable&.id,
-      }
+      },
+      class: 'flex flex-col'
     } do |f| %>
+      <h2 class="card-title"> <%= t('.title') %> </h2>
       <fieldset>
         <%= f.input :stageable, label: t('.stageable_label'), as: :select, collection: all_stageables, prompt: 'Select event/episode', selected: selected_stageable,
           input_html: { id: 'stageable__select', data: { action: 'clears--filters#updateStages', clears__filters_from_stageable_select_param: 'true' } } %>
@@ -14,16 +16,17 @@
       <%= turbo_frame_tag 'filters__stage' do %>
         <% if stageable %>
           <fieldset>
-            <label class="label cursor-pointer justify-start pb-0">
-              <%= f.input_field :challenge_mode, as: :boolean, checked: challenge_mode?, data: { action: 'clears--filters#updateStages'} %>
-              <%= f.label 'Challenge mode?', class: 'label-text ml-2 text-base' %>
+            <%= f.label :challenge_mode, 'Challenge mode', class: "label-text text-base #{challenge_mode? ? 'text-error' : '' } simple_form__label" %>
+            <%= f.check_box :challenge_mode, checked: challenge_mode?, data: { action: 'clears--filters#updateStages'}, class: 'toggle toggle-error block focus:outline-base-content/20' %>
+            <label class="label cursor-pointer justify-start pb-0 ">
             </label>
-            <%= f.association :stage, collection: selectable_stages, prompt: 'Select stage', required: false, label_method: :code, input_html: { id: 'stage_select' }, wrapper_html: { data: { controller: 'choices' } } %>
+            <%= f.association :stage, collection: selectable_stages, selected: selected_stage, prompt: 'Select stage', required: false, label_method: :code,
+              input_html: { id: 'stage_select' }, wrapper_html: { data: { controller: 'choices' }} %>
           </fieldset>
         <% end %>
       <% end %>
       <%= f.input :operator_ids, as: :select, collection: selectable_operators, selected: operator_ids, input_html: { id: 'operators__select', multiple: true }, include_hidden: false %>
-      <%= f.button :submit, "Apply filters", class: 'btn btn-secondary mt-4'%>
+      <%= f.button :submit, "Apply filters", class: 'btn btn-secondary mt-4 self-end'%>
     <% end %>
   </div>
 </div>
