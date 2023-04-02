@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
 class ClearsController < ApplicationController
+  include ClearFilterable
   include Pagy::Backend
 
   def index
-    @pagy, @clears = pagy(Clear.all.includes(used_operators: :operator, stage: :stageable))
     @clear_spec_params = clear_spec_params
+    @pagy, @clears = pagy(Clears::Index.(@clear_spec).value!.includes(used_operators: :operator, stage: :stageable))
   end
 
   def new
@@ -26,12 +27,6 @@ class ClearsController < ApplicationController
   end
 
   private
-
-  def clear_spec_params
-    return {} if params[:clear].nil?
-
-    params.require(:clear).permit(:stageable, :stage_id, :challenge_mode, operator_ids: [])
-  end
 
   def clear_params
     return @clear_params if @clear_params
