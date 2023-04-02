@@ -30,3 +30,5 @@ Style/ClassAndModuleChildren:
   Enabled: false
 Style/LambdaCall:
   Enabled: false
+Naming/VariableNumber:
+  EnforcedStyle: "snake_case"

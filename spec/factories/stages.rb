@@ -1,5 +1,9 @@
 FactoryBot.define do
-  factory :event_stage, class: 'Stage' do
-    stageable factory: :event
+  factory :stage, class: 'Stage' do
+    stageable factory: :episode
+
+    factory :event_stage do
+      stageable factory: :event
+    end
   end
 end

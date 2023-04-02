@@ -1,4 +1,5 @@
 class Stage < ApplicationRecord
+  STAGEABLE_TYPES = Types::String.enum('Event', 'Episode')
   CHALLENGE_MODE_ID = '#f#'.freeze
   belongs_to :stageable, polymorphic: true
   scope :non_challenge_mode, -> { where.not('game_id LIKE ?', "%#{CHALLENGE_MODE_ID}") }
