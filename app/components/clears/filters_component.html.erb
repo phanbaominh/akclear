@@ -1,12 +1,18 @@
 <div class="card mb-4 shadow-xl">
-  <div class="card-body bg-base-200">
+  <div class="card-body bg-base-300">
+    <%= simple_form_for 'reset', url: clears_path, method: :get, html: { data: { turbo_frame: '_top' }, id: 'reset', class: 'hidden' } do %>
+    <% end %>
     <%= simple_form_for Clear.new, url: clears_path, method: :get, html: {
       data: {
         controller: 'clears--filters', turbo_frame: 'clears', clears__filters_stageable_value: stageable&.id,
       },
       class: 'flex flex-col'
     } do |f| %>
-      <h2 class="card-title"> <%= t('.title') %> </h2>
+      <header class="flex justify-between">
+        <h2 class="card-title"> <%= t('.title') %> </h2>
+        <button form="reset" class="btn btn-xs gap-2" ><i class="fa-solid fa-rotate-right"> </i>Reset</button>
+        <noscript><input type="reset" value="Reset" class="btn btn-warning"/></noscript>
+      </header>
       <fieldset>
         <%= f.input :stageable, label: t('.stageable_label'), as: :select, collection: all_stageables, prompt: 'Select event/episode', selected: selected_stageable,
           input_html: { id: 'stageable__select', data: { action: 'clears--filters#updateStages', clears__filters_from_stageable_select_param: 'true' } } %>
@@ -26,7 +32,9 @@
         <% end %>
       <% end %>
       <%= f.input :operator_ids, as: :select, collection: selectable_operators, selected: operator_ids, input_html: { id: 'operators__select', multiple: true }, include_hidden: false %>
-      <%= f.button :submit, "Apply filters", class: 'btn btn-secondary mt-4 self-end'%>
+      <footer class="flex justify-end mt-4 space-x-2">
+        <%= f.button :submit, "Apply filters" %>
+      </footer>
     <% end %>
   </div>
 </div>
