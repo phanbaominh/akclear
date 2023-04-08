@@ -6,7 +6,7 @@ export default class extends Controller {
   emitEvent(event) {
     console.log({ dismissEvent: event });
     this.dispatch("clickDismissOperator", {
-      detail: { index: event.params.index },
+      detail: { operatorId: event.params.operatorId },
     });
   }
 }

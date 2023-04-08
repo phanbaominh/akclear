@@ -1,0 +1,54 @@
+<%= turbo_frame_tag @clear do %>
+  <section class="card shadow-xl bg-base-200 w-1/2 m-auto">
+    <div class="card-body">
+      <header>
+        <h2 class="card-title">NEW CLEAR</h2>
+      </header>
+
+      <%= simple_form_for @clear, html: {
+        class: 'space-y-2 form-control fuck', data: {
+          controller: 'clears--form',
+          clears__form_choices_outlet: '#operators_select',
+          action: 'clears--form--operator-card-component:clickDismissOperator->clears--form#removeOperator' 
+        }
+      } do |f| %>
+        <%= f.input :link %>
+        <%= f.input :name %>
+        <%= f.association :stage, collection: Stage.first(5).map { |stage| [stage.code, stage.id] },
+            required: false, wrapper_html: { data: { controller: 'choices' } } %>
+        <fieldset>
+          <%= f.input :operator_ids, as: :select, collection: selectable_operators, selected: operator_ids, 
+            wrapper_html: {
+              id: 'operators_select',
+              data: {
+                  controller: 'choices',
+                  action: 'change->clears--form#updateOperators' 
+                }
+              },
+            input_html: { multiple: true }, include_hidden: false %>
+          <button
+            formmethod="GET"
+            formaction="<%= new_clear_path %>"
+            data-clears--form-target="selectOperatorButton"
+          ></button>
+          <div id="operators" class="space-y-2">
+            <%= f.simple_fields_for :used_operators do |operator_form| %>
+              <% if operator_form.object.need_to_be_destroyed? %>
+                <% if operator_form.object.persisted? %>
+                  <%= operator_form.hidden_field :need_to_be_destroyed, value: true %>
+                <% else %>
+                  <%= operator_form.hidden_field :_destroy, value: true %>
+                <% end %>
+              <% else %>
+                <%= render Clears::Form::OperatorCardComponent.new(form: operator_form) %>
+              <% end %>
+            <% end %>
+          </div>
+        </fieldset>
+        <footer class="card-actions justify-end">
+          <%= f.button :submit %>
+        </footer>
+      <% end %>
+    </div>
+  </section>
+<% end %>

@@ -27,7 +27,7 @@ module Clears
     def filter_by_operators
       return if spec.operator_ids.empty?
 
-      @clears = @clears.joins(:used_operators).where(used_operators: { operator_id: spec.operator_ids })
+      @clears = @clears.joins(:used_operators).where(used_operators: { operator_id: spec.operator_ids }).distinct
     end
 
     def filter_by_stageable

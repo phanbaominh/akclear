@@ -1,4 +1,7 @@
-<div data-controller="clears--form--operator-card-component">
+<div
+  class="operators_select"
+  data-controller="clears--form--operator-card-component"
+>
   <div class="card card-side card-compact card-bordered bg-base-100 shadow-xl">
     <figure class="p-2">
       <%= image_tag operator_image_url, class: 'w-16', data: { tooltip_target: tooltip_id }, alt: operator_name %>
@@ -6,38 +9,52 @@
     <div class="card-body py-0 justify-center">
       <div class="flex flex-col md:flex-row">
         <div class="md:self-center mr-2 flex items-center mb-2 md:mb-0">
-          <h2 class="card-title  text-md"><%= operator_name %></h2>
+          <h2 class="card-title text-md"><%= operator_name %></h2>
           <div class="card-actions md:hidden flex flex-grow justify-end">
             <button
-            data-action="click->clears--form--operator-card-component#emitEvent:prevent"
-              data-clears--form--operator-card-component-index-param="<%=  @form.index %>"
+              data-action="
+                click->clears--form--operator-card-component#emitEvent:prevent
+              "
+              data-clears--form--operator-card-component-operator-id-param="<%=  @form.object.operator_id %>"
               class="btn btn-circle btn-sm   btn-ghost"
-              >
+            >
               X
             </button>
           </div>
         </div>
         <%= @form.input :operator_id, as: :hidden %>
-        <div class="grid grid-cols-2 gap-2 sm:gap-0 sm:flex justify-between md:space-x-2">
-          <label class="input-group input-group-sm w-auto" >
+        <div
+          class="
+            grid
+            grid-cols-2
+            gap-2
+            sm:gap-0
+            sm:flex
+            justify-between
+            md:space-x-2
+          "
+        >
+          <label class="input-group input-group-sm w-auto">
             <span>Level</span><%= @form.input_field :level, as: :string, class: 'input input-bordered h-auto p-0 text-center w-12' %>
           </label>
-          <label class="input-group input-group-sm w-auto" >
+          <label class="input-group input-group-sm w-auto">
             <span>Elite</span><%= @form.input_field :elite, as: :string, class: 'input input-bordered h-auto p-0 text-center w-12' %>
           </label>
-          <label class="input-group input-group-sm w-auto" >
+          <label class="input-group input-group-sm w-auto">
             <span>Skill</span><%= @form.input_field :skill, as: :string, class: 'input input-bordered h-auto p-0 text-center w-12' %>
           </label>
-          <label class="input-group input-group-sm w-auto" >
+          <label class="input-group input-group-sm w-auto">
             <span>SL</span><%= @form.input_field :skill_level, as: :string, class: 'input input-bordered h-auto p-0 text-center w-12' %>
           </label>
         </div>
         <div class="card-actions hidden md:flex flex-grow justify-end items-center">
           <button
-            data-action="click->clears--form--operator-card-component#emitEvent:prevent"
-            data-clears--form--operator-card-component-index-param="<%=  @form.index %>"
+            data-action="
+              click->clears--form--operator-card-component#emitEvent:prevent
+            "
+            data-clears--form--operator-card-component-operator-id-param="<%=  @form.object.operator_id %>"
             class="btn btn-circle btn-sm btn-ghost"
-            >
+          >
             X
           </button>
         </div>

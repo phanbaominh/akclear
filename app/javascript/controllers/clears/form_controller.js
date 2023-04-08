@@ -6,13 +6,17 @@ export default class extends Controller {
     url: String,
     initialUsedOperatorsCount: Number,
   };
-  static targets = ["getSubmitButton"];
+  static targets = ["getSubmitButton", "selectOperatorButton"];
+  static outlets = ["choices"];
   connect() {
     this.usedOperatorsCount = this.initialUsedOperatorsCountValue || 0;
   }
 
+  updateOperators() {
+    this.selectOperatorButtonTarget.click();
+  }
+
   addOperator(event) {
-    console.log(event);
     const formData = new FormData(this.element);
     formData.append(
       `clear[used_operators_attributes][${this.usedOperatorsCount}][operator_id]`,
@@ -27,7 +31,11 @@ export default class extends Controller {
   }
 
   removeOperator(event) {
-    console.log(event);
+    console.log({ removeEvent: event });
+    this.choicesOutlet.removeItem(event.detail.operatorId);
+    this.updateOperators();
+    return;
+
     const formData = new FormData(this.element);
     formData.set(
       `clear[used_operators_attributes][${event.detail.index}][need_to_be_destroyed]`,
