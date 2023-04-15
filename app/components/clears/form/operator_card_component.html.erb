@@ -2,65 +2,72 @@
   class="operators_select"
   data-controller="clears--form--operator-card-component"
 >
-  <div class="card card-side card-compact card-bordered bg-base-100 shadow-xl">
-    <figure class="p-2">
-      <%= image_tag operator_image_url, class: 'w-16', data: { tooltip_target: tooltip_id }, alt: operator_name %>
+  <%= @form.input :operator_id, as: :hidden %>
+  <div
+    class=" card card-side bg-base-100 shadow-xl grid grid-cols-8 items-center"
+  >
+    <figure class="flex flex-col justify-center">
+      <%= image_tag operator_image_url, class: 'w-16 h-16', data: { tooltip_target: tooltip_id }, alt: operator_name %>
     </figure>
-    <div class="card-body py-0 justify-center">
-      <div class="flex flex-col md:flex-row">
-        <div class="md:self-center mr-2 flex items-center mb-2 md:mb-0">
-          <h2 class="card-title text-md"><%= operator_name %></h2>
-          <div class="card-actions md:hidden flex flex-grow justify-end">
-            <button
-              data-action="
-                click->clears--form--operator-card-component#emitEvent:prevent
-              "
-              data-clears--form--operator-card-component-operator-id-param="<%=  @form.object.operator_id %>"
-              class="btn btn-circle btn-sm   btn-ghost"
-            >
-              X
-            </button>
-          </div>
-        </div>
-        <%= @form.input :operator_id, as: :hidden %>
-        <div
-          class="
-            grid
-            grid-cols-2
-            gap-2
-            sm:gap-0
-            sm:flex
-            justify-between
-            md:space-x-2
-          "
-        >
-          <label class="input-group input-group-sm w-auto">
-            <span>Level</span><%= @form.input_field :level, as: :string, class: 'input input-bordered h-auto p-0 text-center w-12' %>
-          </label>
-          <label class="input-group input-group-sm w-auto">
-            <span>Elite</span><%= @form.input_field :elite, as: :string, class: 'input input-bordered h-auto p-0 text-center w-12' %>
-          </label>
-          <label class="input-group input-group-sm w-auto">
-            <span>Skill</span><%= @form.input_field :skill, as: :string, class: 'input input-bordered h-auto p-0 text-center w-12' %>
-          </label>
-          <label class="input-group input-group-sm w-auto">
-            <span>SL</span><%= @form.input_field :skill_level, as: :string, class: 'input input-bordered h-auto p-0 text-center w-12' %>
-          </label>
-        </div>
-        <div class="card-actions hidden md:flex flex-grow justify-end items-center">
-          <button
-            data-action="
-              click->clears--form--operator-card-component#emitEvent:prevent
-            "
-            data-clears--form--operator-card-component-operator-id-param="<%=  @form.object.operator_id %>"
-            class="btn btn-circle btn-sm btn-ghost"
-          >
-            X
-          </button>
-        </div>
-      </div>
+    <h2 class=" card-title text-md col-span-2 ml-2"><%= operator_name %></h2>
+
+    <%= content_tag(:fieldset, class: 'flex col-span-2 gap-2', data: { **stimulus(:radio_buttons, classes: { selected: 'btn-primary' }) }) do -%>
+      <% max_elite.times do |elite| %>
+        <label for="<%= label_for(:elite, elite) %>">
+          <%= content_tag(:div, class: 'btn rounded-none border-0 p-0 h-full', data: { checked: used_operator_elite == elite, value: elite, **stimulus_attrs(:radio_buttons, target: 'radioButton') }) do -%>
+            <%= vite_image_tag "images/elite#{elite}.png", class: 'w-8' %>
+          <% end %>
+          <%= @form.radio_button :elite, elite, class: 'hidden', checked: used_operator_elite == elite,
+                  data: {
+                    **stimulus_attrs(
+                      :radio_buttons,
+                      actions: { change: 'select'},
+                      params: { value: elite }
+                    )
+                  } %>
+        </label>
+      <% end %>
+    <% end %>
+
+    <%= content_tag(:fieldset, class: 'flex gap-4 col-span-2', data: { **stimulus(:radio_buttons, classes: { selected: 'outline-4 outline-primary' }) }) do -%>
+      <% max_skill.times do |skill| %>
+        <label for="<%= label_for(:skill, skill) %>">
+          <%= content_tag(:div, class: 'outline', data: { checked: used_operator_skill == skill, value: skill, **stimulus_attrs(:radio_buttons, target: 'radioButton') }) do -%>
+            <%= image_tag operator_skill_image_url(skill), class: 'w-10', data: { tooltip_target: tooltip_id }, alt: operator_name %>
+          <% end %>
+          <%= @form.radio_button :skill, skill, class: 'hidden', checked: used_operator_skill == skill,
+                  data: {
+                    **stimulus_attrs(
+                      :radio_buttons,
+                      actions: { change: 'select'},
+                      params: { value: skill }
+                    )
+                  } %>
+        </label>
+      <% end %>
+    <% end %>
+
+    <div
+      class="
+        card-actions
+        hidden
+        md:flex
+        justify-end
+        items-center
+        h-full
+        rounded-l-0
+      "
+    >
+      <button
+        data-action="
+          click->clears--form--operator-card-component#emitEvent:prevent
+          click->clears--form--operator-card-component#destroy
+        "
+        data-clears--form--operator-card-component-operator-id-param="<%=  @form.object.operator_id %>"
+        class="btn h-full btn-sm hover:bg-error"
+      >
+        <i class="fa-solid fa-close text-white"></i>
+      </button>
     </div>
   </div>
-</div>
-<div>
 </div>

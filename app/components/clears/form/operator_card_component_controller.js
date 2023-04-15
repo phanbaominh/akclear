@@ -9,4 +9,8 @@ export default class extends Controller {
       detail: { operatorId: event.params.operatorId },
     });
   }
+
+  destroy() {
+    this.element.remove();
+  }
 }
