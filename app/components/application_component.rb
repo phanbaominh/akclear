@@ -10,7 +10,7 @@ class ApplicationComponent < ViewComponent::Base
   def post_initialize(**options); end
 
   def stimulus(controller, **attributes)
-    { controller: controller.to_s.dasherize, **stimulus_attrs(controller, attributes) }
+    { controller: controller.to_s.dasherize, **stimulus_attrs(controller, **attributes) }
   end
 
   def stimulus_attrs(controller, **attributes)
@@ -31,6 +31,7 @@ class ApplicationComponent < ViewComponent::Base
       attributes[attribute_type]&.transform_keys! { |key| :"#{controller}_#{key}_#{suffix}" }
       data_attributes.merge!(attributes[attribute_type] || {})
     end
+    data_attributes[:"#{controller}_target"] = attributes[:target] if attributes[:target]
     data_attributes
   end
 
