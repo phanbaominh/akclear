@@ -3,11 +3,19 @@
 @tailwind utilities;
 
 .simple_form__input {
-  @apply input input-bordered;
+  @apply input input-bordered block;
+}
+
+.field_with_errors > input {
+  @apply border border-error focus:outline-error;
 }
 
 .simple_form__label {
   @apply label w-fit;
+}
+
+.field_with_errors label {
+  @apply pb-0;
 }
 
 .simple_form__btn {
@@ -27,6 +35,18 @@ select.simple_form__input {
 /* search input for multi-select */
 .choices__inner > .choices__input {
   @apply input p-0 mb-0 rounded-none focus:outline-none !important;
+}
+
+.field_with_errors .choices__inner {
+  @apply border border-error rounded !important;
+}
+
+.field_with_errors .choices.is-focused {
+  @apply outline-error !important;
+}
+
+.error {
+  @apply text-error;
 }
 
 /* search input for single select */
@@ -67,6 +87,10 @@ select.simple_form__input {
 .choices[data-type*="select-multiple"] .choices__button {
   @apply border-l-secondary-content !important;
 }
+
+/* #new_clear .choices__inner .choices__item--selectable {
+  display: none !important; */
+/* } */
 /* .choices__list--multiple {
   @apply hidden !important;
 } */
