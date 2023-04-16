@@ -9,4 +9,6 @@ class Clear < ApplicationRecord
   accepts_nested_attributes_for :used_operators, allow_destroy: true
 
   delegate :event?, :stageable, :challenge_mode?, to: :stage, allow_nil: true
+
+  validates :link, presence: true
 end
