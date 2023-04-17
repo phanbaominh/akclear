@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ClearFilterable
   extend ActiveSupport::Concern
 
@@ -12,12 +14,9 @@ module ClearFilterable
   end
 
   def clear_spec_params
-    return {} if params[:clear].nil?
+    return {} if params[:clear_specification].nil?
 
-    clear_spec_params = params.require(:clear).permit(:stageable, :stage_id, :challenge_mode, operator_ids: [])
-    stageable_id, stageable_type =
-      clear_spec_params[:stageable].present? ? JSON.parse(clear_spec_params[:stageable]) : []
-    clear_spec_params[:operator_ids]
-    clear_spec_params.merge!(stageable_type:, stageable_id:).compact_blank!
+    params.require(:clear_specification).permit(:stageable_id, :stage_id, :challenge_mode,
+                                                operator_ids: []).compact_blank
   end
 end

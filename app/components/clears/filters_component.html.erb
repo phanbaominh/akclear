@@ -2,36 +2,83 @@
   <div class="card-body bg-base-300">
     <%= simple_form_for 'reset', url: clears_path, method: :get, html: { data: { turbo_frame: '_top' }, id: 'reset', class: 'hidden' } do %>
     <% end %>
-    <%= simple_form_for Clear.new, url: clears_path, method: :get, html: {
+    <%= simple_form_for clear_spec, url: clears_path, method: :get, html: {
       data: {
         controller: 'clears--filters', turbo_frame: 'clears', clears__filters_stageable_value: stageable&.id,
       },
       class: 'flex flex-col'
     } do |f| %>
       <header class="flex justify-between">
-        <h2 class="card-title"> <%= t('.title') %> </h2>
-        <button form="reset" class="btn btn-xs gap-2" class="js-only"><i class="fa-solid fa-rotate-right"> </i>Reset</button>
+        <h2 class="card-title">
+          <%= t(".title") %>
+        </h2>
+        <button form="reset" class="btn btn-xs gap-2" class="js-only"><i class="fa-solid fa-rotate-right">
+          </i>Reset</button>
         <noscript><input type="reset" value="Reset" class="btn btn-warning"/></noscript>
       </header>
       <fieldset>
-        <%= f.input :stageable, label: t('.stageable_label'), as: :select, collection: all_stageables, prompt: 'Select event/episode', selected: selected_stageable,
-          input_html: { id: 'stageable__select', data: { action: 'clears--filters#updateStages', clears__filters_from_stageable_select_param: 'true' } } %>
-        <button class="hidden" formmethod="GET" formaction="<%= clears_filters_path %>" data-turbo-frame="filters__stage" data-clears--filters-target="stageableButton">
+        <%= f.input :stageable_id,
+                label: t(".stageable_label"),
+                as: :select,
+                collection: all_stageables,
+                value_method: :to_global_id,
+                prompt: "Select event/episode",
+                input_html: {
+                  id: "stageable__select",
+                  data: {
+                    action: "clears--filters#updateStages",
+                    clears__filters_from_stageable_select_param: "true"
+                  }
+                } %>
+        <button
+          class="hidden"
+          formmethod="GET"
+          formaction="<%= clears_filters_path %>"
+          data-turbo-frame="filters__stage"
+          data-clears--filters-target="stageableButton"
+        >
         </button>
       </fieldset>
       <%= turbo_frame_tag 'filters__stage' do %>
         <% if stageable %>
           <fieldset>
-            <%= f.label :challenge_mode, 'Challenge mode', class: "label-text text-base #{challenge_mode? ? 'text-error' : '' } simple_form__label" %>
-            <%= f.check_box :challenge_mode, checked: challenge_mode?, data: { action: 'clears--filters#updateStages'}, class: 'toggle toggle-error block focus:outline-base-content/20' %>
+            <%= f.label :challenge_mode,
+                    "Challenge mode",
+                    class:
+                      "label-text text-base #{f.object.challenge_mode ? "text-error" : ""} simple_form__label" %>
+            <%= f.check_box :challenge_mode,
+                        data: {
+                          action: "clears--filters#updateStages"
+                        },
+                        class: "toggle toggle-error block focus:outline-base-content/20" %>
             <label class="label cursor-pointer justify-start pb-0 ">
             </label>
-            <%= f.association :stage, collection: selectable_stages, selected: selected_stage, prompt: 'Select stage', required: false, label_method: :code,
-              input_html: { id: 'stage_select' }, wrapper_html: { data: { controller: 'choices' }} %>
+            <%= f.input :stage_id,
+                    as: :select,
+                    collection: selectable_stages,
+                    prompt: "Select stage",
+                    required: false,
+                    label_method: :code,
+                    input_html: {
+                      id: "stage_select"
+                    },
+                    wrapper_html: {
+                      data: {
+                        controller: "choices"
+                      }
+                    } %>
           </fieldset>
         <% end %>
       <% end %>
-      <%= f.input :operator_ids, as: :select, collection: selectable_operators, selected: operator_ids, input_html: { id: 'operators__select', multiple: true }, include_hidden: false %>
+      <%= f.input :operator_ids,
+              as: :select,
+              collection: selectable_operators,
+              selected: operator_ids,
+              input_html: {
+                id: "operators__select",
+                multiple: true
+              },
+              include_hidden: false %>
       <footer class="flex justify-end mt-4 space-x-2">
         <%= f.button :submit, "Apply filters" %>
       </footer>

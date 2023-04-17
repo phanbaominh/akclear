@@ -13,9 +13,7 @@ class Clears::FiltersComponent < ApplicationComponent
   end
 
   def all_stageables
-    [Episode.all, Event.all].flatten.map do |stageable|
-      [stageable.name, [stageable.id, stageable.class.name]]
-    end
+    [Episode.all, Event.all].flatten
   end
 
   def selected_stageable
@@ -23,15 +21,7 @@ class Clears::FiltersComponent < ApplicationComponent
   end
 
   def selectable_stages
-    clear_spec.challenge_mode? ? stageable.stages.challenge_mode : stageable.stages.non_challenge_mode
-  end
-
-  def selected_stage
-    clear_spec.stage
-  end
-
-  def challenge_mode?
-    clear_spec.challenge_mode? || false
+    clear_spec.challenge_mode ? stageable.stages.challenge_mode : stageable.stages.non_challenge_mode
   end
 
   def selectable_operators
