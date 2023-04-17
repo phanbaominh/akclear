@@ -381,6 +381,7 @@ DEPENDENCIES
   erb_lint
   factory_bot_rails
   faker
+  globalid
   htmlbeautifier
   importmap-rails
   jbuilder
