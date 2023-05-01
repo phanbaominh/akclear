@@ -158,9 +158,9 @@ end
 
 if Rails.env.development?
   user = User.first
-  # FetchGameData::FetchLatestOperatorsData.call
-  # FetchGameData::FetchLatestEventsData.call
-  # FetchGameData::FetchLatestEpisodesData.call
-  # FetchGameData::FetchLatestStagesData.call
+  FetchGameData::FetchLatestOperatorsData.call
+  FetchGameData::FetchLatestEventsData.call
+  FetchGameData::FetchLatestEpisodesData.call
+  FetchGameData::FetchLatestStagesData.call
   100.times { create_clear(user) }
 end

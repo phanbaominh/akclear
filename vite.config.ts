@@ -1,9 +1,9 @@
 import { defineConfig } from "vite";
 import { resolve } from "path";
-import RubyPlugin from "vite-plugin-ruby";
+import ViteRails from "vite-plugin-rails";
 
 export default defineConfig({
-  plugins: [RubyPlugin()],
+  plugins: [ViteRails()],
   resolve: {
     alias: {
       "@components": resolve(__dirname, "app/components"),
