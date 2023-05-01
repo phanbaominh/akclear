@@ -9,14 +9,35 @@ module ClearFilterable
 
   private
 
+  def use_clear_spec_session
+    @clear_spec_params = clear_spec_session
+  end
+
+  def delete_clear_spec_session
+    session['clear_spec_params'] = nil
+  end
+
+  def set_clear_spec_session
+    session['clear_spec_params'] = clear_spec_params
+  end
+
+  def clear_spec_session
+    @clear_spec_session ||= (session['clear_spec_params'] ||= {})
+  end
+
   def set_clear_spec
     @clear_spec = Clear::Specification.new(**(clear_spec_params.to_h || {}))
   end
 
+  def clear_spec_from_session
+    @clear_spec_from_session ||= Clear::Specification.new(**(clear_spec_session.to_h.symbolize_keys || {}))
+  end
+
   def clear_spec_params
+    return @clear_spec_params if @clear_spec_params
     return {} if params[:clear_specification].nil?
 
-    params.require(:clear_specification).permit(:stageable_id, :stage_id, :challenge_mode,
-                                                operator_ids: []).compact_blank
+    @clear_spec_params ||= params.require(:clear_specification).permit(:stageable_id, :stage_id, :challenge_mode,
+                                                                       :operator_id, used_operators_attributes: %i[operator_id elite skill]).compact_blank
   end
 end

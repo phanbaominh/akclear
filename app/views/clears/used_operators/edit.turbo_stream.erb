@@ -1,0 +1,10 @@
+<%= turbo_stream.append "operators" do %>
+  <div id="<%= dom_id(@used_operator.operator) %>">
+
+    <%= render Clears::UsedOperatorFormComponent.new(
+      used_operator: @used_operator,
+      submit_text: t(:update_operator),
+      method: :patch
+    ) %>
+  </div>
+<% end %>

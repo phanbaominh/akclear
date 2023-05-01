@@ -1,0 +1,73 @@
+<%= simple_form_for @used_operator, url: clears_used_operator_path, method: method, html: { class: 'card bg-base-200 shadow-xl' } do |f| %>
+  <%= f.input :operator_id, as: :hidden %>
+  <div class="card-body">
+    <div class="flex justify-between">
+      <%= image_tag operator_image_url,
+      class: "w-16 h-16",
+      data: {
+        tooltip_target: tooltip_id
+      },
+      alt: operator_name %>
+
+      <h2 class="card-title"><%= operator_name %></h2>
+    </div>
+
+    <%= f.label :elite, class: "label" %>
+    <%= content_tag(:fieldset, class: 'flex col-span-2 gap-2', data: { **stimulus(:radio_buttons, classes: { selected: 'btn-primary' }) }) do -%>
+      <% max_elite.times do |elite| %>
+        <label for="<%= label_for(f, :elite, elite) %>">
+          <%= content_tag(:div, class: 'btn rounded-none border-0 p-0 h-full', data: { checked: used_operator_elite == elite, value: elite, **stimulus_attrs(:radio_buttons, target: 'radioButton') }) do -%>
+            <%= vite_image_tag "images/elite#{elite}.png", class: "w-8" %>
+          <% end %>
+          <%= f.radio_button :elite,
+                         elite,
+                         class: "hidden",
+                         checked: used_operator_elite == elite,
+                         data: {
+                           **stimulus_attrs(
+                             :radio_buttons,
+                             actions: {
+                               change: "select"
+                             },
+                             params: {
+                               value: elite
+                             }
+                           )
+                         } %>
+        </label>
+      <% end %>
+    <% end %>
+
+    <%= f.label :skill, class: "label" %>
+    <%= content_tag(:fieldset, class: 'flex gap-4 col-span-2', data: { **stimulus(:radio_buttons, classes: { selected: 'outline-4 outline-primary' }) }) do -%>
+      <% max_skill.times do |skill| %>
+        <label for="<%= label_for(f, :skill, skill) %>">
+          <%= content_tag(:div, class: 'outline', data: { checked: used_operator_skill == skill, value: skill, **stimulus_attrs(:radio_buttons, target: 'radioButton') }) do -%>
+            <%= image_tag operator_skill_image_url(skill),
+            class: "w-10",
+            data: {
+              tooltip_target: tooltip_id
+            },
+            alt: operator_name %>
+          <% end %>
+          <%= f.radio_button :skill,
+                         skill,
+                         class: "hidden",
+                         checked: used_operator_skill == skill,
+                         data: {
+                           **stimulus_attrs(
+                             :radio_buttons,
+                             actions: {
+                               change: "select"
+                             },
+                             params: {
+                               value: skill
+                             }
+                           )
+                         } %>
+        </label>
+      <% end %>
+    <% end %>
+    <%= f.button :submit, submit_text, class: "mt-2" %>
+  </div>
+<% end %>

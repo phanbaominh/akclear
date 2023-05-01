@@ -1,5 +1,5 @@
 <%= turbo_frame_tag @clear do %>
-  <section class="card shadow-xl bg-base-200 w-1/2 m-auto">
+  <section class="card shadow-xl bg-base-200 sm:w-1/2 m-auto">
     <div class="card-body">
       <header>
         <h2 class="card-title">NEW CLEAR</h2>
@@ -14,18 +14,35 @@
       } do |f| %>
         <%= f.input :link %>
         <%= f.input :name %>
-        <%= f.association :stage, collection: Stage.first(5).map { |stage| [stage.code, stage.id] },
-            required: false, wrapper_html: { data: { controller: 'choices' } } %>
+        <%= f.association :stage,
+                      collection: selectable_stages,
+                      label_method: :code,
+                      required: false,
+                      wrapper_html: {
+                        data: {
+                          controller: "choices"
+                        }
+                      } %>
         <fieldset>
-          <%= f.input :operator_ids, as: :select, collection: selectable_operators, selected: operator_ids, 
-            wrapper_html: {
-              id: 'operators_select',
-              data: {
-                  controller: 'choices',
-                  action: 'change->clears--form#updateOperators' 
-                }
-              },
-            input_html: { multiple: true }, include_hidden: false %>
+          <%= f.input :operator_ids,
+                  as: :select,
+                  collection: selectable_operators,
+                  selected: operator_ids,
+                  wrapper_html: {
+                    id: "operators_select",
+                    data: {
+                      controller: "choices",
+                      action: "change->clears--form#updateOperators",
+                      choices_choices_options_value: {
+                        removeItemButton: true
+                      }
+                    }
+                  },
+                  prompt: "Add operator to squad",
+                  input_html: {
+                    multiple: true
+                  },
+                  include_hidden: false %>
           <button
             formmethod="GET"
             formaction="<%= new_clear_path %>"

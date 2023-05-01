@@ -1,0 +1,22 @@
+<section class="card">
+  <%= link_to clears_path, class: 'btn btn-ghost w-fit' do %>
+    <i class="fa-solid fa-arrow-left mr-2"></i><%= t :back %>
+  <% end %>
+  <div class="card-body shadow-xl bg-base-300">
+    <header>
+      <h2 class="card-title">
+        <%= t :select_stages %></h2>
+    </header>
+    <%= simple_form_for @clear_spec, url: clears_operators_select_path, method: :get do |form| %>
+      <%= render Clears::StageSelectComponent.new(form: form) %>
+    <% end %>
+    <footer class="flex justify-end space-x-2">
+      <%= link_to t(:apply_filters),
+      clears_path(clear_specification: @clear_spec_params),
+      class: "btn btn-outline" %>
+      <%= link_to t(:add_operators),
+      clears_operators_select_path(clear_specification: @clear_spec_params),
+      class: "btn btn-primary" %>
+    </footer>
+  </div>
+</section>

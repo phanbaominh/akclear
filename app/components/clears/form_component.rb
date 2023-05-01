@@ -16,4 +16,8 @@ class Clears::FormComponent < ApplicationComponent
   def operator_ids
     clear.used_operators.map(&:operator_id)
   end
+
+  def selectable_stages
+    Stage.all
+  end
 end

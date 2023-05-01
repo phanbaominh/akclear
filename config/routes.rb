@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Rails.application.routes.draw do
   get 'operators/show'
   localized do
@@ -17,9 +19,14 @@ Rails.application.routes.draw do
     # Defines the root path route ("/")
     root 'home#index'
     namespace :clears do
-      resources :filters, only: %i[index]
+      resource :filters, only: %i[show]
+      resource :stage_select, only: %i[show]
+      resource :operators_select, only: %i[show]
+      resource :used_operator
     end
-    resources :clears
+    resources :clears do
+      resources :used_operators
+    end
     resources :operators
   end
 end

@@ -25,9 +25,14 @@ module Clears
     end
 
     def filter_by_operators
-      return if spec.operator_ids.empty?
+      return if spec.used_operators.empty?
 
-      @clears = @clears.joins(:used_operators).where(used_operators: { operator_id: spec.operator_ids }).distinct
+      @clears = @clears.joins(:used_operators).distinct
+      @clears = @clears.where(id: UsedOperator
+        .where(used_operators: { operator_id: spec.used_operators.pluck(:operator_id) })
+        .group(:clear_id)
+        .having('count(*) = ?', spec.used_operators.size)
+        .pluck(:clear_id))
     end
 
     def filter_by_stageable

@@ -3,85 +3,46 @@
     <%= simple_form_for 'reset', url: clears_path, method: :get, html: { data: { turbo_frame: '_top' }, id: 'reset', class: 'hidden' } do %>
     <% end %>
     <%= simple_form_for clear_spec, url: clears_path, method: :get, html: {
+      id: "filters__form",
       data: {
-        controller: 'clears--filters', turbo_frame: 'clears', clears__filters_stageable_value: stageable&.id,
+        controller: 'clears--filters', turbo_stream: "true", turbo_frame: 'clears'
       },
       class: 'flex flex-col'
     } do |f| %>
       <header class="flex justify-between">
         <h2 class="card-title">
-          <%= t(".title") %>
+          <%= t(:filter) %>
         </h2>
         <button form="reset" class="btn btn-xs gap-2" class="js-only"><i class="fa-solid fa-rotate-right">
           </i>Reset</button>
         <noscript><input type="reset" value="Reset" class="btn btn-warning"/></noscript>
       </header>
-      <fieldset>
-        <%= f.input :stageable_id,
-                label: t(".stageable_label"),
-                as: :select,
-                collection: all_stageables,
-                value_method: :to_global_id,
-                prompt: "Select event/episode",
-                input_html: {
-                  id: "stageable__select",
-                  data: {
-                    action: "clears--filters#updateStages",
-                    clears__filters_from_stageable_select_param: "true"
-                  }
-                } %>
-        <button
-          class="hidden"
-          formmethod="GET"
-          formaction="<%= clears_filters_path %>"
-          data-turbo-frame="filters__stage"
-          data-clears--filters-target="stageableButton"
-        >
-        </button>
-      </fieldset>
-      <%= turbo_frame_tag 'filters__stage' do %>
-        <% if stageable %>
-          <fieldset>
-            <%= f.label :challenge_mode,
-                    "Challenge mode",
-                    class:
-                      "label-text text-base #{f.object.challenge_mode ? "text-error" : ""} simple_form__label" %>
-            <%= f.check_box :challenge_mode,
-                        data: {
-                          action: "clears--filters#updateStages"
-                        },
-                        class: "toggle toggle-error block focus:outline-base-content/20" %>
-            <label class="label cursor-pointer justify-start pb-0 ">
-            </label>
-            <%= f.input :stage_id,
-                    as: :select,
-                    collection: selectable_stages,
-                    prompt: "Select stage",
-                    required: false,
-                    label_method: :code,
-                    input_html: {
-                      id: "stage_select"
-                    },
-                    wrapper_html: {
-                      data: {
-                        controller: "choices"
-                      }
-                    } %>
-          </fieldset>
-        <% end %>
-      <% end %>
-      <%= f.input :operator_ids,
-              as: :select,
-              collection: selectable_operators,
-              selected: operator_ids,
-              input_html: {
-                id: "operators__select",
-                multiple: true
-              },
-              include_hidden: false %>
-      <footer class="flex justify-end mt-4 space-x-2">
-        <%= f.button :submit, "Apply filters" %>
-      </footer>
+      <%= render Clears::StageSelectComponent.new(form: f) %>
+
+      <%= render Clears::OperatorsSelectComponent.new(form: f) %>
+      <div id="used_operators_fields_wrapper">
+        <div id="used_operators_fields" class="hidden">
+          <%= f.simple_fields_for :used_operators do |used_operator_form| %>
+            <%= render Clears::UsedOperatorFieldsComponent.new(form: used_operator_form) %>
+          <% end %>
+        </div>
+      </div>
     <% end %>
+    <div id="operators" class="grid grid-cols-3">
+      <% clear_spec.used_operators.each do |used_operator| %>
+        <div id="<%= dom_id(used_operator.operator) %>">
+          <%= render Clears::Form::OperatorCardComponent.new(used_operator: used_operator) %>
+        </div>
+      <% end %>
+    </div>
+    <footer class="flex justify-end mt-4 space-x-2">
+      <button
+        form="filters__form"
+        class="btn btn-primary"
+        type="submit"
+        data-turbo-frame="clears"
+      >
+        <%= t(:apply_filters) %></button>
+    </footer>
   </div>
 </div>

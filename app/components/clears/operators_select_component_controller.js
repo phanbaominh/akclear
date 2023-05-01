@@ -1,21 +1,10 @@
 import { Controller } from "@hotwired/stimulus";
-import Choices from "choices.js";
 import "choices.js/public/assets/styles/choices.min.css";
 // Connects to data-controller="clears--operators-select-component"
 export default class extends Controller {
-  static values = {
-    operators: Array,
-  };
-  connect() {
-    const selectedItems = this.operatorsValue
-      .filter((operator) => operator.customProperties.selected)
-      .map((operator) => operator.value);
-    this.choicesElement = new Choices("#clear-form__operators-select", {
-      allowHTML: true,
-      removeItemButton: true,
-      placeholderValue: "Add operator to squad",
-      choices: this.operatorsValue,
-    });
-    this.choicesElement.setChoiceByValue(selectedItems);
+  static targets = ["turboTrigger"];
+
+  appendOperator() {
+    this.turboTriggerTarget.click();
   }
 }

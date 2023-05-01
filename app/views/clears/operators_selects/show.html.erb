@@ -1,0 +1,22 @@
+<%= link_to clears_stage_select_path(clear_specification: @clear_spec_params), class: 'btn btn-ghost w-fit' do %>
+  <i class="fa-solid fa-arrow-left mr-2"></i><%= t :back %>
+<% end %>
+<div class="card-body shadow-xl bg-base-300">
+  <header>
+    <h2 class="card-title">
+      <%= t :select_operators %></h2>
+  </header>
+  <%= simple_form_for @clear_spec, url: clears_path, method: :get, html: { class: 'card', id: 'cool' } do |form| %>
+    <%= render Clears::OperatorsSelectComponent.new(form:) %>
+  <% end %>
+  <div id="operators" class="grid grid-cols-4 gap-2">
+    <% @clear_spec.used_operators.each do |used_operator| %>
+      <%= render Clears::Form::OperatorCardComponent.new(used_operator: used_operator) %>
+    <% end %>
+  </div>
+  <footer class="flex justify-end space-x-2">
+    <%= link_to t(:apply_filters),
+    clears_path(clear_specification: @clear_spec_params),
+    class: "btn btn-primary" %>
+  </footer>
+</div>

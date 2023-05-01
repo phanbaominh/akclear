@@ -1,0 +1,5 @@
+<div class="w-fit m-auto">
+
+  <%= link_to "Back", clears_operators_select_path(clear_specification: @clear_spec_session) %>
+  <%= render Clears::UsedOperatorFormComponent.new(used_operator: @used_operator) %>
+</div>

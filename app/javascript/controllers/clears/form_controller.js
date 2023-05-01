@@ -33,7 +33,6 @@ export default class extends Controller {
   removeOperator(event) {
     console.log({ removeEvent: event });
     this.choicesOutlet.removeItem(event.detail.operatorId);
-    this.updateOperators();
     return;
 
     const formData = new FormData(this.element);

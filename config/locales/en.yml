@@ -31,3 +31,7 @@
 
 en:
   hello: "Hello world"
+  add_operators: "Add operators"
+  add_operator: "Add operator"
+  apply_filters: "Apply filters"
+  update_operator: "Update operator"

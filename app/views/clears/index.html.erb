@@ -1,5 +1,10 @@
+<%= @clear_spec.used_operators.map(&:operator).map(&:name).join(", ") %>
 <%= turbo_frame_tag "filters",
 src: clears_filters_path(clear_specification: @clear_spec_params) %>
+<noscript>
+
+  <%= link_to "Filter", clears_stage_select_path, class: "btn btn-primary" %>
+</noscript>
 <%= turbo_frame_tag 'clears', data: { turbo_action: 'advance'} do %>
   <%= render Clears::ListComponent.new(clears: @clears, pagy: @pagy) %>
 <% end %>

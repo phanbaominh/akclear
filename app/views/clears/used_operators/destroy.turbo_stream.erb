@@ -1,0 +1,11 @@
+<%= turbo_stream.remove @used_operator.operator %>
+<%= turbo_stream.append "used_operators_fields_wrapper" do %>
+  <div id="used_operators_fields" class="hidden">
+    <%= simple_fields_for @clear_spec do |f| %>
+      <%= f.simple_fields_for :used_operators do |used_operator_form| %>
+
+        <%= render Clears::UsedOperatorFieldsComponent.new(form: used_operator_form) %>
+      <% end %>
+    <% end %>
+  </div>
+<% end %>

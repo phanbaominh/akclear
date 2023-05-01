@@ -3,5 +3,5 @@
 class Clears::FiltersController < ApplicationController
   include ClearFilterable
 
-  def index; end
+  def show; end
 end

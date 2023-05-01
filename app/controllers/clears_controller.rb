@@ -5,16 +5,13 @@ class ClearsController < ApplicationController
   include Pagy::Backend
 
   def index
+    set_clear_spec_session
     @clear_spec_params = clear_spec_params
     @pagy, @clears = pagy(Clears::Index.(@clear_spec).value!.includes(used_operators: :operator, stage: :stageable))
   end
 
   def new
     @clear = Clear.new(clear_params)
-    respond_to do |format|
-      format.turbo_stream
-      format.html
-    end
   end
 
   def create
@@ -46,7 +43,7 @@ class ClearsController < ApplicationController
         ]
       )
 
-    update_used_operators_param!(@clear_params.delete(:operator_ids), @clear_params[:used_operators_attributes])
+    update_used_operators_param!(@clear_params.delete(:operator_ids) || [], @clear_params[:used_operators_attributes])
     @clear_params = @clear_params.merge(submitter_id: Current.user.id)
   end
 

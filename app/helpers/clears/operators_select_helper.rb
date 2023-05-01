@@ -1,0 +1,2 @@
+module Clears::OperatorsSelectHelper
+end
