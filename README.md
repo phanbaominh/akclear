@@ -16,7 +16,7 @@ Stage clear videos aggerator for Arknights
 ### Hotwire
 - New stimulus controllers created in `app/javascript/controllers` and `app/components` are auto-registered, controller name will be `path__to__folder__file-name`
 ### ViewComponent
-- Use `bin/rails g component X` to create a component and associated files, see `https://viewcomponent.org/guide/generators.html`
+- Use `bin/rails g component X` to create a component and associated files, see [here](https://viewcomponent.org/guide/generators.html) for more details
 ## Testing
 - Run `bin/rspec path/to/test/files/or/folder`
 
