@@ -1,23 +1,21 @@
 # frozen_string_literal: true
 
 class Clears::FormComponent < ApplicationComponent
+  include Turbo::StreamsHelper
   include Turbo::FramesHelper
 
-  attr_reader :clear
+  renders_one :header
+  renders_one :footer
 
-  def post_initialize(clear:)
-    @clear = clear
+  attr_reader :clear_spec
+
+  delegate :operator_ids, to: :clear_spec
+
+  def post_initialize(clear_spec:)
+    @clear_spec = clear_spec
   end
 
   def selectable_operators
     Operator.all
-  end
-
-  def operator_ids
-    clear.used_operators.map(&:operator_id)
-  end
-
-  def selectable_stages
-    Stage.all
   end
 end

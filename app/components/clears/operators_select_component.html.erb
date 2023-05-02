@@ -16,6 +16,8 @@
     :button,
     nil,
     class: "hidden",
+    formmethod: "GET",
+    formaction: new_clears_used_operator_path,
     data: {
       **stimulus_attrs(
         :clears__operators_select_component,
@@ -24,7 +26,9 @@
     }
   ) %>
   <noscript>
-    <button class="btn btn-circle btn-primary">
+    <button
+      class="btn btn-circle btn-primary"
+    >
       <i class="fa-solid fa-plus"></i>
     </button>
   </noscript>

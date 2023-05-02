@@ -26,7 +26,7 @@ module ClearFilterable
   end
 
   def clear_spec_session
-    @clear_spec_session ||= session[clear_spec_session_key]
+    @clear_spec_session ||= (session[clear_spec_session_key] ||= {})
   end
 
   def assign_modifying_clear
