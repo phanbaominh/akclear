@@ -12,7 +12,8 @@ class Clears::UsedOperatorsController < ApplicationController
 
   def create
     clear_spec_session['used_operators_attributes'] ||= {}
-    clear_spec_session['used_operators_attributes'].merge!(clear_spec_session['used_operators_attributes'].size.to_s => used_operator_params)
+    max_index = clear_spec_session['used_operators_attributes'].keys.max.to_i + 1
+    clear_spec_session['used_operators_attributes'][max_index.to_s] = used_operator_params
     respond_to do |format|
       format.html { redirect_to clears_operators_select_path(clear_specification: clear_spec_session) }
       format.turbo_stream do

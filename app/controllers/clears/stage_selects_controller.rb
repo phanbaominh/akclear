@@ -4,6 +4,7 @@ class Clears::StageSelectsController < ApplicationController
   include ClearFilterable
 
   def show
-    @clear_spec = Clear::Specification.new(**(clear_spec_params.to_h || {}))
+    clear_spec_session.merge!(clear_spec_params)
+    @clear_spec = clear_spec_from_session
   end
 end

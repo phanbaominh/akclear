@@ -9,14 +9,13 @@
     </header>
     <%= simple_form_for @clear_spec, url: clears_operators_select_path, method: :get do |form| %>
       <%= render Clears::StageSelectComponent.new(form: form) %>
+      <footer class="flex justify-end space-x-2">
+        <button formaction="<%= clears_path %>" class="btn btn-outline">
+          <%= t(:apply_filters) %>
+        </button>
+        <%= form.button :submit, t(:add_operator) %>
+      </footer>
     <% end %>
-    <footer class="flex justify-end space-x-2">
-      <%= link_to t(:apply_filters),
-      clears_path(clear_specification: @clear_spec_params),
-      class: "btn btn-outline" %>
-      <%= link_to t(:add_operators),
-      clears_operators_select_path(clear_specification: @clear_spec_params),
-      class: "btn btn-primary" %>
-    </footer>
+
   </div>
 </section>
