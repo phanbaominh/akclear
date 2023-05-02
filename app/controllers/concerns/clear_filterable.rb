@@ -4,33 +4,41 @@ module ClearFilterable
   extend ActiveSupport::Concern
 
   included do
-    before_action :set_modifying_clear
+    before_action :assign_modifying_clear
   end
 
   private
 
-  def use_clear_spec_session?
-    true
+  def use_clear_spec_param
+    @use_clear_spec_param = true
   end
 
   def delete_clear_spec_session
-    session['clear_spec_params'] = nil
+    session[clear_spec_session_key] = nil
   end
 
   def set_clear_spec_session
     session['clear_spec_params'] = clear_spec_params
   end
 
+  def clear_spec_session_key
+    modifying_clear? ? 'clear_params' : 'clear_spec_params'
+  end
+
   def clear_spec_session
-    @clear_spec_session ||= if modifying_clear?
-                              (session['clear_spec_params'] ||= {})
-                            else
-                              (session['clear_params'] ||= {})
-                            end
+    @clear_spec_session ||= session[clear_spec_session_key]
+  end
+
+  def assign_modifying_clear
+    @modifying_clear = session['modifying_clear']
   end
 
   def set_modifying_clear
-    session['modifying_clear'] = (true if clear_params.present?)
+    session['modifying_clear'] = true
+  end
+
+  def unset_modifying_clear
+    session['modifying_clear'] = nil
   end
 
   def modifying_clear?
@@ -46,7 +54,7 @@ module ClearFilterable
   end
 
   def clear_spec_attributes
-    use_clear_spec_session? ? clear_spec_session.symbolize_keys : clear_spec_params.to_h
+    @use_clear_spec_param ? clear_spec_params.to_h : (clear_spec_session || {}).symbolize_keys
   end
 
   def clear_params

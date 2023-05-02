@@ -1,5 +1,5 @@
 <section class="card">
-  <%= link_to clears_path, class: 'btn btn-ghost w-fit' do %>
+  <%= link_to @modifying_clear ? new_clear_path : clears_path, class: 'btn btn-ghost w-fit' do %>
     <i class="fa-solid fa-arrow-left mr-2"></i><%= t :back %>
   <% end %>
   <div class="card-body shadow-xl bg-base-300">
@@ -7,13 +7,26 @@
       <h2 class="card-title">
         <%= t :select_stages %></h2>
     </header>
-    <%= simple_form_for @clear_spec, url: clears_operators_select_path, method: :get do |form| %>
+    <%= simple_form_for @clear_spec, url: clears_operators_select_path, method: :get, html: { id: 'stage_form'} do |form| %>
       <%= render Clears::StageSelectComponent.new(form: form) %>
+      <% unless @modifying_clear %>
+        <footer class="flex justify-end space-x-2">
+
+          <button formaction="<%= clears_path %>" class="btn btn-outline">
+            <%= t(:apply_filters) %>
+          </button>
+
+          <%= form.button :submit, t(:add_operator) %>
+        </footer>
+      <% end %>
+    <% end %>
+
+    <% if @modifying_clear %>
       <footer class="flex justify-end space-x-2">
-        <button formaction="<%= clears_path %>" class="btn btn-outline">
-          <%= t(:apply_filters) %>
+        <%= button_to t(:finish), clears_path, class: "btn btn-outline" %>
+        <button form="stage_form" class="btn btn-primary">
+          <%= t(:add_operator) %>
         </button>
-        <%= form.button :submit, t(:add_operator) %>
       </footer>
     <% end %>
 

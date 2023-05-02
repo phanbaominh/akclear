@@ -8,7 +8,14 @@ class Clear < ApplicationRecord
   has_many :used_operators, dependent: :destroy
   accepts_nested_attributes_for :used_operators, allow_destroy: true
 
-  delegate :event?, :stageable, :challenge_mode?, to: :stage, allow_nil: true
+  delegate :event?, to: :stage, allow_nil: true
 
   validates :link, presence: true
+
+  attribute :challenge_mode, :boolean
+  attribute :stageable_id, :string
+
+  def stageable
+    stage ? stage.stageable : GlobalID::Locator.locate(stageable_id)
+  end
 end
