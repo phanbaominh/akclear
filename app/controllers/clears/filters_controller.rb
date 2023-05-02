@@ -3,5 +3,7 @@
 class Clears::FiltersController < ApplicationController
   include ClearFilterable
 
-  def show; end
+  def show
+    set_clear_spec
+  end
 end

@@ -3,7 +3,6 @@ class Clears::UsedOperatorsController < ApplicationController
 
   def new
     @used_operator = UsedOperator.new(operator_id: clear_spec_params[:operator_id])
-    use_clear_spec_session
     respond_to do |format|
       format.html
       format.turbo_stream
@@ -17,7 +16,7 @@ class Clears::UsedOperatorsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to clears_operators_select_path(clear_specification: clear_spec_session) }
       format.turbo_stream do
-        @clear_spec = clear_spec_from_session
+        set_clear_spec
         @used_operator = UsedOperator.new(used_operator_params)
       end
     end
@@ -30,15 +29,14 @@ class Clears::UsedOperatorsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to clears_operators_select_path(clear_specification: clear_spec_session) }
       format.turbo_stream do
+        set_clear_spec
         @used_operator = UsedOperator.new(operator_id: params[:operator_id])
-        @clear_spec = clear_spec_from_session
       end
     end
   end
 
   def edit
     @used_operator = UsedOperator.new(used_operator_params)
-    use_clear_spec_session
     respond_to do |format|
       format.html
       format.turbo_stream
@@ -54,7 +52,7 @@ class Clears::UsedOperatorsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to clears_operators_select_path(clear_specification: clear_spec_session) }
       format.turbo_stream do
-        @clear_spec = clear_spec_from_session
+        set_clear_spec
         @used_operator = UsedOperator.new(used_operator_params)
         render :create
       end
