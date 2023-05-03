@@ -20,7 +20,7 @@ describe Clears::Index do
     let_it_be(:operator) { create(:operator) }
     let_it_be(:clear_operator_1) { create(:clear, used_operators: [create(:used_operator, operator:)]) }
     let_it_be(:clear_operator_2) { create(:clear, used_operators: [create(:used_operator)]) }
-    let(:clear_spec_params) { { operator_ids: [operator.id] } }
+    let(:clear_spec_params) { { used_operators_attributes: { '0' => { operator_id: operator.id } } } }
 
     it 'returns clears for the given operators' do
       expect(result).to be_success
@@ -34,7 +34,7 @@ describe Clears::Index do
     let_it_be(:episode_clear_1) { create(:clear, stage: create(:stage, stageable: episode)) }
     let_it_be(:episode_clear_2) { create(:clear, stage: create(:stage)) }
     let_it_be(:event_clear) { create(:clear, stage: create(:stage, stageable: event)) }
-    let(:clear_spec_params) { { stageable_id: 1, stageable_type: 'Episode' } }
+    let(:clear_spec_params) { { stageable_id: episode.to_global_id.to_s } }
 
     it 'returns clears for the given stage' do
       expect(result).to be_success
