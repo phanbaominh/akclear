@@ -2,11 +2,11 @@
   class="operators_select"
   data-controller="clears--form--operator-card-component"
 >
-  <div class=" card card-side bg-base-100 shadow-xl p-2">
-    <figure class="h-fit">
+  <div class="card card-side bg-base-100 shadow-xl p-2">
+    <figure class="h-fit rounded-2xl">
       <%= image_tag avatar, class: "w-16 h-16", alt: name %>
     </figure>
-    <div class="card-body p-0 justify-center">
+    <div class="card-body p-0 justify-center pl-2">
       <h2 class=" card-title text-md ml-2 hidden"><%= name %></h2>
 
       <div class="flex space-x-2">
@@ -19,12 +19,12 @@
       </div>
     </div>
 
-    <div class=" card-actions rounded-l-0 flex-col ">
-      <%= link_to edit_clears_used_operator_path(used_operator: used_operator_params), class: 'btn btn-sm  btn-secondary', data: { turbo_stream: 'true'} do %>
+    <div class="card-actions rounded-l-0 flex-col gap-0">
+      <%= link_to edit_clears_used_operator_path(used_operator: used_operator_params), class: 'btn btn-sm btn-secondary w-8', data: { turbo_stream: 'true'} do %>
         <%= hidden_field_tag :operator_id, used_operator.operator_id %>
         <i class="fa-solid fa-pen-to-square text-white"></i>
       <% end %>
-      <%= button_to clears_used_operator_path, method: :delete, class: 'btn btn-sm hover:bg-error' do %>
+      <%= button_to clears_used_operator_path, method: :delete, class: 'btn btn-sm hover:bg-error w-8' do %>
         <%= hidden_field_tag :operator_id, used_operator.operator_id %>
         <i class="fa-solid fa-close text-white"></i>
       <% end %>
