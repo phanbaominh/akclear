@@ -4,17 +4,17 @@
 >
   <div class=" card card-side bg-base-100 shadow-xl p-2">
     <figure class="h-fit">
-      <%= image_tag operator_image_url, class: "w-16 h-16", alt: operator_name %>
+      <%= image_tag avatar, class: "w-16 h-16", alt: name %>
     </figure>
     <div class="card-body p-0 justify-center">
-      <h2 class=" card-title text-md ml-2 hidden"><%= operator_name %></h2>
+      <h2 class=" card-title text-md ml-2 hidden"><%= name %></h2>
 
       <div class="flex space-x-2">
         <% if elite %>
-          <%= vite_image_tag "images/elite#{elite}.png", class: "w-8" %>
+          <%= vite_image_tag elite_image_url, class: "w-8" %>
         <% end %>
         <% if skill %>
-          <%= image_tag operator_skill_image_url, class: "w-8", alt: operator_name %>
+          <%= image_tag skill_image_url, class: "w-8", alt: name %>
         <% end %>
       </div>
     </div>

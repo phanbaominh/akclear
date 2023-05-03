@@ -11,17 +11,14 @@ class Clears::UsedOperatorFormComponent < ApplicationComponent
 
   delegate :operator, to: :used_operator
   delegate :elite, :skill, to: :used_operator, prefix: true
+  delegate :name, :avatar, to: :presenter
 
-  def operator_image_url
-    used_operator.operator.avatar
+  def presenter_object
+    used_operator
   end
 
-  def operator_skill_image_url(skill)
-    "https://raw.githubusercontent.com/Aceship/Arknight-Images/main/skills/skill_icon_skchr_#{operator.game_id.split('_').last}_#{skill + 1}.png"
-  end
-
-  def operator_name
-    used_operator.operator.name
+  def skill_alt_text
+    "#{name}_#{used_operator_skill}"
   end
 
   def tooltip_id

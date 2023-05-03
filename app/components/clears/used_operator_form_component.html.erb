@@ -2,14 +2,14 @@
   <%= f.input :operator_id, as: :hidden %>
   <div class="card-body">
     <div class="flex justify-between">
-      <%= image_tag operator_image_url,
+      <%= image_tag avatar,
       class: "w-16 h-16",
       data: {
         tooltip_target: tooltip_id
       },
-      alt: operator_name %>
+      alt: name %>
 
-      <h2 class="card-title"><%= operator_name %></h2>
+      <h2 class="card-title"><%= name %></h2>
     </div>
 
     <%= f.label :elite, class: "label" %>
@@ -17,7 +17,7 @@
       <% max_elite.times do |elite| %>
         <label for="<%= label_for(f, :elite, elite) %>">
           <%= content_tag(:div, class: 'btn rounded-none border-0 p-0 h-full', data: { checked: used_operator_elite == elite, value: elite, **stimulus_attrs(:radio_buttons, target: 'radioButton') }) do -%>
-            <%= vite_image_tag "images/elite#{elite}.png", class: "w-8" %>
+            <%= vite_image_tag UsedOperatorPresenter.elite_image_url(elite), class: "w-8" %>
           <% end %>
           <%= f.radio_button :elite,
                          elite,
@@ -43,12 +43,12 @@
       <% max_skill.times do |skill| %>
         <label for="<%= label_for(f, :skill, skill) %>">
           <%= content_tag(:div, class: 'outline', data: { checked: used_operator_skill == skill, value: skill, **stimulus_attrs(:radio_buttons, target: 'radioButton') }) do -%>
-            <%= image_tag operator_skill_image_url(skill),
+            <%= image_tag UsedOperatorPresenter.skill_image_url(operator.game_id, skill),
             class: "w-10",
             data: {
               tooltip_target: tooltip_id
             },
-            alt: operator_name %>
+            alt: skill_alt_text %>
           <% end %>
           <%= f.radio_button :skill,
                          skill,
