@@ -65,7 +65,6 @@ module ClearFilterable
   end
 
   def clear_spec_params
-    return clear_params if modifying_clear?
     return @clear_spec_params if @clear_spec_params
     return (@clear_spec_params ||= {}) if params[:clear_specification].nil?
 
