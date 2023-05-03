@@ -1,7 +1,6 @@
 <div class="dropdown dropdown-end">
   <button type="button" class="button px-4 py-2  inline-flex items-center justify-center">
     <%= vite_image_tag icon(current_locale), class: 'w-6 mr-2 inline-block'  %>
-    <%= name(current_locale) %>
   </button>
   <ul class="menu dropdown-content bg-base-200 w-44 py-2">
     <% locale_options.each do |locale| %>
