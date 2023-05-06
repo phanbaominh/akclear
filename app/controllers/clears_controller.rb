@@ -23,9 +23,13 @@ class ClearsController < ApplicationController
     @clear = Clear.new((clear_params.presence || clear_spec_session).merge(submitter: Current.user))
     if @clear.save
       delete_clear_spec_session
-      redirect_to clears_path
+      redirect_to @clear
     else
       render 'new', status: :unprocessable_entity
     end
+  end
+
+  def show
+    @clear = Clear.find(params[:id])
   end
 end
