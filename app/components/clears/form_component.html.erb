@@ -1,6 +1,5 @@
 <div class="card mb-4 shadow-xl">
   <div class="card-body bg-base-300">
-
     <%= simple_form_for clear_spec, url: clears_path, method: :get, html: {
       id: "clears__form",
       data: {
@@ -26,7 +25,7 @@
         </div>
       </div>
     <% end %>
-    <div id="operators" class="grid grid-cols-3">
+    <div id="operators" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       <% clear_spec.used_operators.each do |used_operator| %>
         <div id="<%= dom_id(used_operator.operator) %>">
           <%= render Clears::Form::OperatorCardComponent.new(used_operator: used_operator) %>
