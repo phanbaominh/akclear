@@ -1,6 +1,6 @@
 <div class="space-y-4 xl:space-y-0 xl:grid xl:grid-cols-2 xl:gap-4 ">
   <% @clears.each do |clear| %>
-    <%= link_to clear_path(clear) do %>
+    <%= link_to clear_path(clear), data: { turbo_frame: '_top'} do %>
       <div class="">
         <div
           class="
