@@ -36,4 +36,5 @@ en:
   apply_filters: "Apply filters"
   update_operator: "Update operator"
   ago: "ago"
+  by: "by"
   submitted_by: "Submitted by"
