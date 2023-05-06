@@ -94,3 +94,9 @@ select.simple_form__input {
 /* .choices__list--multiple {
   @apply hidden !important;
 } */
+
+
+.new-clear__time::before {
+  content: "\00B7\20";
+  padding-left: 4px;
+}

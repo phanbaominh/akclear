@@ -1,5 +1,67 @@
-<p style="color: green"><%= notice %></p>
-
-<p>Hello <%= Current.user.email %></p>
-
-<p>insert quick buttons here</p>
+<div class="md:flex flex-row">
+    <div class="grid lg:grid-cols-2 grow gap-12 pr-12 basis-0">
+        <% [3, 2, 4, 5].each do |count| %>
+            <section>
+                <h1 class="text-3xl">Latest events</h1>
+                <div class="h-4"></div>
+                <ul>
+                    <% for i in 1..count do %>
+                        <a href="/clears?somefilter=123">
+                            <li>
+                                <img
+                                    src="https://prts.wiki/images/thumb/3/3e/%E6%B4%BB%E5%8A%A8%E9%A2%84%E5%91%8A_%E6%98%A5%E5%88%86_01.jpg/650px-%E6%B4%BB%E5%8A%A8%E9%A2%84%E5%91%8A_%E6%98%A5%E5%88%86_01.jpg"
+                                    alt=""
+                                    class="w-full"
+                                >
+                            </li>
+                        </a>
+                        <div class="h-4"></div>
+                    <% end %>
+                </ul>
+            </section>
+        <% end %>
+    </div>
+    <div>
+        <% ["Trending clears", "New clears"].each do |section| %>
+        <section class="pt-8 md:pt-0 pb-4 md:pb-12">
+            <div class="relative flex">
+                <h1 class="text-md uppercase bg-base-300 z-[1] pr-2 relative"><%= section %></h1>
+                <div class="absolute w-full top-1/2 left-0 h-px bg-gray-700 z-0"></div>
+            </div>
+            <ul>
+                <% for i in 1..6 do %>
+                <li class="<%= i > 1 ? 'border-t' : '' %> border-gray-700 py-4">
+                    <div class="flex flex-row justify-between">
+                        <a href="/clears" class="text-white hover:text-primary">
+                            CB-EX7, stage <%= i %>
+                        </a>
+                        <a href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer">
+                            <i class="fa-brands fa-youtube"></i>
+                        </a>
+                    </div>
+                    <div class="flex flex-row">
+                        <span class="text-xs block">by fidela</span>
+                        <span class="text-xs block new-clear__time">15 minutes ago</span>
+                    </div>
+                    <div class="flex flex-row items-center justify-between pt-2">
+                        <div class="grid grid-cols-7">
+                            <% for i in 1..7 do %>
+                            <img
+                                src="https://raw.githubusercontent.com/Aceship/Arknight-Images/main/avatars/char_274_astesi.png"
+                                alt=""
+                                class="w-6 h-6 rounded-full"
+                            >
+                            <% end %>
+                        </div>
+                        <div class="pl-6">
+                            <i class="fa-solid fa-heart"></i>
+                            50
+                        </div>
+                    </div>
+                </li>
+                <% end %>
+            </ul>
+        </section>
+        <% end %>
+    </div>
+</div>
