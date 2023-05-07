@@ -7,11 +7,21 @@
       class="absolute top-0 left-0 w-full h-full"
     ></iframe>
   </div>
-  <div class="flex justify-between">
-
-    <h2 class="text-2xl font-bold"><%= clear.name %></h2>
-    <section>
-
+  <div class="md:flex justify-between">
+    <h2 class="text-2xl font-bold">
+      <%= clear.stage.stageable.name %> - <%= clear.stage.code %>
+    </h2>
+    <section class="flex items-center space-x-4">
+      <%# TODO: check for verification status %>
+      <div class="text-green-500">
+        <i class="fa-solid fa-circle-check"></i>
+        <span title="Verified 5 days ago">Verified by admin123</span>
+      </div>
+      <%# TODO: check for admin role %>
+      <button class="hover:text-green-500">
+        <i class="fa-regular fa-circle-check"></i>
+        <span>Verify</span>
+      </button>
       <div class=" group flex cursor-pointer text-lg">
         <div class="group-hover:bg-primary/40 rounded-full px-2">
           <span>
@@ -35,56 +45,21 @@
             </i>
           </span>
         </div>
-
         <span>
-          <%= likes_count %></span>
+          <%= likes_count %>
+        </span>
       </div>
     </section>
   </div>
 
-  <section class="card shadow-xl bg-base-200 flex-row w-1/2">
+  <div class="flex">
+    <span class="inline-block"><%= t(:submitted_by) %>&nbsp;</span>
+    <a href="#" class="inline-block">
+      <%= clear.player_name%>
+    </a>
+    <span class="new-clear__time inline-block"><%= time_ago_in_words(clear.created_at) + " " + t(:ago) %></span>
+  </div>
 
-    <div class="card-body">
-      <div>
-        <div
-          class="
-            badge
-            xs:badge-lg
-            rounded-sm
-            <%= 'badge-warning' if clear.event? %>
-            max-w-64
-            line-clamp-1
-            xs:line-clamp-none
-          "
-        >
-          <%= clear.stage.stageable.name %>
-        </div>
-        <h3 class="card-title"><%= clear.stage.code %></h3>
-      </div>
-      <div class="space-y-2">
-
-        <div class>
-          <span><%= t(:submitted_by) %>:</span>
-          <a href="#">
-            <%= clear.player_name %>
-          </a>
-          <span><%= time_ago_in_words(clear.created_at) + " " + t(:ago) %></span>
-        </div>
-        <div>
-          <div class="badge xs:badge-lg rounded-sm badge-success text-success-content">
-            Verified
-          </div>
-          <span>
-            <%= clear.player_name %>
-          </span>
-          <span><%= time_ago_in_words(clear.created_at) + " " + t(:ago) %></span>
-
-        </div>
-      </div>
-
-    </div>
-
-  </section>
   <section class="card shadow-xl bg-base-200">
     <div class="card-body">
       <h3 class="card-title">
