@@ -100,3 +100,33 @@ select.simple_form__input {
   content: "\00B7\20";
   padding-left: 4px;
 }
+
+.clear-summary__operator-list {
+  @apply border-l border-t border-neutral-content/20;
+}
+
+.operator-cell--container {
+  @apply xl:w-12 xl:h-12 sm:w-16 sm:h-16 w-12 h-12;
+}
+
+.operator-cell {
+  @apply border-r border-b border-neutral-content/20 w-full h-full;
+}
+
+@media (max-width: 400px) {
+  .operator-cell--container {
+    /* when screen is small enough, assume that the cells will be <= 3rem wide, then do this to enforce aspect ratio 1:1 for the image */
+    @apply h-auto w-auto;
+    max-width: 3rem;
+    height: 0;
+    padding-bottom: 100%;
+    position: relative;
+  }
+  .operator-cell {
+    position: absolute;
+    @apply inset-0;
+  }
+  .clear-summary {
+    display: block;
+  }
+}
