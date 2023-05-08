@@ -389,6 +389,7 @@ DEPENDENCIES
   htmlbeautifier
   importmap-rails
   jbuilder
+  nokogiri
   pagy
   pg (~> 1.1)
   pry
