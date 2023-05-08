@@ -157,10 +157,11 @@ def create_clear(user)
 end
 
 if Rails.env.development?
-  user = User.first
+  user = User.first || User.create!(email: 'test@mail.com', password: 'Password1@')
   FetchGameData::FetchLatestOperatorsData.call
   FetchGameData::FetchLatestEventsData.call
   FetchGameData::FetchLatestEpisodesData.call
   FetchGameData::FetchLatestStagesData.call
+  FetchGameData::FetchEventBanners.call
   100.times { create_clear(user) }
 end
