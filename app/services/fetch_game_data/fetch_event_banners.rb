@@ -2,6 +2,7 @@
 
 module FetchGameData
   class FetchEventBanners < ApplicationService
+    include ImageStorable
     CN_EVENTS_DATA_URL = 'https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/zh_CN/gamedata/excel/activity_table.json'
     BANNERS_PAGE_URL = 'https://prts.wiki/w/%E6%B4%BB%E5%8A%A8%E4%B8%80%E8%A7%88'
     IMAGE_HOST = 'https://prts.wiki'
@@ -19,10 +20,6 @@ module FetchGameData
 
     def self.images_path
       Rails.root.join('app/javascript/images/banners')
-    end
-
-    def initialize(overwrite: false)
-      @overwrite = overwrite
     end
 
     def call
@@ -67,7 +64,7 @@ module FetchGameData
         game_id = cn_event_name_to_game_id[img_event_name]
         next if game_id.nil?
 
-        event_game_id_to_banner_url[game_id] = img['data-src'].gsub('650', '1300')
+        event_game_id_to_banner_url[game_id] = "#{IMAGE_HOST}#{img['data-src'].gsub('650', '1300')}"
         event_day[img_event_name] = day
       end
       event_game_id_to_banner_url
@@ -86,22 +83,8 @@ module FetchGameData
       end
     end
 
-    def store_images(event_game_id_to_banner_url)
-      log_info('Storing images...')
-      folder_path = self.class.images_path
-      event_game_id_to_banner_url.each do |game_id, banner_url|
-        path = folder_path.join("#{game_id}.jpg")
-        if path.exist? && !overwrite
-          log_info("Skipping image for event #{game_id}, already exist at #{path}")
-          next
-        end
-
-        log_info("Storing image for event #{game_id} at #{path}...")
-        IO.copy_stream(URI.parse("#{IMAGE_HOST}#{banner_url}").open, path.to_s)
-      rescue StandardError => e
-        log_info("Failed to store image for event #{game_id} at #{path}: #{e.message}")
-      end
-      Success()
+    def image_storable
+      :event
     end
   end
 end

@@ -1,4 +1,5 @@
 require 'rails_helper'
+require_relative './image_storable'
 
 describe FetchGameData::FetchEventBanners do
   let_it_be(:ideal_city_summer_event) do
@@ -92,31 +93,7 @@ describe FetchGameData::FetchEventBanners do
     expect(IO).to have_received(:copy_stream).exactly(3).times
   end
 
-  describe 'overwrite' do
-    before do
-      allow_any_instance_of(Pathname).to receive(:exist?).and_return(true)
-    end
-
-    context 'when overwrite is true' do
-      let(:service) { described_class.new(overwrite: true) }
-
-      it 'overwrites existing images' do
-        service.call
-
-        expect(IO)
-          .to have_received(:copy_stream)
-          .with('image file', Regexp.new('test_act20side.jpg'))
-      end
-    end
-
-    context 'when overwrite is false' do
-      it 'does not overwrite existing images' do
-        service.call
-
-        expect(IO)
-          .not_to have_received(:copy_stream)
-          .with('image file', Regexp.new('test_act20side.jpg'))
-      end
-    end
+  include_examples 'image_storable' do
+    let(:overwritten_image_name) { 'test_act20side' }
   end
 end
