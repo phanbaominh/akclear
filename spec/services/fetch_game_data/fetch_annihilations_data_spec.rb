@@ -28,6 +28,16 @@ describe FetchGameData::FetchAnnihilationsData do
       }
     }
   end
+  let(:end_times_data) do
+    {
+      'campaignRotateStageOpenTimes' => [
+        {
+          'stageId' => 'camp_r_01',
+          'endTs' => 1_589_471_999
+        }
+      ]
+    }
+  end
 
   let(:service) { described_class.new }
 
@@ -36,6 +46,10 @@ describe FetchGameData::FetchAnnihilationsData do
       .to receive(:call)
       .with('https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/en_US/gamedata/excel/stage_table.json')
       .and_return(Dry::Monads::Success(stages_data))
+    allow(FetchGameData::FetchJson)
+      .to receive(:call)
+      .with('https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/en_US/gamedata/excel/campaign_table.json')
+      .and_return(Dry::Monads::Success(end_times_data))
   end
 
   it 'create annihilation stages' do
@@ -44,7 +58,8 @@ describe FetchGameData::FetchAnnihilationsData do
     annihilation = Annihilation.first
     expect(annihilation).to have_attributes(
       name: 'The Grand Knight Territory Outskirts',
-      game_id: 'camp_r_01'
+      game_id: 'camp_r_01',
+      end_time: a_value_within(1.second).of(Time.zone.at(1_589_471_999))
     )
     expect(annihilation.stages.first).to have_attributes(
       code: 'The Grand Knight Territory Outskirts',
