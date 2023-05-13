@@ -17,7 +17,8 @@ module FetchGameData
 
         code = stage_data['name']
         zone = stage_data['zoneId'][-1]
-        stage = stageable.stages.create_with(code:, zone:).find_or_create_by!(game_id: stage_id)
+        stage = stageable.stages.find_or_initialize_by(game_id: stage_id)
+        stage.update!(code:, zone:)
 
         next unless stage.previously_new_record?
 

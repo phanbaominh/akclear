@@ -15,7 +15,8 @@ module FetchGameData
 
         name = event_data['name']
 
-        event = Event.create_with(name:).find_or_create_by!(game_id: event_id)
+        event = Event.find_or_initialize_by(game_id: event_id)
+        event.update!(name:)
         unless event.previously_new_record?
           is_first_event = false
           next

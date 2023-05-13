@@ -19,7 +19,8 @@ module FetchGameData
         name = operator['name']
         rarity = operator['rarity']
         log_info("Creating operator #{name}... ")
-        Operator.create_with(name:, rarity:).find_or_create_by!(game_id:)
+        operator = Operator.find_or_initialize_by(game_id:)
+        operator.update!(name:, rarity:)
         log_info("Operator #{name} created sucessfully!")
         count += 1
       rescue ActiveRecord::RecordInvalid
