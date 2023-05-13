@@ -162,6 +162,7 @@ if Rails.env.development?
   FetchGameData::FetchLatestEventsData.call
   FetchGameData::FetchLatestEpisodesData.call
   FetchGameData::FetchLatestStagesData.call
+  FetchGameData::FetchAnnihilationsData.call
   FetchGameData::FetchEventBanners.call
   FetchGameData::FetchEpisodesBanners.call
   100.times { create_clear(user) }

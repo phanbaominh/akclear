@@ -15,4 +15,8 @@ namespace :fetch_game_data do
   task fetch_latest_stages_data: :environment do
     FetchGameData::FetchLatestStagesData.call
   end
+
+  task fetch_annihilations_data: :environment do
+    FetchGameData::FetchAnnihilationsData.call
+  end
 end
