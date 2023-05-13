@@ -7,6 +7,7 @@ describe FetchGameData::FetchLatestEventsData do
       'displayType' => 'SIDESTORY',
       'name' => 'Ideal City: Carnival in the Endless Summer',
       'startTime' => 1_673_611_200,
+      'endTime' => 1_675_421_999,
       'isReplicate' => false
     }
   end
@@ -17,6 +18,7 @@ describe FetchGameData::FetchLatestEventsData do
       'displayType' => 'SIDESTORY',
       'name' => 'Lingering Echoes',
       'startTime' => 1_672_142_400,
+      'endTime' => 1_675_421_999,
       'isReplicate' => false
     }
   end
@@ -36,6 +38,7 @@ describe FetchGameData::FetchLatestEventsData do
       'displayType' => 'MINISTORY',
       'name' => 'A Light Spark in Darkness',
       'startTime' => 1_660_824_000,
+      'endTime' => 1_675_421_999,
       'isReplicate' => false
     }
   end
@@ -78,7 +81,8 @@ describe FetchGameData::FetchLatestEventsData do
     service.call
 
     expect(Event.find_by(game_id: 'act20side')).to have_attributes(
-      name: 'Ideal City: Carnival in the Endless Summer'
+      name: 'Ideal City: Carnival in the Endless Summer',
+      end_time: a_value_within(1.second).of(Time.zone.at(1_675_421_999))
     )
   end
 

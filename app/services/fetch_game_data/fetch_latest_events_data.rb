@@ -16,7 +16,7 @@ module FetchGameData
         name = event_data['name']
 
         event = Event.find_or_initialize_by(game_id: event_id)
-        event.update!(name:)
+        event.update!(name:, end_time: Time.zone.at(event_data['endTime']))
         unless event.previously_new_record?
           is_first_event = false
           next
@@ -29,7 +29,7 @@ module FetchGameData
 
         is_first_event = false
       rescue StandardError
-        log_info("Failed to create event #{name}: #{event.error_message}")
+        log_info("Failed to create event #{name}: #{event.errors.full_messages.to_sentence}")
       end
       log_info("Fetching completed! #{count} new events were created!")
 
