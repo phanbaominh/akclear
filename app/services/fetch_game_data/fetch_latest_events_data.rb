@@ -8,7 +8,6 @@ module FetchGameData
     def call
       events_data = yield FetchJson.call(SOURCE)
       events_data = events_data['basicInfo']
-      is_first_event = true
       count = 0
       events_data.each do |event_id, event_data|
         next unless valid_event?(event_data)
@@ -17,19 +16,15 @@ module FetchGameData
 
         event = Event.find_or_initialize_by(game_id: event_id)
         event.update!(name:, end_time: Time.zone.at(event_data['endTime']))
-        unless event.previously_new_record?
-          is_first_event = false
-          next
+        if event.previously_new_record?
+          log_info("Event #{event_id} created successfully!")
+          count += 1
+        else
+          log_info("Event #{event_id} updated successfully!")
         end
 
-        log_info("Event #{name} created successfully!")
-        count += 1
-
-        mark_as_latest(event) if is_first_event
-
-        is_first_event = false
-      rescue StandardError
-        log_info("Failed to create event #{name}: #{event.errors.full_messages.to_sentence}")
+      rescue StandardError => e
+        log_info("Failed to create/update event #{name}: #{e.message}")
       end
       log_info("Fetching completed! #{count} new events were created!")
 
@@ -52,14 +47,6 @@ module FetchGameData
 
     def rerun_event?(event_data)
       event_data['isReplicate']
-    end
-
-    def mark_as_latest(event)
-      Event.transaction do
-        Event.latest&.update!(latest: false)
-        event.update!(latest: true)
-      end
-      event
     end
   end
 end

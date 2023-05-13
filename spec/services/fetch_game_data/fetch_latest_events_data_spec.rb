@@ -61,12 +61,13 @@ describe FetchGameData::FetchLatestEventsData do
         'act10mini' => ministory_event,
         'act9sre' => rerun_event,
         'existing' => {
-          name: 'Existing Event'
+          'name' => 'Existing Event',
+          'displayType' => 'MINISTORY',
+          'endTime' => 1_675_421_999
         }
       }
     }
   end
-
   let!(:current_latest_event) { create(:event, :latest, game_id: 'existing') }
   let(:service) { described_class.new }
 
@@ -92,22 +93,16 @@ describe FetchGameData::FetchLatestEventsData do
     expect(Event.where(game_id: %w[act20side act18side]).distinct.count).to eq(2)
   end
 
-  it 'marks first SIDESTORY activity as latest event' do
-    service.call
-
-    expect(Event.find_by(game_id: 'act20side')).to be_latest
-  end
-
-  it 'unmark current latest event' do
-    service.call
-
-    expect(current_latest_event.reload).not_to be_latest
-  end
-
   it 'create events for MINISTORY activities' do
     service.call
 
     expect(Event.find_by(game_id: 'act10mini')).to be_present
+  end
+
+  it 'updates existing events' do
+    service.call
+
+    expect(current_latest_event.reload).to have_attributes(name: 'Existing Event')
   end
 
   it 'does not create events for other activities or existing events' do

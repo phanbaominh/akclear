@@ -4,7 +4,5 @@ class Event < ApplicationRecord
   include GlobalID::Identification
   has_many :stages, dependent: :nullify, as: :stageable
 
-  def self.latest
-    find_by(latest: true)
-  end
+  scope :latest, -> { where(end_time: Time.current..).order(end_time: :desc) }
 end
