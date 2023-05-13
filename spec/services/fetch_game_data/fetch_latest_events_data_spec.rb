@@ -68,7 +68,7 @@ describe FetchGameData::FetchLatestEventsData do
       }
     }
   end
-  let!(:current_latest_event) { create(:event, :latest, game_id: 'existing') }
+  let!(:existing_event) { create(:event, game_id: 'existing') }
   let(:service) { described_class.new }
 
   before do
@@ -102,7 +102,7 @@ describe FetchGameData::FetchLatestEventsData do
   it 'updates existing events' do
     service.call
 
-    expect(current_latest_event.reload).to have_attributes(name: 'Existing Event')
+    expect(existing_event.reload).to have_attributes(name: 'Existing Event')
   end
 
   it 'does not create events for other activities or existing events' do
