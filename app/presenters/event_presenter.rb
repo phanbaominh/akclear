@@ -1,0 +1,2 @@
+class EventPresenter < StageablePresenter
+end

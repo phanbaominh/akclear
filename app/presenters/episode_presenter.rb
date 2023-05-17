@@ -1,0 +1,2 @@
+class EpisodePresenter < StageablePresenter
+end
