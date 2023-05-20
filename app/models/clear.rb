@@ -20,4 +20,8 @@ class Clear < ApplicationRecord
   def stageable
     stage ? stage.stageable : GlobalID::Locator.locate(stageable_id)
   end
+
+  def stage_id
+    stageable.is_a?(Annihilation) ? stageable.stages.first.id : super
+  end
 end

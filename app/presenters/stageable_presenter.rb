@@ -8,4 +8,16 @@ class StageablePresenter < ApplicationPresenter
   def banner_image_path
     "images/banners/#{object.game_id}.jpg"
   end
+
+  def label
+    object.name
+  end
+
+  def type_label
+    object.class.to_s.titleize
+  end
+
+  def type_color
+    raise NotImplementedError
+  end
 end

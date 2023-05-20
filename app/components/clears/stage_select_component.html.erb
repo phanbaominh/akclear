@@ -1,24 +1,25 @@
 <fieldset data-controller="clears--stage-select">
-    <%= form.input :stageable_id,
-              label: t(".stageable_label"),
-              as: :grouped_select,
-              collection: [Event, Episode],
-              value_method: :to_global_id,
-              group_method: :all,
-              group_label_method: :to_s,
-              prompt: "Select event/episode",
-              wrapper_html: {
-                class: "w-full",
-                data: {
-                  controller: "choices"
-                }
-              },
-              input_html: {
-                id: "stageable__select",
-                data: {
-                  action: "clears--stage-select#updateStages"
-                }
-              } %>
+  <%= form.input :stageable_id,
+             label: t(".stageable_label"),
+             as: :grouped_select,
+             collection: [Event, Episode, Annihilation],
+             value_method: :to_global_id,
+             group_method: :all,
+             group_label_method: :to_s,
+             label_method: :label,
+             prompt: "Select event/episode",
+             wrapper_html: {
+               class: "w-full",
+               data: {
+                 controller: "choices"
+               }
+             },
+             input_html: {
+               id: "stageable__select",
+               data: {
+                 action: "clears--stage-select#updateStages"
+               }
+             } %>
 
   <button
     class="hidden"
@@ -51,14 +52,13 @@
     <% if stageable %>
       <fieldset>
 
-        <label class="label cursor-pointer justify-start pb-0 ">
-        </label>
         <%= form.input :stage_id,
-                   as: :select,
+                   as: stageable.is_a?(Annihilation) ? :hidden : :select,
                    collection: selectable_stages,
                    prompt: "Select stage",
                    required: false,
                    label_method: :code,
+                   include_blank: true,
                    input_html: {
                      id: "stage_select"
                    },

@@ -19,22 +19,32 @@
             <div class="badge xs:badge-lg rounded-sm badge-success text-success-content">
               Verified
             </div>
+            <div class="badge-error hidden"></div>
             <div
               class="
                 badge
+                badge<%= clear.stageable.type_color %>
                 xs:badge-lg
                 rounded-sm
-                <%= 'badge-warning' if clear.event? %>
                 max-w-64
                 line-clamp-1
                 xs:line-clamp-none
               "
             >
-              <%= stageable_name(clear) %>
+              <%= clear.stageable.type_label %>
             </div>
           </div>
           <div class="card-body pb-2 pt-2">
-            <div class="clear-summary flex flex-col md:flex-row items-start md:items-center">
+            <div
+              class="
+                clear-summary
+                flex
+                flex-col
+                md:flex-row
+                items-start
+                md:items-center
+              "
+            >
               <div class="flex md:space-x-0 flex-col w-full md:w-48">
                 <h2 class="card-title"><%= clear.stage.code %></h2>
                 <div class="flex space-x-2 w-full">
@@ -53,20 +63,10 @@
                     <% if (used_operator = clear.used_operators[i]) %>
                       <%# TODO: When hover expand and display stat? %>
                       <%= image_tag used_operator.operator.avatar,
-                        class: "operator-cell",
-                        alt: used_operator.operator.name
-                      %>
+                      class: "operator-cell",
+                      alt: used_operator.operator.name %>
                     <% else %>
-                      <div
-                        class="
-                          operator-cell
-                          text-xs
-                          flex
-                          flex-col
-                          items-center
-                          justify-center
-                        "
-                      >
+                      <div class=" operator-cell text-xs flex flex-col items-center justify-center ">
                         <span>NO</span>
                         <span>INFO</span>
                       </div>
