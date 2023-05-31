@@ -17,6 +17,18 @@ class ApplicationComponent < ViewComponent::Base
 
   def post_initialize(**options); end
 
+  def stimuluses(**options)
+    include_controller = options.delete(:include_controller)
+    include_controller = false if include_controller.nil?
+    stimulus_data = options.map do |(controller, attributes)|
+      include_controller ? stimulus(controller, **attributes) : stimulus_attrs(controller, **attributes)
+    end
+
+    stimulus_data.reduce do |acc, s|
+      acc.merge(s) { |key, oldval, newval| %i[controller action].include?(key) ? "#{oldval} #{newval}" : newval }
+    end
+  end
+
   def stimulus(controller, **attributes)
     { controller: controller.to_s.dasherize, **stimulus_attrs(controller, **attributes) }
   end
