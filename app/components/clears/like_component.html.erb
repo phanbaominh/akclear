@@ -1,0 +1,31 @@
+<%= content_tag :div, class: 'group flex cursor-pointer text-lg', id: dom_id(@clear, :like),
+  data: { **stimuluses(clears__like: { values: { liked: liked? } }, toggle: {}, include_controller: true) } do %>
+  <div class="group-hover:bg-primary/40 rounded-full px-2">
+    <%= button_to clear_like_path(clear), method: liked? ? :delete : :post, 
+      data: { **stimuluses(clears__like: { actions: { click: 'changeLikeCount' } }, toggle: { actions: { click: 'toggle'} }) } do %>
+      <span>
+        <%= content_tag :i,
+        "",
+        class: "fa-solid fa-heart text-primary #{"hidden" unless liked?}",
+        data: {
+          toggled: liked?,
+          **stimulus_attrs(:toggle, target: "toggle")
+        } %>
+        <%= content_tag :i,
+        "",
+        class: "fa-regular fa-heart #{"hidden" if liked?}",
+        data: {
+          toggled: !liked?,
+          **stimulus_attrs(:toggle, target: "toggle")
+        } %>
+      </span>
+
+      <noscript><%= liked? ? t(:unlike) : t(:like) %></noscript>
+
+    <% end %>
+
+  </div>
+  <%= content_tag :span, data: { **stimulus_attrs(:clears__like, target: 'likeCounter') }, class: 'w-2' do %>
+    <%= likes_count %>
+  <% end %>
+<% end %>

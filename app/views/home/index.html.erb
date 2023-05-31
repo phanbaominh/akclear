@@ -54,7 +54,10 @@
   </div>
   <div>
     <% ["Trending clears", "New clears"].each do |title| %>
-      <%= render Clears::AsideComponent.new(clears: Clear.first(6), title: title) %>
+      <%= render Clears::AsideComponent.new(
+        clears: Clear.includes(:stage, used_operators: :operator).first(6),
+        title: title
+      ) %>
     <% end %>
   </div>
 </div>

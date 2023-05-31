@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/BlockLength
 Rails.application.routes.draw do
   get 'operators/show'
   localized do
@@ -26,7 +27,9 @@ Rails.application.routes.draw do
     end
     resources :clears do
       resources :used_operators
+      resource :like, only: %i[create destroy], controller: 'clears/likes'
     end
     resources :operators
   end
 end
+# rubocop:enable Metrics/BlockLength

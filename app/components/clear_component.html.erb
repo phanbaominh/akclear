@@ -12,33 +12,7 @@
     <h2 class="text-2xl font-bold"><%= clear.name %></h2>
     <section>
 
-      <div class=" group flex cursor-pointer text-lg">
-        <div class="group-hover:bg-primary/40 rounded-full px-2">
-          <span>
-            <i
-              class="
-                <%= liked? ? 'fa-solid' : 'fa-regular' %>
-                fa-heart
-                <%= 'text-primary' if liked? %>
-                group-hover:hidden
-              "
-            ></i>
-          </span>
-          <span class="hidden group-hover:inline">
-            <i
-              class="
-                <%= liked? ? 'fa-regular' : 'fa-solid' %>
-                fa-heart
-                <%= 'text-primary' unless liked? %>
-              "
-            >
-            </i>
-          </span>
-        </div>
-
-        <span>
-          <%= likes_count %></span>
-      </div>
+      <%= render Clears::LikeComponent.new(clear: clear) %>
     </section>
   </div>
 

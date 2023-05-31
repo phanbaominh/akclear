@@ -12,4 +12,8 @@ module User::Likeable
   def unlike(clear)
     liked_clears.delete(clear)
   end
+
+  def liked?(clear)
+    liked_clears.include?(clear)
+  end
 end
