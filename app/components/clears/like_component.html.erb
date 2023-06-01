@@ -2,7 +2,7 @@
   data: { **stimuluses(clears__like: { values: { liked: liked? } }, toggle: {}, include_controller: true) } do %>
   <div class="group-hover:bg-primary/40 rounded-full px-2">
     <%= button_to clear_like_path(clear), method: liked? ? :delete : :post, 
-      data: { **stimuluses(clears__like: { actions: { click: 'changeLikeCount' } }, toggle: { actions: { click: 'toggle'} }) } do %>
+      data: { **stimuluses(clears__like: { actions: { click: 'changeLikeCount' } }, toggle: { actions: { click: 'toggle:stop'} }) } do %>
       <span>
         <%= content_tag :i,
         "",
