@@ -1,0 +1,3 @@
+<%= turbo_stream.replace dom_id(@clear, :like) do %>
+  <%= render Clears::LikeComponent.new(clear: @clear) %>
+<% end %>

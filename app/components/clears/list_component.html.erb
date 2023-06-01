@@ -75,16 +75,13 @@
                 <% end %>
               </div>
             </div>
-            <div class="card-actions text-base-content-subdued justify-between">
-              <div class="text-base-content-subdued"><%= time_ago_in_words clear.created_at %>
-                ago</div>
-              <div class="group">
-                <i class="fa-regular fa-heart group-hover:hidden"></i>
-                <span class="hidden group-hover:inline"><i class="fa-solid fa-heart text-primary"></i></span>
-                50
+            <div class="card-actions text-base-content-subdued justify-between z-20">
+              <div class="text-base-content-subdued"><%= time_string clear.created_at %>
               </div>
+              <%= render Clears::LikeComponent.new(clear: clear) %>
             </div>
           </div>
+
         </div>
       </div>
     <% end %>
