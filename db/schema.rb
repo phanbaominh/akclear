@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_22_141852) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_03_095413) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -179,6 +179,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_22_141852) do
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
+  create_table "verifications", force: :cascade do |t|
+    t.bigint "verifier_id", null: false
+    t.bigint "clear_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["clear_id"], name: "index_verifications_on_clear_id"
+    t.index ["verifier_id"], name: "index_verifications_on_verifier_id"
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "clears", "stages"
@@ -192,4 +201,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_22_141852) do
   add_foreign_key "taggings", "tags"
   add_foreign_key "used_operators", "clears"
   add_foreign_key "used_operators", "operators"
+  add_foreign_key "verifications", "clears"
+  add_foreign_key "verifications", "users", column: "verifier_id"
 end
