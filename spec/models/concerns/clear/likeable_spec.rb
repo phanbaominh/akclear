@@ -13,7 +13,7 @@ describe Clear::Likeable do
     let_it_be(:user) { create(:user) }
 
     it 'returns the number of users who liked the clear' do
-      expect { user.like(clear) }.to change(clear, :likes).by(1)
+      expect { user.like(clear) }.to change(clear, :likes_count).by(1)
     end
   end
 end
