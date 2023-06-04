@@ -6,7 +6,7 @@ class Clear < ApplicationRecord
   include Youtubeable
   belongs_to :submitter, class_name: 'User'
   belongs_to :stage
-  belongs_to :player, class_name: 'User', optional: true
+  belongs_to :channel, optional: true # TODO: make this non-optional in the future
   has_many :used_operators, dependent: :destroy
 
   accepts_nested_attributes_for :used_operators, allow_destroy: true
