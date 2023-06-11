@@ -3,6 +3,8 @@ class User < ApplicationRecord
   include User::Verifiable
   has_secure_password
 
+  enum :role, %i[user verifier admin], default: :user
+
   has_many :email_verification_tokens, dependent: :destroy
   has_many :password_reset_tokens, dependent: :destroy
 
