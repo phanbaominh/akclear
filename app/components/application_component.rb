@@ -55,6 +55,10 @@ class ApplicationComponent < ViewComponent::Base
     Current.user
   end
 
+  def can?(...)
+    helpers.can?(...)
+  end
+
   private
 
   def stimulus_data_attributes(controller, attributes)

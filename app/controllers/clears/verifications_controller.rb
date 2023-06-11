@@ -1,7 +1,8 @@
 class Clears::VerificationsController < ApplicationController
-  def create
-    @clear = Clear.find(params[:clear_id])
+  load_resource :clear
+  authorize_resource class: false
 
+  def create
     flash[:error] = I18n.t(:failed_to_verify) unless current_user.verify(@clear)
 
     respond_to do |format|
@@ -11,8 +12,6 @@ class Clears::VerificationsController < ApplicationController
   end
 
   def destroy
-    @clear = Clear.find(params[:clear_id])
-
     flash[:error] = I18n.t(:failed_to_unverify) unless current_user.unverify(@clear)
 
     @clear.reload

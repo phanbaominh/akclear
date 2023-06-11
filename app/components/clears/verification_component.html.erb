@@ -8,7 +8,7 @@
       <%= verification.verifier.username %>
     </span>
     <span><%= time_string(verification.created_at) %></span>
-    <%= if current_user.verifier?
+    <%= if can?(:destroy, :verification)
       button_to(
         t(:unverify),
         clear_verification_path(clear),
@@ -16,7 +16,7 @@
         class: "btn btn-error"
       )
     end %>
-  <% elsif current_user.verifier? %>
+  <% elsif can?(:create, :verification) %>
     <%= button_to t(:verify), clear_verification_path(clear), class: "btn btn-primary" %>
   <% else %>
     <div class="badge xs:badge-lg rounded-sm badge-warning text-warning-content">
