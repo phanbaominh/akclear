@@ -6,8 +6,9 @@ class Clear < ApplicationRecord
   include Youtubeable
   belongs_to :submitter, class_name: 'User'
   belongs_to :stage
-  belongs_to :player, class_name: 'User', optional: true
+  belongs_to :channel, optional: true # TODO: make this non-optional in the future
   has_many :used_operators, dependent: :destroy
+  has_one :verification, dependent: :destroy
 
   accepts_nested_attributes_for :used_operators, allow_destroy: true
 
@@ -25,5 +26,9 @@ class Clear < ApplicationRecord
 
   def stage_id
     stageable.is_a?(Annihilation) ? stageable.stages.first.id : super
+  end
+
+  def verified?
+    verification.present?
   end
 end

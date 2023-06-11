@@ -42,16 +42,11 @@
           <a href="#">
             <%= clear.player_name %>
           </a>
-          <span><%= time_ago_in_words(clear.created_at) + " " + t(:ago) %></span>
+          <span><%= time_string(clear.created_at) %></span>
         </div>
         <div>
-          <div class="badge xs:badge-lg rounded-sm badge-success text-success-content">
-            Verified
-          </div>
-          <span>
-            <%= clear.player_name %>
-          </span>
-          <span><%= time_ago_in_words(clear.created_at) + " " + t(:ago) %></span>
+
+          <%= render Clears::VerificationComponent.new(clear: clear) %>
 
         </div>
       </div>

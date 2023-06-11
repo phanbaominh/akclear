@@ -28,6 +28,7 @@ Rails.application.routes.draw do
     resources :clears do
       resources :used_operators
       resource :like, only: %i[create destroy], controller: 'clears/likes'
+      resource :verification, only: %i[create destroy], controller: 'clears/verifications'
     end
     resources :operators
   end

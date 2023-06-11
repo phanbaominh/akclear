@@ -6,4 +6,8 @@ module ApplicationHelper
       success: 'alert-success'
     }[key.to_sym]
   end
+
+  def current_user
+    Current.user
+  end
 end

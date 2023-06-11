@@ -1,6 +1,11 @@
 class User < ApplicationRecord
   include User::Likeable
+  include User::Verifiable
   has_secure_password
+
+  ROLES = %i[user verifier admin].freeze
+
+  enum :role, ROLES, default: :user
 
   has_many :email_verification_tokens, dependent: :destroy
   has_many :password_reset_tokens, dependent: :destroy

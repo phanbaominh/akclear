@@ -1,4 +1,6 @@
 class Clears::LikesController < ApplicationController
+  authorize_resource class: false
+
   def create
     @clear = Clear.find(params[:clear_id])
     Current.user.like(@clear)
