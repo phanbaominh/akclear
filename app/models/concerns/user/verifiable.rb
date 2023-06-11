@@ -1,6 +1,6 @@
 module User::Verifiable
   def verifier?
-    false
+    true
   end
 
   def verify(clear)

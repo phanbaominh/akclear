@@ -1,23 +1,26 @@
-<% if clear.verified? %>
-  <div class="badge xs:badge-lg rounded-sm badge-success text-success-content">
-    <%= t(:verified) %>
-  </div>
-  <span>
-    <%= verification.verifier.username %>
-  </span>
-  <span><%= time_string(verification.created_at) %></span>
-  <%= if current_user.verifier?
-    button_to(
-      t(:unverify),
-      clear_verification_path(clear),
-      method: :delete,
-      class: "btn btn-error"
-    )
-  end %>
-<% elsif current_user.verifier? %>
-  <%= button_to t(:verify), clear_verification_path(clear), class: "btn btn-primary" %>
-<% else %>
-  <div class="badge xs:badge-lg rounded-sm badge-warning text-warning-content">
-    <%= t(:unverified) %>
-  </div>
+<%= content_tag :div, id: dom_id(clear, :verification) do %>
+
+  <% if clear.verified? %>
+    <div class="badge xs:badge-lg rounded-sm badge-success text-success-content">
+      <%= t(:verified) %>
+    </div>
+    <span>
+      <%= verification.verifier.username %>
+    </span>
+    <span><%= time_string(verification.created_at) %></span>
+    <%= if current_user.verifier?
+      button_to(
+        t(:unverify),
+        clear_verification_path(clear),
+        method: :delete,
+        class: "btn btn-error"
+      )
+    end %>
+  <% elsif current_user.verifier? %>
+    <%= button_to t(:verify), clear_verification_path(clear), class: "btn btn-primary" %>
+  <% else %>
+    <div class="badge xs:badge-lg rounded-sm badge-warning text-warning-content">
+      <%= t(:unverified) %>
+    </div>
+  <% end %>
 <% end %>
