@@ -4,6 +4,10 @@ class ApplicationController < ActionController::Base
   before_action :set_current_request_details
   before_action :authenticate
 
+  def current_user
+    Current.user
+  end
+
   private
 
   def switch_locale(&action)

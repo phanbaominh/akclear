@@ -51,6 +51,10 @@ class ApplicationComponent < ViewComponent::Base
     "#{I18n.t(:by)} #{performer_name}"
   end
 
+  def current_user
+    Current.user
+  end
+
   private
 
   def stimulus_data_attributes(controller, attributes)

@@ -1,5 +1,6 @@
 class User < ApplicationRecord
   include User::Likeable
+  include User::Verifiable
   has_secure_password
 
   has_many :email_verification_tokens, dependent: :destroy
