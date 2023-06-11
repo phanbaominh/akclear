@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::Base
-  # around_action :switch_locale
+  around_action :switch_locale
 
   rescue_from CanCan::AccessDenied do |exception|
     Rails.logger.info { "Access denied on #{exception.action} #{exception.subject}" } if Rails.env.development?
