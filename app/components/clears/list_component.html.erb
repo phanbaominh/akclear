@@ -16,9 +16,15 @@
           "
         >
           <div class="flex space-y-1 xs:space-y-0 xs:space-x-1 flex-col xs:flex-row ">
-            <div class="badge xs:badge-lg rounded-sm badge-success text-success-content">
-              Verified
-            </div>
+            <% if clear.verified? %>
+              <div class="badge xs:badge-lg rounded-sm badge-success text-success-content">
+                <%= t(:verified) %>
+              </div>
+            <% else %>
+              <div class="badge xs:badge-lg rounded-sm badge-error text-error-content">
+                <%= t(:unverified) %>
+              </div>
+            <% end %>
             <div class="badge-error hidden"></div>
             <div
               class="
