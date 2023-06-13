@@ -4,6 +4,7 @@ module FetchGameData
   class FetchLatestEventsData < ApplicationService
     SOURCE = 'https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/en_US/gamedata/excel/activity_table.json'
     EVENT_TYPES = %w[MINISTORY SIDESTORY].freeze
+    EVENT_ID_TYPES = %w[side mini].freeze
 
     def call
       events_data = yield FetchJson.call(SOURCE)
@@ -42,7 +43,8 @@ module FetchGameData
     end
 
     def sidestory_or_ministory_event?(event_data)
-      EVENT_TYPES.include?(event_data['displayType'])
+      EVENT_TYPES.include?(event_data['displayType']) ||
+        EVENT_ID_TYPES.any? { |event_type| event_data['id'].include?(event_type) }
     end
 
     def rerun_event?(event_data)

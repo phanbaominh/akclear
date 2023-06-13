@@ -52,9 +52,18 @@ describe FetchGameData::FetchLatestEventsData do
     }
   end
 
+  let(:event_without_display_type) do
+    {
+      'id' => 'act21side',
+      'name' => 'IL Siracusano',
+      'endTime' => 1_675_421_999
+    }
+  end
+
   let(:events_data) do
     {
       'basicInfo' => {
+        'act21side' => event_without_display_type,
         'act20side' => latest_event,
         'act18side' => ended_event,
         'act11sre' => record_restored_event,
@@ -87,6 +96,12 @@ describe FetchGameData::FetchLatestEventsData do
     )
   end
 
+  it 'creates events for activity with side/mini in id' do
+    service.call
+
+    expect(Event.find_by(game_id: 'act21side')).to be_present
+  end
+
   it 'creates events for SIDESTORY activities' do
     service.call
 
@@ -108,7 +123,7 @@ describe FetchGameData::FetchLatestEventsData do
   it 'does not create events for other activities or existing events' do
     service.call
 
-    expect(Event.count).to eq(4)
+    expect(Event.count).to eq(5)
     expect(Event.find_by(game_id: 'act11sre')).not_to be_present
   end
 
