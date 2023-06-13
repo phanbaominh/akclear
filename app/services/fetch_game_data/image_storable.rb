@@ -17,7 +17,8 @@ module FetchGameData
     end
 
     def store_images(file_name_to_banner_url)
-      log_info('Storing images...')
+      count = 0
+      log_info("Storing #{file_name_to_banner_url.keys.size} images...")
       folder_path = self.class.images_path
       file_name_to_banner_url.each do |file_name, banner_url|
         path = folder_path.join("#{file_name}.jpg")
@@ -28,9 +29,11 @@ module FetchGameData
 
         log_info("Storing image for  #{image_storable} #{file_name} at #{path}...")
         IO.copy_stream(URI.parse(banner_url).open, path.to_s)
+        count += 1
       rescue StandardError => e
         log_info("Failed to store image for  #{image_storable} #{file_name} at #{path} from source #{banner_url}: #{e.message}")
       end
+      log_info("Finished storing #{count} images!")
       Success()
     end
   end
