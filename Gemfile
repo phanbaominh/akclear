@@ -72,6 +72,7 @@ group :development, :test do
   gem 'shoulda-matchers'
   gem 'pry'
   gem 'letter_opener'
+  gem 'dotenv-rails'
 end
 
 group :development do
