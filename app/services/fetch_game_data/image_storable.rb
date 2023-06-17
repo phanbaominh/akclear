@@ -18,12 +18,12 @@ module FetchGameData
 
     def store_images(file_name_to_banner_url)
       count = 0
-      log_info("Storing #{file_name_to_banner_url.keys.size} images...")
+      log_info("Found #{file_name_to_banner_url.keys.size} events images, storing...")
       folder_path = self.class.images_path
       file_name_to_banner_url.each do |file_name, banner_url|
         path = folder_path.join("#{file_name}.jpg")
         if path.exist? && !overwrite
-          log_info("Skipping image for #{image_storable} #{file_name}, already exist at #{path}")
+          log_debug("Skipping image for #{image_storable} #{file_name}, already exist at #{path}")
           next
         end
 
@@ -33,7 +33,7 @@ module FetchGameData
       rescue StandardError => e
         log_info("Failed to store image for  #{image_storable} #{file_name} at #{path} from source #{banner_url}: #{e.message}")
       end
-      log_info("Finished storing #{count} images!")
+      log_info("Finished storing #{count} new images!")
       Success()
     end
   end

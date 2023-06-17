@@ -9,7 +9,7 @@ module FetchGameData
     def call
       events_data = yield FetchJson.call(SOURCE)
       events_data = events_data['basicInfo']
-      count = 0
+      fetch_logger = FetchLogger.new(Event.name)
       events_data.each do |event_id, event_data|
         next unless valid_event?(event_data)
 
@@ -17,17 +17,12 @@ module FetchGameData
 
         event = Event.find_or_initialize_by(game_id: event_id)
         event.update!(name:, end_time: Time.zone.at(event_data['endTime']))
-        if event.previously_new_record?
-          log_info("Event #{event_id} created successfully!")
-          count += 1
-        else
-          log_info("Event #{event_id} updated successfully!")
-        end
+        fetch_logger.log_write(event, event_id)
 
       rescue StandardError => e
         log_info("Failed to create/update event #{name}: #{e.message}")
       end
-      log_info("Fetching completed! #{count} new events were created!")
+      fetch_logger.log_summary
 
       Success()
     end

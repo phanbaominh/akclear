@@ -2,7 +2,6 @@
 
 module FetchGameData
   class FetchAnnihilationsData < ApplicationService
-    include FetchLoggable
     STAGES_SOURCE = 'https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/en_US/gamedata/excel/stage_table.json'
     ANNIHILATIONS_SOURCE = 'https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/en_US/gamedata/excel/campaign_table.json'
 
@@ -12,7 +11,9 @@ module FetchGameData
       stages_data = stages_data['stages']
       end_times_data = annihilations_data['campaignRotateStageOpenTimes']
 
-      count = 0
+      annihilation_fetch_logger = FetchLogger.new(Annihilation.name)
+      stage_fetch_logger = FetchLogger.new(Stage.name)
+
       stages_data.each do |stage_id, stage_data|
         next unless valid_stage?(stage_data)
 
@@ -20,7 +21,9 @@ module FetchGameData
         end_time = end_times_data.find { |et| et['stageId'] == stage_id }.try(:[], 'endTs')
         end_time = Time.zone.at(end_time) if end_time
         annihilation.update!(name: stage_data['name'], end_time:)
-        log_write(annihilation, stage_id)
+
+        annihilation_fetch_logger.log_write(annihilation, stage_id)
+
         next if annihilation.blank?
 
         code = stage_data['name']
@@ -28,12 +31,11 @@ module FetchGameData
         stage = annihilation.stages.find_or_initialize_by(game_id: stage_id)
         stage.update!(code:, zone:)
 
-        log_write(stage, stage_id)
-
-        count += 1 if stage.previously_new_record?
+        stage_fetch_logger.log_write(stage, stage_id)
       end
 
-      log_info("#{count} annihilations were succesfully created!")
+      annihilation_fetch_logger.log_summary
+      stage_fetch_logger.log_summary
       Success()
     end
 
