@@ -6,7 +6,10 @@ class Event < ApplicationRecord
   belongs_to :original_event, class_name: 'Event', optional: true
   has_one :rerun_event, class_name: 'Event', foreign_key: :original_event_id, dependent: :nullify,
                         inverse_of: :original_event
+
+  validates :original_event, presence: true, if: :rerun_event?
+
   def rerun_event?
-    original_event_id.present?
+    original_event_id.present? || name.include?('Rerun')
   end
 end
