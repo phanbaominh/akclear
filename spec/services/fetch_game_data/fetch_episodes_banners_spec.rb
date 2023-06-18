@@ -10,7 +10,7 @@ describe FetchGameData::FetchEpisodesBanners do
   end
   let(:banners_page) do
     <<~HTML
-      <img alt="Prologue: Evil Time Part 1"
+      <img alt="Prologue: Evil time Part 1"
       src="https://static.wikia.nocookie.net/mrfz/images/f/f8/Prologue.png/revision/latest?cb=20220418161704">
       <th>
         <a>
