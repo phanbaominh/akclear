@@ -1,0 +1,22 @@
+<section>
+  <h1 class="text-3xl"><%= title %></h1>
+  <div class="h-4"></div>
+  <ul>
+    <% stageables.each do |stageable| %>
+      <% if stageable.try(:end_time).present? %>
+        <span>
+          <%= t(:end_in) %>:
+          <%= stageable.end_time %></span>
+      <% end %>
+      <%= link_to stageable.filter_link do %>
+        <li>
+          <% if remote_image %>
+            <%= image_tag stageable.banner_image_path, class: "w-full", alt: stageable.name %>
+          <% else %>
+            <%= vite_image_tag stageable.banner_image_path, alt: stageable.name %>
+          <% end %>
+        </li>
+      <% end %>
+    <% end %>
+  </ul>
+</section>

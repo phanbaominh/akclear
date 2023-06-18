@@ -1,56 +1,22 @@
 <div class="md:flex flex-row">
   <div class="grid lg:grid-cols-2 grow gap-12 pr-12 basis-0">
-    <section>
-      <h1 class="text-3xl"><%= t(:latest_events) %></h1>
-      <div class="h-4"></div>
-      <ul>
-        <% Event.last(2).each do |event| %>
-          <span>
-            End time:
-            <%= event.end_time %></span>
-          <%= link_to event.filter_link do %>
-            <li>
-              <%= vite_image_tag event.banner_image_path, class: "w-full", alt: event.name %>
-            </li>
-          <% end %>
-          <div class="h-4"></div>
-        <% end %>
-      </ul>
-    </section>
-    <section>
-      <h1 class="text-3xl"><%= t(:latest_episode) %></h1>
-      <div class="h-4"></div>
-      <ul>
-        <% [Episode.latest].each do |episode| %>
-          <%= link_to episode.filter_link do %>
-            <li>
-              <%= vite_image_tag episode.banner_image_path, class: "w-full", alt: episode.name %>
-            </li>
-          <% end %>
-          <div class="h-4"></div>
-        <% end %>
-      </ul>
-    </section>
-    <section>
-      <h1 class="text-3xl"><%= t(:latest_annihilations) %></h1>
-      <div class="h-4"></div>
-      <ul>
-        <% Annihilation.latest.each do |annihilation| %>
-          <h2><%= annihilation.name %></h2>
-          <span>
-            End time
-            <%= annihilation.end_time %></span>
-          <%= link_to annihilation.filter_link do %>
-            <li>
-              <%= image_tag annihilation.banner_image_path,
-              class: "w-full",
-              alt: annihilation.name %>
-            </li>
-          <% end %>
-          <div class="h-4"></div>
-        <% end %>
-      </ul>
-    </section>
+    <div class="col-span-2">
+      <%= render Home::HeroComponent.new(
+        stageables: Event.latest,
+        title: t(:latest_events)
+      ) %>
+    </div>
+
+    <%= render Home::HeroComponent.new(
+      stageables: [Episode.latest],
+      title: t(:latest_events)
+    ) %>
+    <%= render Home::HeroComponent.new(
+      stageables: Annihilation.latest,
+      title: t(:latest_events),
+      remote_image: true
+    ) %>
+
   </div>
   <div>
     <% ["Trending clears", "New clears"].each do |title| %>
