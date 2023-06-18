@@ -48,7 +48,17 @@ describe FetchGameData::FetchLatestEventsData do
       'id' => 'act9sre',
       'displayType' => 'SIDESTORY',
       'name' => 'Who Is Real - Rerun',
-      'isReplicate' => true
+      'isReplicate' => true,
+      'endTime' => 1_628_852_399
+    }
+  end
+
+  let(:original_event) do
+    {
+      'id' => 'act16d5',
+      'displayType' => 'SIDESTORY',
+      'name' => 'Who Is Real',
+      'endTime' => 1_628_852_399
     }
   end
 
@@ -63,6 +73,7 @@ describe FetchGameData::FetchLatestEventsData do
   let(:events_data) do
     {
       'basicInfo' => {
+        'act16d5' => original_event,
         'act21side' => event_without_display_type,
         'act20side' => latest_event,
         'act18side' => ended_event,
@@ -123,13 +134,15 @@ describe FetchGameData::FetchLatestEventsData do
   it 'does not create events for other activities or existing events' do
     service.call
 
-    expect(Event.count).to eq(5)
+    expect(Event.count).to eq(7)
     expect(Event.find_by(game_id: 'act11sre')).not_to be_present
   end
 
-  it 'does not create events for rerun event' do
+  it 'create events for rerun event' do
     service.call
 
-    expect(Event.find_by(game_id: 'act9sre')).not_to be_present
+    original_event_record = Event.find_by(game_id: original_event['id'])
+
+    expect(Event.find_by(game_id: 'act9sre', original_event: original_event_record)).to be_present
   end
 end
