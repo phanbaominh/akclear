@@ -9,6 +9,9 @@ class Event < ApplicationRecord
 
   validates :original_event, presence: true, if: :rerun_event?
 
+  scope :original, -> { where(original_event_id: nil) }
+  scope :selectable, -> { original }
+
   def rerun_event?
     original_event_id.present? || name.include?('Rerun')
   end
