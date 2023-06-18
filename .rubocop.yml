@@ -36,5 +36,5 @@ Metrics/BlockLength:
   Exclude:
     - "spec/**/*"
     - "lib/tasks/**/*"
-RSpec/NestedGroups
+RSpec/NestedGroups:
   Enabled: false
