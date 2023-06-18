@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_11_031221) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_18_093051) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -91,6 +91,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_11_031221) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "end_time"
+    t.bigint "original_event_id"
+    t.index ["original_event_id"], name: "index_events_on_original_event_id"
   end
 
   create_table "likes", id: false, force: :cascade do |t|
@@ -205,6 +207,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_11_031221) do
   add_foreign_key "clears", "stages"
   add_foreign_key "clears", "users", column: "submitter_id"
   add_foreign_key "email_verification_tokens", "users"
+  add_foreign_key "events", "events", column: "original_event_id"
   add_foreign_key "likes", "clears"
   add_foreign_key "likes", "users"
   add_foreign_key "password_reset_tokens", "users"

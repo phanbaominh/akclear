@@ -3,6 +3,13 @@ require 'rails_helper'
 RSpec.describe Event, type: :model do
   describe 'associations' do
     it { is_expected.to have_many(:stages).dependent(:nullify) }
+    it { is_expected.to belong_to(:original_event).class_name('Event').optional }
+
+    it {
+      is_expected # rubocop:disable RSpec/ImplicitSubject
+        .to have_one(:rerun_event)
+        .class_name('Event').with_foreign_key(:original_event_id).dependent(:nullify).inverse_of(:original_event)
+    }
   end
 
   describe '.latest' do
