@@ -1,6 +1,6 @@
 require 'support/rake'
 
-describe 'fetch_game_data:fetch_latest_operator_table' do
+describe 'fetch_latest_game_data:operators' do
   include_context 'rake'
 
   it 'calls the correct service' do
@@ -12,7 +12,7 @@ describe 'fetch_game_data:fetch_latest_operator_table' do
   end
 end
 
-describe 'fetch_game_data:fetch_latest_events_data' do
+describe 'fetch_latest_game_data:events' do
   include_context 'rake'
 
   it 'calls the correct service' do
@@ -24,7 +24,7 @@ describe 'fetch_game_data:fetch_latest_events_data' do
   end
 end
 
-describe 'fetch_game_data:fetch_latest_episodes_data' do
+describe 'fetch_latest_game_data:episodes' do
   include_context 'rake'
 
   it 'calls the correct service' do
@@ -36,7 +36,7 @@ describe 'fetch_game_data:fetch_latest_episodes_data' do
   end
 end
 
-describe 'fetch_game_data:fetch_latest_stages_data' do
+describe 'fetch_latest_game_data:stages' do
   include_context 'rake'
 
   it 'calls the correct service' do

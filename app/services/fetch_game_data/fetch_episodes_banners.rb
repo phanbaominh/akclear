@@ -33,7 +33,7 @@ module FetchGameData
       doc.css('th > a > img').each do |img|
         img_episode_name = extract_episode_name(img[:alt])
 
-        game_id = episodes.find { |episode| episode.name == img_episode_name }&.game_id
+        game_id = episodes.find { |episode| episode.name.casecmp(img_episode_name).zero? }&.game_id
         next if game_id.nil?
 
         episode_game_id_to_banner_url[game_id] = img[:src].start_with?('http') ? img[:src] : img['data-src']

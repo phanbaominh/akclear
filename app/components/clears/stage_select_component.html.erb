@@ -4,7 +4,7 @@
              as: :grouped_select,
              collection: [Event, Episode, Annihilation],
              value_method: :to_global_id,
-             group_method: :all,
+             group_method: :selectable,
              group_label_method: :to_s,
              label_method: :label,
              prompt: "Select event/episode",

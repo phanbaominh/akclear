@@ -16,7 +16,10 @@ module FetchGameData
         name = event_data['name']
 
         event = Event.find_or_initialize_by(game_id: event_id)
-        event.update!(name:, end_time: Time.zone.at(event_data['endTime']))
+
+        original_name = name.split('-').first.strip
+        original_event = (Event.find_by(name: original_name) if rerun_event?(event_data))
+        event.update!(name:, end_time: Time.zone.at(event_data['endTime']), original_event:)
         fetch_logger.log_write(event, event_id)
 
       rescue StandardError => e
@@ -31,8 +34,6 @@ module FetchGameData
 
     def valid_event?(event_data)
       return false unless sidestory_or_ministory_event?(event_data)
-
-      return false if rerun_event?(event_data)
 
       true
     end
