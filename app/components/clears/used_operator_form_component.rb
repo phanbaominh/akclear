@@ -9,9 +9,8 @@ class Clears::UsedOperatorFormComponent < ApplicationComponent
     @submit_text = submit_text || I18n.t(:add_operator)
   end
 
-  delegate :operator, to: :used_operator
+  delegate :operator, :name, :avatar, to: :used_operator
   delegate :elite, :skill, to: :used_operator, prefix: true
-  delegate :name, :avatar, to: :presenter
 
   def presenter_object
     used_operator

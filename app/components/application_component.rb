@@ -11,14 +11,6 @@ class ApplicationComponent < ViewComponent::Base
     post_initialize(**options)
   end
 
-  def presenter_object
-    nil
-  end
-
-  def presenter
-    @presenter ||= "#{presenter_object.class.name}Presenter".constantize.new(presenter_object)
-  end
-
   def post_initialize(**options); end
 
   def stimuluses(**options)

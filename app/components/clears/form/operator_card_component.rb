@@ -4,14 +4,10 @@ class Clears::Form::OperatorCardComponent < ApplicationComponent
   attr_reader :used_operator
 
   delegate :elite, :skill, :skill_level, :skill_mastery, :level, :operator, to: :used_operator
-  delegate :name, :avatar, :skill_image_url, :elite_image_url, to: :presenter
+  delegate :name, :avatar, :skill_image_url, :elite_image_url, to: :used_operator
 
   def post_initialize(used_operator:)
     @used_operator = used_operator
-  end
-
-  def presenter_object
-    used_operator
   end
 
   def used_operator_params
