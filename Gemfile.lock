@@ -151,6 +151,8 @@ GEM
       i18n (>= 1.8.11, < 2)
     globalid (1.1.0)
       activesupport (>= 5.0)
+    heroicon (1.0.0)
+      rails (>= 5.2)
     htmlbeautifier (1.4.2)
     i18n (1.12.0)
       concurrent-ruby (~> 1.0)
@@ -399,6 +401,7 @@ DEPENDENCIES
   factory_bot_rails
   faker
   globalid
+  heroicon
   htmlbeautifier
   importmap-rails
   jbuilder
