@@ -10,4 +10,8 @@ module ApplicationHelper
   def current_user
     Current.user
   end
+
+  def time_string(time)
+    "#{time_ago_in_words(time)} #{I18n.t(:ago)}"
+  end
 end

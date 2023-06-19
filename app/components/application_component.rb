@@ -2,6 +2,9 @@
 
 class ApplicationComponent < ViewComponent::Base
   include HeroiconHelper
+
+  delegate :time_string, :current_user, :can?, to: :helpers
+
   def initialize(class: '', id: '', **options)
     @class = binding.local_variable_get(:class)
     @id = id
@@ -44,20 +47,8 @@ class ApplicationComponent < ViewComponent::Base
     { action: action_data_attribute, **stimulus_data_attributes(controller, attributes) }
   end
 
-  def time_string(time)
-    "#{time_ago_in_words(time)} #{I18n.t(:ago)}"
-  end
-
   def by_string(performer_name)
     "#{I18n.t(:by)} #{performer_name}"
-  end
-
-  def current_user
-    Current.user
-  end
-
-  def can?(...)
-    helpers.can?(...)
   end
 
   private
