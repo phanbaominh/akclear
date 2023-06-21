@@ -14,7 +14,7 @@
     "@hotwired/turbo-rails": "^7.2.4",
     "@rails/request.js": "^0.0.8",
     "choices.js": "^9.1.0",
-    "daisyui": "^2.50.0",
+    "daisyui": "^3.1.5",
     "vite-plugin-rails": "^0.1.0"
   }
 }
