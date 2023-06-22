@@ -148,7 +148,6 @@ def create_clear(user)
   end
   params.merge!(
     stage: stages.sample,
-    player_name: Faker::Internet.username,
     name: Faker::Lorem.sentence,
     link: 'https://www.youtube.com/watch?v=FNCWoNnFUdc',
     submitter: user
@@ -157,7 +156,7 @@ def create_clear(user)
 end
 
 if Rails.env.development?
-  user = User.first || User.create!(email: 'test@mail.com', password: 'Password1@', role: :admin)
+  user = User.first || User.create!(email: 'test@mail.com', password: 'Password1@', role: :admin, username: 'admin')
   FetchGameData::FetchLatestOperatorsData.call
   FetchGameData::FetchLatestEventsData.call
   FetchGameData::FetchLatestEpisodesData.call
