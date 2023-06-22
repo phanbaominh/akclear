@@ -41,3 +41,7 @@ en:
   anonymous: "Anonymous"
   end_in: "End in"
   reset: "Reset"
+  verified: "Verified"
+  verified_by: "Verified by %{username}"
+  verify: "Verify"
+  unverify: "Unverify"

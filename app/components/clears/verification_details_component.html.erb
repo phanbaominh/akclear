@@ -1,0 +1,14 @@
+<span class="new-clear__time contents" id="<%= dom_id(clear, :verification_details) %>">
+  <% if clear.verified? %>
+    <div class="text-green-500 ml-2">
+      <i class="fa-solid fa-circle-check"></i>
+      <span title="<%= time_string(verification.created_at) %>">
+        <%= t(:verified_by, username: verification.verifier.username) %>
+      </span>
+    </div>
+  <% else %>
+    <div class="badge xs:badge-lg rounded-sm badge-warning text-warning-content ml-2">
+      <%= t(:unverified) %>
+    </div>
+  <% end %>
+</span>

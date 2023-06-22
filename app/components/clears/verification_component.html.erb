@@ -1,26 +1,26 @@
 <%= content_tag :div, id: dom_id(clear, :verification) do %>
 
   <% if clear.verified? %>
-    <div class="badge xs:badge-lg rounded-sm badge-success text-success-content">
-      <%= t(:verified) %>
-    </div>
-    <span>
-      <%= verification.verifier.username %>
-    </span>
-    <span><%= time_string(verification.created_at) %></span>
-    <%= if can?(:destroy, :verification)
-      button_to(
+    <% if can?(:destroy, :verification) %>
+      <%= button_to(
         t(:unverify),
         clear_verification_path(clear),
         method: :delete,
         class: "btn btn-error"
-      )
-    end %>
+      ) %>
+    <% else %>
+      <div class="text-green-500">
+        <i class="fa-solid fa-circle-check"></i>
+        <span title="<%= time_string(verification.created_at) %>">
+          <%= t(:verified) %> by <%= verification.verifier.username %>
+        </span>
+      </div>
+    <% end %>
   <% elsif can?(:create, :verification) %>
-    <%= button_to t(:verify), clear_verification_path(clear), class: "btn btn-primary" %>
+    <%= button_to clear_verification_path(clear), class: "btn btn-success" do %>
+      <i class="fa-regular fa-circle-check text-white"></i>
+      <span class="text-white"><%= t(:verify) %></span>
+    <% end %>
   <% else %>
-    <div class="badge xs:badge-lg rounded-sm badge-warning text-warning-content">
-      <%= t(:unverified) %>
-    </div>
   <% end %>
 <% end %>

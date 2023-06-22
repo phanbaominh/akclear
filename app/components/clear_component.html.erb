@@ -7,51 +7,32 @@
       class="absolute top-0 left-0 w-full h-full"
     ></iframe>
   </div>
-  <div class="flex justify-between">
-
-    <h2 class="text-2xl font-bold"><%= clear.name %></h2>
-    <section>
-
-      <%= render Clears::LikeComponent.new(clear: clear) %>
+  <div class="md:flex justify-between">
+    <h2 class="text-2xl font-bold flex flex-row items-center">
+      <%= clear.stage.stageable.name %>
+      -
+      <%= clear.stage.code %>
+    </h2>
+    <section class="flex items-center space-x-4">
+      <%= render Clears::VerificationComponent.new(clear: clear) %>
+      <div class=" group flex cursor-pointer text-lg">
+        <%= render Clears::LikeComponent.new(clear: clear) %>
+      </div>
     </section>
   </div>
 
-  <section class="card shadow-xl bg-base-200 flex-row w-1/2">
+  <div>
+    <h2 class="text-2xl font-bold"><%= clear.name %></h2>
+  </div>
 
-    <div class="card-body">
-      <div>
-        <div
-          class="
-            badge
-            xs:badge-lg
-            rounded-sm
-            <%= 'badge-warning' if clear.event? %>
-            max-w-64
-            line-clamp-1
-            xs:line-clamp-none
-          "
-        >
-          <%= clear.stage.stageable.name %>
-        </div>
-        <h3 class="card-title"><%= clear.stage.code %></h3>
-      </div>
-      <div class="space-y-2">
-
-        <div class>
-          <span><%= t(:submitted_by) %>:</span>
-          <a href="#">
-            <%= clear.player_name %>
-          </a>
-          <span><%= time_string(clear.created_at) %></span>
-        </div>
-        <div>
-
-          <%= render Clears::VerificationComponent.new(clear: clear) %>
-
-        </div>
-      </div>
-
-    </div>
+  <div class="flex">
+    <span class="inline-block"><%= t(:submitted_by) %>&nbsp;</span>
+    <a href="#" class="inline-block">
+      <%= clear.player_name%>
+    </a>
+    <span class="new-clear__time inline-block"><%= time_ago_in_words(clear.created_at) + " " + t(:ago) %></span>
+    <%= render Clears::VerificationDetailsComponent.new(clear: clear) %>
+  </div>
 
   </section>
   <section class="card shadow-xl bg-base-200">
@@ -60,10 +41,12 @@
 
         <%= t(:squad) %></h3>
       <span class="divider m-0"></span>
-      <div class="grid sm:flex sm:flex-wrap gap-2">
-        <% clear.used_operators.each do |used_operator| %>
-          <%= render Clears::UsedOperatorComponent.new(used_operator: used_operator) %>
-        <% end %>
+      <div class="flex justify-center">
+        <div class="grid grid-cols-2 xs:grid-cols-3 sm:flex sm:flex-wrap gap-2">
+          <% clear.used_operators.each do |used_operator| %>
+            <%= render Clears::UsedOperatorComponent.new(used_operator: used_operator) %>
+          <% end %>
+        </div>
       </div>
     </div>
 
