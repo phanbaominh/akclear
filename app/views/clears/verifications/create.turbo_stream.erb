@@ -1,0 +1,3 @@
+<%= turbo_stream.replace dom_id(@clear, :verification) do %>
+  <%= render Clears::VerificationComponent.new(clear: @clear) %>
+<% end %>

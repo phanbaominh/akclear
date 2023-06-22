@@ -6,12 +6,4 @@ class ClearComponent < ApplicationComponent
   def post_initialize(clear:)
     @clear = clear
   end
-
-  def likes_count
-    50
-  end
-
-  def liked?
-    true
-  end
 end

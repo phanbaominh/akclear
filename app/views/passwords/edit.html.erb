@@ -8,32 +8,38 @@
     <%= form_with(url: password_path, method: :patch) do |form| %>
       <div>
         <%= form.email_field :email,
-          autofocus: true,
-          autocomplete: "email",
-          placeholder: :email,
-          class: "simple_form__input w-full",
-          required: true
-        %>
+                         autofocus: true,
+                         autocomplete: "email",
+                         placeholder: :email,
+                         class: "simple_form__input w-full",
+                         required: true %>
       </div>
       <div class="h-8"></div>
       <div>
+        <%= form.password_field :current_password,
+                            required: true,
+                            placeholder: :current_password,
+                            autocomplete: "current-password",
+                            class: "simple_form__input w-full" %>
+      </div>
+
+      <div class="h-8"></div>
+      <div>
         <%= form.password_field :password,
-          required: true,
-          autocomplete: "new-password",
-          placeholder: :password,
-          class: "simple_form__input w-full",
-          required: true
-        %>
+                            required: true,
+                            autocomplete: "new-password",
+                            placeholder: :password,
+                            class: "simple_form__input w-full",
+                            required: true %>
       </div>
       <div class="h-8"></div>
       <div>
         <%= form.password_field :password_confirmation,
-          required: true,
-          autocomplete: "new-password",
-          placeholder: :password_confirmation,
-          class: "simple_form__input w-full",
-          required: true
-        %>
+                            required: true,
+                            autocomplete: "new-password",
+                            placeholder: :password_confirmation,
+                            class: "simple_form__input w-full",
+                            required: true %>
       </div>
       <div class="h-10"></div>
       <%= form.submit "Change password", class: "simple_form__btn w-full" %>

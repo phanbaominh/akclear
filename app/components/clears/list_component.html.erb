@@ -1,6 +1,6 @@
-<div class="space-y-4 xl:space-y-0 xl:grid xl:grid-cols-2 xl:gap-4 ">
+<div class="grid space-y-4 xl:space-y-0 xl:grid-cols-2 xl:gap-4 ">
   <% @clears.each do |clear| %>
-    <%= link_to clear_path(clear), data: { turbo_frame: '_top'} do %>
+    <%= link_to clear_path(clear), data: { turbo_frame: '_top' } do %>
       <div class="">
         <div
           class="
@@ -16,89 +16,78 @@
           "
         >
           <div class="flex space-y-1 xs:space-y-0 xs:space-x-1 flex-col xs:flex-row ">
-            <div class="badge xs:badge-lg rounded-sm badge-success text-success-content">
-              Verified
-            </div>
+            <% if clear.verified? %>
+              <div class="badge xs:badge-lg rounded-sm badge-success text-success-content">
+                <%= t(:verified) %>
+              </div>
+            <% else %>
+              <div class="badge xs:badge-lg rounded-sm badge-error text-error-content">
+                <%= t(:unverified) %>
+              </div>
+            <% end %>
+            <div class="badge-error hidden"></div>
             <div
               class="
                 badge
+                badge<%= clear.stageable.type_color %>
                 xs:badge-lg
                 rounded-sm
-                <%= 'badge-warning' if clear.event? %>
                 max-w-64
                 line-clamp-1
                 xs:line-clamp-none
               "
             >
-              <%= stageable_name(clear) %>
+              <%= clear.stageable.type_label %>
             </div>
           </div>
           <div class="card-body pb-2 pt-2">
-            <div class="flex flex-col md:flex-row items-start md:items-center">
+            <div
+              class="
+                clear-summary
+                flex
+                flex-col
+                md:flex-row
+                items-start
+                md:items-center
+              "
+            >
               <div class="flex md:space-x-0 flex-col w-full md:w-48">
                 <h2 class="card-title"><%= clear.stage.code %></h2>
                 <div class="flex space-x-2 w-full">
-                  <div class="text-base-content-subdued">by
-                    <%= clear.player_name %></div>
+                  <div class="text-base-content-subdued">
+                    <%= by_string(clear.player_name) %></div>
                 </div>
               </div>
-              <div class="grid grid-cols-5 xs:grid-cols-7">
-                <div
-                  class="
-                    border
-                    border-neutral-content/20
-                    flex
-                    items-center
-                    justify-center
-                    xl:w-12
-                    xl:h-12
-                    sm:w-16
-                    sm:h-16
-                    w-12
-                    h-12
-                  "
-                ><%= clear.used_operators.size %></div>
+              <div class="clear-summary__operator-list grid grid-cols-5 xs:grid-cols-7">
+                <div class="operator-cell--container">
+                  <div class="operator-cell flex items-center justify-center">
+                    <%= clear.used_operators.size %>
+                  </div>
+                </div>
                 <% 13.times do |i| %>
-                  <% if (used_operator = clear.used_operators[i]) %>
-                    <%# TODO: When hover expand and display stat? %>
-                    <%= image_tag used_operator.operator.avatar,
-                    class: "xl:w-12 sm:w-16 w-12 border border-neutral-content/20",
-                    alt: used_operator.operator.name %>
-                  <% else %>
-                    <div
-                      class="
-                        xl:w-12
-                        xl:h-12
-                        sm:w-16
-                        sm:h-16
-                        w-12
-                        h-12
-                        text-xs
-                        border
-                        border-neutral-content/20
-                        flex
-                        flex-col
-                        items-center
-                        justify-center
-                      "
-                    >
-                      <span>NO</span>
-                      <span>INFO</span>
-                    </div>
-                  <% end %>
+                  <div class="operator-cell--container">
+                    <% if (used_operator = clear.used_operators[i]) %>
+                      <%# TODO: When hover expand and display stat? %>
+                      <%= image_tag used_operator.operator.avatar,
+                      class: "operator-cell",
+                      alt: used_operator.operator.name %>
+                    <% else %>
+                      <div class=" operator-cell text-xs flex flex-col items-center justify-center ">
+                        <span>NO</span>
+                        <span>INFO</span>
+                      </div>
+                    <% end %>
+                  </div>
                 <% end %>
               </div>
             </div>
-            <div class="card-actions text-base-content-subdued justify-between">
-              <div class="text-base-content-subdued"><%= time_ago_in_words clear.created_at %>
-                ago</div>
-              <div class="group">
-                <i class="fa-regular fa-heart group-hover:hidden"></i>
-                <span class="hidden group-hover:inline"><i class="fa-solid fa-heart text-primary"></i></span>
-                50
+            <div class="card-actions text-base-content-subdued justify-between z-20">
+              <div class="text-base-content-subdued"><%= time_string clear.created_at %>
               </div>
+              <%= render Clears::LikeComponent.new(clear: clear) %>
             </div>
           </div>
+
         </div>
       </div>
     <% end %>

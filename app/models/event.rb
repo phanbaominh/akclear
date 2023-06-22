@@ -1,10 +1,18 @@
 # frozen_string_literal: true
 
 class Event < ApplicationRecord
-  include GlobalID::Identification
-  has_many :stages, dependent: :nullify, as: :stageable
+  include Stageable
 
-  def self.latest
-    find_by(latest: true)
+  belongs_to :original_event, class_name: 'Event', optional: true
+  has_one :rerun_event, class_name: 'Event', foreign_key: :original_event_id, dependent: :nullify,
+                        inverse_of: :original_event
+
+  validates :original_event, presence: true, if: :rerun_event?
+
+  scope :original, -> { where(original_event_id: nil) }
+  scope :selectable, -> { original }
+
+  def rerun_event?
+    original_event_id.present? || name.include?('Rerun')
   end
 end

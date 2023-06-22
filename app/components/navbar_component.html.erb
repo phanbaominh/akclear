@@ -2,38 +2,58 @@
   <div class="navbar-start">
     <div class="dropdown">
       <label tabindex="0" class="btn btn-ghost lg:hidden">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" /></svg>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-5 w-5"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        ><path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 6h16M4 12h8m-8 6h16"
+          /></svg>
       </label>
       <nav tabindex="0">
-        <%= render Navbar::LinksComponent.new(class: 'menu menu-compact dropdown-content mt-3 p-2 shadow-2xl bg-base-200 rounded-box w-52') %>
+        <%= render Navbar::LinksComponent.new(
+          class:
+            "menu menu-compact dropdown-content mt-3 p-2 shadow-2xl bg-base-200 rounded-box w-52 z-10"
+        ) %>
       </nav>
     </div>
-    <%= link_to 'Akclear', root_path, class: 'btn btn-ghost normal-case text-xl' %>
+    <%= link_to "Akclear", root_path, class: "btn btn-ghost normal-case text-xl" %>
   </div>
   <div class="navbar-center hidden lg:flex">
-    <nav><%= render Navbar::LinksComponent.new(class: 'menu menu-horizontal px-1') %></nav>
+    <nav><%= render Navbar::LinksComponent.new(class: "menu menu-horizontal px-1") %></nav>
   </div>
   <div class="navbar-end">
-    <%= link_to new_clear_path, class: 'mr-2' do%>
-      <%= render Primer::Button::IconComponent.new(icon: 'plus', sr_description: 'New clear', class: 'shadow') %>
-    <% end%>
+    <%= link_to new_clear_path, class: 'mr-2' do %>
+      <%= render Primer::Button::IconComponent.new(
+        icon: "plus",
+        sr_description: "New clear",
+        class: "shadow"
+      ) %>
+    <% end %>
     <ul class="menu menu-horizontal px-1 hidden lg:flex">
       <li tabindex="0">
-        <a>
-          Profile
-          <svg class="fill-current" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z"/></svg>
-        </a>
-        <ul class="p-2 bg-base-200 shadow rounded-box z-[1]">
-          <li>
-            <%= link_to "Change email address", edit_identity_email_path %>
+        <details>
+          <summary>
+            Profile
+          </summary>
+          <ul class="p-2 bg-base-200 shadow rounded-box z-[1] left-auto right-0">
+            <li>
+              <%= link_to "Change email address", edit_identity_email_path %>
             </li>
-          <li>
-            <%= link_to "Change password", edit_password_path %>
-          </li>
-          <li>
-            <%= button_to "Log out", Current.session, method: :delete %>
-          </li>
-        </ul>
+            <li>
+              <%= link_to "Change password", edit_password_path %>
+            </li>
+            <li>
+              <%= button_to "Log out", Current.session, method: :delete %>
+            </li>
+          </ul>
+        </details>
+
       </li>
     </ul>
     <%= render Navbar::LanguageDropdownComponent.new %>

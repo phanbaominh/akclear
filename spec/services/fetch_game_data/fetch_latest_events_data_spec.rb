@@ -7,6 +7,7 @@ describe FetchGameData::FetchLatestEventsData do
       'displayType' => 'SIDESTORY',
       'name' => 'Ideal City: Carnival in the Endless Summer',
       'startTime' => 1_673_611_200,
+      'endTime' => 1_675_421_999,
       'isReplicate' => false
     }
   end
@@ -17,6 +18,7 @@ describe FetchGameData::FetchLatestEventsData do
       'displayType' => 'SIDESTORY',
       'name' => 'Lingering Echoes',
       'startTime' => 1_672_142_400,
+      'endTime' => 1_675_421_999,
       'isReplicate' => false
     }
   end
@@ -36,6 +38,7 @@ describe FetchGameData::FetchLatestEventsData do
       'displayType' => 'MINISTORY',
       'name' => 'A Light Spark in Darkness',
       'startTime' => 1_660_824_000,
+      'endTime' => 1_675_421_999,
       'isReplicate' => false
     }
   end
@@ -45,26 +48,47 @@ describe FetchGameData::FetchLatestEventsData do
       'id' => 'act9sre',
       'displayType' => 'SIDESTORY',
       'name' => 'Who Is Real - Rerun',
-      'isReplicate' => true
+      'isReplicate' => true,
+      'endTime' => 1_628_852_399
+    }
+  end
+
+  let(:original_event) do
+    {
+      'id' => 'act16d5',
+      'displayType' => 'SIDESTORY',
+      'name' => 'Who Is Real',
+      'endTime' => 1_628_852_399
+    }
+  end
+
+  let(:event_without_display_type) do
+    {
+      'id' => 'act21side',
+      'name' => 'IL Siracusano',
+      'endTime' => 1_675_421_999
     }
   end
 
   let(:events_data) do
     {
       'basicInfo' => {
+        'act16d5' => original_event,
+        'act21side' => event_without_display_type,
         'act20side' => latest_event,
         'act18side' => ended_event,
         'act11sre' => record_restored_event,
         'act10mini' => ministory_event,
         'act9sre' => rerun_event,
         'existing' => {
-          name: 'Existing Event'
+          'name' => 'Existing Event',
+          'displayType' => 'MINISTORY',
+          'endTime' => 1_675_421_999
         }
       }
     }
   end
-
-  let!(:current_latest_event) { create(:event, :latest, game_id: 'existing') }
+  let!(:existing_event) { create(:event, game_id: 'existing') }
   let(:service) { described_class.new }
 
   before do
@@ -78,8 +102,15 @@ describe FetchGameData::FetchLatestEventsData do
     service.call
 
     expect(Event.find_by(game_id: 'act20side')).to have_attributes(
-      name: 'Ideal City: Carnival in the Endless Summer'
+      name: 'Ideal City: Carnival in the Endless Summer',
+      end_time: a_value_within(1.second).of(Time.zone.at(1_675_421_999))
     )
+  end
+
+  it 'creates events for activity with side/mini in id' do
+    service.call
+
+    expect(Event.find_by(game_id: 'act21side')).to be_present
   end
 
   it 'creates events for SIDESTORY activities' do
@@ -88,34 +119,30 @@ describe FetchGameData::FetchLatestEventsData do
     expect(Event.where(game_id: %w[act20side act18side]).distinct.count).to eq(2)
   end
 
-  it 'marks first SIDESTORY activity as latest event' do
-    service.call
-
-    expect(Event.find_by(game_id: 'act20side')).to be_latest
-  end
-
-  it 'unmark current latest event' do
-    service.call
-
-    expect(current_latest_event.reload).not_to be_latest
-  end
-
   it 'create events for MINISTORY activities' do
     service.call
 
     expect(Event.find_by(game_id: 'act10mini')).to be_present
   end
 
+  it 'updates existing events' do
+    service.call
+
+    expect(existing_event.reload).to have_attributes(name: 'Existing Event')
+  end
+
   it 'does not create events for other activities or existing events' do
     service.call
 
-    expect(Event.count).to eq(4)
+    expect(Event.count).to eq(7)
     expect(Event.find_by(game_id: 'act11sre')).not_to be_present
   end
 
-  it 'does not create events for rerun event' do
+  it 'create events for rerun event' do
     service.call
 
-    expect(Event.find_by(game_id: 'act9sre')).not_to be_present
+    original_event_record = Event.find_by(game_id: original_event['id'])
+
+    expect(Event.find_by(game_id: 'act9sre', original_event: original_event_record)).to be_present
   end
 end

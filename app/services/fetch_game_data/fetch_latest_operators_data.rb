@@ -11,22 +11,21 @@ module FetchGameData
 
     def call
       operator_table = yield FetchJson.call(source)
-      count = 0
+      fetch_logger = FetchLogger.new(Operator.name)
 
       operator_table.each do |game_id, operator|
         next unless valid_operator?(operator)
 
         name = operator['name']
         rarity = operator['rarity']
-        log_info("Creating operator #{name}... ")
-        Operator.create_with(name:, rarity:).find_or_create_by!(game_id:)
-        log_info("Operator #{name} created sucessfully!")
-        count += 1
+        operator = Operator.find_or_initialize_by(game_id:)
+        operator.update!(name:, rarity:)
+        fetch_logger.log_write(operator, game_id)
       rescue ActiveRecord::RecordInvalid
-        log_info("Failed to create operator #{name}")
+        log_info("Failed to write operator #{name}")
       end
 
-      log_info("Finished fetching operator data! #{count} new operators created!")
+      fetch_logger.log_summary
     end
 
     private

@@ -27,8 +27,7 @@
             <% end %>
           </div>
           <div class="pl-6">
-            <i class="fa-solid fa-heart"></i>
-            50
+            <%= render Clears::LikeComponent.new(clear: clear) %>
           </div>
         </div>
       </li>

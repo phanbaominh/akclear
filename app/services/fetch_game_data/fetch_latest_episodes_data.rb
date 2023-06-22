@@ -13,7 +13,8 @@ module FetchGameData
 
         name = episode_data['zoneNameSecond']
         number = episode_id.split('_').last
-        episode = Episode.create_with(name:, number:).find_or_create_by!(game_id: episode_id)
+        episode = Episode.find_or_initialize_by(game_id: episode_id)
+        episode.update!(name:, number:)
 
         next unless episode.previously_new_record?
 

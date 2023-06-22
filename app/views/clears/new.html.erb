@@ -1,5 +1,12 @@
 <%= render Clears::FormComponent.new(clear_spec: @clear) do |component| %>
   <%= component.with_header do %>
+    <% if @clear.errors.present? %>
+      <ul class="alert alert-error">
+        <% @clear.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    <% end %>
     <h2 class="card-title">
       <%= t(:new_clear) %>
     </h2>

@@ -18,6 +18,10 @@ class Clear::Specification
     GlobalID::Locator.locate(stageable_id)
   end
 
+  def stage_id
+    stageable.is_a?(Annihilation) ? stageable.stages.first.id : super
+  end
+
   def stage
     Stage.find_by(id: stage_id)
   end

@@ -14,6 +14,10 @@ module FetchGameData
       Success(data)
     end
 
+    def log_service
+      nil
+    end
+
     private
 
     attr_reader :source

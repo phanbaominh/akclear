@@ -11,12 +11,12 @@
     <%= vite_client_tag %>
     <%# TODO: need to add "data-turbo-track": "reload" here %>
     <%= vite_javascript_tag "application" %>
+    <script src="https://kit.fontawesome.com/3bcd340270.js" crossorigin="anonymous"></script>
     <%= vite_stylesheet_tag "tailwind.css" %>
     <!-- If using a TypeScript entrypoint file: vite_typescript_tag
     'application' If using a .jsx or .tsx entrypoint, add the extension:
     vite_javascript_tag 'application.jsx' Visit the guide for more information:
     https://vite-ruby.netlify.app/guide/rails -->
-    <script src="https://kit.fontawesome.com/3bcd340270.js" crossorigin="anonymous"></script>
     <noscript>
       <style>
         .js-only {
@@ -26,6 +26,24 @@
     </noscript>
   </head>
   <body>
+    <% if flash.present? %>
+      <div class="toast toast-top z-50">
+        <% flash.each do |name, msg| %>
+          <%= content_tag :div, class: "alert #{flash_key_to_alert_class(name)}", data: { controller: 'dismissable'} do %>
+            <div>
+              <span><%= msg %></span>
+              <button
+                class="btn btn-ghost float-right js-only"
+                data-action="dismissable#dismiss"
+              >
+                <i class="fa-solid fa-close"></i>
+              </button>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+
     <%= render NavbarComponent.new %>
     <main class=" container mx-auto mt-28 px-5 flex flex-col pb-8 ">
       <%= yield %>

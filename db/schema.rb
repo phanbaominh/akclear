@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_02_28_150547) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_18_093051) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -42,16 +42,32 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_28_150547) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "annihilations", force: :cascade do |t|
+    t.string "game_id"
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "end_time"
+  end
+
+  create_table "channels", force: :cascade do |t|
+    t.string "name"
+    t.string "url"
+    t.bigint "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_channels_on_user_id"
+  end
+
   create_table "clears", force: :cascade do |t|
     t.bigint "submitter_id", null: false
     t.string "link"
     t.bigint "stage_id", null: false
-    t.string "player_name"
-    t.bigint "player_id"
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["player_id"], name: "index_clears_on_player_id"
+    t.bigint "channel_id"
+    t.index ["channel_id"], name: "index_clears_on_channel_id"
     t.index ["stage_id"], name: "index_clears_on_stage_id"
     t.index ["submitter_id"], name: "index_clears_on_submitter_id"
   end
@@ -72,9 +88,18 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_28_150547) do
   create_table "events", force: :cascade do |t|
     t.string "name"
     t.string "game_id"
-    t.boolean "latest", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "end_time"
+    t.bigint "original_event_id"
+    t.index ["original_event_id"], name: "index_events_on_original_event_id"
+  end
+
+  create_table "likes", id: false, force: :cascade do |t|
+    t.bigint "clear_id", null: false
+    t.bigint "user_id", null: false
+    t.index ["clear_id"], name: "index_likes_on_clear_id"
+    t.index ["user_id"], name: "index_likes_on_user_id"
   end
 
   create_table "operators", force: :cascade do |t|
@@ -161,18 +186,35 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_28_150547) do
     t.boolean "verified", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "username"
+    t.integer "role", default: 0, null: false
     t.index ["email"], name: "index_users_on_email", unique: true
+  end
+
+  create_table "verifications", force: :cascade do |t|
+    t.bigint "verifier_id", null: false
+    t.bigint "clear_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["clear_id"], name: "index_verifications_on_clear_id"
+    t.index ["verifier_id"], name: "index_verifications_on_verifier_id"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "channels", "users"
+  add_foreign_key "clears", "channels"
   add_foreign_key "clears", "stages"
-  add_foreign_key "clears", "users", column: "player_id"
   add_foreign_key "clears", "users", column: "submitter_id"
   add_foreign_key "email_verification_tokens", "users"
+  add_foreign_key "events", "events", column: "original_event_id"
+  add_foreign_key "likes", "clears"
+  add_foreign_key "likes", "users"
   add_foreign_key "password_reset_tokens", "users"
   add_foreign_key "sessions", "users"
   add_foreign_key "taggings", "tags"
   add_foreign_key "used_operators", "clears"
   add_foreign_key "used_operators", "operators"
+  add_foreign_key "verifications", "clears"
+  add_foreign_key "verifications", "users", column: "verifier_id"
 end

@@ -6,10 +6,9 @@
       <h2 class="card-title">
         <%= t(:filter) %>
       </h2>
-      <button form="reset" class="btn btn-xs gap-2" class="js-only">
-        <i class="fa-solid fa-rotate-right">
-        </i>
-        <%= t(:reset) %>
+      <button form="reset" class="btn btn-xs gap-2 " class="js-only">
+        <%= heroicon "arrow-path", options: { class: "h-4" } %>
+        <span><%= t(:reset) %></span>
       </button>
       <noscript><input type="reset" value="Reset" class="btn btn-warning"/></noscript>
     <% end %>

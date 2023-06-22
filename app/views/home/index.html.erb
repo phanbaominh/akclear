@@ -1,29 +1,29 @@
 <div class="md:flex flex-row">
   <div class="grid lg:grid-cols-2 grow gap-12 pr-12 basis-0">
-    <% [3, 2, 4, 5].each do |count| %>
-      <section>
-        <h1 class="text-3xl">Latest events</h1>
-        <div class="h-4"></div>
-        <ul>
-          <% for i in 1..count do %>
-            <a href="/clears?somefilter=123">
-              <li>
-                <img
-                  src="https://prts.wiki/images/thumb/3/3e/%E6%B4%BB%E5%8A%A8%E9%A2%84%E5%91%8A_%E6%98%A5%E5%88%86_01.jpg/650px-%E6%B4%BB%E5%8A%A8%E9%A2%84%E5%91%8A_%E6%98%A5%E5%88%86_01.jpg"
-                  alt=""
-                  class="w-full"
-                >
-              </li>
-            </a>
-            <div class="h-4"></div>
-          <% end %>
-        </ul>
-      </section>
-    <% end %>
+    <div class="col-span-2">
+      <%= render Home::HeroComponent.new(
+        stageables: Event.latest,
+        title: t(:latest_events)
+      ) %>
+    </div>
+
+    <%= render Home::HeroComponent.new(
+      stageables: [Episode.latest],
+      title: t(:latest_events)
+    ) %>
+    <%= render Home::HeroComponent.new(
+      stageables: Annihilation.latest,
+      title: t(:latest_events),
+      remote_image: true
+    ) %>
+
   </div>
   <div>
     <% ["Trending clears", "New clears"].each do |title| %>
-      <%= render Clears::AsideComponent.new(clears: Clear.first(6), title: title) %>
+      <%= render Clears::AsideComponent.new(
+        clears: Clear.includes(:stage, used_operators: :operator).first(6),
+        title: title
+      ) %>
     <% end %>
   </div>
 </div>

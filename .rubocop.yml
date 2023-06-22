@@ -32,3 +32,9 @@ Style/LambdaCall:
   Enabled: false
 Naming/VariableNumber:
   EnforcedStyle: "snake_case"
+Metrics/BlockLength:
+  Exclude:
+    - "spec/**/*"
+    - "lib/tasks/**/*"
+RSpec/NestedGroups:
+  Enabled: false

@@ -1,0 +1,24 @@
+<section>
+  <h1 class="text-3xl"><%= title %></h1>
+  <div class="h-4"></div>
+  <ul>
+    <% stageables.each do |stageable| %>
+
+      <li class="text-center ">
+        <% if stageable.try(:end_time).present? %>
+          <span class="badge badge-lg badge-warning mb-2">
+            <%= t(:end_in) %>:
+            <%= distance_of_time_in_words(Time.current, stageable.end_time) %>
+          </span>
+        <% end %>
+        <%= link_to stageable.filter_link do %>
+          <% if remote_image %>
+            <%= image_tag stageable.banner_image_path, class: "w-full", alt: stageable.name %>
+          <% else %>
+            <%= vite_image_tag stageable.banner_image_path, alt: stageable.name %>
+          <% end %>
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+</section>
