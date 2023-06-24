@@ -35,27 +35,29 @@
         class: "shadow"
       ) %>
     <% end %>
-    <ul class="menu menu-horizontal px-1 hidden lg:flex">
-      <li tabindex="0">
-        <details>
-          <summary>
-            Profile
-          </summary>
-          <ul class="p-2 bg-base-200 shadow rounded-box z-[1] left-auto right-0">
-            <li>
-              <%= link_to "Change email address", edit_identity_email_path %>
-            </li>
-            <li>
-              <%= link_to "Change password", edit_password_path %>
-            </li>
-            <li>
-              <%= button_to "Log out", Current.session, method: :delete %>
-            </li>
-          </ul>
-        </details>
+    <% if authenticated? %>
+      <ul class="menu menu-horizontal px-1 hidden lg:flex">
+        <li tabindex="0">
+          <details>
+            <summary>
+              Profile
+            </summary>
+            <ul class="p-2 bg-base-200 shadow rounded-box z-[1] left-auto right-0">
+              <li>
+                <%= link_to "Change email address", edit_identity_email_path %>
+              </li>
+              <li>
+                <%= link_to "Change password", edit_password_path %>
+              </li>
+              <li>
+                <%= button_to "Log out", Current.session, method: :delete %>
+              </li>
+            </ul>
+          </details>
 
-      </li>
-    </ul>
+        </li>
+      </ul>
+    <% end %>
     <%= render Navbar::LanguageDropdownComponent.new %>
   </div>
 </header>

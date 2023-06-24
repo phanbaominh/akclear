@@ -1,32 +1,33 @@
 <ul class="<%= @class %>">
   <li><%= link_to "Clears", clears_path %></li>
   <li><%= link_to "Guide", "#" %></li>
-  <li tabindex="0" class="lg:hidden">
-    <a>
-      Profile
-    </a>
-    <ul
-      class="
-        p-2
-        bg-base-200
-        shadow
-        rounded-box
-        left-auto
-        sm:left-full
-        top-full
-        sm:top-0
-        
-      "
-    >
-      <li>
-        <%= link_to "Change email address", edit_identity_email_path %>
-      </li>
-      <li>
-        <%= link_to "Change password", edit_password_path %>
-      </li>
-      <li>
-        <%= button_to "Log out", Current.session, method: :delete %>
-      </li>
-    </ul>
-  </li>
+  <% if authenticated? %>
+    <li tabindex="0" class="lg:hidden">
+      <a>
+        Profile
+      </a>
+      <ul
+        class="
+          p-2
+          bg-base-200
+          shadow
+          rounded-box
+          left-auto
+          sm:left-full
+          top-full
+          sm:top-0
+        "
+      >
+        <li>
+          <%= link_to "Change email address", edit_identity_email_path %>
+        </li>
+        <li>
+          <%= link_to "Change password", edit_password_path %>
+        </li>
+        <li>
+          <%= button_to "Log out", Current.session, method: :delete %>
+        </li>
+      </ul>
+    </li>
+  <% end %>
 </ul>

@@ -1,4 +1,5 @@
 class Clears::OperatorsSelectsController < ApplicationController
+  skip_before_action :authenticate!
   include ClearFilterable
 
   def show

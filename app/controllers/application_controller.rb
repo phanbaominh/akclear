@@ -11,6 +11,7 @@ class ApplicationController < ActionController::Base
 
   before_action :set_current_request_details
   before_action :authenticate
+  before_action :authenticate!
 
   def current_user
     Current.user
@@ -24,11 +25,13 @@ class ApplicationController < ActionController::Base
   end
 
   def authenticate
-    if (session = Session.find_by_id(cookies.signed[:session_token]))
-      Current.session = session
-    else
-      redirect_to sign_in_path
-    end
+    return unless (session = Session.find_by_id(cookies.signed[:session_token]))
+
+    Current.session = session
+  end
+
+  def authenticate!
+    redirect_to sign_in_path, alert: 'You need to sign in or sign up before continuing' unless current_user
   end
 
   def set_current_request_details

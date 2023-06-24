@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class ClearsController < ApplicationController
+  skip_before_action :authenticate!, only: %i[index show]
   include ClearFilterable
   include Pagy::Backend
 

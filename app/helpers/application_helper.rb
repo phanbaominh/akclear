@@ -18,4 +18,8 @@ module ApplicationHelper
   def by_string(performer_name)
     "#{I18n.t(:by)} #{performer_name}"
   end
+
+  def authenticated?
+    Current.user.present?
+  end
 end

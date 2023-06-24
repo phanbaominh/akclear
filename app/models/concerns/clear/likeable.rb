@@ -10,6 +10,6 @@ module Clear::Likeable
   end
 
   def liked?
-    Current.user.liked?(self)
+    Current.user&.liked?(self)
   end
 end
