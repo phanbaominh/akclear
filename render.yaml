@@ -1,0 +1,18 @@
+databases:
+  - name: akclear
+    databaseName: akclear
+    user: akclear
+
+services:
+  - type: web
+    name: akclear
+    runtime: ruby
+    buildCommand: "./bin/render-build.sh"
+    startCommand: "bundle exec puma -C config/puma.rb"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: akclear
+          property: connectionString
+      - key: RAILS_MASTER_KEY
+        sync: false
