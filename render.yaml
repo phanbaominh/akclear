@@ -18,3 +18,5 @@ services:
           property: connectionString
       - key: RAILS_MASTER_KEY
         sync: false
+      - key: NODE_VERSION
+        value: 16.16.0
