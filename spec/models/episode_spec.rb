@@ -8,7 +8,7 @@ RSpec.describe Episode, type: :model do
     let_it_be(:episode_2) { create(:episode, number: 1) }
 
     it 'returns episode with latest number' do
-      expect(described_class.latest).to eq(episode_1)
+      expect(described_class.latest.first).to eq(episode_1)
     end
   end
 end

@@ -1,5 +1,5 @@
 class Episode < ApplicationRecord
   include Stageable
 
-  scope :latest, -> { order(:number).last }
+  scope :latest, -> { where(id: order(:number).last) }
 end

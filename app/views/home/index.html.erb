@@ -8,7 +8,7 @@
     </div>
 
     <%= render Home::HeroComponent.new(
-      stageables: [Episode.latest],
+      stageables: Episode.latest,
       title: t(:latest_events)
     ) %>
     <%= render Home::HeroComponent.new(
