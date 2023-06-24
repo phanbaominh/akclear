@@ -83,4 +83,5 @@ production:
   <<: *default
   database: akclear_production
   username: akclear
+  url: <%= ENV['DATABASE_URL'] %>
   password: <%= ENV["AKCLEAR_DATABASE_PASSWORD"] %>
