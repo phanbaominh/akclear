@@ -19,6 +19,8 @@ Rails.application.routes.draw do
 
     # Defines the root path route ("/")
     root 'home#index'
+    resources :healthz, only: %i[index]
+
     namespace :clears do
       resource :filters, only: %i[show]
       resource :stage_select, only: %i[show]
