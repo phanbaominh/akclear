@@ -1,0 +1,24 @@
+<%= simple_form_for 'reset', url: clears_path, method: :get, html: { data: { turbo_frame: '_top' }, id: 'reset', class: 'hidden' } do %>
+<% end %>
+<%= render Clears::FormComponent.new(clear_spec: clear_spec) do |component| %>
+  <%= component.with_header do %>
+    <h2 class="card-title">
+      <%= t(:filter) %>
+    </h2>
+    <button form="reset" class="btn btn-xs gap-2 " class="js-only">
+      <%= heroicon "arrow-path", options: { class: "h-4" } %>
+      <span><%= t(:reset) %></span>
+    </button>
+    <noscript><input type="reset" value="Reset" class="btn btn-warning"/></noscript>
+  <% end %>
+  <%= component.with_footer do %>
+    <button
+      form="clears__form"
+      class="btn btn-primary"
+      type="submit"
+      data-turbo-frame="clears"
+    >
+      <%= t(:apply_filters) %></button>
+  <% end %>
+
+<% end %>

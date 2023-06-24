@@ -88,13 +88,16 @@ select.simple_form__input {
   @apply border-l-secondary-content !important;
 }
 
+.choices[data-type*="select-one"]::after {
+  @apply border-t-base-content border-4 right-[18px] -mt-[1px] !important;
+}
+
 /* #new_clear .choices__inner .choices__item--selectable {
   display: none !important; */
 /* } */
 /* .choices__list--multiple {
   @apply hidden !important;
 } */
-
 
 .new-clear__time::before {
   content: "\00B7\20";
@@ -129,4 +132,8 @@ select.simple_form__input {
   .clear-summary {
     display: block;
   }
+}
+
+#clears__form select {
+  @apply w-full input font-normal px-[15px];
 }
