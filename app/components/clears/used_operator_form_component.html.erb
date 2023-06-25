@@ -2,12 +2,7 @@
   <%= f.input :operator_id, as: :hidden %>
   <div class="card-body">
     <div class="flex justify-between">
-      <%= image_tag avatar,
-      class: "w-16 h-16",
-      data: {
-        tooltip_target: tooltip_id
-      },
-      alt: name %>
+      <%= image_tag avatar, class: "w-16 h-16", alt: name %>
 
       <h2 class="card-title"><%= name %></h2>
     </div>
@@ -50,11 +45,8 @@
               **stimulus_attrs(:radio_buttons, target: 'radioButton')
             }
           ) do -%>
-            <%= image_tag UsedOperatorPresenter.skill_image_url(operator.game_id, skill),
+            <%= image_tag UsedOperatorPresenter.skill_image_url(operator.skill_game_ids[skill]),
             class: "w-10",
-            data: {
-              tooltip_target: tooltip_id
-            },
             alt: skill_alt_text %>
           <% end %>
           <%= f.radio_button :skill,

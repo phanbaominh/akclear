@@ -54,8 +54,8 @@ module Operator::Rarifiable
     RARITIES_TO_MAX_ELITE[rarity]
   end
 
-  def number_of_skills
-    RARITIES_TO_NUMBER_OF_SKILLS[rarity]
+  def max_skill
+    skill_game_ids&.length || RARITIES_TO_NUMBER_OF_SKILLS[rarity]
   end
 
   def max_level(elite:)

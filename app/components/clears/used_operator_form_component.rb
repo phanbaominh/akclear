@@ -9,7 +9,8 @@ class Clears::UsedOperatorFormComponent < ApplicationComponent
     @submit_text = submit_text || I18n.t(:add_operator)
   end
 
-  delegate :operator, :name, :avatar, to: :used_operator
+  delegate :operator, :name, :avatar, :max_elite, :max_skill, :max_skill_level, :max_level,
+           to: :used_operator
   delegate :elite, :skill, to: :used_operator, prefix: true
 
   def presenter_object
@@ -18,18 +19,6 @@ class Clears::UsedOperatorFormComponent < ApplicationComponent
 
   def skill_alt_text
     "#{name}_#{used_operator_skill}"
-  end
-
-  def tooltip_id
-    "operator_#{used_operator.operator_id}"
-  end
-
-  def max_elite
-    3
-  end
-
-  def max_skill
-    3
   end
 
   # Hacky way to get for attribute of label, consider using simple form custom components

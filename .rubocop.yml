@@ -38,3 +38,5 @@ Metrics/BlockLength:
     - "lib/tasks/**/*"
 RSpec/NestedGroups:
   Enabled: false
+RSpec/ImplicitSubject:
+  Enabled: false
