@@ -35,7 +35,7 @@
 
     <%= f.label :skill, class: "label" %>
     <%= content_tag(:fieldset, class: 'flex gap-4 col-span-2', data: { **stimulus(:radio_buttons, classes: { selected: 'border-primary hover:border-primary' }) }) do -%>
-      <% max_skill.times do |skill| %>
+      <% max_skill.times.map(&:succ).each do |skill| %>
         <label for="<%= label_for(f, :skill, skill) %>">
           <%= content_tag(:div,
             class: 'btn border-4 rounded-none p-0',
@@ -45,7 +45,9 @@
               **stimulus_attrs(:radio_buttons, target: 'radioButton')
             }
           ) do -%>
-            <%= image_tag UsedOperatorPresenter.skill_image_url(operator.skill_game_ids[skill]),
+            <%= image_tag UsedOperatorPresenter.skill_image_url(
+              operator.skill_game_ids[skill - 1]
+            ),
             class: "w-10",
             alt: skill_alt_text %>
           <% end %>

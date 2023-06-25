@@ -8,9 +8,8 @@
         <%= vite_image_tag elite_image_url, class: "w-8" %>
         <span class="text-xl text-white text-center">70</span>
       </div>
-      <%= image_tag skill_image_url, class: "w-8 self-end" %>
+      <%= image_tag skill_image_url, class: "w-8 self-end" if used_operator.skill %>
     </div>
-
     <!--h3 class="line-clamp-1"><%= name + " the Radiant Knight" %></%h3-->
   </div>
 

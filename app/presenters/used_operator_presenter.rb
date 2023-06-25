@@ -13,10 +13,10 @@ class UsedOperatorPresenter < ApplicationPresenter
   end
 
   def skill_image_url
-    self.class.skill_image_url(operator.skill_game_ids[object.skill])
+    self.class.skill_image_url(operator.skill_game_ids[object.skill.to_i - 1])
   end
 
   def elite_image_url
-    self.class.elite_image_url(object.elite)
+    self.class.elite_image_url(object.elite || 0)
   end
 end
