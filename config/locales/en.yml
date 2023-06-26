@@ -42,6 +42,6 @@ en:
   end_in: "End in"
   reset: "Reset"
   verified: "Verified"
-  verified_by: "Verified by %{username}"
+  verified_by: "Verified by %{username} %{at}"
   verify: "Verify"
   unverify: "Unverify"
