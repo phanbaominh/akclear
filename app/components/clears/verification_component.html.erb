@@ -6,18 +6,11 @@
         t(:unverify),
         clear_verification_path(clear),
         method: :delete,
-        class: "btn btn-error"
+        class: "btn btn-error btn-sm"
       ) %>
-    <% else %>
-      <div class="text-green-500">
-        <i class="fa-solid fa-circle-check"></i>
-        <span title="<%= time_string(verification.created_at) %>">
-          <%= t(:verified) %> by <%= verification.verifier.username %>
-        </span>
-      </div>
     <% end %>
   <% elsif can?(:create, :verification) %>
-    <%= button_to clear_verification_path(clear), class: "btn btn-success" do %>
+    <%= button_to clear_verification_path(clear), class: "btn btn-success btn-sm" do %>
       <i class="fa-regular fa-circle-check text-white"></i>
       <span class="text-white"><%= t(:verify) %></span>
     <% end %>

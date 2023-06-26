@@ -36,7 +36,7 @@
     </h2>
   </div>
 
-  <div class="flex justify-between">
+  <div class="md:flex justify-between">
     <div class="flex">
       <span class="inline-block"><%= t(:submitted_by) %>&nbsp;</span>
       <a href="#" class="inline-block">
@@ -47,9 +47,7 @@
     
     <section class="flex items-center space-x-4">
       <%= render Clears::VerificationComponent.new(clear: clear) %>
-      <div class=" group flex cursor-pointer text-lg">
-        <%= render Clears::LikeComponent.new(clear: clear) %>
-      </div>
+      <%= render Clears::LikeBigComponent.new(clear: clear) %>
     </section>
   </div>
 

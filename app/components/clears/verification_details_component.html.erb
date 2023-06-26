@@ -8,6 +8,9 @@
     max-w-64
     line-clamp-1
     xs:line-clamp-none"
+    <% if clear.verified? %>
+      title="<%= t(:verified_by, username: verification.verifier.username, at: time_string(verification.created_at)) %>"
+    <% end %>
 >
   <% if clear.verified? %>
     <%= t(:verified) %>
