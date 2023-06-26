@@ -2,7 +2,7 @@
 
 module Clears
   class Index < ::ApplicationService
-    param :spec, type: Types.Instance(Clear::Specification)
+    param :spec, type: Types.Instance(Clear)
 
     def call
       @clears = base_scope
@@ -29,7 +29,7 @@ module Clears
 
       @clears = @clears.joins(:used_operators).distinct
       @clears = @clears.where(id: UsedOperator
-        .where(used_operators: { operator_id: spec.used_operators.pluck(:operator_id) })
+        .where(used_operators: { operator_id: spec.used_operators.map(&:operator_id) })
         .group(:clear_id)
         .having('count(*) = ?', spec.used_operators.size)
         .pluck(:clear_id))

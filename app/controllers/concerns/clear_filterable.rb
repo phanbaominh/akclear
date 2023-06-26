@@ -18,11 +18,11 @@ module ClearFilterable
   end
 
   def set_clear_spec_session
-    session['clear_spec_params'] = clear_spec_params
+    session['clear_params'] = clear_params
   end
 
   def clear_spec_session_key
-    modifying_clear? ? 'clear_params' : 'clear_spec_params'
+    'clear_params'
   end
 
   def clear_spec_session
@@ -46,15 +46,11 @@ module ClearFilterable
   end
 
   def set_clear_spec
-    @clear_spec = if modifying_clear?
-                    Clear.new(clear_spec_attributes || {})
-                  else
-                    Clear::Specification.new(**(clear_spec_attributes || {}))
-                  end
+    @clear_spec = Clear.new(clear_spec_attributes || {})
   end
 
   def clear_spec_attributes
-    @use_clear_spec_param ? clear_spec_params.to_h : (clear_spec_session || {}).symbolize_keys
+    @use_clear_spec_param ? clear_params.to_h : (clear_spec_session || {}).symbolize_keys
   end
 
   def clear_params
@@ -62,14 +58,5 @@ module ClearFilterable
 
     @clear_params ||= params.require(:clear).permit(:stageable_id, :stage_id, :challenge_mode,
                                                     :operator_id, :link, :name, used_operators_attributes: %i[operator_id elite skill]).compact_blank
-  end
-
-  def clear_spec_params
-    return clear_params if modifying_clear?
-    return @clear_spec_params if @clear_spec_params
-    return (@clear_spec_params ||= {}) if params[:clear_specification].nil?
-
-    @clear_spec_params ||= params.require(:clear_specification).permit(:stageable_id, :stage_id, :challenge_mode,
-                                                                       :operator_id, used_operators_attributes: %i[operator_id elite skill]).compact_blank
   end
 end

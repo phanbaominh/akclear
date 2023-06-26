@@ -1,4 +1,4 @@
-<%= render Clears::FormComponent.new(clear_spec: @clear) do |component| %>
+<%= render Clears::FormComponent.new(clear_spec: @clear, new_form: true) do |component| %>
   <%= component.with_header do %>
     <% if @clear.errors.present? %>
       <ul class="alert alert-error">
@@ -22,6 +22,7 @@
     </button>
     <noscript>
       <button
+        form="clears__form"
         formmethod="GET"
         formaction="<%= clears_stage_select_path %>"
         class="btn btn-primary"
