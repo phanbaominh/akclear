@@ -8,6 +8,6 @@ class EpisodePresenter < StageablePresenter
   end
 
   def type_color
-    ''
+    'badge-info'
   end
 end

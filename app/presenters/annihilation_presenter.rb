@@ -12,6 +12,6 @@ class AnnihilationPresenter < StageablePresenter
   end
 
   def type_color
-    '-error'
+    'badge-error'
   end
 end

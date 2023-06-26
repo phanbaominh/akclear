@@ -1,3 +1,7 @@
 <%= turbo_stream.replace dom_id(@clear, :like) do %>
   <%= render Clears::LikeComponent.new(clear: @clear) %>
 <% end %>
+
+<%= turbo_stream.replace dom_id(@clear, :like_big) do %>
+  <%= render Clears::LikeBigComponent.new(clear: @clear) %>
+<% end %>
