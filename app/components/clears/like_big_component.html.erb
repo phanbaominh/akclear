@@ -9,7 +9,7 @@
     )
   },
   class: 'flex btn btn-neutral btn-sm pl-1 pr-3',
-  id: dom_id(@clear, :like_big) do %>
+  form: { id: dom_id(@clear, :like_big) } do %>
   <div class="rounded-full px-2">
     <span>
       <%= content_tag :i,

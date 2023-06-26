@@ -8,6 +8,6 @@ class EventPresenter < StageablePresenter
   end
 
   def type_color
-    '-warning'
+    'badge-warning'
   end
 end
