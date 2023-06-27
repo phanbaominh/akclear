@@ -12,12 +12,7 @@
     </h2>
   <% end %>
   <%= component.with_footer do %>
-    <button
-      formmethod="POST"
-      formaction=<%= clears_path %>
-      form="clears__form"
-      class="btn btn-primary js-only"
-    >
+    <button form="clears__form" class="btn btn-primary js-only">
       <%= t(:create_clear) %>
     </button>
     <noscript>

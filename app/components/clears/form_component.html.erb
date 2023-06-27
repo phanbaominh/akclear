@@ -1,7 +1,7 @@
 <div class="card mb-4 shadow-xl">
   <div class="card-body bg-base-300">
 
-    <%= simple_form_for clear_spec, url: clears_path, method: :get, html: {
+    <%= simple_form_for clear_spec, url: clears_path, method: new_form ? :post : :get, html: {
       id: "clears__form",
       data: {
         turbo_stream: "true", turbo_frame: 'clears'

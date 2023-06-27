@@ -20,7 +20,7 @@ class ClearsController < ApplicationController
   end
 
   def create
-    @clear = Clear.new((clear_params.presence || clear_spec_session).merge(submitter: Current.user))
+    @clear = Clear.new(clear_params.presence.merge(submitter: Current.user))
     if @clear.save
       delete_clear_spec_session
       redirect_to @clear
