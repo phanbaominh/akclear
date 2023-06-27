@@ -16,6 +16,9 @@
       <%= t(:create_clear) %>
     </button>
     <noscript>
+      <%# In no js case, will submit a GET request with authenticity_token param in the URL => 
+        undesired but should not cause any issue as Rails generate a new token per request 
+        and also check for origin of request %>
       <button
         form="clears__form"
         formmethod="GET"
