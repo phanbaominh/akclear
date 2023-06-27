@@ -137,3 +137,33 @@ select.simple_form__input {
 #clears__form select {
   @apply w-full input font-normal px-[15px];
 }
+
+.channel-list-grid {
+  @apply grid-cols-1 gap-4;
+  @apply md:grid-cols-2;
+  @apply lg:grid-cols-3;
+}
+
+.channel-list-list {
+  @apply grid-cols-1 gap-4;
+}
+
+.channel-list__item-img {
+  @apply mr-4 rounded-full w-12 h-12;
+}
+
+.channel-list__item-body {
+  @apply flex flex-grow items-center justify-between;
+}
+
+/* 
+Only when the view mode is `grid` and the screen size is at least md (meaning there are at least 2 columns) do we show:
+- square image
+- youtube button right under channel name
+ */
+.channel-list-grid .channel-list__item-img {
+  @apply md:w-24 md:h-24 md:rounded-none;
+}
+.channel-list-grid .channel-list__item-body {
+  @apply md:block;
+}
