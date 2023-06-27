@@ -45,3 +45,5 @@ en:
   verified_by: "Verified by %{username} %{at}"
   verify: "Verify"
   unverify: "Unverify"
+  channels:
+    list: 'Channels'
