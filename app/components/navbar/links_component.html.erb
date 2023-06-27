@@ -1,5 +1,6 @@
 <ul class="<%= @class %>">
   <li><%= link_to "Clears", clears_path %></li>
+  <li><%= link_to t("channels.list"), channels_path %></li>
   <li><%= link_to "Guide", "#" %></li>
   <% if authenticated? %>
     <li tabindex="0" class="lg:hidden">
