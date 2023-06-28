@@ -12,6 +12,10 @@ class Event < ApplicationRecord
   scope :original, -> { where(original_event_id: nil) }
   scope :selectable, -> { original }
 
+  def self.challengable?
+    true
+  end
+
   def rerun_event?
     original_event_id.present? || name.include?('Rerun')
   end

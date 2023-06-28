@@ -9,4 +9,10 @@ module Stageable
     scope :latest, -> { where(end_time: Time.current..).order(end_time: :desc) }
     scope :selectable, -> { all }
   end
+
+  class_methods do
+    def challengable?
+      false
+    end
+  end
 end

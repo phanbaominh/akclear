@@ -4,21 +4,25 @@ class Clears::StageSelectComponent < ApplicationComponent
   include Turbo::FramesHelper
   attr_reader :form
 
-  delegate :stageable, to: :stage_selectable
+  delegate :stageable, to: :clear_spec
 
   def post_initialize(form:)
     @form = form
   end
 
-  def stage_selectable
+  def clear_spec
     form.object
   end
 
-  def all_stageables
-    [Episode.all, Event.all].flatten
+  def stage_type
+    clear_spec.stage_type&.constantize
+  end
+
+  def stageables
+    stage_type.all
   end
 
   def selectable_stages
-    stage_selectable.challenge_mode ? stageable.stages.challenge_mode : stageable.stages.non_challenge_mode
+    clear_spec.challenge_mode ? stageable.stages.challenge_mode : stageable.stages.non_challenge_mode
   end
 end

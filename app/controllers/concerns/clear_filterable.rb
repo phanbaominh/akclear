@@ -56,7 +56,7 @@ module ClearFilterable
   def clear_params
     return {} if params[:clear].nil?
 
-    @clear_params ||= params.require(:clear).permit(:stageable_id, :stage_id, :challenge_mode,
+    @clear_params ||= params.require(:clear).permit(:stageable_id, :stage_id, :challenge_mode, :stage_type,
                                                     :operator_id, :link, :name, used_operators_attributes: %i[operator_id elite skill]).compact_blank
   end
 end

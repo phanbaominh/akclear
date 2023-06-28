@@ -45,3 +45,11 @@ en:
   verified_by: "Verified by %{username} %{at}"
   verify: "Verify"
   unverify: "Unverify"
+  choose: "Choose"
+  clear_form:
+    stageable_field:
+      prompt: "Select a %{stage_type}"
+      label: "%{stage_type}"
+    stage_type_field:
+      prompt: "Select stage type"
+      label: "Stage type"

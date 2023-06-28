@@ -19,9 +19,12 @@ class Clear < ApplicationRecord
   attribute :challenge_mode, :boolean
   attribute :stageable_id, :string
   attribute :operator_id, :integer
+  attribute :stage_type, :string
+
+  validates :stage_type, inclusion: { in: Stage::STAGEABLE_TYPES }
 
   def stageable
-    stage ? stage.stageable : GlobalID::Locator.locate(stageable_id)
+    stageable_id ? GlobalID::Locator.locate(stageable_id) : stage&.stageable
   end
 
   def stage_id
