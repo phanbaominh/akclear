@@ -4,6 +4,7 @@ class Stage < ApplicationRecord
   belongs_to :stageable, polymorphic: true
   scope :non_challenge_mode, -> { where.not('game_id LIKE ?', "%#{CHALLENGE_MODE_ID}") }
   scope :challenge_mode, -> { where('game_id LIKE ?', "%#{CHALLENGE_MODE_ID}") }
+  scope :with_environment, ->(environment) { where('game_id LIKE ?', "#{environment.to_game_id}%") }
 
   def event?
     stageable.is_a?(Event)
