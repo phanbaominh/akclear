@@ -14,4 +14,10 @@ RSpec.describe Annihilation, type: :model do
       expect(described_class.latest).to eq([annihilation_1, annihilation_2])
     end
   end
+
+  describe '#challengable?' do
+    it 'returns false' do
+      expect(build_stubbed(:annihilation)).not_to be_challengable
+    end
+  end
 end

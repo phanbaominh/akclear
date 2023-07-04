@@ -10,9 +10,11 @@ module Stageable
     scope :selectable, -> { all }
   end
 
-  class_methods do
-    def challengable?
-      false
-    end
+  def challengable?
+    true
+  end
+
+  def has_environments? # rubocop:disable Naming/PredicateName
+    false
   end
 end
