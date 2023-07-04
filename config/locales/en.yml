@@ -53,3 +53,5 @@ en:
     stage_type_field:
       prompt: "Select stage type"
       label: "Stage type"
+    environment_field:
+      label: "Environment"

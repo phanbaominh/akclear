@@ -47,6 +47,9 @@ module ClearFilterable
 
   def set_clear_spec
     @clear_spec = Clear.new(clear_spec_attributes || {})
+    return unless @clear_spec&.stage_type&.constantize != @clear_spec&.stageable&.class
+
+    @clear_spec.reset_spec
   end
 
   def clear_spec_attributes
@@ -56,7 +59,7 @@ module ClearFilterable
   def clear_params
     return {} if params[:clear].nil?
 
-    @clear_params ||= params.require(:clear).permit(:stageable_id, :stage_id, :challenge_mode, :stage_type,
+    @clear_params ||= params.require(:clear).permit(:stageable_id, :stage_id, :challenge_mode, :stage_type, :environment,
                                                     :operator_id, :link, :name, used_operators_attributes: %i[operator_id elite skill]).compact_blank
   end
 end

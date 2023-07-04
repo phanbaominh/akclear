@@ -35,6 +35,7 @@ module FetchGameData
     def valid_stage?(stage_data)
       return false if story_stage?(stage_data)
       return false if tutorial_stage?(stage_data)
+      return false if ap_cost_0?(stage_Data)
 
       true
     end
@@ -45,6 +46,10 @@ module FetchGameData
 
     def tutorial_stage?(stage_data)
       stage_data['code'].match?(/TR-/) && stage_data['stageId'].match?(/tr/)
+    end
+
+    def ap_cost_0?(stage_data)
+      stage_data['apCost'].to_s == '0'
     end
 
     def stageable(stage_data)

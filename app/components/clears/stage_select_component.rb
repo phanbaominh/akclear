@@ -22,7 +22,25 @@ class Clears::StageSelectComponent < ApplicationComponent
     stage_type.all
   end
 
+  def challengable?
+    stageable.challengable? && (
+      !stageable.is_a?(Episode) ||
+      !stageable.episode_9? || clear_spec.environment == Episode::Environment::STANDARD
+    )
+  end
+
+  def selectable_environments
+    Episode::Environment.available_environments(stageable)
+  end
+
   def selectable_stages
-    clear_spec.challenge_mode ? stageable.stages.challenge_mode : stageable.stages.non_challenge_mode
+    base = stageable.stages
+    if clear_spec.challenge_mode
+      base.challenge_mode
+    elsif clear_spec.environment
+      base.with_environment(clear_spec.environment).non_challenge_mode
+    else
+      base.non_challenge_mode
+    end
   end
 end
