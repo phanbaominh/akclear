@@ -1,4 +1,4 @@
-<%= render Clears::FormComponent.new(clear_spec: @clear) do |component| %>
+<%= render Clears::FormComponent.new(clear_spec: @clear, new_form: true) do |component| %>
   <%= component.with_header do %>
     <% if @clear.errors.present? %>
       <ul class="alert alert-error">
@@ -12,16 +12,15 @@
     </h2>
   <% end %>
   <%= component.with_footer do %>
-    <button
-      formmethod="POST"
-      formaction=<%= clears_path %>
-      form="clears__form"
-      class="btn btn-primary js-only"
-    >
+    <button form="clears__form" class="btn btn-primary js-only">
       <%= t(:create_clear) %>
     </button>
     <noscript>
+      <%# In no js case, will submit a GET request with authenticity_token param in the URL => 
+        undesired but should not cause any issue as Rails generate a new token per request 
+        and also check for origin of request %>
       <button
+        form="clears__form"
         formmethod="GET"
         formaction="<%= clears_stage_select_path %>"
         class="btn btn-primary"

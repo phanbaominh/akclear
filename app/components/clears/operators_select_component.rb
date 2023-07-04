@@ -10,6 +10,6 @@ class Clears::OperatorsSelectComponent < ApplicationComponent
   end
 
   def selectable_operators
-    Operator.all
+    Operator.all.order(:name)
   end
 end

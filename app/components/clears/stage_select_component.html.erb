@@ -1,73 +1,122 @@
-<fieldset data-controller="clears--stage-select">
-  <%= form.input :stageable_id,
-             label: t(".stageable_label"),
-             as: :grouped_select,
-             collection: [Event, Episode, Annihilation],
-             value_method: :to_global_id,
-             group_method: :selectable,
-             group_label_method: :to_s,
-             label_method: :label,
-             prompt: "Select event/episode",
-             wrapper_html: {
-               class: "w-full",
-               data: {
-                 controller: "choices"
-               }
-             },
-             input_html: {
-               id: "stageable__select",
-               data: {
-                 action: "clears--stage-select#updateStages"
-               }
-             } %>
-
-  <button
-    class="hidden"
-    formmethod="GET"
-    formaction="<%= clears_stage_select_path %>"
-    data-turbo-frame="filters__stage"
-    data-clears--stage-select-target="stageableButton"
-  >
-  </button>
-
-  <%= form.label :challenge_mode,
-             "Challenge mode",
-             class:
-               "label-text text-base #{form.object.challenge_mode ? "text-error" : ""} simple_form__label" %>
-  <%= form.check_box :challenge_mode,
-                 data: {
-                   action: "clears--stage-select#updateStages"
-                 },
-                 class: "toggle toggle-error block focus:outline-base-content/20" %>
-  <noscript>
+<%= turbo_frame_tag 'filters__stage' do %>
+  <fieldset data-controller="clears--stage-select">
     <button
+      class="hidden"
       formmethod="GET"
       formaction="<%= clears_stage_select_path %>"
-      class="btn btn-primary inline-block mt-2"
+      data-turbo-frame="filters__stage"
+      data-clears--stage-select-target="stageableButton"
     >
-      <%= t(".choose_stage") %>
     </button>
-  </noscript>
-  <%= turbo_frame_tag 'filters__stage' do %>
-    <% if stageable %>
-      <fieldset>
 
-        <%= form.input :stage_id,
-                   as: stageable.is_a?(Annihilation) ? :hidden : :select,
-                   collection: selectable_stages,
-                   prompt: "Select stage",
-                   required: false,
-                   label_method: :code,
-                   include_blank: true,
-                   input_html: {
-                     id: "stage_select"
-                   },
-                   wrapper_html: {
-                     data: {
-                       controller: "choices"
-                     }
-                   } %>
-      </fieldset>
+    <%= form.input :stage_type,
+               label: t("clear_form.stage_type_field.label"),
+               collection: [Event, Episode, Annihilation],
+               value_method: :to_s,
+               label_method: :to_s,
+               prompt: t("clear_form.stage_type_field.prompt"),
+               wrapper_html: {
+                 class: "w-full",
+                 data: {
+                   controller: "choices"
+                 }
+               },
+               input_html: {
+                 data: {
+                   action: "clears--stage-select#updateStages"
+                 }
+               } %>
+    <noscript>
+      <button
+        formmethod="GET"
+        formaction="<%= clears_stage_select_path %>"
+        class="btn btn-primary inline-block mt-2"
+      >
+        <%= t("choose") %>
+      </button>
+    </noscript>
+    <% if stage_type %>
+      <%= form.input :stageable_id,
+                 label: t("clear_form.stageable_field.label", stage_type: stage_type),
+                 as: :select,
+                 collection: stageables,
+                 value_method: :to_global_id,
+                 label_method: :label,
+                 prompt:
+                   t("clear_form.stageable_field.prompt", stage_type: stage_type),
+                 wrapper_html: {
+                   class: "w-full",
+                   data: {
+                     controller: "choices"
+                   }
+                 },
+                 input_html: {
+                   data: {
+                     action: "clears--stage-select#updateStages"
+                   }
+                 } %>
+
+      <% if stageable %>
+
+        <% if stageable.has_environments? %>
+          <fieldset class="join block">
+            <legend class="simple_form__label"><%= t("clear_form.environment_field.label") %></legend>
+            <% form.collection_radio_buttons :environment, selectable_environments, :itself, :itself, class: 'join-item btn' do |b| %>
+
+              <%= b.label(class: "hidden") %>
+              <%= b.radio_button(
+                class: "join-item btn",
+                "aria-label": b.text,
+                data: {
+                  **stimulus_attrs(:clears__stage_select, actions: { change: "updateStages" })
+                }
+              ) %>
+            <% end %>
+
+          </fieldset>
+        <% end %>
+        <% if challengable? %>
+          <%= form.label :challenge_mode,
+                     "Challenge mode",
+                     class:
+                       "label-text text-base #{clear_spec.challenge_mode ? "text-error" : ""} simple_form__label" %>
+          <%= form.check_box :challenge_mode,
+                         data: {
+                           action: "clears--stage-select#updateStages"
+                         },
+                         class: "toggle toggle-error block focus:outline-base-content/20" %>
+        <% end %>
+
+      <% end %>
+      <noscript>
+        <button
+          formmethod="GET"
+          formaction="<%= clears_stage_select_path %>"
+          class="btn btn-primary inline-block mt-2"
+        >
+          <%= t("get_stages") %>
+        </button>
+      </noscript>
+      <% if stageable %>
+
+        <fieldset>
+          <%= form.input :stage_id,
+                     as: stageable.is_a?(Annihilation) ? :hidden : :select,
+                     collection: selectable_stages,
+                     prompt: "Select stage",
+                     required: false,
+                     label_method: :code,
+                     include_blank: true,
+                     input_html: {
+                       id: "stage_select"
+                     },
+                     wrapper_html: {
+                       data: {
+                         controller: "choices"
+                       }
+                     } %>
+        </fieldset>
+      <% end %>
     <% end %>
-  <% end %>
-</fieldset>
+  </fieldset>
+<% end %>
