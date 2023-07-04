@@ -22,7 +22,7 @@ class Clear < ApplicationRecord
   attribute :operator_id, :integer
   attribute :stage_type, :string
 
-  validates :stage_type, inclusion: { in: Stage::STAGEABLE_TYPES }
+  validates :stage_type, inclusion: { in: Stage::STAGEABLE_TYPES }, allow_blank: true
 
   def environment
     Episode::Environment.new(super) if super

@@ -35,7 +35,7 @@ module FetchGameData
     def valid_stage?(stage_data)
       return false if story_stage?(stage_data)
       return false if tutorial_stage?(stage_data)
-      return false if ap_cost_0?(stage_Data)
+      return false if ap_cost_0?(stage_data)
 
       true
     end
