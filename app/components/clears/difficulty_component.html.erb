@@ -1,0 +1,15 @@
+<% if clear.stage.challenge_mode %>
+  <%= content_tag :div, class: "tooltip", data: { tip: t("challenge_mode") } do %>
+    <%= vite_image_tag "images/challenge_mode.png",
+    alt: t("challenge_mode"),
+    class: "#{@class}" %>
+  <% end %>
+
+<% end %>
+<% if clear.stage.environment %>
+  <%= content_tag :div, class: "tooltip ", data: { tip: t("stages.environments.#{clear.stage.environment}") } do %>
+    <%= vite_image_tag "images/environment_#{clear.stage.environment}.png",
+    class: "rounded-full #{@class} ",
+    alt: t("stages.environments.#{clear.stage.environment}") %>
+  <% end %>
+<% end %>

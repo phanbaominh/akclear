@@ -13,4 +13,11 @@ class Stage < ApplicationRecord
   def challenge_mode
     game_id&.include?(CHALLENGE_MODE_ID)
   end
+
+  def environment
+    return unless stageable.has_environments?
+
+    game_id_prefix = game_id.split('_').first
+    Episode::Environment::ENVIRONMENT_TO_GAME_ID.invert[game_id_prefix]
+  end
 end

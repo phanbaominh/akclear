@@ -46,6 +46,7 @@ en:
   verify: "Verify"
   unverify: "Unverify"
   choose: "Choose"
+  challenge_mode: "Challenge Mode"
   clear_form:
     stageable_field:
       prompt: "Select a %{stage_type}"
@@ -57,3 +58,9 @@ en:
       label: "Environment"
   channels:
     list: "Channels"
+  stages:
+    environments:
+      story: "Story"
+      standard: "Standard"
+      adverse: "Adverse"
+
