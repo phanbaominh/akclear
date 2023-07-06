@@ -29,7 +29,7 @@
             <div
               class="
                 badge
-                <%= clear.stageable.type_color %>
+                <%= clear.stageable.color(:badge) %>
                 xs:badge-lg
                 rounded-sm
                 max-w-64
@@ -37,7 +37,7 @@
                 xs:line-clamp-none
               "
             >
-              <%= clear.stageable.type_label %>
+              <%= clear.stageable.label %>
             </div>
           </div>
           <div class="card-body pb-2 pt-2">
@@ -49,6 +49,7 @@
                 md:flex-row
                 items-start
                 md:items-center
+                space-x-2
               "
             >
               <div class="flex md:space-x-0 flex-col w-full md:w-48">

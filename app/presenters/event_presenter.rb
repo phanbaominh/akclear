@@ -7,7 +7,9 @@ class EventPresenter < StageablePresenter
     end
   end
 
-  def type_color
-    'badge-warning'
+  def color(component)
+    {
+      badge: 'badge-warning text-warning-content'
+    }[component]
   end
 end

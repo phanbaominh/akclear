@@ -47,6 +47,8 @@ en:
   unverify: "Unverify"
   choose: "Choose"
   challenge_mode: "Challenge Mode"
+  episode: "Episode"
+  annihilation: "Annihilation"
   clear_form:
     stageable_field:
       prompt: "Select a %{stage_type}"
@@ -63,4 +65,3 @@ en:
       story: "Story"
       standard: "Standard"
       adverse: "Adverse"
-
