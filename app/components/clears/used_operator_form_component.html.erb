@@ -1,4 +1,4 @@
-<%= simple_form_for @used_operator, url: clears_used_operator_path, method: method, html: { class: 'card bg-base-200 shadow-xl' } do |f| %>
+<%= simple_form_for @used_operator, url: clears_used_operator_path, method: method, html: { class: 'card bg-base-200 shadow-xl' }, namespace: @used_operator.operator_id do |f| %>
   <%= f.input :operator_id, as: :hidden %>
   <div class="card-body">
     <div class="flex justify-between">
@@ -7,68 +7,26 @@
       <h2 class="card-title"><%= name %></h2>
     </div>
 
-    <%= f.label :elite, class: "label" %>
-    <%= content_tag(:fieldset, class: 'flex col-span-2 gap-2', data: { **stimulus(:radio_buttons, classes: { selected: 'btn-primary' }) }) do -%>
-      <% max_elite.times do |elite| %>
-        <label for="<%= label_for(f, :elite, elite) %>">
-          <%= content_tag(:div, class: 'btn rounded-none border-0 p-0 h-full', data: { checked: used_operator_elite == elite, value: elite, **stimulus_attrs(:radio_buttons, target: 'radioButton') }) do -%>
-            <%= vite_image_tag UsedOperatorPresenter.elite_image_url(elite), class: "w-8" %>
-          <% end %>
-          <%= f.radio_button :elite,
-                         elite,
-                         class: "hidden",
-                         checked: used_operator_elite == elite,
-                         data: {
-                           **stimulus_attrs(
-                             :radio_buttons,
-                             actions: {
-                               change: "select"
-                             },
-                             params: {
-                               value: elite
-                             }
-                           )
-                         } %>
-        </label>
-      <% end %>
-    <% end %>
+    <fieldset class="join block">
+      <legend class="simple_form__label"><%= t("elite") %></legend>
+      <%= f.collection_radio_buttons :elite, (max_elite + 1).times.to_a, :itself, :itself, item_wrapper_tag: nil, item_label_class: 'join-item btn' do |b| %>
 
-    <%= f.label :skill, class: "label" %>
-    <%= content_tag(:fieldset, class: 'flex gap-4 col-span-2', data: { **stimulus(:radio_buttons, classes: { selected: 'border-primary hover:border-primary' }) }) do -%>
-      <% max_skill.times.map(&:succ).each do |skill| %>
-        <label for="<%= label_for(f, :skill, skill) %>">
-          <%= content_tag(:div,
-            class: 'btn border-4 rounded-none p-0',
-            data: {
-              checked: used_operator_skill == skill,
-              value: skill,
-              **stimulus_attrs(:radio_buttons, target: 'radioButton')
-            }
-          ) do -%>
-            <%= image_tag UsedOperatorPresenter.skill_image_url(
-              operator.skill_game_ids[skill - 1]
-            ),
-            class: "w-10",
-            alt: skill_alt_text %>
-          <% end %>
-          <%= f.radio_button :skill,
-                         skill,
-                         class: "hidden",
-                         checked: used_operator_skill == skill,
-                         data: {
-                           **stimulus_attrs(
-                             :radio_buttons,
-                             actions: {
-                               change: "select"
-                             },
-                             params: {
-                               value: skill
-                             }
-                           )
-                         } %>
-        </label>
+        <%= vite_image_tag UsedOperatorPresenter.elite_image_url(b.value), class: "w-8" %>
+        <%= b.radio_button %>
       <% end %>
-    <% end %>
+    </fieldset>
+
+    <fieldset class="join block">
+      <legend class="simple_form__label"><%= t("skill") %></legend>
+      <%= f.collection_radio_buttons :skill, (max_skill).times.to_a, :itself, :itself, item_wrapper_tag: nil, item_label_class: 'join-item btn' do |b| %>
+
+        <%= image_tag UsedOperatorPresenter.skill_image_url(
+          operator.skill_game_ids[b.value - 1]
+        ),
+        class: "w-8" %>
+        <%= b.radio_button %>
+      <% end %>
+    </fieldset>
     <%= f.button :submit, submit_text, class: "mt-2" %>
   </div>
 <% end %>
