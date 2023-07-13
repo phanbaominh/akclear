@@ -1,4 +1,4 @@
-<%= turbo_stream.append "operators" do %>
+<%= turbo_stream.replace @used_operator.operator do %>
   <div id="<%= dom_id(@used_operator.operator) %>">
 
     <%= render Clears::UsedOperatorFormComponent.new(

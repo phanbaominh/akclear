@@ -18,7 +18,7 @@
 
     <fieldset class="join block">
       <legend class="simple_form__label"><%= t("skill") %></legend>
-      <%= f.collection_radio_buttons :skill, (max_skill).times.to_a, :itself, :itself, item_wrapper_tag: nil, item_label_class: 'join-item btn' do |b| %>
+      <%= f.collection_radio_buttons :skill, (max_skill).times.to_a.map(&:succ), :itself, :itself, item_wrapper_tag: nil, item_label_class: 'join-item btn' do |b| %>
 
         <%= image_tag UsedOperatorPresenter.skill_image_url(
           operator.skill_game_ids[b.value - 1]
