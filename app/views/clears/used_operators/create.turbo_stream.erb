@@ -1,6 +1,6 @@
 <%= turbo_stream.replace @used_operator.operator do %>
   <div id="<%= dom_id(@used_operator.operator) %>">
-    <%= render Clears::Form::OperatorCardComponent.new(used_operator: @used_operator) %>
+    <%= render Clears::UsedOperatorComponent.new(used_operator: @used_operator) %>
   </div>
 <% end %>
 <%= turbo_stream.append "used_operators_fields_wrapper" do %>

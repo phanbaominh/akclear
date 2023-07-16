@@ -3,7 +3,15 @@ class Clears::UsedOperatorsController < ApplicationController
   include ClearFilterable
 
   def new
-    @used_operator = UsedOperator.new(operator_id: clear_params[:operator_id])
+    @used_operator =
+      if clear_params[:operator_id]
+        UsedOperator.new(
+          operator_id: clear_params[:operator_id]
+        )
+      else
+        UsedOperator.new(used_operator_params)
+      end
+
     respond_to do |format|
       format.html
       format.turbo_stream

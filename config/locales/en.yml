@@ -58,6 +58,9 @@ en:
       label: "Stage type"
     environment_field:
       label: "Environment"
+  used_operator_form:
+    skill_level: "Level %{skill_level}"
+    skill_mastery: "Mastery %{skill_mastery}"
   channels:
     list: "Channels"
   stages:

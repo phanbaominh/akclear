@@ -34,7 +34,7 @@
     >
       <% clear_spec.used_operators.each do |used_operator| %>
         <div id="<%= dom_id(used_operator.operator) %>">
-          <%= render Clears::Form::OperatorCardComponent.new(used_operator: used_operator) %>
+          <%= render Clears::UsedOperatorComponent.new(used_operator: used_operator) %>
         </div>
       <% end %>
     </div>

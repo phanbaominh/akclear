@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Clears::UsedOperatorFormComponent < ApplicationComponent
+  include Turbo::FramesHelper
   attr_reader :used_operator, :submit_text, :method
 
   def post_initialize(used_operator:, submit_text: nil, method: :post)
@@ -11,18 +12,27 @@ class Clears::UsedOperatorFormComponent < ApplicationComponent
 
   delegate :operator, :name, :avatar, :max_elite, :max_skill, :max_skill_level, :max_level,
            to: :used_operator
-  delegate :elite, :skill, to: :used_operator, prefix: true
 
   def presenter_object
     used_operator
   end
 
   def skill_alt_text
-    "#{name}_#{used_operator_skill}"
+    "#{name}_#{used_operator.skill}"
   end
 
-  # Hacky way to get for attribute of label, consider using simple form custom components
-  def label_for(form, field, value)
-    "#{form.object_name.tr('[', '_').tr(']', '')}_#{field}_#{value}"
+  def skill_levels
+    levels = max_skill_level.times.map do |i|
+      [i + 1, I18n.t('used_operator_form.skill_level', skill_level: i + 1)]
+    end
+    masteries = (if used_operator.elite == 2
+                   3.times.map do |i|
+                     [8 + i,
+                      I18n.t('used_operator_form.skill_mastery', skill_mastery: i + 1)]
+                   end
+                 else
+                   []
+                 end)
+    levels + masteries
   end
 end
