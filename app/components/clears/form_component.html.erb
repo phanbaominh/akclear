@@ -28,9 +28,20 @@
         </div>
       </div>
     <% end %>
+    <div id="new_operator_wrapper">
+
+    </div>
     <div
       id="operators"
-      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 js-only"
+      class="
+        grid
+        grid-cols-1
+        xs:grid-cols-2
+        sm:flex
+        sm:flex-wrap
+        gap-2
+        js-only
+      "
     >
       <% clear_spec.used_operators.each do |used_operator| %>
         <div id="<%= dom_id(used_operator.operator) %>">

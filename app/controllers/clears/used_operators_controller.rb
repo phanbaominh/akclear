@@ -63,7 +63,6 @@ class Clears::UsedOperatorsController < ApplicationController
       format.turbo_stream do
         set_clear_spec
         @used_operator = UsedOperator.new(used_operator_params)
-        render :create
       end
     end
   end

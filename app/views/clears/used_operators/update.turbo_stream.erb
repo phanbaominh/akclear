@@ -1,6 +1,5 @@
-<%= turbo_stream.append "operators" do %>
+<%= turbo_stream.replace @used_operator.operator do %>
   <div id="<%= dom_id(@used_operator.operator) %>">
-
     <%= render Clears::UsedOperatorComponent.new(used_operator: @used_operator) %>
   </div>
 <% end %>
@@ -14,4 +13,5 @@
     <% end %>
   </div>
 <% end %>
+
 <%= turbo_stream.remove "new_operator" %>

@@ -13,8 +13,8 @@
 
       <fieldset class="join block">
         <legend class="simple_form__label"><%= t("elite") %></legend>
-        <div class="flex justify-between">
-          <%= f.collection_radio_buttons :elite, (max_elite + 1).times.to_a, :itself, :itself, item_wrapper_tag: nil, item_label_class: 'join-item btn !p-0 flex-grow' do |b| %>
+        <div class="grid grid-cols-3">
+          <%= f.collection_radio_buttons :elite, (max_elite + 1).times.to_a, :itself, :itself, item_wrapper_tag: nil, item_label_class: 'join-item btn !p-0' do |b| %>
 
             <%= vite_image_tag UsedOperatorPresenter.elite_image_url(b.value), class: "w-7" %>
             <%= b.radio_button data: {
@@ -35,7 +35,14 @@
         nil,
         class: "hidden",
         formmethod: "GET",
-        formaction: new_clears_used_operator_path,
+        formaction:
+          (
+            if method == :post
+              new_clears_used_operator_path
+            else
+              edit_clears_used_operator_path
+            end
+          ),
         data: {
           **stimulus_attrs(:click_other, target: "clickable")
         }
@@ -54,8 +61,8 @@
 
         <fieldset class="join block">
           <legend class="simple_form__label"><%= t("skill") %></legend>
-          <div class="flex">
-            <%= f.collection_radio_buttons :skill, (max_skill).times.to_a.map(&:succ), :itself, :itself, item_wrapper_tag: nil, item_label_class: 'join-item btn  !p-0 flex-grow' do |b| %>
+          <div class="grid grid-cols-3">
+            <%= f.collection_radio_buttons :skill, (max_skill).times.to_a.map(&:succ), :itself, :itself, item_wrapper_tag: nil, item_label_class: 'join-item btn !p-0 ' do |b| %>
 
               <%= image_tag UsedOperatorPresenter.skill_image_url(
                 operator.skill_game_ids[b.value - 1]
