@@ -58,7 +58,7 @@
         <%= t(:squad) %></h3>
       <span class="divider m-0"></span>
       <div class="flex justify-center">
-        <div class=" grid grid-cols-1 xs:grid-cols-2 sm:flex sm:flex-wrap gap-2 ">
+        <div class="grid grid-cols-2 xs:grid-cols-3 sm:flex sm:flex-wrap gap-2">
           <% clear.used_operators.each do |used_operator| %>
             <%= render Clears::UsedOperatorComponent.new(
               used_operator: used_operator,

@@ -1,24 +1,21 @@
-<article class="card">
-  <div class="card-body shadow-xl bg-base-100 rounded p-3">
+<article class="card sm:w-fit">
+  <div class="card-body shadow-xl bg-base-100 rounded p-3 sm:w-fit">
 
-    <div class="flex justify-between">
-      <div class="flex gap-2">
-        <%= image_tag avatar, class: "w-24" %>
-        <div class="grid grid-cols-2 gap-x-2">
+    <div class="flex gap-2">
+      <%= image_tag avatar, class: "w-24" %>
+      <div class="grid grid-cols-2 gap-x-2">
 
-          <%= vite_image_tag elite_image_url, class: "w-8 " %>
-          <span class="text-xl mt-1 "><%= level %></span>
-          <% if skill %>
+        <%= vite_image_tag elite_image_url, class: "w-8 " %>
+        <span class="text-xl mt-1 "><%= level %></span>
+        <% if skill %>
 
-            <%= image_tag skill_image_url, class: "w-7" if skill %>
-            <span class="text-xl"><%= skill_level %></span>
-          <% end %>
-          <div></div>
-        </div>
+          <%= image_tag skill_image_url, class: "w-7" if skill %>
+          <span class="text-xl"><%= skill_level %></span>
+        <% end %>
+        <div></div>
       </div>
-
       <% if editable %>
-        <div class=" flex flex-col justify-between">
+        <div class=" flex flex-col justify-between ">
           <%= button_to clears_used_operator_path, method: :delete, class: 'btn btn-sm hover:bg-error w-8 ' do %>
             <%= hidden_field_tag :operator_id, used_operator.operator_id %>
             <i class="fa-solid fa-close text-white"></i>
