@@ -19,7 +19,7 @@
 
   </div>
   <div>
-    <% ["Trending clears", "New clears"].each do |title| %>
+    <% [t(:trending_clears), t(:new_clears)].each do |title| %>
       <%= render Clears::AsideComponent.new(
         clears: Clear.includes(:stage, used_operators: :operator).first(6),
         title: title
