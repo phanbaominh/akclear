@@ -1,18 +1,18 @@
 <ul class="<%= @class %>">
-  <li><%= link_to "Clears", clears_path %></li>
+  <li><%= link_to t("clears"), clears_path %></li>
   <li><%= link_to t("channels.list"), channels_path %></li>
-  <li><%= link_to "Guide", "#" %></li>
+  <li><%= link_to t("guide"), "#" %></li>
   <li aria-hidden="true" class="border-t border-gray-700 mx-0"></li>
   <% if authenticated? %>
     <div class="lg:hidden contents">
       <li>
-        <%= link_to "Change email address", edit_identity_email_path %>
+        <%= link_to t("change_email"), edit_identity_email_path %>
       </li>
       <li>
-        <%= link_to "Change password", edit_password_path %>
+        <%= link_to t("change_password"), edit_password_path %>
       </li>
       <li>
-        <%= button_to "Log out", Current.session, method: :delete %>
+        <%= button_to t("logout"), Current.session, method: :delete %>
       </li>
     </div>
   <% end %>

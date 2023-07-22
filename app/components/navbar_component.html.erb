@@ -31,7 +31,7 @@
     <%= link_to new_clear_path, class: 'mr-2' do %>
       <%= render Primer::Button::IconComponent.new(
         icon: "plus",
-        sr_description: "New clear",
+        sr_description: t("new_clear"),
         class: "shadow"
       ) %>
     <% end %>
@@ -40,17 +40,17 @@
         <li tabindex="0">
           <details>
             <summary>
-              Profile
+              <%= t("profile") %>
             </summary>
             <ul class="p-2 bg-base-200 shadow rounded-box z-[1] left-auto right-0">
               <li>
-                <%= link_to "Change email address", edit_identity_email_path %>
+                <%= link_to t("change_email"), edit_identity_email_path %>
               </li>
               <li>
-                <%= link_to "Change password", edit_password_path %>
+                <%= link_to t("change_password"), edit_password_path %>
               </li>
               <li>
-                <%= button_to "Log out", Current.session, method: :delete %>
+                <%= button_to t("logout"), Current.session, method: :delete %>
               </li>
             </ul>
           </details>
