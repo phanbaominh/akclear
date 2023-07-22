@@ -3,6 +3,8 @@
   <li><%= link_to t("channels.list"), channels_path %></li>
   <li><%= link_to t("guide"), "#" %></li>
   <li aria-hidden="true" class="border-t border-gray-700 mx-0"></li>
+  <%= render Navbar::LanguageDropdownComponent.new(flatten: true) %>
+  <li aria-hidden="true" class="border-t border-gray-700 mx-0"></li>
   <% if authenticated? %>
     <div class="lg:hidden contents">
       <li>

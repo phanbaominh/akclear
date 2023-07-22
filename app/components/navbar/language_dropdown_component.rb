@@ -6,6 +6,10 @@ class Navbar::LanguageDropdownComponent < ApplicationComponent
     jp: 'Japanese'
   }.freeze
 
+  def post_initialize(flatten: false)
+    @flatten = flatten
+  end
+
   def name(locale)
     LOCALE_TO_NAME[locale]
   end

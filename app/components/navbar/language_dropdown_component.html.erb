@@ -1,4 +1,18 @@
-<div class="dropdown dropdown-end">
+<% if @flatten %>
+<div class="contents lg:hidden">
+  <% available_locales.each do |locale| %>
+    <li>
+      <%= link_to url_for(locale: locale.to_s), hreflang: locale, rel: 'alternate' do%>
+        <div class="inline-flex items-center">
+          <%= vite_image_tag icon(locale), class: 'w-6 mr-2'  %>
+          <%= name(locale) %>
+        </div>
+      <% end %>
+    </li>
+  <% end %>
+</div>
+<% else %>
+<div class="dropdown dropdown-end hidden lg:block">
   <button type="button" class="button py-2 ml-2 inline-flex items-center justify-center">
     <%= vite_image_tag icon(current_locale), class: 'w-6 inline-block'  %>
   </button>
@@ -15,3 +29,4 @@
     <% end %>
   </ul>
 </div>
+<% end %>
