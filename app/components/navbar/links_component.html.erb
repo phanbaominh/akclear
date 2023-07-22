@@ -2,33 +2,18 @@
   <li><%= link_to "Clears", clears_path %></li>
   <li><%= link_to t("channels.list"), channels_path %></li>
   <li><%= link_to "Guide", "#" %></li>
+  <li aria-hidden="true" class="border-t border-gray-700 mx-0"></li>
   <% if authenticated? %>
-    <li tabindex="0" class="lg:hidden">
-      <a>
-        Profile
-      </a>
-      <ul
-        class="
-          p-2
-          bg-base-200
-          shadow
-          rounded-box
-          left-auto
-          sm:left-full
-          top-full
-          sm:top-0
-        "
-      >
-        <li>
-          <%= link_to "Change email address", edit_identity_email_path %>
-        </li>
-        <li>
-          <%= link_to "Change password", edit_password_path %>
-        </li>
-        <li>
-          <%= button_to "Log out", Current.session, method: :delete %>
-        </li>
-      </ul>
-    </li>
+    <div class="lg:hidden contents">
+      <li>
+        <%= link_to "Change email address", edit_identity_email_path %>
+      </li>
+      <li>
+        <%= link_to "Change password", edit_password_path %>
+      </li>
+      <li>
+        <%= button_to "Log out", Current.session, method: :delete %>
+      </li>
+    </div>
   <% end %>
 </ul>
