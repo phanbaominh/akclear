@@ -16,28 +16,35 @@
 
         </div>
       <% end %>
-      <%= f.input :operator_id,
-              as: :select,
-              collection: selectable_operators,
-              wrapper_html: {
-                class: "w-32",
-                data: {
-                  **stimuluses(
-                    choices: {
-                      include_controller: true
-                    },
-                    click_other: {
-                      actions: {
-                        change: "clickOther"
+      <% if edit_form? %>
+        <%= f.input :operator_id, as: :hidden %>
+        <span>
+          <%= used_operator.name %>
+        </span>
+      <% else %>
+        <%= f.input :operator_id,
+                as: :select,
+                collection: selectable_operators,
+                wrapper_html: {
+                  class: "w-32",
+                  data: {
+                    **stimuluses(
+                      choices: {
+                        include_controller: true
+                      },
+                      click_other: {
+                        actions: {
+                          change: "clickOther"
+                        }
                       }
-                    }
-                  )
-                }
-              },
-              input_html: {
-                id: "operators__select"
-              },
-              include_hidden: false %>
+                    )
+                  }
+                },
+                input_html: {
+                  id: "operators__select"
+                },
+                include_hidden: false %>
+      <% end %>
 
     </div>
 
