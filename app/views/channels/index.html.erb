@@ -38,17 +38,18 @@
             } do %>
       <% for i in 1..30 do %>
         <li class="flex">
-          <%= button_to "/channels/1", 
-                    class: "
-                        flex-row flex text-left p-4 bg-base-200 shadow-xl flex-grow
-                        hover:outline
-                        hover:outline-primary
-                        hover:bg-base-content
-                        hover:bg-opacity-10
-                    ",
-                    form: {
-                        class: "flex flex-grow"
-                    } do %>
+          <%= button_to "/channels/1",
+            method: "get",
+            class: "
+                flex-row flex text-left p-4 bg-base-200 shadow-xl flex-grow
+                hover:outline
+                hover:outline-primary
+                hover:bg-base-content
+                hover:bg-opacity-10
+            ",
+            form: {
+                class: "flex flex-grow",
+            } do %>
             <img
               src="https://holodex.net/statics/channelImg/UCg02KL1G0nmH0QzFuLsVoRQ/100.png"
               alt=""
