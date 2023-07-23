@@ -63,11 +63,12 @@
     <% if used_operator.operator_id %>
       <fieldset class="join block">
         <legend class="simple_form__label"><%= t("elite") %></legend>
-        <div class="flex justify-between">
-          <%= f.collection_radio_buttons :elite, (max_elite + 1).times.to_a, :itself, :itself, item_wrapper_tag: nil, item_label_class: 'join-item btn !p-0 flex-grow' do |b| %>
+        <div class="grid grid-cols-3 justify-between ">
+          <%= f.collection_radio_buttons :elite, (max_elite + 1).times.to_a, :itself, :itself, item_wrapper_tag: nil,
+           item_label_class: 'join-item !p-0 flex-grow' do |b| %>
 
-            <%= vite_image_tag UsedOperatorPresenter.elite_image_url(b.value), class: "w-7" %>
-            <%= b.radio_button data: {
+            <%= b.radio_button class: "peer appearance-none",
+                           data: {
                              **stimulus_attrs(
                                :click_other,
                                actions: {
@@ -75,6 +76,9 @@
                                }
                              )
                            } %>
+            <div class="btn animate-none peer-checked:bg-primary w-full">
+              <%= vite_image_tag UsedOperatorPresenter.elite_image_url(b.value), class: "w-7" %>
+            </div>
           <% end %>
         </div>
 
@@ -93,14 +97,19 @@
 
         <fieldset class="join block">
           <legend class="simple_form__label"><%= t("skill") %></legend>
-          <div class="flex">
-            <%= f.collection_radio_buttons :skill, (max_skill).times.to_a.map(&:succ), :itself, :itself, item_wrapper_tag: nil, item_label_class: 'join-item btn  !p-0 flex-grow' do |b| %>
+          <div class="grid grid-cols-3">
+            <%= f.collection_radio_buttons :skill, (max_skill).times.to_a.map(&:succ),
+               :itself, :itself, item_wrapper_tag: nil,
+               item_label_class: 'join-item !p-0 flex-grow' do |b| %>
 
-              <%= image_tag UsedOperatorPresenter.skill_image_url(
-                operator.skill_game_ids[b.value - 1]
-              ),
-              class: "w-8" %>
-              <%= b.radio_button %>
+              <%= b.radio_button class: "peer appearance-none" %>
+              <div class="btn animate-none peer-checked:bg-primary w-full">
+                <%= image_tag UsedOperatorPresenter.skill_image_url(
+                  operator.skill_game_ids[b.value - 1]
+                ),
+                class: "w-8" %>
+              </div>
+
             <% end %>
           </div>
 
@@ -110,7 +119,7 @@
                 collection: skill_levels,
                 label_method: :last,
                 value_method: :first %>
-        <%= f.button :submit, submit_text, class: "mt-2" %>
+        <%= f.button :submit, submit_text, class: "mt-2 !animate-none" %>
 
       <% end %>
     <% end %>
