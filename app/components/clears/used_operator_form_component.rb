@@ -13,12 +13,20 @@ class Clears::UsedOperatorFormComponent < ApplicationComponent
   delegate :operator, :name, :avatar, :max_elite, :max_skill, :max_skill_level, :max_level,
            to: :used_operator
 
+  def form_namespace
+    used_operator.operator_id || 'new_operator'
+  end
+
   def presenter_object
     used_operator
   end
 
   def skill_alt_text
     "#{name}_#{used_operator.skill}"
+  end
+
+  def selectable_operators
+    Operator.all.order(:name)
   end
 
   def skill_levels

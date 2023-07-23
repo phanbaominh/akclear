@@ -4,13 +4,7 @@ class Clears::UsedOperatorsController < ApplicationController
 
   def new
     @used_operator =
-      if clear_params[:operator_id]
-        UsedOperator.new(
-          operator_id: clear_params[:operator_id]
-        )
-      else
-        UsedOperator.new(used_operator_params)
-      end
+      UsedOperator.new(params[:used_operator] ? used_operator_params : {})
 
     respond_to do |format|
       format.html

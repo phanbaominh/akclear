@@ -1,8 +1,7 @@
 module StimulusHelper
   def stimuluses(**options)
-    include_controller = options.delete(:include_controller)
-    include_controller = false if include_controller.nil?
     stimulus_data = options.map do |(controller, attributes)|
+      include_controller = attributes.delete(:include_controller)
       include_controller ? stimulus(controller, **attributes) : stimulus_attrs(controller, **attributes)
     end
 

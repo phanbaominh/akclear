@@ -1,11 +1,16 @@
 <%= turbo_stream.remove @used_operator.operator %>
-<%= turbo_stream.append "used_operators_fields_wrapper" do %>
-  <div id="used_operators_fields" class="hidden">
-    <%= simple_fields_for @clear_spec do |f| %>
-      <%= f.simple_fields_for :used_operators do |used_operator_form| %>
+<%= turbo_stream.remove dom_id(
+                      UsedOperator.new,
+                      "#{@used_operator.operator_id}_new"
+                    ) %>
+<%= turbo_stream.append "operators__list" do %>
+  <%= render Clears::Form::NewOperatorButtonComponent.new %>
+<% end %>
+<%= turbo_stream.update "clears__form__operators_fields" do %>
+  <%= simple_fields_for @clear_spec do |f| %>
+    <%= f.simple_fields_for :used_operators do |used_operator_form| %>
 
-        <%= render Clears::UsedOperatorFieldsComponent.new(form: used_operator_form) %>
-      <% end %>
+      <%= render Clears::UsedOperatorFieldsComponent.new(form: used_operator_form) %>
     <% end %>
-  </div>
+  <% end %>
 <% end %>

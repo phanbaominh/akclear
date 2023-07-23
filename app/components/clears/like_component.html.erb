@@ -1,6 +1,6 @@
 <%= content_tag :div, class: 'group flex cursor-pointer text-lg', 
-  data: { **stimuluses(clears__like: { values: { liked: liked? } }, 
-  toggle: { classes: { on: 'fa-solid fa-heart text-primary', off: 'fa-regular fa-heart' }}, include_controller: true) }, id: dom_id(@clear, :like) do %>
+  data: { **stimuluses(clears__like: { values: { liked: liked? }, include_controller: true }, 
+  toggle: { classes: { on: 'fa-solid fa-heart text-primary', off: 'fa-regular fa-heart' }, include_controller: true}) }, id: dom_id(@clear, :like) do %>
   <div class="group-hover:bg-primary/40 rounded-full px-2">
     <%= button_to clear_like_path(clear)  , method: liked? ? :delete : :post, 
       data: { **stimuluses(clears__like: { actions: { click: 'changeLikeCount' } }, 

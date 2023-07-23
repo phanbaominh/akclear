@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus";
+import "choices.js/public/assets/styles/choices.min.css";
 import Choices from "choices.js";
 // Connects to data-controller="clears--form"
 export default class extends Controller {

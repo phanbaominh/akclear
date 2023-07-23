@@ -1,16 +1,59 @@
-<%= turbo_frame_tag @used_operator.operator_id do %>
-  <%= simple_form_for @used_operator, url: clears_used_operator_path, method: method,
-  html: { class: 'card bg-base-200 shadow-xl', data: { **stimulus(:click_other) } },
-  namespace: @used_operator.operator_id do |f| %>
-    <%= f.input :operator_id, as: :hidden %>
-    <div class="card-body">
-      <div class="flex justify-between">
+<%= simple_form_for @used_operator, url: clears_used_operator_path, method: method,
+  html: { class: 'card bg-base-200 shadow-xl w-1/2',
+  data: { **stimulus(:click_other), turbo_stream: true } },
+  namespace: form_namespace do |f| %>
+
+  <div class="card-body">
+    <%= content_tag :button, class: "btn btn-circle self-end", 
+      data: { **stimulus(:dispatch, values: { event: 'clickCloseForm' }, actions: {click: 'dp:prevent' })}  do %>
+      <%= heroicon "x-mark", options: { class: "h-4" } %>
+    <% end %>
+    <div class="flex justify-between">
+      <% if used_operator.operator_id %>
         <%= image_tag avatar, class: "w-16 h-16", alt: name %>
 
-        <h2 class="card-title"><%= name %></h2>
+      <% else %>
+        <div class="w-16 h-16 bg-base-content">
 
-      </div>
+        </div>
+      <% end %>
+      <%= f.input :operator_id,
+              as: :select,
+              collection: selectable_operators,
+              wrapper_html: {
+                class: "w-32",
+                data: {
+                  **stimuluses(
+                    choices: {
+                      include_controller: true
+                    },
+                    click_other: {
+                      actions: {
+                        change: "clickOther"
+                      }
+                    }
+                  )
+                }
+              },
+              input_html: {
+                id: "operators__select"
+              },
+              include_hidden: false %>
 
+    </div>
+
+    <%= content_tag(
+      :button,
+      nil,
+      class: "hidden",
+      formmethod: "GET",
+      formaction: new_clears_used_operator_path,
+      data: {
+        **stimulus_attrs(:click_other, target: "clickable")
+      }
+    ) %>
+
+    <% if used_operator.operator_id %>
       <fieldset class="join block">
         <legend class="simple_form__label"><%= t("elite") %></legend>
         <div class="flex justify-between">
@@ -29,17 +72,6 @@
         </div>
 
       </fieldset>
-
-      <%= content_tag(
-        :button,
-        nil,
-        class: "hidden",
-        formmethod: "GET",
-        formaction: new_clears_used_operator_path,
-        data: {
-          **stimulus_attrs(:click_other, target: "clickable")
-        }
-      ) %>
 
       <% if @used_operator.elite %>
         <%= f.input :level,
@@ -74,6 +106,7 @@
         <%= f.button :submit, submit_text, class: "mt-2" %>
 
       <% end %>
-    </div>
-  <% end %>
+    <% end %>
+
+  </div>
 <% end %>
