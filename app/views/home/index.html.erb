@@ -1,5 +1,5 @@
-<div class="md:flex flex-row">
-  <div class="grid grid-cols-1 sm:grid-cols-2 grow gap-12 pr-12 basis-0">
+<div class="md:flex flex-row gap-12">
+  <div class="grid grid-cols-1 sm:grid-cols-2 grow gap-12 basis-0">
     <div class="sm:col-span-2">
       <%= render Home::HeroComponent.new(
         stageables: Event.latest,
@@ -19,7 +19,7 @@
 
   </div>
   <div>
-    <% ["Trending clears", "New clears"].each do |title| %>
+    <% [t(:trending_clears), t(:new_clears)].each do |title| %>
       <%= render Clears::AsideComponent.new(
         clears: Clear.includes(:stage, used_operators: :operator).first(6),
         title: title
