@@ -3,9 +3,19 @@ class Clears::UsedOperatorsController < ApplicationController
   include ClearFilterable
 
   def new
+    session['used_operator'] = nil
     @used_operator =
       UsedOperator.new(params[:used_operator] ? used_operator_params : {})
 
+    respond_to do |format|
+      format.html
+      format.turbo_stream
+    end
+  end
+
+  def show
+    @used_operator = UsedOperator.new(session['used_operator'])
+    session['used_operator'] = nil
     respond_to do |format|
       format.html
       format.turbo_stream
@@ -39,6 +49,7 @@ class Clears::UsedOperatorsController < ApplicationController
   end
 
   def edit
+    session['used_operator'] ||= used_operator_params
     @used_operator = UsedOperator.new(used_operator_params)
     respond_to do |format|
       format.html
@@ -47,6 +58,7 @@ class Clears::UsedOperatorsController < ApplicationController
   end
 
   def update
+    session['used_operator'] = nil
     index = clear_spec_session['used_operators_attributes']&.find do |_key, used_operator|
       used_operator['operator_id'] == used_operator_params[:operator_id]
     end&.first
@@ -57,7 +69,6 @@ class Clears::UsedOperatorsController < ApplicationController
       format.turbo_stream do
         set_clear_spec
         @used_operator = UsedOperator.new(used_operator_params)
-        render :create
       end
     end
   end

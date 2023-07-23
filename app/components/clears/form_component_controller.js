@@ -8,27 +8,4 @@ export default class extends Controller {
       }
     });
   }
-
-  closeForm() {
-    this.highlight({ detail: { operatorId: null } });
-    this.appendNewButton();
-    this.removeForm();
-  }
-
-  removeForm() {
-    this.element.querySelector("#operators__form_container > form").remove();
-  }
-
-  appendNewButton() {
-    if (
-      this.element.querySelector(
-        "#operators__list #operators__new_operator_btn"
-      )
-    )
-      return;
-    const addButton = this.element
-      .querySelector("#operators__new_operator_btn_template")
-      .content.cloneNode(true);
-    this.element.querySelector("#operators__list").appendChild(addButton);
-  }
 }

@@ -2,19 +2,24 @@
 
 class Clears::UsedOperatorFormComponent < ApplicationComponent
   include Turbo::FramesHelper
-  attr_reader :used_operator, :submit_text, :method
+  attr_reader :used_operator, :submit_text, :method, :prefix_namespace
 
-  def post_initialize(used_operator:, submit_text: nil, method: :post)
+  def post_initialize(used_operator:, submit_text: nil, method: :post, prefix_namespace: nil)
     @used_operator = used_operator
     @method = method
+    @prefix_namespace = prefix_namespace
     @submit_text = submit_text || I18n.t(:add_operator)
   end
 
   delegate :operator, :name, :avatar, :max_elite, :max_skill, :max_skill_level, :max_level,
            to: :used_operator
 
+  def edit_form?
+    method == :patch
+  end
+
   def form_namespace
-    used_operator.operator_id || 'new_operator'
+    [prefix_namespace, used_operator.operator_id || 'new_operator'].compact.join('_')
   end
 
   def presenter_object

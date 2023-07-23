@@ -1,4 +1,5 @@
 <%= turbo_stream.remove @used_operator.operator %>
+<%= turbo_stream.remove dom_id(@used_operator.operator, :mobile) %>
 <%= turbo_stream.remove dom_id(
                       UsedOperator.new,
                       "#{@used_operator.operator_id}_new"

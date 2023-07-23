@@ -1,11 +1,4 @@
-<%= turbo_stream.append "operators__list" do %>
-  <%= render Clears::UsedOperatorResponsiveComponent.new(
-    used_operator: @used_operator
-  ) %>
-  <%= render Clears::Form::NewOperatorButtonComponent.new %>
-<% end %>
-<%= turbo_stream.update "operators__form_container" %>
-
+<%= render template: "clears/used_operators/show" %>
 <%= turbo_stream.update "clears__form__operators_fields" do %>
   <%= simple_fields_for @clear_spec do |f| %>
     <%= f.simple_fields_for :used_operators do |used_operator_form| %>

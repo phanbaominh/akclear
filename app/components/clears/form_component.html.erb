@@ -27,16 +27,13 @@
       </div>
     <% end %>
     <%= content_tag :div,
-      class: 'space-y-2',
+      class: 'space-y-2 flex flex-col',
       data: { **stimulus(:clears__form_component,
         actions: {
           'dispatch:clickEditOperator': 'highlight',
           'dispatch:clickCloseForm': 'closeForm',
         }
       )} do %>
-      <template id="operators__new_operator_btn_template">
-        <%= render Clears::Form::NewOperatorButtonComponent.new %>
-      </template>
       <div
         id="operators__list"
         class="
@@ -50,13 +47,11 @@
         "
       >
         <% clear_spec.used_operators.each do |used_operator| %>
-          <div id="<%= dom_id(used_operator.operator) %>">
-            <%= render Clears::UsedOperatorComponent.new(used_operator: used_operator) %>
-          </div>
+          <%= render Clears::UsedOperatorResponsiveComponent.new(used_operator: used_operator) %>
         <% end %>
         <%= render Clears::Form::NewOperatorButtonComponent.new %>
       </div>
-      <div id="operators__form_container" class="flex flex-col items-center">
+      <div id="operators__form_container" class="self-center w-full sm:w-1/2">
 
       </div>
     <% end %>
