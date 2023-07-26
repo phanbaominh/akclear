@@ -389,6 +389,8 @@ GEM
     xpath (3.2.0)
       nokogiri (~> 1.8)
     yard (0.9.34)
+    yt (0.33.4)
+      activesupport
     zeitwerk (2.6.8)
 
 PLATFORMS
@@ -447,6 +449,7 @@ DEPENDENCIES
   vite_rails
   web-console
   webdrivers
+  yt
 
 RUBY VERSION
    ruby 3.1.3p185
