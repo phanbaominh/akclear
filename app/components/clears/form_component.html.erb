@@ -4,7 +4,8 @@
     <%= simple_form_for clear_spec, url: clears_path, method: new_form ? :post : :get, html: {
       id: "clears__form",
       data: {
-        turbo_stream: "true", turbo_frame: 'clears'
+        turbo_stream: "true", turbo_frame: 'clears',
+        **stimulus(:clears__form_component)
       },
       class: 'flex flex-col'
     } do |f| %>
@@ -12,7 +13,24 @@
         <%= header %>
       </header>
       <% if new_form %>
-        <%= f.input :link %>
+        <%= content_tag :iframe,
+        nil,
+        class: "hidden w-fit",
+        data: {
+          **stimulus_attrs(:clears__form_component, target: "videoFrame")
+        } %>
+        <%= f.input :link,
+                input_html: {
+                  data: {
+                    **stimulus_attrs(
+                      :clears__form_component,
+                      actions: {
+                        focusout: "embedLink"
+                      },
+                      target: "link"
+                    )
+                  }
+                } %>
         <%= f.input :name %>
       <% end %>
       <div class="js-only">
@@ -28,7 +46,7 @@
     <% end %>
     <%= content_tag :div,
       class: 'space-y-2 flex flex-col',
-      data: { **stimulus(:clears__form_component,
+      data: { **stimulus_attrs(:clears__form_component,
         actions: {
           'dispatch:clickEditOperator': 'highlight',
           'dispatch:clickCloseForm': 'closeForm',
