@@ -104,4 +104,5 @@ group :test do
   gem 'selenium-webdriver'
   gem 'webdrivers'
   gem "test-prof"
+  gem 'webmock'
 end
