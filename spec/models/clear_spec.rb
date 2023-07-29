@@ -14,12 +14,26 @@ RSpec.describe Clear, type: :model do
 
   describe '#assign_channel' do
     context 'when the link has changed' do
-      let_it_be(:channel) { create(:channel) }
       let(:link) { 'https://www.youtube.com/watch?v=123' }
 
       before { allow(Channel).to receive(:from).with(link).and_return(channel) }
 
       context 'when new channel' do
+        let_it_be(:channel) { build(:channel) }
+
+        it 'assigns the channel' do
+          clear = build(:clear, link:)
+
+          clear.save
+
+          expect(channel).to be_persisted
+          expect(clear.channel).to eq(channel)
+        end
+      end
+
+      context 'when existing channel' do
+        let_it_be(:channel) { create(:channel) }
+
         it 'assigns the channel' do
           clear = build(:clear, link:)
 

@@ -26,7 +26,11 @@ class Clear < ApplicationRecord
   def assign_channel
     return unless saved_change_to_link?
 
-    self.channel = Channel.from(link).presence
-    save if has_changes_to_save?
+    self.channel = Channel.from(link)
+
+    return unless has_changes_to_save?
+
+    channel.save! if channel.new_record?
+    save!
   end
 end
