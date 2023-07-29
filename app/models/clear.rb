@@ -17,8 +17,16 @@ class Clear < ApplicationRecord
 
   validates :link, presence: true
 
+  after_save :assign_channel
 
   def verified?
     verification.present?
+  end
+
+  def assign_channel
+    return unless saved_change_to_link?
+
+    self.channel = Channel.from(link).presence
+    save if has_changes_to_save?
   end
 end

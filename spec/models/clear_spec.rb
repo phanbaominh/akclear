@@ -11,4 +11,34 @@ RSpec.describe Clear, type: :model do
   describe 'validations' do
     it { is_expected.to validate_presence_of(:link) }
   end
+
+  describe '#assign_channel' do
+    context 'when the link has changed' do
+      let_it_be(:channel) { create(:channel) }
+      let(:link) { 'https://www.youtube.com/watch?v=123' }
+
+      before { allow(Channel).to receive(:from).with(link).and_return(channel) }
+
+      context 'when new channel' do
+        it 'assigns the channel' do
+          clear = build(:clear, link:)
+
+          clear.save
+
+          expect(clear.channel).to eq(channel)
+        end
+      end
+    end
+
+    context 'when the link has not changed' do
+      it 'does not assign the channel' do
+        allow(Channel).to receive(:from)
+        clear = build(:clear, link: nil)
+
+        clear.save
+
+        expect(Channel).not_to have_received(:from)
+      end
+    end
+  end
 end

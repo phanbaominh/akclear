@@ -4,4 +4,41 @@ RSpec.describe Channel, type: :model do
   describe 'associations' do
     it { is_expected.to belong_to(:user).optional }
   end
+
+  describe '.from' do
+    let(:link) { 'https://www.youtube.com/watch?v=123&' }
+
+    before do
+      allow(Yt::Video).to receive(:new).and_return(video_data)
+    end
+
+    context 'when the channel exists' do
+      let_it_be(:channel) { create(:channel, external_id: 'abc') }
+      let(:video_data) { double(channel_id: 'abc') }
+
+      it 'returns the channel' do
+        expect(described_class.from(link)).to eq(channel)
+      end
+    end
+
+    context 'when the channel does not exist' do
+      let(:video_data) { double(channel_id: 'abc', channel_title: 'title') }
+      let(:channel_data) { double(thumbnail_url: 'thumbnail', banner_url: 'banner') }
+
+      before do
+        allow(Yt::Models::ChannelBranding).to receive(:new).and_return(channel_data)
+      end
+
+      it 'initializes a new channel' do
+        new_channel = described_class.from(link)
+        expect(new_channel).to be_new_record
+        expect(new_channel).to have_attributes(
+          title: 'title',
+          external_id: 'abc',
+          thumbnail_url: 'thumbnail',
+          banner_url: 'banner'
+        )
+      end
+    end
+  end
 end
