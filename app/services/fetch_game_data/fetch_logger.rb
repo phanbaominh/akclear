@@ -10,6 +10,7 @@ module FetchGameData
       if entity.previously_new_record?
         log_info("#{entity_class} #{entity_id} created successfully!")
         @new_count += 1
+      # TODO: does not log translation changes yet
       elsif entity.previous_changes.present?
         log_info("#{entity_class} #{entity_id} updated successfully!")
         @update_count += 1

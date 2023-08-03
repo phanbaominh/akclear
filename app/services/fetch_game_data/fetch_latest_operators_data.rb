@@ -4,9 +4,12 @@ require 'open-uri'
 
 module FetchGameData
   class FetchLatestOperatorsData < ApplicationService
-    OPERATOR_TABLE_SOURCE = 'https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/en_US/gamedata/excel/character_table.json'
-    def initialize(source = OPERATOR_TABLE_SOURCE)
-      @source = source
+    SOURCES = {
+      en: 'https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/en_US/gamedata/excel/character_table.json',
+      jp: 'https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/ja_JP/gamedata/excel/character_table.json'
+    }
+    def initialize(source = nil)
+      @source = source || SOURCES[I18n.locale]
     end
 
     def call
