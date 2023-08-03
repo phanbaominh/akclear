@@ -1,4 +1,6 @@
 class Operator < ApplicationRecord
+  extend Mobility
+  translates :name, type: :string
   # https://raw.githubusercontent.com/Aceship/Arknight-Images/main/avatars/char_002_amiya.png
   include Operator::Rarifiable
   has_one_attached :sprite
