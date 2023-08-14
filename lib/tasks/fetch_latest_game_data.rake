@@ -28,7 +28,8 @@ namespace :fetch_latest_game_data do
       FetchGameData::FetchAnnihilationsData,
       FetchGameData::FetchLatestStagesData,
       FetchGameData::FetchEpisodesBanners,
-      FetchGameData::FetchEventBanners
+      FetchGameData::FetchEventBanners,
+      FetchGameData::FetchOperatorsSkillsIcons
     ].map(&:call)
   end
 end

@@ -164,5 +164,6 @@ if Rails.env.development?
   FetchGameData::FetchAnnihilationsData.call
   FetchGameData::FetchEventBanners.call
   FetchGameData::FetchEpisodesBanners.call
+  FetchGameData::FetchOperatorsSkillsIcons.call
   100.times { create_clear(user) }
 end

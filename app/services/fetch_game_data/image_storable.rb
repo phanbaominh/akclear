@@ -18,7 +18,7 @@ module FetchGameData
 
     def store_images(file_name_to_banner_url)
       count = 0
-      log_info("Found #{file_name_to_banner_url.keys.size} events images, storing...")
+      log_info("Found #{file_name_to_banner_url.keys.size} #{image_storable} images, storing...")
       folder_path = self.class.images_path
       file_name_to_banner_url.each do |file_name, banner_url|
         path = folder_path.join("#{file_name}.jpg")
