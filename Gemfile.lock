@@ -217,6 +217,7 @@ GEM
       ast (~> 2.4.1)
       racc
     pg (1.5.3)
+    pkg-config (1.5.2)
     prettier_print (1.2.1)
     pry (0.14.2)
       coderay (~> 1.1)
@@ -268,9 +269,13 @@ GEM
     regexp_parser (2.8.1)
     reline (0.3.5)
       io-console (~> 0.5)
+    request_store (1.5.1)
+      rack (>= 1.4)
     reverse_markdown (2.1.1)
       nokogiri
     rexml (3.2.5)
+    rmagick (5.3.0)
+      pkg-config (~> 1.4)
     route_translator (13.1.0)
       actionpack (>= 5.2, < 7.1)
       activesupport (>= 5.2, < 7.1)
@@ -291,6 +296,7 @@ GEM
       rspec-mocks (~> 3.12)
       rspec-support (~> 3.12)
     rspec-support (3.12.0)
+    rtesseract (3.1.2)
     rubocop (1.52.1)
       json (~> 2.3)
       parallel (~> 1.10)
@@ -441,8 +447,10 @@ DEPENDENCIES
   rack-attack
   rails (~> 7.0.4)
   redis (~> 4.0)
+  rmagick
   route_translator
   rspec-rails (~> 6.0.0)
+  rtesseract
   rubocop
   rubocop-performance
   rubocop-rails

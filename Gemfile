@@ -65,6 +65,8 @@ gem 'rack-attack'
 gem 'cancancan'
 gem 'heroicon'
 gem 'yt'
+gem 'rmagick'
+gem 'rtesseract'
 gem 'mobility'
 
 group :development, :test do

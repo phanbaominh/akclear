@@ -44,3 +44,5 @@ RSpec/ImplicitSubject:
   Enabled: false
 Naming/PredicateName:
   Enabled: false
+Style/MultilineBlockChain:
+  Enabled: false
