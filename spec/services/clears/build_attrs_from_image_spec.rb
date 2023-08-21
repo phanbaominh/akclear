@@ -44,16 +44,17 @@ describe Clears::BuildAttrsFromImage do
   context 'when language is japanese' do
     let(:operators) do
       [
-        ['クルース', 55, 1, 1, ['skchr_kroos_1'], Operator::Rarifiable::THREE_STARS],
-        ['ポプカル', 55, 1, 1, ['skcom_atk_up[1]'], Operator::Rarifiable::THREE_STARS],
+        # name, level, elite, skill, skill_game_ids
         ['アンセル', 55, 1, 1, ['skcom_range_extend'], Operator::Rarifiable::THREE_STARS],
         ['カーディ', 55, 1, 1, ['skcom_heal_self[1]'], Operator::Rarifiable::THREE_STARS],
-        ['テンニンカ', 30, 2, 1, ['skcom_assist_cost[2]', 'skchr_myrtle_2'], Operator::Rarifiable::FOUR_STARS],
-        ['プリュム', 55, 1, 1, ['skcom_quickattack[1]'], Operator::Rarifiable::THREE_STARS],
-        ['ハイビスカス', 55, 1, 1, ['skcom_heal_up[1]'], Operator::Rarifiable::THREE_STARS],
+        ['クルース', 55, 1, 1, ['skchr_kroos_1'], Operator::Rarifiable::THREE_STARS],
+        ['グラベル', 30, 2, 2, %w[skchr_gravel_1 skchr_gravel_2], Operator::Rarifiable::FOUR_STARS],
+        ['ケルシー', 90, 2, 3, %w[skchr_kalts_1 skchr_kalts_2 skchr_kalts_3], Operator::Rarifiable::SIX_STARS],
         ['ジェシカ', 60, 1, 1, %w[skchr_jesica_1 skchr_jesica_2], Operator::Rarifiable::FOUR_STARS],
-        ['グラベル', 30, 2, 1, %w[skchr_gravel_1 skchr_gravel_2], Operator::Rarifiable::FOUR_STARS],
-        ['ケルシー', 90, 2, 3, %w[skchr_kalts_1 skchr_kalts_2 skchr_kalts_3], Operator::Rarifiable::SIX_STARS]
+        ['テンニンカ', 3, 0, 1, ['skcom_assist_cost[2]', 'skchr_myrtle_2'], Operator::Rarifiable::FOUR_STARS], # correct level: 30, elite: 2
+        ['ハイビスカス', 5, 0, 1, ['skcom_heal_up[1]'], Operator::Rarifiable::THREE_STARS], #  correct elite: 1, level: 55
+        ['プリュム', 55, 1, 1, ['skcom_quickattack[1]'], Operator::Rarifiable::THREE_STARS],
+        ['ポプカル', 55, 1, 1, ['skcom_atk_up[1]'], Operator::Rarifiable::THREE_STARS]
       ]
     end
     let(:image_path) { 'spec/fixtures/images/jp_clear.png' }

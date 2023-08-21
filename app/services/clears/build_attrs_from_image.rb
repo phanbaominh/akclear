@@ -8,7 +8,7 @@ module Clears
     ELITE_0_REFERENCE_IMAGE_PATH = Rails.root.join('app/javascript/images/elite0_reference.png')
     ELITE_1_REFERENCE_IMAGE_PATH = Rails.root.join('app/javascript/images/elite1_reference.png')
     SKILL_IMAGE_PATH = Rails.root.join('app/javascript/images/skills/')
-    NAME_SIMILARITY_THRESHOLD = 0.5
+    NAME_SIMILARITY_THRESHOLD = 0.7
     LOCALE_TO_TESSERACT_LANG = {
       en: 'eng',
       jp: 'jpn'
@@ -24,7 +24,12 @@ module Clears
       image = ImageList.new(image_path)
 
       puts 'Processing image for extraction...'
-      processed_image = process_image(image)
+      processed_image = if lang == 'eng'
+                          # ImageList.new('english.jpg')
+                          process_image(image)
+                        else
+                          process_image(image)
+                        end
       # processed_image.write('tmp/processed.png')
       # processed_image = ImageList.new('tmp/processed.png')
       puts 'Extracting image...'
@@ -64,12 +69,13 @@ module Clears
 
     def reduce_box(comb)
       di = 0
+      comb[:idx] = comb[:word].size.times.map { |i| comb[:start_idx] + i } if comb[:start_idx]
       comb_dup = comb.deep_dup
       while di < comb[:word].size
         reduced_word = (comb[:word][0...di] + comb[:word][(di + 1)..]).join
         word = comb[:word].join
         if (m1 = get_largest_similar_ratio(reduced_word)) >= (m2 = get_largest_similar_ratio(word))
-          comb.each_value { |v| v.delete_at(di) }
+          comb.each_value { |v| v.try(:delete_at, di) }
         else
           di += 1
         end
@@ -80,15 +86,19 @@ module Clears
         reduced_word = (comb_dup[:word][0...di] + comb_dup[:word][(di + 1)..]).join
         word = comb_dup[:word].join
         if (m1 = get_largest_similar_ratio(reduced_word)) >= (m2 = get_largest_similar_ratio(word))
-          comb_dup.each_value { |v| v.delete_at(di) }
+          comb_dup.each_value { |v| v.try(:delete_at, di) }
           di = [di, comb_dup[:word].size - 1].min
         else
           di -= 1
         end
         mdup = [m1, m2].max
       end
-      p "RESULT: #{[comb[:word].join, comb_dup[:word].join, m, mdup].inspect}"
+      # p "RESULT: #{[comb[:word].join, comb_dup[:word].join, m, mdup].inspect}"
       comb = comb_dup if mdup > m
+      get_final_box(comb)
+    end
+
+    def get_final_box(comb)
       comb[:word] = comb[:word].join
       comb[:x_start] = comb[:x_start].min
       comb[:x_end] = comb[:x_end].max
@@ -97,7 +107,12 @@ module Clears
       comb
     end
 
-    def combine_boxes_based_on_detected_string(_found_strings, boxes)
+    def sort_boxes(boxes)
+      boxes
+      # boxes.sort { |a, b| (a[:y_start] * 5) + a[:x_start] <=> (b[:y_start] * 5) + b[:x_start] }
+    end
+
+    def combine_boxes_based_on_detected_string_jpn(_found_strings, boxes)
       combined_boxes = []
       i = 0
       comb = {}
@@ -106,33 +121,49 @@ module Clears
       last_ratio = 0
       while i < boxes.size
         box = boxes[i]
-        current_word = CGI.unescapeHTML((comb.present? ? comb[:word].join('') : box[:word]).gsub(/\s/, ''))
+        box.each do |k, v|
+          comb[k] ||= []
+          comb[k] << v
+        end
+        comb[:start_idx] ||= i
+        current_word = CGI.unescapeHTML((comb[:word].present? ? comb[:word].join('') : box[:word]).gsub(/\s/, ''))
         ratio = get_largest_similar_ratio(current_word)
 
-        p [current_word, ratio, last_ratio, reduce_len, start_reduce]
+        # p [current_word, ratio, last_ratio, reduce_len, start_reduce]
         dist = nil
+        new_dist = nil
         if comb[:x_start].present? && comb[:x_start].size > 2
           dist = comb[:x_start][1] - comb[:x_end][0]
           new_dist = comb[:x_start][-1] - comb[:x_end][-2]
         end
+        # p "DIST #{dist} #{new_dist} #{comb.inspect}"
 
-        if dist && (new_dist > dist * 2 || new_dist * 2 < dist)
-          comb1 = {}
-          comb1 = comb.each do |k, v|
-            comb1[k] = v[0...-2]
-          end
-          comb1 = reduce_box(comb1)
-
-          combined_boxes << comb1
+        if ratio == 1 || (dist && dist < 0)
+          combined_boxes << get_final_box(comb)
           comb = {}
           reduce_len = 0
           start_reduce = false
           last_ratio = 0
-          i -= 1
+          i += 1
+        elsif dist && (new_dist > dist * 2 || new_dist * 2 < dist)
+          comb1 = {}
+
+          comb.each do |k, v|
+            comb1[k] = new_dist > dist * 2 ? v[0...-1] : v[0...-2]
+          end
+          comb1[:start_idx] = comb[:start_idx]
+          comb1 = reduce_box(comb1)
+          combined_boxes << comb1
+          i = (comb1[:idx].max || comb1[:start_idx]) + 1
+          comb = {}
+          reduce_len = 0
+          start_reduce = false
+          last_ratio = 0
         elsif last_ratio > ratio && reduce_len > 1
           comb = reduce_box(comb)
 
           combined_boxes << comb
+          i = comb[:idx].max + 1
           comb = {}
           reduce_len = 0
           start_reduce = false
@@ -143,10 +174,7 @@ module Clears
           elsif start_reduce
             reduce_len += 1
           end
-          box.each do |k, v|
-            comb[k] ||= []
-            comb[k] << v
-          end
+
           i += 1
           last_ratio = ratio
         end
@@ -162,32 +190,50 @@ module Clears
       while i < boxes.size
         current_string = found_strings[found_strings_index]
         box = boxes[i]
-        current_word = ((comb ? comb[:word] : '') + box[:word]).gsub(/\s/, '')
+        current_word = ((comb ? comb[:word].join : '') + box[:word]).gsub(/\s/, '')
         matched_string = Regexp.new("^#{Regexp.escape(CGI.unescapeHTML(current_word))}").match?(current_string)
         if matched_string
-          comb = if comb
-                   {
-                     word: [comb[:word], box[:word]].join(''),
-                     x_start: [comb[:x_start], box[:x_start]].min,
-                     x_end: [comb[:x_end], box[:x_end]].max,
-                     y_start: [comb[:y_start], box[:y_start]].min,
-                     y_end: [comb[:y_end], box[:y_end]].max
-                   }
-                 else
-                   box
-                 end
+          comb = {}
+          box.each do |k, v|
+            comb[k] ||= []
+            comb[k] << v
+          end
+          # comb = if comb
+          #          {
+          #            word: [comb[:word], box[:word]].join(''),
+          #            x_start: [comb[:x_start], box[:x_start]].min,
+          #            x_end: [comb[:x_end], box[:x_end]].max,
+          #            y_start: [comb[:y_start], box[:y_start]].min,
+          #            y_end: [comb[:y_end], box[:y_end]].max,
+          #            confidence: [comb[:confidence], box[:confidence]].flatten
+          #          }
+          #        else
+          #          box
+          #        end
           if CGI.unescapeHTML(current_word) == current_string || (!operator_names.include?(current_string) && operator_names.include?(current_word))
             found_strings_index += 1
-            combined_boxes << comb
+            combined_boxes << get_final_box(comb)
             comb = nil
           end
         else
-          combined_boxes << (comb || box)
+          combined_boxes << (comb ? get_final_box(comb) : box)
           comb = nil
         end
         i += 1
       end
       combined_boxes
+    end
+
+    def combine_boxes_based_on_detected_string(found_strings, boxes)
+      boxes = sort_boxes(boxes)
+      if lang == 'jpn'
+        combine_boxes_based_on_detected_string_jpn(found_strings,
+                                                   boxes)
+      else
+        combine_boxes_based_on_detected_string_eng(
+          found_strings, boxes
+        )
+      end.select { |box| box[:word].present? }
     end
 
     def process_image(image, h_diff: 1.4)
@@ -206,7 +252,6 @@ module Clears
         @found_strings,
         @base_boxes
       )
-      binding.pry
       img_width = image.columns
       img_height = image.rows
       first_line_y = second_line_y = [lang == 'jpn' ? 0 : Float::INFINITY, 0]
@@ -230,6 +275,9 @@ module Clears
         end
       end
       x_bound = [[first_line_x[0], second_line_x[0]].min, [first_line_x[1], second_line_x[1]].max]
+
+      @first_line_y_start = first_line_y[0]
+      @second_line_y_start = second_line_y[0]
 
       black_and_white_img
         .tap { |i| replace_pixels(i, 0, 0, img_width, first_line_y[0] - 1, white_pixel) }
@@ -286,6 +334,31 @@ module Clears
       combined_boxes
     end
 
+    def guess_boxes(boxes, ref_box, card_width, image_width, x_error, dist)
+      last_boxes = []
+      sp = ref_box[:x_end]
+      while sp - dist > card_width
+        sp -= dist
+        last_boxes.unshift(if (box = boxes.find { |box| box[:x_end] < sp + x_error && box[:x_end] > sp - x_error })
+                             box
+                           else
+                             { word: nil, x_end: sp, y_start: ref_box[:y_start] }
+                           end)
+      end
+      last_boxes.push(ref_box)
+      sp = ref_box[:x_end]
+
+      while sp + dist < image_width
+        sp += dist
+        last_boxes << if (box = boxes.find { |box| box[:x_end] < sp + x_error && box[:x_end] > sp - x_error })
+                        box
+                      else
+                        { word: nil, x_end: sp, y_start: ref_box[:y_start] }
+                      end
+      end
+      last_boxes
+    end
+
     def extract(image, processed_image, x_diff: 0.2)
       processed_image.write(TMP_FILE_PATH)
       ocr_result = RTesseract.new(TMP_FILE_PATH.to_s, psm: '11', lang:)
@@ -304,6 +377,7 @@ module Clears
       prev = nil
       total = 0
       c = 0
+
       p ['approx:', approx_height, approx_distance_between_cards]
       boxes.each do |box|
         if prev &&
@@ -315,40 +389,85 @@ module Clears
         end
         prev = box
       end
-      binding.pry
       dist = total * 1.0 / c
       orig = x_distance_between_card = 230
       card_height = (409.0 / orig) * dist
       card_width = (185.0 / orig) * dist
       left_border_to_end_of_name = (180.0 / orig) * dist
       top_border_to_end_of_name = (375.0 / orig) * dist
-      skill = [125.0, 315.0, 53.0, 53.0]
-      level = [8.0, 319.0, 53.0, 43.0] # [11.0, 328.0, 50.0, 34.0]
-      elite = [0, 239.0, 75.0, 62.0]
+      skill = [125.0, 315.0, 53.0, 53.0, 'skill']
+      level = [7.0, 319.0, 56.0, 42.0, 'level'] # [11.0, 328.0, 50.0, 34.0]
+      elite = [0, 239.0, 75.0, 62.0, 'elite']
 
+      @first_line_y_start ||= 494
+      p @first_line_y_start
+      start_of_second_line_idx = boxes.find_index do |box|
+        box[:y_start] > @first_line_y_start * 1.5
+      end
+      first_line_boxes = boxes[0...start_of_second_line_idx]
+      second_line_boxes = boxes[start_of_second_line_idx..]
+      max_conf_first_line_box = first_line_boxes.select do |box|
+                                  processed_operator_names.include?(box[:word])
+                                end.max_by do |box|
+        box[:confidence].is_a?(Array) ? box[:confidence].sum / box[:confidence].size : box[:confidence]
+      end
+      max_conf_second_line_box = second_line_boxes.select do |box|
+                                   processed_operator_names.include?(box[:word])
+                                 end.max_by do |box|
+        box[:confidence].is_a?(Array) ? box[:confidence].sum / box[:confidence].size : box[:confidence]
+      end
+      boxes = guess_boxes(first_line_boxes, max_conf_first_line_box, card_width, image.columns, approx_height, dist) +
+              guess_boxes(second_line_boxes, max_conf_second_line_box, card_width, image.columns, approx_height, dist)
+
+      white_pixel = Pixel.from_color('white')
+      i = -1
       boxes.filter_map do |box|
         card_x = box[:x_end] - left_border_to_end_of_name
         card_y = box[:y_start] - top_border_to_end_of_name
 
-        image.crop(card_x, card_y, card_width, card_height)
+        if box[:word].nil? || find_most_matched_name(box[:word]).nil?
+          dif = approx_height * 1.0 / 7
+          image.crop(card_x, box[:y_start] - dif, card_width * 1.2, approx_height + dif)
+               .quantize(2, GRAYColorspace).negate_channel(false, RedChannel, GreenChannel, BlueChannel)
+               .color_floodfill(card_width * 1.2 / 2, 0, white_pixel).write(TMP_FILE_PATH)
+          ocr_result = RTesseract.new(TMP_FILE_PATH.to_s, psm: '11', lang:)
 
-        crop_image = proc do |(x, y, w, h)|
+          comb = ocr_result.to_box.each_with_object({}) do |b, memo|
+            b.each do |k, v|
+              memo[k] ||= []
+              memo[k] << v
+            end
+          end
+          if comb[:word].present?
+            reduced_box = reduce_box(comb)
+            box[:word] = reduced_box[:word]
+            if comb[:x_end].present?
+              box[:x_end] = card_x + reduced_box[:x_end]
+              card_x = box[:x_end] - left_border_to_end_of_name
+            end
+          end
+
+        end
+        operator = find_operator(box[:word])
+        next unless operator
+
+        i += 1
+
+        image.crop(card_x, card_y, card_width, card_height).write("tmp/#{i}.png")
+        crop_image = proc do |(x, y, w, h, type)|
           x = x / orig * dist
           y = y / orig * dist
           w = w / orig * dist
           h = h / orig * dist
-          image.crop(card_x + x, card_y + y, w, h)
+          image.crop(card_x + x, card_y + y, w, h).write("tmp/#{i}_#{type}.png")
         end
-
-        operator = find_operator(box[:word])
-        next unless operator
-
         {
           operator_id: operator.id,
           name: operator.name,
           skill: operator.skill_game_ids.present? ? get_skill_from_image(crop_image.call(skill), operator) : nil,
           elite: get_elite_from_image(crop_image.call(elite), operator),
           level: get_level_from_image(crop_image.call(level), operator)
+          # word: box[:word]
         }
       end.sort_by { |o| o[:name] }
     end
@@ -372,7 +491,7 @@ module Clears
     end
 
     def find_operator(detected_name)
-      return unless (most_matched_name = find_most_matched_name(detected_name))
+      return unless detected_name && (most_matched_name = find_most_matched_name(detected_name))
 
       Operator.i18n.find_by(name: most_matched_name)
     end
@@ -406,7 +525,7 @@ module Clears
                          0
                        else
                          color_histogram = image.quantize(2, GRAYColorspace).color_histogram.transform_keys(&:to_color)
-                         color_histogram['white'] > color_histogram['black'] ? 2 : 1
+                         color_histogram['white'] * 1.1 > color_histogram['black'] ? 2 : 1
                        end
       [detected_elite, operator.max_elite].min
     end
