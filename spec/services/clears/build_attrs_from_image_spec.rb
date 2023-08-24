@@ -2,7 +2,8 @@ require 'rails_helper'
 
 describe Clears::BuildAttrsFromImage do
   let(:service) { described_class.new(image_path) }
-  let(:result) do
+  let(:received_result) { service.call.value! }
+  let(:get_expected_result) do
     operators.map do |(name, level, elite, skill, skill_game_ids, rarity)|
       {
         operator_id: create(:operator, name:, skill_game_ids:, rarity:).id,
@@ -34,10 +35,8 @@ describe Clears::BuildAttrsFromImage do
     let(:image_path) { 'spec/fixtures/images/english_clear.jpg' }
 
     it 'returns correct attributes' do
-      result
-      service.call
-
-      expect(service.data).to match_array(result)
+      get_expected_result
+      expect(received_result).to match_array(get_expected_result)
     end
   end
 
@@ -61,11 +60,9 @@ describe Clears::BuildAttrsFromImage do
 
     it 'returns correct attributes' do
       I18n.with_locale(:jp) do
-        result
-        service.call
+        get_expected_result
+        expect(received_result).to match_array(get_expected_result)
       end
-
-      expect(service.data).to match_array(result)
     end
   end
 end

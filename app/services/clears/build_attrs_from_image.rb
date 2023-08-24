@@ -33,9 +33,11 @@ module Clears
       # processed_image.write('tmp/processed.png')
       # processed_image = ImageList.new('tmp/processed.png')
       puts 'Extracting image...'
-      @data = extract(image, processed_image)
+      data = extract(image, processed_image)
 
-      self
+      Success(data)
+
+      # FileUtils.rm TMP_FILE_PATH, force: true
     end
 
     private
@@ -47,7 +49,7 @@ module Clears
     end
 
     def processed_operator_names
-      @processed_operator_names ||= operator_names.map { |n| n.gsub(/\s/, '') }
+      @processed_operator_names ||= operator_names.map { |n| n.gsub(/\s/, '') } - ['W']
     end
 
     def operator_names
@@ -110,6 +112,10 @@ module Clears
     def sort_boxes(boxes)
       boxes
       # boxes.sort { |a, b| (a[:y_start] * 5) + a[:x_start] <=> (b[:y_start] * 5) + b[:x_start] }
+    end
+
+    def get_box_confidence(box)
+      box[:confidence].is_a?(Array) ? box[:confidence].sum / box[:confidence].size : box[:confidence]
     end
 
     def combine_boxes_based_on_detected_string_jpn(_found_strings, boxes)
@@ -262,6 +268,8 @@ module Clears
       approx_height = boxes.select do |box|
                         processed_operator_names.include?(box[:word])
                       end.map { |box| box[:y_end] - box[:y_start] }.min
+      approx_line_y_start_diff = (422.0 / 24) * approx_height
+      approx_line_y_end_diff = (464.0 / 24) * approx_height
       boxes.each do |box|
         next unless processed_operator_names.include?(box[:word])
 
@@ -275,6 +283,15 @@ module Clears
         end
       end
       x_bound = [[first_line_x[0], second_line_x[0]].min, [first_line_x[1], second_line_x[1]].max]
+
+      if second_line_y[1] == 0
+        if first_line_y[1] + approx_line_y_end_diff > img_height
+          second_line_y = first_line_y
+          first_line_y = [second_line_y[0] - approx_line_y_start_diff, second_line_y[0] - approx_line_y_end_diff]
+        else
+          second_line_y = [first_line_y[0] + approx_line_y_start_diff, first_line_y[0] + approx_line_y_end_diff]
+        end
+      end
 
       @first_line_y_start = first_line_y[0]
       @second_line_y_start = second_line_y[0]
@@ -369,9 +386,16 @@ module Clears
         @base_boxes
       ).sort { |a, b| (a[:y_start] * 5) + a[:x_start] <=> (b[:y_start] * 5) + b[:x_start] }
       @boxes = boxes
-      approx_height = boxes.map do |box|
-        processed_operator_names.include?(box[:word]) ? box[:y_end] - box[:y_start] : nil
-      end.compact.reduce(:+) / boxes.select { |box| processed_operator_names.include?(box[:word]) }.size
+      boxes_with_operator = boxes.select { |box| processed_operator_names.include?(box[:word]) }
+      boxes_with_operator_height = boxes_with_operator.map { |box| box[:y_end] - box[:y_start] }
+      min_height = boxes_with_operator_height.min
+      boxes_with_valid_height = boxes_with_operator_height.select { |height| height <= min_height * 1.2 }
+      approx_height = if lang == 'eng'
+                        boxes_with_operator_height.sum / boxes_with_operator_height.size
+                      else
+                        boxes_with_valid_height.sum / boxes_with_valid_height.size
+                      end
+
       approx_distance_between_cards = approx_height * (230.0 / 24)
 
       prev = nil
