@@ -59,10 +59,8 @@ describe Clears::BuildAttrsFromImage do
     let(:image_path) { 'spec/fixtures/images/jp_clear.png' }
 
     it 'returns correct attributes' do
-      I18n.with_locale(:jp) do
-        get_expected_result
-        expect(received_result).to match_array(get_expected_result)
-      end
+      I18n.with_locale(:jp) { get_expected_result }
+      expect(received_result).to match_array(get_expected_result)
     end
   end
 end

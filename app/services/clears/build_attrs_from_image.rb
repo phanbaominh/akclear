@@ -21,21 +21,21 @@ module Clears
     end
 
     def call
-      image = ImageList.new(image_path)
-
-      puts 'Processing image for extraction...'
-      processed_image = if lang == 'eng'
-                          # ImageList.new('english.jpg')
-                          process_image(image)
-                        else
-                          process_image(image)
-                        end
-      # processed_image.write('tmp/processed.png')
-      # processed_image = ImageList.new('tmp/processed.png')
-      puts 'Extracting image...'
-      data = extract(image, processed_image)
-
-      Success(data)
+      data = nil
+      I18n.with_locale(image_language) do
+        puts "Processing image (lang=#{image_language}) for extraction..."
+        processed_image = if lang == 'eng'
+                            # ImageList.new('english.jpg')
+                            process_image(image)
+                          else
+                            process_image(image)
+                          end
+        # processed_image.write('tmp/processed.png')
+        # processed_image = ImageList.new('tmp/processed.png')
+        puts 'Extracting image...'
+        data = extract(image, processed_image)
+        Success(data)
+      end
 
       # FileUtils.rm TMP_FILE_PATH, force: true
     end
@@ -43,6 +43,22 @@ module Clears
     private
 
     attr_reader :image_path, :tmp_images
+
+    def image
+      @image ||= ImageList.new(image_path)
+    end
+
+    def image_language
+      greyscale_image.write(TMP_FILE_PATH)
+      all_characters_regex = /[^\p{Latin}\p{Hiragana}\p{Katakana}\p{Han}]+/u
+      @image_language ||= LOCALE_TO_TESSERACT_LANG.max_by do |_locale, tess_lang_code|
+        RTesseract.new(TMP_FILE_PATH.to_s, psm: '11', lang: tess_lang_code).to_box
+                  .select { |box| box[:confidence] > 80 }
+                  .pluck(:word)
+                  .join
+                  .gsub(all_characters_regex, '').size
+      end.first
+    end
 
     def lang
       LOCALE_TO_TESSERACT_LANG[I18n.locale]
@@ -242,13 +258,17 @@ module Clears
       end.select { |box| box[:word].present? }
     end
 
-    def process_image(image, h_diff: 1.4)
+    def greyscale_image
       white_pixel = Pixel.from_color('white')
-      black_and_white_img = image
-                            .quantize(2, GRAYColorspace)
-                            .negate_channel(false, RedChannel, GreenChannel, BlueChannel)
-                            .color_floodfill(image.columns / 2, image.rows / 2, white_pixel)
-                            .tap { |i| i.alpha(OffAlphaChannel) }
+      @greyscale_image ||= image
+                           .quantize(2, GRAYColorspace)
+                           .negate_channel(false, RedChannel, GreenChannel, BlueChannel)
+                           .color_floodfill(image.columns / 2, image.rows / 2, white_pixel)
+                           .tap { |i| i.alpha(OffAlphaChannel) }
+    end
+
+    def process_image(image, h_diff: 1.4)
+      black_and_white_img = greyscale_image
 
       black_and_white_img.write(TMP_FILE_PATH)
       ocr_result = RTesseract.new(TMP_FILE_PATH.to_s, psm: '11', lang:)
@@ -295,6 +315,7 @@ module Clears
 
       @first_line_y_start = first_line_y[0]
       @second_line_y_start = second_line_y[0]
+      white_pixel = Pixel.from_color('white')
 
       black_and_white_img
         .tap { |i| replace_pixels(i, 0, 0, img_width, first_line_y[0] - 1, white_pixel) }
