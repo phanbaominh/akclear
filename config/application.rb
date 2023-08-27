@@ -15,6 +15,7 @@ module Akclear
     logger.formatter = config.log_formatter
     config.logger    = ActiveSupport::TaggedLogging.new(logger)
     config.log_level = :info
+    config.active_job.queue_adapter = :good_job
 
     # Configuration for the application, engines, and railties goes here.
     #
