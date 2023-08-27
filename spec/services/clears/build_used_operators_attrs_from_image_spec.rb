@@ -1,13 +1,12 @@
 require 'rails_helper'
 
-describe Clears::BuildAttrsFromImage do
+describe Clears::BuildUsedOperatorsAttrsFromImage do
   let(:service) { described_class.new(image_path) }
   let(:received_result) { service.call.value! }
   let(:get_expected_result) do
     operators.map do |(name, level, elite, skill, skill_game_ids, rarity)|
       {
         operator_id: create(:operator, name:, skill_game_ids:, rarity:).id,
-        name:,
         level:,
         elite:,
         skill:

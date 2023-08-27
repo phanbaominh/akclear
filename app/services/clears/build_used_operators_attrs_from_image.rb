@@ -2,7 +2,7 @@
 
 # rubocop:disable Metrics/CyclomaticComplexity, Metrics/ClassLength, Metrics/PerceivedComplexity
 module Clears
-  class BuildAttrsFromImage < ApplicationService
+  class BuildUsedOperatorsAttrsFromImage < ApplicationService
     include Magick
     TMP_FILE_PATH = Rails.root.join('tmp/tmp.png')
     ELITE_0_REFERENCE_IMAGE_PATH = Rails.root.join('app/javascript/images/elite0_reference.png')
@@ -30,7 +30,7 @@ module Clears
                           else
                             process_image(image)
                           end
-        # processed_image.write('tmp/processed.png')
+        processed_image.write('tmp/processed.png')
         # processed_image = ImageList.new('tmp/processed.png')
         puts 'Extracting image...'
         data = extract(image, processed_image)
@@ -285,16 +285,16 @@ module Clears
 
       @boxes = boxes
 
-      approx_height = boxes.select do |box|
-                        processed_operator_names.include?(box[:word])
-                      end.map { |box| box[:y_end] - box[:y_start] }.min
+      boxes_with_operator = boxes.select { |box| processed_operator_names.include?(box[:word]) }
+
+      approx_height = boxes_with_operator.map { |box| box[:y_end] - box[:y_start] }.min
       approx_line_y_start_diff = (422.0 / 24) * approx_height
       approx_line_y_end_diff = (464.0 / 24) * approx_height
-      boxes.each do |box|
-        next unless processed_operator_names.include?(box[:word])
-
+      ys = []
+      boxes_with_operator.each do |box|
         height = box[:y_end] - box[:y_start]
         if box[:y_start] > first_line_y[1] * 1.2 && first_line_y[1] != 0
+          ys << [box[:y_start], box[:y_end]]
           second_line_y = get_value_y(second_line_y, box, :y) if height < approx_height * h_diff
           second_line_x = get_value_x(second_line_x, box, :x)
         else
@@ -302,6 +302,7 @@ module Clears
           first_line_x = get_value_x(first_line_x, box, :x)
         end
       end
+      # binding.pry
       x_bound = [[first_line_x[0], second_line_x[0]].min, [first_line_x[1], second_line_x[1]].max]
 
       if second_line_y[1] == 0
@@ -309,7 +310,7 @@ module Clears
           second_line_y = first_line_y
           first_line_y = [second_line_y[0] - approx_line_y_start_diff, second_line_y[0] - approx_line_y_end_diff]
         else
-          second_line_y = [first_line_y[0] + approx_line_y_start_diff, first_line_y[0] + approx_line_y_end_diff]
+          second_line_y = [ys.map(&:first).min, ys.map(&:second).min]
         end
       end
 
@@ -508,7 +509,6 @@ module Clears
         end
         {
           operator_id: operator.id,
-          name: operator.name,
           skill: operator.skill_game_ids.present? ? get_skill_from_image(crop_image.call(skill), operator) : nil,
           elite: get_elite_from_image(crop_image.call(elite), operator),
           level: get_level_from_image(crop_image.call(level), operator)
