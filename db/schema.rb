@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_27_153050) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_28_134414) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -96,6 +96,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_27_153050) do
     t.datetime "end_time"
     t.bigint "original_event_id"
     t.index ["original_event_id"], name: "index_events_on_original_event_id"
+  end
+
+  create_table "extract_clear_data_from_video_jobs", force: :cascade do |t|
+    t.integer "status"
+    t.jsonb "data"
+    t.string "video_url"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "good_job_batches", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
