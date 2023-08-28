@@ -48,6 +48,7 @@ gem 'bootsnap', require: false
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"
 
+gem 'aasm'
 gem 'acts-as-taggable-on', '~> 9.0'
 gem 'amatch'
 gem 'authentication-zero'
@@ -57,6 +58,7 @@ gem 'dry-monads'
 gem 'dry-types'
 gem 'faker', require: false
 gem 'globalid'
+gem 'good_job'
 gem 'heroicon'
 gem 'mobility'
 gem 'nokogiri'
