@@ -1,4 +1,4 @@
-<%= render Clears::FormComponent.new(clear_spec: @clear, new_form: true) do |component| %>
+<%= render Clears::FormComponent.new(clear_spec: @clear, new_form: true, job_id: @job.id) do |component| %>
   <%= component.with_header do %>
     <% if @clear.errors.present? %>
       <ul class="alert alert-error">
@@ -28,7 +28,5 @@
         <%= t(:select_stage) %>
       </button>
     </noscript>
-
   <% end %>
-
 <% end %>

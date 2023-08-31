@@ -1,0 +1,46 @@
+<%= link_to t(:new_clear_job), new_admin_clear_job_path, class: 'btn btn-primary' %>
+<table>
+  <thead>
+    <tr>
+      <th>Job Id</th>
+      <th>Status</th>
+      <th>Data</th>
+      <th>Video url</th>
+      <th>Actions</th>
+    </tr>
+  </th>
+  <tbody>
+    <% @extract_clear_data_from_video_jobs.each do |job| %>
+      <tr>
+        <td><%= job.id %></td>
+        <td><%= job.status %></td>
+        <td>
+          <% if job.data %>
+            <% if job.completed? %>
+              <%= job.clear.stage&.code %>
+              <div class="grid grid-cols-2 xs:grid-cols-3 sm:flex sm:flex-wrap gap-2">
+                <% job.clear.used_operators&.each do |used_operator| %>
+                  <%= render Clears::UsedOperatorComponent.new(
+                used_operator: used_operator,
+                editable: false
+              ) %>
+                <% end %>
+              </div>
+            <% elsif job.failed? %>
+              <%= job.data['error'] %>
+            <% end %>
+          <% end %>
+        </td>
+        <td><%= job.video_url %></td>
+        <td>
+          <%= link_to new_clears_from_job_path(job_id: job.id), class: 'btn btn-primary btn-circle' do %>
+            <%= heroicon "check", options: { alt: 'Create clear' } %>
+          <% end %>
+          <%= button_to admin_clear_job_path(job), method: :delete, class: 'btn btn-error btn-circle hover:bg-opacity-80'  do %>
+            <%= heroicon "x-mark", options: { alt: 'Delete' } %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

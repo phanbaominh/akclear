@@ -30,6 +30,12 @@
 # available at https://guides.rubyonrails.org/i18n.html.
 
 en:
+  admin:
+    extract_clear_data_from_video_jobs:
+      create:
+        success: "Job was successfully created."
+      destroy:
+        success: "Job was successfully deleted."
   hello: "Hello world"
   add_operators: "Add operators"
   add_operator: "Add operator"

@@ -23,6 +23,10 @@ class Video
     @valid = YOUTUBE_REGEX.match?(@url)
   end
 
+  def ==(other)
+    self.class == other.class && to_url == other.to_url
+  end
+
   private
 
   def metadata

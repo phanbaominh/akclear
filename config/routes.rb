@@ -8,6 +8,9 @@ Rails.application.routes.draw do
     post 'sign_in', to: 'sessions#create'
     get  'sign_up', to: 'registrations#new'
     post 'sign_up', to: 'registrations#create'
+    namespace :admin do
+      resources :clear_jobs, controller: 'extract_clear_data_from_video_jobs'
+    end
     resources :sessions, only: %i[index show destroy]
     resource  :password, only: %i[edit update]
     namespace :identity do
@@ -27,6 +30,7 @@ Rails.application.routes.draw do
       resource :stage_select, only: %i[show]
       resource :operators_select, only: %i[show]
       resource :used_operator
+      resource :from_job, only: %i[new]
     end
     resources :clears do
       resources :used_operators

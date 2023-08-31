@@ -17,7 +17,17 @@ module Clear::Specifiable
   end
 
   def stageable
-    stageable_id ? GlobalID::Locator.locate(stageable_id) : stage&.stageable
+    attributes[:stageable_id] ? GlobalID::Locator.locate(stageable_id) : stage&.stageable
+  end
+
+  # autofill value when only stage_id is present
+  def stageable_id
+    super || stageable&.to_global_id
+  end
+
+  # autofill value when only stage_id is present
+  def stage_type
+    super || stageable&.class&.name
   end
 
   def stage_id

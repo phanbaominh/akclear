@@ -1,6 +1,6 @@
 module Clears
   class BuildClearFromVideo < ApplicationService
-    def initialize(video, submitter)
+    def initialize(video, submitter = nil)
       @video = video
       @submitter = submitter
     end

@@ -1,6 +1,5 @@
 <div class="card mb-8 md:mb-4 md:shadow-xl">
   <div class="md:card-body md:bg-base-300">
-
     <%= simple_form_for clear_spec, url: clears_path, method: new_form ? :post : :get, html: {
       id: "clears__form",
       data: {
@@ -12,6 +11,9 @@
       <header class="flex justify-between">
         <%= header %>
       </header>
+      <% if job_id.present? %>
+        <%= f.input :job_id, as: :hidden, input_html: { value: job_id } %>
+      <% end %>
       <% if new_form %>
         <%= content_tag :iframe,
         nil,
@@ -35,7 +37,6 @@
       <% end %>
       <div class="js-only">
         <%= render Clears::StageSelectComponent.new(form: f) %>
-
         <%= f.label :operator_id, t(:operators) %>
         <div id="clears__form__operators_fields" class="hidden">
           <%= f.simple_fields_for :used_operators do |used_operator_form| %>
@@ -70,13 +71,10 @@
         <%= render Clears::Form::NewOperatorButtonComponent.new %>
       </div>
       <div id="operators__form_container" class="self-center w-full sm:w-1/2">
-
       </div>
     <% end %>
-
     <footer class="flex justify-end mt-4 space-x-2">
       <%= footer %>
-
     </footer>
   </div>
 </div>

@@ -8,7 +8,7 @@ class ExtractClearDataFromVideoJob < ApplicationRecord
     state :completed
     state :failed
 
-    event :process do
+    event :start do
       transitions from: :pending, to: :processing
     end
 
@@ -19,5 +19,20 @@ class ExtractClearDataFromVideoJob < ApplicationRecord
     event :fail do
       transitions from: :processing, to: :failed
     end
+  end
+
+  validates :video_url, presence: true
+  validate :valid_video
+
+  def video
+    @video ||= Video.new(video_url)
+  end
+
+  def valid_video
+    errors.add(:video_url, 'errors.messages.invalid') unless video.valid?
+  end
+
+  def clear
+    @clear ||= Clear.new(data) if completed?
   end
 end
