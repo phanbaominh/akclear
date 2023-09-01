@@ -46,3 +46,5 @@ Naming/PredicateName:
   Enabled: false
 Style/MultilineBlockChain:
   Enabled: false
+Metrics/CyclomaticComplexity:
+  Enabled: false
