@@ -20,7 +20,9 @@ class Clear < ApplicationRecord
 
   before_validation :assign_channel
   before_save :normalize_link
-  after_save :assign_channel
+  after_save :mark_job_as_clear_created
+
+  attr_accessor :job_id
 
   def verified?
     verification.present?
@@ -30,6 +32,13 @@ class Clear < ApplicationRecord
     return unless link && will_save_change_to_link?
 
     self.link = Video.new(link).to_url(normalized: true)
+  end
+
+  def mark_job_as_clear_created
+    return if job_id.blank?
+
+    job = ExtractClearDataFromVideoJob.find_by(id: job_id)
+    job&.mark_clear_created! if job&.completed?
   end
 
   def assign_channel

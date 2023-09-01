@@ -12,6 +12,40 @@ RSpec.describe Clear, type: :model do
     it { is_expected.to validate_presence_of(:link) }
   end
 
+  describe '#mark_job_as_clear_created' do
+    context 'when job_id is blank' do
+      it 'returns' do
+        allow(ExtractClearDataFromVideoJob).to receive(:find_by)
+
+        create(:clear, job_id: nil)
+
+        expect(ExtractClearDataFromVideoJob).not_to have_received(:find_by)
+      end
+    end
+
+    context 'when job_id is present' do
+      let_it_be(:job, reload: true) { create(:extract_clear_data_from_video_job) }
+
+      context 'when job is completed' do
+        it 'marks the job as clear_created' do
+          job.update!(status: :completed)
+          create(:clear, job_id: job.id)
+
+          expect(job.reload).to be_clear_created
+        end
+      end
+
+      context 'when job is not completed' do
+        it 'does not mark the job as clear_created' do
+          job.update!(status: :processing)
+          create(:clear, job_id: job.id)
+
+          expect(job.reload).not_to be_clear_created
+        end
+      end
+    end
+  end
+
   describe '#normalize_link' do
     context 'when the link has changed' do
       it 'normalizes the link when saving' do

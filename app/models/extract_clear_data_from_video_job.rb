@@ -1,12 +1,13 @@
 class ExtractClearDataFromVideoJob < ApplicationRecord
   include AASM
-  enum :status, { pending: 0, processing: 1, completed: 2, failed: 3 }
+  enum :status, { pending: 0, processing: 1, completed: 2, failed: 3, clear_created: 4 }
 
   aasm column: :status, enum: true do
     state :pending, initial: true
     state :processing
     state :completed
     state :failed
+    state :clear_created
 
     event :start do
       transitions from: :pending, to: :processing
@@ -18,6 +19,10 @@ class ExtractClearDataFromVideoJob < ApplicationRecord
 
     event :fail do
       transitions from: :processing, to: :failed
+    end
+
+    event :mark_clear_created do
+      transitions from: :completed, to: :clear_created
     end
   end
 
