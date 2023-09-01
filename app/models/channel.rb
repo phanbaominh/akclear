@@ -15,5 +15,8 @@ class Channel < ApplicationRecord
       c.thumbnail_url = channel_data.thumbnail_url
       c.banner_url = channel_data.banner_url
     end
+  rescue Yt::Errors::RequestError
+    Rails.logger.warn("Could not find channel using link: #{link}")
+    nil
   end
 end
