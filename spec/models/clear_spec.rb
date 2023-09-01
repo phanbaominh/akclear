@@ -17,7 +17,7 @@ RSpec.describe Clear, type: :model do
       it 'normalizes the link when saving' do
         clear = build(:clear, link: 'https://youtu.be/aAfeBGKoZeI?t=34')
 
-        clear.save
+        clear.save!(validate: false)
 
         expect(clear.link).to eq('https://youtube.com/watch?v=aAfeBGKoZeI')
       end
@@ -34,9 +34,9 @@ RSpec.describe Clear, type: :model do
         let_it_be(:channel) { build(:channel) }
 
         it 'assigns the channel' do
-          clear = build(:clear, link:)
+          clear = build(:clear, link:, channel: nil)
 
-          clear.save
+          clear.save!
 
           expect(channel).to be_persisted
           expect(clear.channel).to eq(channel)
@@ -47,9 +47,9 @@ RSpec.describe Clear, type: :model do
         let_it_be(:channel) { create(:channel) }
 
         it 'assigns the channel' do
-          clear = build(:clear, link:)
+          clear = build(:clear, link:, channel: nil)
 
-          clear.save
+          clear.save!
 
           expect(clear.channel).to eq(channel)
         end
@@ -59,9 +59,9 @@ RSpec.describe Clear, type: :model do
     context 'when the link has not changed' do
       it 'does not assign the channel' do
         allow(Channel).to receive(:from)
-        clear = build(:clear, link: nil)
+        clear = create(:clear)
 
-        clear.save
+        clear.update!(updated_at: Time.current)
 
         expect(Channel).not_to have_received(:from)
       end

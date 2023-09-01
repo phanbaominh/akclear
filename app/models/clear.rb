@@ -16,7 +16,9 @@ class Clear < ApplicationRecord
   delegate :event?, to: :stage, allow_nil: true
 
   validates :link, presence: true
+  validates :channel_id, presence: true
 
+  before_validation :assign_channel
   before_save :normalize_link
   after_save :assign_channel
 
@@ -31,13 +33,14 @@ class Clear < ApplicationRecord
   end
 
   def assign_channel
-    return unless saved_change_to_link?
+    return if new_record? && channel.present?
+    return unless will_save_change_to_link?
 
     self.channel = Channel.from(link)
 
-    return unless has_changes_to_save?
+    return unless channel.present? && (channel.new_record? || will_save_change_to_channel_id?)
 
     channel.save! if channel.new_record?
-    save!
+    self.channel_id = channel.id
   end
 end
