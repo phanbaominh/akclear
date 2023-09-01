@@ -12,9 +12,21 @@ RSpec.describe Clear, type: :model do
     it { is_expected.to validate_presence_of(:link) }
   end
 
+  describe '#normalize_link' do
+    context 'when the link has changed' do
+      it 'normalizes the link when saving' do
+        clear = build(:clear, link: 'https://youtu.be/aAfeBGKoZeI?t=34')
+
+        clear.save
+
+        expect(clear.link).to eq('https://youtube.com/watch?v=aAfeBGKoZeI')
+      end
+    end
+  end
+
   describe '#assign_channel' do
     context 'when the link has changed' do
-      let(:link) { 'https://www.youtube.com/watch?v=123' }
+      let(:link) { 'https://youtube.com/watch?v=123' }
 
       before { allow(Channel).to receive(:from).with(link).and_return(channel) }
 

@@ -25,8 +25,22 @@ describe Video do
   end
 
   describe '#to_url' do
-    it 'returns the url' do
-      expect(video.to_url).to eq(video_url)
+    context 'when normalized is true' do
+      [
+        'https://www.youtube.com/watch?v=aAfeBGKoZeI&t=34',
+        'https://youtu.be/aAfeBGKoZeI?t=34'
+      ].each do |url|
+        let(:video_url) { url }
+        it 'returns the normalized url' do
+          expect(video.to_url(normalized: true)).to eq 'https://youtube.com/watch?v=aAfeBGKoZeI'
+        end
+      end
+    end
+
+    context 'when normalized is false' do
+      it 'returns the url' do
+        expect(video.to_url).to eq(video_url)
+      end
     end
   end
 

@@ -17,10 +17,17 @@ class Clear < ApplicationRecord
 
   validates :link, presence: true
 
+  before_save :normalize_link
   after_save :assign_channel
 
   def verified?
     verification.present?
+  end
+
+  def normalize_link
+    return unless link && will_save_change_to_link?
+
+    self.link = Video.new(link).to_url(normalized: true)
   end
 
   def assign_channel

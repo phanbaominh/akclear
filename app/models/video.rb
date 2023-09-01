@@ -5,12 +5,12 @@ class Video
     @url = url
   end
 
-  def to_url
-    url
+  def to_url(normalized: false)
+    normalized ? normalized_url : url
   end
 
   def timestamp
-    CGI.parse(URI.parse(url).query)['t'].first
+    params['t'].first
   end
 
   def title
@@ -28,6 +28,22 @@ class Video
   end
 
   private
+
+  def video_id
+    params['v']&.first || uri.path.slice(1..-1)
+  end
+
+  def uri
+    @uri ||= URI.parse(url)
+  end
+
+  def normalized_url
+    "https://youtube.com/watch?v=#{video_id}"
+  end
+
+  def params
+    @params ||= (query_string = uri.query) ? CGI.parse(query_string) : {}
+  end
 
   def metadata
     @metadata ||= Yt::Video.new(url:)
