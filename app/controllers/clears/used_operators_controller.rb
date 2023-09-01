@@ -49,7 +49,8 @@ class Clears::UsedOperatorsController < ApplicationController
   end
 
   def edit
-    session['used_operator'] ||= used_operator_params
+    @previous_used_operator = UsedOperator.new(session['used_operator'])  
+    session['used_operator'] = used_operator_params
     @used_operator = UsedOperator.new(used_operator_params)
     respond_to do |format|
       format.html

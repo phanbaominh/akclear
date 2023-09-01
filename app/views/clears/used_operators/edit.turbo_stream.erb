@@ -6,9 +6,13 @@
       method: :patch
     ) %>
   </div>
-
 <% end %>
 <%= turbo_stream.remove "operators__new_operator_btn" %>
+<% if @previous_used_operator&.operator %>
+  <%= turbo_stream.update dom_id(@previous_used_operator.operator, :mobile) do %>
+    <%= render Clears::UsedOperatorComponent.new(used_operator: @previous_used_operator) %>
+  <% end %>
+<% end %>
 <%= turbo_stream.update dom_id(@used_operator.operator, :mobile) do %>
   <%= render Clears::UsedOperatorFormComponent.new(
     used_operator: @used_operator,

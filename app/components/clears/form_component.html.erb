@@ -47,7 +47,7 @@
     <% end %>
     <%= content_tag :div,
       class: 'space-y-2 flex flex-col',
-      data: { **stimulus_attrs(:clears__form_component,
+      data: { **stimulus(:clears__form_component,
         actions: {
           'dispatch:clickEditOperator': 'highlight',
           'dispatch:clickCloseForm': 'closeForm',
@@ -69,6 +69,11 @@
           <%= render Clears::UsedOperatorResponsiveComponent.new(used_operator: used_operator) %>
         <% end %>
         <%= render Clears::Form::NewOperatorButtonComponent.new %>
+      </div>
+      <div class="flex flex-wrap self-center">
+        <% clear_spec.used_operators.each do |used_operator| %>
+          <%= render Clears::UsedOperatorMiniComponent.new(used_operator: used_operator) %>
+        <% end %>
       </div>
       <div id="operators__form_container" class="self-center w-full sm:w-1/2">
       </div>
