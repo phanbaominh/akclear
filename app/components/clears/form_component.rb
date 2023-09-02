@@ -16,8 +16,4 @@ class Clears::FormComponent < ApplicationComponent
     @new_form = new_form
     @job_id = job_id
   end
-
-  def selectable_operators
-    Operator.all
-  end
 end

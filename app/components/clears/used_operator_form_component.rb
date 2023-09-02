@@ -31,7 +31,7 @@ class Clears::UsedOperatorFormComponent < ApplicationComponent
   end
 
   def selectable_operators
-    Operator.all.order(:name)
+    Operator.i18n.order(:name).pluck(:name, :id)
   end
 
   def skill_levels
