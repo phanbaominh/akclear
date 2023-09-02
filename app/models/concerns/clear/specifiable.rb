@@ -4,6 +4,7 @@ module Clear::Specifiable
   extend ActiveSupport::Concern
 
   included do
+    # switch to attr_accessor
     attribute :challenge_mode, :boolean
     attribute :environment, :string
     attribute :stageable_id, :string
@@ -17,7 +18,7 @@ module Clear::Specifiable
   end
 
   def stageable
-    attributes[:stageable_id] ? GlobalID::Locator.locate(stageable_id) : stage&.stageable
+    attributes['stageable_id'] ? GlobalID::Locator.locate(stageable_id) : stage&.stageable
   end
 
   # autofill value when only stage_id is present
