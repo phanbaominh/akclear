@@ -14,7 +14,7 @@ module Clears
       clear_attrs = {
         stage_id:,
         used_operators_attributes:,
-        link: video.to_url,
+        link: video.to_url(normalized: true),
         submitter:
       }
       clear = Clear.new(clear_attrs)
