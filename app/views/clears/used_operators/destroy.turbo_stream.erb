@@ -9,13 +9,7 @@
     <%= render Clears::Form::NewOperatorButtonComponent.new %>
   <% end %>
 <% end %>
-<%= turbo_stream.update "clears__form__operators_fields" do %>
-  <%= simple_fields_for @clear_spec do |f| %>
-    <%= f.simple_fields_for :used_operators do |used_operator_form| %>
-      <%= render Clears::UsedOperatorFieldsComponent.new(form: used_operator_form) %>
-    <% end %>
-  <% end %>
-<% end %>
+<%= turbo_stream.remove dom_id(@used_operator.operator, :fields) %>
 <%= turbo_stream.remove dom_id(
   UsedOperator.new,
                       "#{@used_operator.operator_id}_new"
