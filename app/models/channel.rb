@@ -14,6 +14,7 @@ class Channel < ApplicationRecord
       channel_data = Yt::Models::ChannelMeta.new(id: external_id)
       c.thumbnail_url = channel_data.thumbnail_url
       c.banner_url = channel_data.banner_url
+      c.uploads_playlist_id = channel_data.uploads_playlist_id
     end
   rescue Yt::Errors::RequestError
     Rails.logger.warn("Could not find channel using link: #{link}")
