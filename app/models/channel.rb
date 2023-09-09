@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Channel < ApplicationRecord
+  include VideosImportable
+
   belongs_to :user, optional: true
 
   def self.from(link)

@@ -4,6 +4,14 @@ describe Video do
   let(:video_url) { 'https://www.youtube.com/watch?v=aAfeBGKoZeI&t=34' }
   let(:video) { described_class.new(video_url) }
 
+  describe '#from_id' do
+    it 'returns a video with the normalized url' do
+      video = described_class.from_id('aAfeBGKoZeI')
+
+      expect(video.to_url).to eq('https://youtube.com/watch?v=aAfeBGKoZeI')
+    end
+  end
+
   describe '#valid?' do
     context 'when url is valid' do
       it 'returns true' do
@@ -20,6 +28,14 @@ describe Video do
 
       it 'raises an error when accessing url' do
         expect { video.to_url }.to raise_error(Video::InvalidUrl)
+      end
+    end
+
+    context 'when url has invalid params' do
+      let(:video_url) { 'https://www.youtube.com/watch?v=aAfeBGKoZeI&t=34&invalid=param' }
+
+      it 'returns false' do
+        expect(video).not_to be_valid
       end
     end
   end

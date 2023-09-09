@@ -31,7 +31,7 @@ describe Clears::BuildClearFromVideo do
       expect(clear).to have_attributes(
         {
           stage_id: stage.id,
-          link: video_url,
+          link: 'https://youtube.com/watch?v=aAfeBGKoZeI',
           submitter:,
           used_operators: [have_attributes(used_operators_attributes.first)]
         }

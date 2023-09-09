@@ -1,12 +1,22 @@
 class Video
   class InvalidUrl < StandardError; end
   YOUTUBE_REGEX = %r{(?:https?://)?(?:www\.)?(?:youtube\.com|youtu\.be)/(?:watch\?v=)?(.+)}
+  ALLOWED_YOUTUBE_PARAM_KEYS = %w[v t].freeze
+
+  def self.from_id(video_id)
+    new(normalized_url(video_id))
+  end
+
+  def self.normalized_url(video_id)
+    "https://youtube.com/watch?v=#{video_id}"
+  end
+
   def initialize(url)
     @url = url
   end
 
   def to_url(normalized: false)
-    normalized ? normalized_url : url
+    normalized ? self.class.normalized_url(video_id) : url
   end
 
   def timestamp
@@ -21,6 +31,8 @@ class Video
     return @valid if defined?(@valid)
 
     @valid = YOUTUBE_REGEX.match?(@url)
+    # make sure that @valid has value first or it will lead to infinite recursion when querying url
+    @valid &&= params_contains_only_allowed_keys?
   end
 
   def ==(other)
@@ -29,16 +41,16 @@ class Video
 
   private
 
+  def params_contains_only_allowed_keys?
+    params.blank? || params.keys.all? { |key| ALLOWED_YOUTUBE_PARAM_KEYS.include?(key) }
+  end
+
   def video_id
     params['v']&.first || uri.path.slice(1..-1)
   end
 
   def uri
     @uri ||= URI.parse(url)
-  end
-
-  def normalized_url
-    "https://youtube.com/watch?v=#{video_id}"
   end
 
   def params
