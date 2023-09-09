@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/CyclomaticComplexity, Metrics/ClassLength, Metrics/PerceivedComplexity
+# rubocop:disable Metrics/ClassLength, Metrics/PerceivedComplexity
 module Clears
   class BuildUsedOperatorsAttrsFromImage < ApplicationService
     include Magick
@@ -69,7 +69,7 @@ module Clears
     end
 
     def operator_names
-      @operator_names = Operator.all.i18n.pluck(:name).uniq
+      @operator_names ||= Operator.all.i18n.pluck(:name).uniq
     end
 
     def get_value_x(current, box, dir)
@@ -526,7 +526,7 @@ module Clears
         Amatch::Levenshtein.new(name).match(detected_name)
       end
 
-      return most_matched_name if most_matched_name.levenshtein_similar(detected_name) > NAME_SIMILARITY_THRESHOLD
+      most_matched_name if most_matched_name.levenshtein_similar(detected_name) > NAME_SIMILARITY_THRESHOLD
     end
 
     def get_largest_similar_ratio(string)
@@ -542,8 +542,8 @@ module Clears
     end
 
     def compare_image(target_image, source_image, grayscaled: false)
-      target_image = target_image.is_a?(Image) ? target_image : ImageList.new(target_image)
-      source_image = source_image.is_a?(Image) ? source_image : ImageList.new(source_image)
+      target_image = ImageList.new(target_image) unless target_image.is_a?(Image)
+      source_image = ImageList.new(source_image) unless source_image.is_a?(Image)
       target_image = target_image.scale(source_image.columns, source_image.rows)
       target_image = target_image.quantize(2, GRAYColorspace) if grayscaled
       source_image = source_image.quantize(2, GRAYColorspace) if grayscaled
