@@ -26,7 +26,7 @@ RSpec.describe Channel, type: :model do
       let(:channel_data) { double(thumbnail_url: 'thumbnail', banner_url: 'banner') }
 
       before do
-        allow(Yt::Models::ChannelBranding).to receive(:new).and_return(channel_data)
+        allow(Yt::Models::ChannelMeta).to receive(:new).and_return(channel_data)
       end
 
       it 'initializes a new channel' do

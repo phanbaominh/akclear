@@ -11,7 +11,7 @@ class Channel < ApplicationRecord
 
       c.title = video_data.channel_title
       c.external_id = external_id
-      channel_data = Yt::Models::ChannelBranding.new(id: external_id)
+      channel_data = Yt::Models::ChannelMeta.new(id: external_id)
       c.thumbnail_url = channel_data.thumbnail_url
       c.banner_url = channel_data.banner_url
     end
