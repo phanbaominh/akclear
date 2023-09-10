@@ -1,6 +1,10 @@
 class Channel::VideosImportSpecification
+  include StageSpecifiable
+  attr_reader :channel_ids, :all_channels
+
   def initialize(params)
     @params = params
+    @all_channels = ActiveRecord::Type::Boolean.new.cast(params[:all_channels]) || params[:all_channels].nil?
   end
 
   def channels
@@ -9,6 +13,14 @@ class Channel::VideosImportSpecification
 
   def satisfy?(video_data)
     stages.blank? || has_specified_stages_code_in_title?(video_data)
+  end
+
+  def all_channels?
+    all_channels
+  end
+
+  def persisted?
+    false
   end
 
   private
