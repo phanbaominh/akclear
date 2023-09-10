@@ -3,7 +3,7 @@ class Clear < ApplicationRecord
   include Clear::HardTaggable
   include Clear::Squadable
   include Clear::Likeable
-  include Clear::Specifiable
+  include StageSpecifiable
   include Youtubeable
   belongs_to :submitter, class_name: 'User'
   belongs_to :stage
