@@ -10,6 +10,7 @@ Rails.application.routes.draw do
     post 'sign_up', to: 'registrations#create'
     namespace :admin do
       resources :clear_jobs, controller: 'extract_clear_data_from_video_jobs'
+      resources :videos_imports, only: %i[new create]
     end
     resources :sessions, only: %i[index show destroy]
     resource  :password, only: %i[edit update]
