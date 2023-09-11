@@ -1,4 +1,6 @@
 class ExtractClearDataFromVideoJob < ApplicationRecord
+  belongs_to :stage
+
   include AASM
   enum :status, { pending: 0, processing: 1, completed: 2, failed: 3, clear_created: 4 }
 

@@ -12,6 +12,10 @@ RSpec.describe ExtractClearDataFromVideoJob, type: :model do
     end
   end
 
+  describe 'associations' do
+    it { is_expected.to belong_to(:stage) }
+  end
+
   describe 'aasm' do
     subject { described_class.new }
 

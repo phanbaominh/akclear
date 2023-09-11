@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_09_130343) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_11_140603) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -105,6 +105,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_09_130343) do
     t.string "video_url"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "stage_id", null: false
+    t.index ["stage_id"], name: "index_extract_clear_data_from_video_jobs_on_stage_id"
   end
 
   create_table "good_job_batches", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -323,6 +325,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_09_130343) do
   add_foreign_key "clears", "users", column: "submitter_id"
   add_foreign_key "email_verification_tokens", "users"
   add_foreign_key "events", "events", column: "original_event_id"
+  add_foreign_key "extract_clear_data_from_video_jobs", "stages"
   add_foreign_key "likes", "clears"
   add_foreign_key "likes", "users"
   add_foreign_key "password_reset_tokens", "users"
