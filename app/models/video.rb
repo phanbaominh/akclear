@@ -27,6 +27,10 @@ class Video
     metadata&.title
   end
 
+  def stage_id
+    @stage_id ||= stages_ids_and_codes.find { |(_id, code)| title&.include?(code) }&.first
+  end
+
   def valid?
     return @valid if defined?(@valid)
 
@@ -40,6 +44,10 @@ class Video
   end
 
   private
+
+  def stages_ids_and_codes
+    @stages_ids_and_codes ||= Stage.all.non_challenge_mode.pluck(:id, :code)
+  end
 
   def params_contains_only_allowed_keys?
     params.blank? || params.keys.all? { |key| ALLOWED_YOUTUBE_PARAM_KEYS.include?(key) }

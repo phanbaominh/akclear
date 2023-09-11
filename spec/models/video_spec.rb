@@ -78,5 +78,17 @@ describe Video do
         expect(video.title).to eq('title')
       end
     end
+
+    describe '#stage_id' do
+      let_it_be(:stage) { create(:stage, code: 'CODE', game_id: 'gameid') }
+      let_it_be(:challenge_mode_stage) { create(:stage, code: 'CODE', game_id: '#f#gameid') }
+      let_it_be(:wrong_code_stage) { create(:stage, code: 'WRONG', game_id: 'wgameid') }
+
+      let(:metadata) { double(title: 'CODE | title') }
+
+      it 'returns the stage with correct code' do
+        expect(video.stage_id).to eq(stage.id)
+      end
+    end
   end
 end
