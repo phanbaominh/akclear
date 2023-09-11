@@ -25,4 +25,28 @@ RSpec.describe ExtractClearDataFromVideoJob, type: :model do
     it { is_expected.to transition_from(:completed).to(:clear_created).on_event(:mark_clear_created) }
     it { is_expected.to transition_from(:processing).to(:failed).on_event(:fail) }
   end
+
+  describe '#video_url=' do
+    let(:video_url) { 'https://www.youtube.com/watch?v=aAfeBGKoZeI&t=34' }
+    let(:job) { described_class.new(video_url:) }
+    let(:video) { instance_double(Video, stage_id: 1, valid?: valid) }
+
+    before { allow(Video).to receive(:new).with(video_url).and_return(video) }
+
+    context 'when video is valid' do
+      let(:valid) { true }
+
+      it 'sets the stage_id' do
+        expect(job.stage_id).to eq(1)
+      end
+    end
+
+    context 'when video is invalid' do
+      let(:valid) { false }
+
+      it 'does not set the stage_id' do
+        expect(job.stage_id).to be_nil
+      end
+    end
+  end
 end

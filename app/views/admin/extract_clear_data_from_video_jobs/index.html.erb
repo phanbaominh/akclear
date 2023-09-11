@@ -2,7 +2,7 @@
 <table>
   <thead>
     <tr>
-      <th>Job Id</th>
+      <th>Stage</th>
       <th>Status</th>
       <th>Data</th>
       <th>Video url</th>
@@ -12,7 +12,7 @@
   <tbody>
     <% @extract_clear_data_from_video_jobs.each do |job| %>
       <tr>
-        <td><%= job.id %></td>
+        <td><%= job.stage.code %></td>
         <td><%= job.status %></td>
         <td>
           <% if job.data %>

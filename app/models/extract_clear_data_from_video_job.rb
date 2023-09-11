@@ -35,6 +35,14 @@ class ExtractClearDataFromVideoJob < ApplicationRecord
     @video ||= Video.new(video_url)
   end
 
+  def video_url=(url)
+    super url
+    video = Video.new(url)
+    return unless video.valid?
+
+    self.stage_id = video.stage_id unless stage_id
+  end
+
   def valid_video
     errors.add(:video_url, 'errors.messages.invalid') unless video.valid?
   end
