@@ -1,0 +1,6 @@
+<iframe src="<%= @extract_clear_data_from_video_job.video.embed_link %>" class=" w-full h-[50vh]"></iframe>
+<%= simple_form_for @extract_clear_data_from_video_job, url: admin_clear_job_url(@extract_clear_data_from_video_job) do |f| %>
+  <%= f.input :video_url, input_html: { class: 'w-full' } %>
+  <%= f.input :stage_id, collection: Stage.all, label_method: :code %>
+  <%= f.button :submit, t('admin.extract_clear_data_from_video_jobs.update.start_job') %>
+<% end %>

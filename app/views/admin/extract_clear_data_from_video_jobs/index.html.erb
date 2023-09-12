@@ -33,8 +33,15 @@
         </td>
         <td><%= job.video_url %></td>
         <td>
-          <%= link_to new_clears_from_job_path(job_id: job.id), class: 'btn btn-primary btn-circle' do %>
-            <%= heroicon "check", options: { alt: 'Create clear' } %>
+          <% if job.pending? %>
+            <%= link_to edit_admin_clear_job_path(job), class: 'btn btn-primary btn-circle' do %>
+              <%= heroicon "pencil", options: { alt: 'Edit' } %>
+            <% end %>
+          <% end %>
+          <% if job.completed? %>
+            <%= link_to new_clears_from_job_path(job_id: job.id), class: 'btn btn-primary btn-circle' do %>
+              <%= heroicon "check", options: { alt: 'Create clear' } %>
+            <% end %>
           <% end %>
           <%= button_to admin_clear_job_path(job), method: :delete, class: 'btn btn-error btn-circle hover:bg-opacity-80'  do %>
             <%= heroicon "x-mark", options: { alt: 'Delete' } %>

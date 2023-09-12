@@ -3,6 +3,8 @@ class Video
   YOUTUBE_REGEX = %r{(?:https?://)?(?:www\.)?(?:youtube\.com|youtu\.be)/(?:watch\?v=)?(.+)}
   ALLOWED_YOUTUBE_PARAM_KEYS = %w[v t].freeze
 
+  attr_writer :metadata
+
   def self.from_id(video_id)
     new(normalized_url(video_id))
   end
@@ -41,6 +43,10 @@ class Video
 
   def ==(other)
     self.class == other.class && to_url == other.to_url
+  end
+
+  def embed_link
+    self.class.normalized_url(video_id).gsub('watch?v=', 'embed/')
   end
 
   private

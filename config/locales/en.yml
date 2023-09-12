@@ -31,7 +31,16 @@
 
 en:
   admin:
+    videos_imports:
+      new:
+        submit: "Start import"
+      create:
+        success: "Videos import was successfully started."
     extract_clear_data_from_video_jobs:
+      job_started: "Job already started"
+      update:
+        start_job: "Start job"
+        success: "Job was successfully updated."
       create:
         success: "Job was successfully created."
       destroy:
