@@ -15,7 +15,7 @@ class Admin::VideosImportsController < ApplicationController
   def videos_import_params
     return {} if params[:videos_import].blank? && action_name == 'new'
 
-    params.require(:videos_import).permit(:channel_ids, :stageable_id, :all_channels, :stage_id, :challenge_mode,
-                                          :stage_type, :environmentd)
+    params.require(:videos_import).permit(:stageable_id, :all_channels, :stage_id, :challenge_mode,
+                                          :stage_type, :environment, :full_pages, channel_ids: [])
   end
 end
