@@ -32,7 +32,7 @@ module StageSpecifiable
   end
 
   def challenge_mode=(value)
-    @challenge_mode = stageable&.challengable? ? value : nil
+    @challenge_mode = stageable&.challengable? ? ActiveRecord::Type::Boolean.new.cast(value) : nil
   end
 
   def environment=(value)
