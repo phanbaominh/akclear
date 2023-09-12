@@ -4,20 +4,24 @@ module Channel::VideosImportable
   class_methods do
     def import_videos(spec)
       spec.channels.find_each do |channel|
-        channel.import_videos do |video_data|
-          spec.satisfy?(video_data)
-        end
+        channel.import_videos(spec)
+        spec.reset
       end
     end
   end
 
-  def import_videos(&)
-    selected_playlist_items = Yt::Playlist.new(id: uploads_playlist_id).playlist_items.select(&)
-    selected_playlist_items.each do |playlist_item|
-      video = Video.from_id(playlist_item.video_id)
-      next unless video.valid?
+  def import_videos(spec)
+    selected_playlist_items =
+      Yt::Playlist.new(id: uploads_playlist_id).playlist_items.each.with_object([]) do |video_data, selected_videos|
+        break selected_videos if spec.stop?
 
-      ExtractClearDataFromVideoJob.create(video_url: video.to_url)
-    end
+        selected_videos << video_data if spec.satisfy?(video_data)
+      end
+    selected_playlist_items.map do |playlist_item|
+      video = Video.from_id(playlist_item.video_id)
+      video.metadata = playlist_item
+
+      ExtractClearDataFromVideoJob.new(video_url: video)
+    end.map(&:save)
   end
 end
