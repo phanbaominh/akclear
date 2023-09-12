@@ -2,17 +2,23 @@ class ExtractClearDataFromVideoJob < ApplicationRecord
   belongs_to :stage
 
   include AASM
-  enum :status, { pending: 0, processing: 1, completed: 2, failed: 3, clear_created: 4 }
+  enum :status, { pending: 0, processing: 1, completed: 2, failed: 3, clear_created: 4, started: 5 }
 
   aasm column: :status, enum: true do
     state :pending, initial: true
+    state :started
     state :processing
     state :completed
     state :failed
     state :clear_created
 
-    event :start do
-      transitions from: :pending, to: :processing
+    # make sure to use bang version to trigger after_commit
+    event :start, after_commit: :run do
+      transitions from: :pending, to: :started
+    end
+
+    event :process do
+      transitions from: :started, to: :processing
     end
 
     event :complete do
@@ -35,10 +41,14 @@ class ExtractClearDataFromVideoJob < ApplicationRecord
     @video ||= Video.new(video_url)
   end
 
-  def video_url=(url)
-    super url
-    video = Video.new(url)
-    return unless video.valid?
+  def video_url=(video_or_url)
+    @video =
+      if video_or_url.is_a?(String)
+        Video.new(video_or_url)
+      else
+        video_or_url
+      end
+    super video.to_url
 
     self.stage_id = video.stage_id unless stage_id
   end
@@ -49,5 +59,11 @@ class ExtractClearDataFromVideoJob < ApplicationRecord
 
   def clear
     @clear ||= Clear.new(data) if completed?
+  end
+
+  def run
+    return unless started?
+
+    ExtractClearDataFromVideoJobRunner.perform_later(id)
   end
 end

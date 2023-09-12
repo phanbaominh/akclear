@@ -71,6 +71,7 @@ gem 'simple_form'
 gem 'view_component'
 gem 'vite_rails'
 gem 'yt'
+gem 'after_commit_everywhere', '~> 1.0'
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem

@@ -5,16 +5,16 @@ class ExtractClearDataFromVideoJobRunner < ApplicationJob
   def perform(job_id)
     job = ExtractClearDataFromVideoJob.find_by(id: job_id)
 
-    return unless job&.pending?
+    return unless job&.started?
 
-    job.start
+    job.process!
 
     case Clears::BuildClearFromVideo.call(job.video)
     in Success(clear)
       job.data = {
         stage_id: clear.stage_id,
         link: clear.link,
-        used_operators_attributes: clear.used_operators.map(&:attributes),
+        used_operators_attributes: clear.used_operators.map(&:attributes)
       }
       job.complete!
     in Failure(error)

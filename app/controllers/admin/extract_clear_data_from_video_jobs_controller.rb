@@ -11,7 +11,7 @@ module Admin
 
     def create
       if @extract_clear_data_from_video_job.save
-        ExtractClearDataFromVideoJobRunner.perform_later(@extract_clear_data_from_video_job.id)
+        @extract_clear_data_from_video_job.start!
         redirect_to admin_clear_jobs_path, notice: I18n.t('admin.extract_clear_data_from_video_jobs.create.success')
       else
         render :new
