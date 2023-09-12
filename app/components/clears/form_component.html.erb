@@ -67,7 +67,7 @@
           'dispatch:clickEditOperator': 'highlight',
         }
       )} do %>
-      <div id="detailed_operators" class="block grid grid-cols-1 sm:grid-cols-2 sm:hidden">
+      <div id="detailed_operators" class="grid grid-cols-1 sm:grid-cols-2 sm:hidden">
         <div
         id="detailed_operators__list"
         class="grid grid-cols-1 sm:flex sm:flex-wrap gap-2 js-only"
@@ -83,9 +83,10 @@
       <div id="basic_operators" class="hidden sm:block">
         <div class=" flex flex-col w-full  ">
           <div class="flex">
-            <label class="label hidden  sm:flex  cursor-pointer w-fit self-center">
-              <span class="label-text">Show video</span>
-              <%= content_tag :input, nil, type: 'checkbox', class: "toggle ", data: {
+            <% if new_form %>
+              <label class="label hidden  sm:flex  cursor-pointer w-fit self-center">
+                <span class="label-text"><%= t(:show_video) %></span>
+                <%= content_tag :input, nil, type: 'checkbox', class: "toggle ", data: {
                     **stimulus_attrs(
                       :clears__form_component,
                       actions: {
@@ -93,7 +94,8 @@
                       },
                     )
                   } %>
-            </label>
+              </label>
+            <% end %>
             <div id="basic_operators__list" class="hidden sm:flex flex-wrap self-center items-center justify-items-end">
               <% clear_spec.used_operators.each do |used_operator| %>
                 <%= render Clears::UsedOperatorMiniComponent.new(used_operator: used_operator) %>
