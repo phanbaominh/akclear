@@ -1,0 +1,41 @@
+<article class="card bg-base-200 shadow-xl">
+  <span class="badge badge-primary"><%= job.status %></span>
+  <div class="card-body p-4">
+    <div class="flex justify-between items-center">
+      <div>
+        <h2 class="card-title inline-block "><%= job.stage.code %></h2>
+        <span><%= job.video_url %></span>
+      </div>
+      <div class="flex space-x-2">
+        <% if job.pending? %>
+          <%= link_to edit_admin_clear_job_path(job), class: 'btn btn-primary btn-circle btn-sm' do %>
+            <%= heroicon "pencil", options: { alt: 'Edit', class: 'w-3 h-3' } %>
+          <% end %>
+        <% end %>
+        <% if job.completed? %>
+          <%= link_to new_clears_from_job_path(job_id: job.id), class: 'btn btn-primary btn-circle btn-sm' do %>
+            <%= heroicon "check", options: { alt: 'Create clear', class: 'w-3 h-3' } %>
+          <% end %>
+        <% end %>
+        <%= button_to admin_clear_job_path(job), method: :delete, class: 'btn btn-error btn-circle hover:bg-opacity-80 btn-sm'  do %>
+          <%= heroicon "x-mark", options: { alt: 'Delete', class: 'w-3 h-3' } %>
+        <% end %>
+      </div>
+    </div>
+    <% if job.data %>
+      <% if job.completed? %>
+        <%= job.clear.stage&.code %>
+        <div class="grid grid-cols-2 xs:grid-cols-3 sm:flex sm:flex-wrap gap-2">
+          <% job.clear.used_operators&.each do |used_operator| %>
+            <%= render Clears::UsedOperatorMiniComponent.new(
+                used_operator: used_operator,
+                editable: false
+              ) %>
+          <% end %>
+        </div>
+      <% elsif job.failed? %>
+        <%= job.data['error'] %>
+      <% end %>
+    <% end %>
+  </div>
+</article>

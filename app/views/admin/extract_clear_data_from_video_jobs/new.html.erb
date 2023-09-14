@@ -1,4 +1,7 @@
-<%= simple_form_for @extract_clear_data_from_video_job, url: admin_clear_jobs_url do |f| %>
-  <%= f.input :video_url %>
-  <%= f.button :submit %>
+<%= turbo_frame_tag ExtractClearDataFromVideoJob.new do %>
+  <%= simple_form_for @extract_clear_data_from_video_job, url: admin_clear_jobs_url do |f| %>
+    <%= f.input :video_url %>
+    <%= link_to t(:cancel), admin_clear_jobs_url, class: 'btn' %>
+    <%= f.button :submit %>
+  <% end %>
 <% end %>

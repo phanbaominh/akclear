@@ -1,53 +1,11 @@
-<%= link_to t(:new_clear_job), new_admin_clear_job_path, class: 'btn btn-primary' %>
-<table>
-  <thead>
-    <tr>
-      <th>Stage</th>
-      <th>Status</th>
-      <th>Data</th>
-      <th>Video url</th>
-      <th>Actions</th>
-    </tr>
-  </th>
-  <tbody>
-    <% @extract_clear_data_from_video_jobs.each do |job| %>
-      <tr>
-        <td><%= job.stage.code %></td>
-        <td><%= job.status %></td>
-        <td>
-          <% if job.data %>
-            <% if job.completed? %>
-              <%= job.clear.stage&.code %>
-              <div class="grid grid-cols-2 xs:grid-cols-3 sm:flex sm:flex-wrap gap-2">
-                <% job.clear.used_operators&.each do |used_operator| %>
-                  <%= render Clears::UsedOperatorComponent.new(
-                used_operator: used_operator,
-                editable: false
-              ) %>
-                <% end %>
-              </div>
-            <% elsif job.failed? %>
-              <%= job.data['error'] %>
-            <% end %>
-          <% end %>
-        </td>
-        <td><%= job.video_url %></td>
-        <td>
-          <% if job.pending? %>
-            <%= link_to edit_admin_clear_job_path(job), class: 'btn btn-primary btn-circle' do %>
-              <%= heroicon "pencil", options: { alt: 'Edit' } %>
-            <% end %>
-          <% end %>
-          <% if job.completed? %>
-            <%= link_to new_clears_from_job_path(job_id: job.id), class: 'btn btn-primary btn-circle' do %>
-              <%= heroicon "check", options: { alt: 'Create clear' } %>
-            <% end %>
-          <% end %>
-          <%= button_to admin_clear_job_path(job), method: :delete, class: 'btn btn-error btn-circle hover:bg-opacity-80'  do %>
-            <%= heroicon "x-mark", options: { alt: 'Delete' } %>
-          <% end %>
-        </td>
-      </tr>
+<%= turbo_frame_tag ExtractClearDataFromVideoJob.new do %>
+  <%= link_to t(:new_clear_job), new_admin_clear_job_path, class: 'btn btn-primary w-fit' %>
+<% end %>
+<section class="space-x-2">
+  <h1>Jobs</h1>
+  <% @extract_clear_data_from_video_jobs.each do |job| %>
+    <%= turbo_frame_tag job do %>
+      <%= render Admin::ExtractClearDataFromVideoJobs::ShowComponent.new(job) %>
     <% end %>
-  </tbody>
-</table>
+  <% end %>
+</section>

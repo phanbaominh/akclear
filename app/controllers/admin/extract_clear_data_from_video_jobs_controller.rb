@@ -5,7 +5,12 @@ module Admin
 
     before_action :redirect_if_job_started, only: %i[edit update]
 
-    def index; end
+    def index
+      @extract_clear_data_from_video_jobs =
+        @extract_clear_data_from_video_jobs.order(created_at: :desc)
+    end
+
+    def show; end
 
     def new
       @extract_clear_data_from_video_job = ExtractClearDataFromVideoJob.new
