@@ -21,7 +21,13 @@ module Admin
     def create
       if @extract_clear_data_from_video_job.save
         @extract_clear_data_from_video_job.start!
-        redirect_to admin_clear_jobs_path, notice: I18n.t('admin.extract_clear_data_from_video_jobs.create.success')
+
+        respond_to do |format|
+          format.html do
+            redirect_to admin_clear_jobs_path, notice: I18n.t('admin.extract_clear_data_from_video_jobs.create.success')
+          end
+          format.turbo_stream
+        end
       else
         render :new
       end
@@ -30,7 +36,12 @@ module Admin
     def update
       if @extract_clear_data_from_video_job.update(extract_clear_data_from_video_job_params)
         @extract_clear_data_from_video_job.start!
-        redirect_to admin_clear_jobs_path, notice: I18n.t('admin.extract_clear_data_from_video_jobs.update.success')
+        respond_to do |format|
+          format.html do
+            redirect_to admin_clear_jobs_path, notice: I18n.t('admin.extract_clear_data_from_video_jobs.update.success')
+          end
+          format.turbo_stream
+        end
       else
         render :edit
       end
@@ -39,7 +50,12 @@ module Admin
     def destroy
       return unless @extract_clear_data_from_video_job.destroy
 
-      redirect_to admin_clear_jobs_path, notice: I18n.t('admin.extract_clear_data_from_video_jobs.destroy.success')
+      respond_to do |format|
+        format.html do
+          redirect_to admin_clear_jobs_path, notice: I18n.t('admin.extract_clear_data_from_video_jobs.destroy.success')
+        end
+        format.turbo_stream
+      end
     end
 
     private

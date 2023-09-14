@@ -1,11 +1,13 @@
 <%= turbo_frame_tag ExtractClearDataFromVideoJob.new do %>
   <%= link_to t(:new_clear_job), new_admin_clear_job_path, class: 'btn btn-primary w-fit' %>
 <% end %>
-<section class="space-x-2">
-  <h1>Jobs</h1>
-  <% @extract_clear_data_from_video_jobs.each do |job| %>
-    <%= turbo_frame_tag job do %>
-      <%= render Admin::ExtractClearDataFromVideoJobs::ShowComponent.new(job) %>
+<section >
+  <h1><%= t("admin.extract_clear_data_from_video_jobs.index.jobs") %></h1>
+  <div id="jobs" class="space-x-2" >
+    <% @extract_clear_data_from_video_jobs.each do |job| %>
+      <%= turbo_frame_tag job do %>
+        <%= render Admin::ExtractClearDataFromVideoJobs::ShowComponent.new(job) %>
+      <% end %>
     <% end %>
-  <% end %>
+  </div>
 </section>
