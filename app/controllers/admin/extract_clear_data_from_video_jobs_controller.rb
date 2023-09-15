@@ -1,13 +1,14 @@
 module Admin
   class ExtractClearDataFromVideoJobsController < ApplicationController
+    include Pagy::Backend
     # load and authorized @extract_clear_data_from_video_job and @extract_clear_data_from_video_jobs
     load_and_authorize_resource
 
     before_action :redirect_if_job_started, only: %i[edit update]
 
     def index
-      @extract_clear_data_from_video_jobs =
-        @extract_clear_data_from_video_jobs.order(created_at: :desc)
+      @pagy, @extract_clear_data_from_video_jobs =
+        pagy(@extract_clear_data_from_video_jobs.order(created_at: :desc).includes(:stage))
     end
 
     def show; end
@@ -24,7 +25,8 @@ module Admin
 
         respond_to do |format|
           format.html do
-            redirect_to admin_clear_jobs_path, notice: I18n.t('admin.extract_clear_data_from_video_jobs.create.success')
+            redirect_to admin_clear_jobs_path,
+                        notice: I18n.t('admin.extract_clear_data_from_video_jobs.create.success')
           end
           format.turbo_stream
         end
@@ -38,7 +40,8 @@ module Admin
         @extract_clear_data_from_video_job.start!
         respond_to do |format|
           format.html do
-            redirect_to admin_clear_jobs_path, notice: I18n.t('admin.extract_clear_data_from_video_jobs.update.success')
+            redirect_to admin_clear_jobs_path,
+                        notice: I18n.t('admin.extract_clear_data_from_video_jobs.update.success')
           end
           format.turbo_stream
         end
@@ -52,7 +55,8 @@ module Admin
 
       respond_to do |format|
         format.html do
-          redirect_to admin_clear_jobs_path, notice: I18n.t('admin.extract_clear_data_from_video_jobs.destroy.success')
+          redirect_to admin_clear_jobs_path,
+                      notice: I18n.t('admin.extract_clear_data_from_video_jobs.destroy.success')
         end
         format.turbo_stream
       end

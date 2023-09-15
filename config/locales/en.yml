@@ -38,6 +38,8 @@ en:
         success: "Videos import was successfully started."
     extract_clear_data_from_video_jobs:
       job_started: "Job already started"
+      index:
+        jobs: "Jobs"
       update:
         start_job: "Start job"
         success: "Job was successfully updated."

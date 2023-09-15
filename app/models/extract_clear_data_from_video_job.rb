@@ -58,7 +58,14 @@ class ExtractClearDataFromVideoJob < ApplicationRecord
   end
 
   def clear
-    @clear ||= Clear.new(data) if completed?
+    return @clear if defined?(@clear)
+
+    return unless completed?
+
+    @clear ||= Clear.new(data)
+    operators = Operator.where(id: @clear.used_operators.map(&:operator_id))
+    @clear.used_operators.each { |uo| uo.operator = operators.find { |o| o.id == uo.operator_id } }
+    @clear
   end
 
   def run

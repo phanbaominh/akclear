@@ -24,7 +24,6 @@
     </div>
     <% if job.data %>
       <% if job.completed? %>
-        <%= job.clear.stage&.code %>
         <div class="grid grid-cols-2 xs:grid-cols-3 sm:flex sm:flex-wrap gap-2">
           <% job.clear.used_operators&.each do |used_operator| %>
             <%= render Clears::UsedOperatorMiniComponent.new(
