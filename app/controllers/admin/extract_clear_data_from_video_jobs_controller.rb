@@ -71,7 +71,7 @@ module Admin
     end
 
     def extract_clear_data_from_video_job_params
-      params.require(:extract_clear_data_from_video_job).permit(:video_url)
+      params.require(:extract_clear_data_from_video_job).permit(:video_url, :stage_id)
     end
   end
 end
