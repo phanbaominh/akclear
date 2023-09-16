@@ -39,12 +39,14 @@
               <%= heroicon "x-mark", options: { class: "w-5 h-5 " } %>
             <% end %>
           <% end %>
-
         <% end %>
       </div>
     <% end %>
-
-    <%= render NavbarComponent.new %>
+    <% if controller.class.to_s.downcase.include? 'admin' %>
+      <%= render Admin::NavbarComponent.new %>
+    <% else  %>
+      <%= render NavbarComponent.new %>
+    <% end %>
     <main class=" container mx-auto mt-16 md:mt-28 px-5 flex flex-col pb-8 ">
       <%= yield %>
     </main>

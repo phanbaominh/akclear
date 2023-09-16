@@ -1,5 +1,5 @@
 module Admin
-  class ExtractClearDataFromVideoJobsController < ApplicationController
+  class ExtractClearDataFromVideoJobsController < AdminController
     include Pagy::Backend
     # load and authorized @extract_clear_data_from_video_job and @extract_clear_data_from_video_jobs
     load_and_authorize_resource

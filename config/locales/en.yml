@@ -31,12 +31,15 @@
 
 en:
   admin:
+    title: "Admin"
     videos_imports:
       new:
+        title: "Import videos"
         submit: "Start import"
       create:
         success: "Videos import was successfully started."
     extract_clear_data_from_video_jobs:
+      title: "Import clear jobs"
       job_started: "Job already started"
       index:
         jobs: "Jobs"

@@ -1,4 +1,4 @@
-class Admin::VideosImportsController < ApplicationController
+class Admin::VideosImportsController < AdminController
   authorize_resource class: false
 
   def new
