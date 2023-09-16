@@ -10,7 +10,7 @@ class Stage < ApplicationRecord
     stageable.is_a?(Event)
   end
 
-  def challenge_mode
+  def challenge_mode?
     game_id&.include?(CHALLENGE_MODE_ID)
   end
 

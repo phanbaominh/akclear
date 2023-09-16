@@ -3,7 +3,9 @@
   <div class="card-body p-4">
     <div class="flex justify-between items-center">
       <div>
-        <h2 class="card-title inline-block "><%= job.stage.code %></h2>
+        <h2 class="card-title  gap-1 flex">
+          <%= render Stages::CodeComponent.new(stage: job.stage, class: 'h-5') %>
+        </h2>
         <span><%= job.video_url %></span>
       </div>
       <div class="flex space-x-2">

@@ -8,7 +8,6 @@
       data-clears--stage-select-target="stageableButton"
     >
     </button>
-
     <%= form.input :stage_type,
                label: t("clear_form.stage_type_field.label"),
                collection: [Event, Episode, Annihilation],
@@ -55,14 +54,11 @@
                      action: "clears--stage-select#updateStages"
                    }
                  } %>
-
       <% if stageable %>
-
         <% if stageable.has_environments? %>
           <fieldset class="join block">
             <legend class="simple_form__label"><%= t("clear_form.environment_field.label") %></legend>
             <% form.collection_radio_buttons :environment, selectable_environments, :itself, :itself, class: 'join-item btn' do |b| %>
-
               <%= b.label(class: "hidden") %>
               <%= b.radio_button(
                 class: "join-item btn",
@@ -72,7 +68,6 @@
                 }
               ) %>
             <% end %>
-
           </fieldset>
         <% end %>
         <% if challengable? %>
@@ -86,7 +81,6 @@
                          },
                          class: "toggle toggle-error block focus:outline-base-content/20" %>
         <% end %>
-
       <% end %>
       <noscript>
         <button
@@ -98,14 +92,13 @@
         </button>
       </noscript>
       <% if stageable %>
-
         <fieldset>
           <%= form.input :stage_id,
                      as: stageable.is_a?(Annihilation) ? :hidden : :select,
                      collection: selectable_stages,
                      prompt: "Select stage",
                      required: false,
-                     label_method: :code,
+                     label_method: :code_with_mods,
                      include_blank: true,
                      input_html: {
                        id: "stage_select"

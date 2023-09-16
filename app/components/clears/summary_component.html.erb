@@ -52,14 +52,10 @@
         >
           <div class="flex md:space-x-0 flex-col w-full md:w-48">
             <div>
-
               <h2 class="card-title">
-                <%= @clear.stage.code %>
-                <%= render Clears::DifficultyComponent.new(clear: @clear, class: "h-5") %>
+                <%= render Stages::CodeComponent.new(stage: @clear.stage, class: "h-5") %>
               </h2>
-
             </div>
-
             <div class="flex space-x-2 w-full">
               <div class="text-base-content-subdued">
                 <%= by_string(@clear.player_name) %></div>
@@ -94,7 +90,6 @@
           <%= render Clears::LikeComponent.new(clear: @clear) %>
         </div>
       </div>
-
     </div>
   </div>
 <% end %>
