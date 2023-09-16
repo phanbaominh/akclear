@@ -12,6 +12,7 @@ Rails.application.routes.draw do
     namespace :admin do
       resources :clear_jobs, controller: 'extract_clear_data_from_video_jobs'
       resources :videos_imports, only: %i[new create]
+      resource :clear_from_job, only: %i[new]
     end
     resources :sessions, only: %i[index show destroy]
     resource  :password, only: %i[edit update]
@@ -32,7 +33,6 @@ Rails.application.routes.draw do
       resource :stage_select, only: %i[show]
       resource :operators_select, only: %i[show]
       resource :used_operator
-      resource :from_job, only: %i[new]
     end
     resources :clears do
       resources :used_operators

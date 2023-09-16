@@ -1,5 +1,5 @@
-module Clears
-  class FromJobsController < ApplicationController
+module Admin
+  class ClearFromJobsController < AdminController
     include ClearFilterable
     def new
       @job = ExtractClearDataFromVideoJob.find_by(id: params[:job_id])
