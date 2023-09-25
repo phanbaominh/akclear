@@ -16,6 +16,10 @@ class ClearImage
         RTesseract.new(path, config_file: :digits, psm: '7').to_s.to_i
       end
 
+      def read_lined_names(path)
+        RTesseract.new(path, psm: '3', oem: 1, lang: tess_language_code).to_box
+      end
+
       def read_sparse_names(path)
         RTesseract.new(path, psm: '11', oem: 1, lang: tess_language_code).to_box
       end

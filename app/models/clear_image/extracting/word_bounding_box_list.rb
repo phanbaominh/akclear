@@ -45,11 +45,11 @@ class ClearImage
         max_result
       end
 
-      def minimum_dist_between_word(lower_bound)
+      def dists_between_words(lower_bound)
         list.each_cons(2).filter_map do |first_name_box, second_name_box|
           dist = second_name_box.x_end - first_name_box.x_end
           dist if dist > lower_bound
-        end.min
+        end
       end
 
       def line_up?(box)

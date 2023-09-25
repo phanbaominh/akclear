@@ -6,23 +6,41 @@ class ClearImage
       processed_image = Extracting::Processor.make_names_white_on_black(image).write(tmp_file_path)
 
       extract_name_lines
+      # binding.pry
+      processed_image = Extracting::Processor
+                        .paint_white_in_between_names(processed_image, *name_lines)
 
-      Extracting::Processor
-        .paint_white_over_non_names(processed_image, *name_lines_bounding_boxes)
-        .write(tmp_file_path)
+      processed_image = Extracting::Processor
+                        .paint_white_over_non_names(processed_image, *name_lines_bounding_boxes).write(tmp_file_path)
 
+      @lined = true
       p 'Extracting image...'
 
       extract_name_lines
 
-      extract_operators_data_from_all_possible_operator_cards_bounding_boxes
+      # binding.pry
 
-      combine_extracted_operators_data
+      extract_operators_data_based_on_name_lines
+
+      # extract_operators_data_from_all_possible_operator_cards_bounding_boxes
+
+      # combine_extracted_operators_data
     end
 
     private
 
     attr_reader :name_lines, :operators_data_from_all_possible_operator_cards_bounding_boxes
+
+    def extract_operators_data_based_on_name_lines
+      name_lines.map do |line|
+        # line = line.filter_out_noises(distance_between_operator_card, image.columns)
+        line.map do |name_box|
+          box = Extracting::OperatorCardBoundingBox.new(distance_between_operator_card,
+                                                        name_bounding_box: name_box)
+          Extracting::OperatorExtractor.new(box, image, reader).extract
+        end
+      end.flatten
+    end
 
     def extract_operators_data_from_all_possible_operator_cards_bounding_boxes
       @operators_data_from_all_possible_operator_cards_bounding_boxes =
@@ -69,6 +87,15 @@ class ClearImage
 
     def name_lines_bounding_boxes
       name_lines.map(&:merge)
+      # name_lines.map do |line|
+      #   merged = line.merge
+      #   BoundingBox.new(
+      #     merged.x,
+      #     merged.parts.sum(&:y) / merged.parts.size,
+      #     x_end: merged.x_end,
+      #     y_end: merged.parts.sum(&:y_end) / merged.parts.size
+      #   )
+      # end
     end
 
     def extract_name_lines
@@ -83,7 +110,7 @@ class ClearImage
     end
 
     def extract_words
-      ocr_word_boxes = reader.read_sparse_names(tmp_file_path)
+      ocr_word_boxes = @lined ? reader.read_lined_names(tmp_file_path) : reader.read_sparse_names(tmp_file_path)
       word_bounding_boxes = ocr_word_boxes.map { |box| Extracting::WordBoundingBox.new(box) }
       Extracting::WordProcessor.group_near_words_in_same_line(word_bounding_boxes)
     end

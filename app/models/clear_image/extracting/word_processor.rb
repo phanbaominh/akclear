@@ -26,7 +26,7 @@ class ClearImage
           lines_of_words = []
           current_line = WordBoundingBoxList.new
           words_bounding_boxes.each do |box|
-            next if box.average_confidence < 80
+            next if box.average_confidence < 70
 
             if current_line.line_up?(box)
               current_line << box

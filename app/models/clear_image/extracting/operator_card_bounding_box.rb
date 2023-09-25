@@ -15,7 +15,7 @@ class ClearImage
       COMPONENTS_TO_BASE_BOUNDING_BOXES = {
         # x, y, width, height
         SKILL => BoundingBox.new(125.0, 315.0, 53.0, 53.0),
-        LEVEL => BoundingBox.new(7.0, 319.0, 56.0, 42.0), # [11.0, 328.0, 50.0, 34.0]]
+        LEVEL => BoundingBox.new(7.0, 319.0, 58.0, 42.0), # [11.0, 328.0, 50.0, 34.0]]
         ELITE => BoundingBox.new(0, 239.0, 75.0, 62.0),
         NAME => BoundingBox.new(0, 373, BASE_WIDTH, 28)
       }.freeze
@@ -24,11 +24,19 @@ class ClearImage
 
       delegate :x, :y, :width, :height, :inside?, to: :bounding_box
 
+      attr_reader :word
+
       def self.guess_dist(first_name_line, second_name_line)
         all_name_boxes = first_name_line + second_name_line
         lower_bound_of_dist = all_name_boxes.max_by(&:width).width
-        [first_name_line, second_name_line]
-          .map { |line| line.minimum_dist_between_word(lower_bound_of_dist) }.min
+        # figure out a way to deal with word missing
+        # [first_name_line, second_name_line]
+        #   .map { |line| line.minimum_dist_between_word(lower_bound_of_dist) }.min
+        dists_between_words = (first_name_line + second_name_line).dists_between_words(lower_bound_of_dist)
+        lower_bound_of_dist = dists_between_words.min
+        Utils.average(dists_between_words.select do |dist|
+                        dist < lower_bound_of_dist * Constants::UPPER_BOUND_CARD_DIST_RATIO
+                      end)
       end
 
       def self.guest_most_accurate_name_bounding_box(name_bounding_boxes)
@@ -63,6 +71,7 @@ class ClearImage
       def initialize(card_dist, name_bounding_box: nil, bounding_box: nil)
         @card_dist = card_dist
         @real_name_bounding_box = name_bounding_box
+        @word = name_bounding_box&.word
         @bounding_box = bounding_box
       end
 
