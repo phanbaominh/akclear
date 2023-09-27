@@ -8,8 +8,13 @@ module Utils
     end
 
     def within_ratio?(a, b, ratio)
-
       a * (1 + ratio) >= b && a <= b * (1 + ratio)
+    end
+
+    def average(array)
+      return 0 if array.empty?
+
+      array.sum / array.size.to_f
     end
   end
 end
