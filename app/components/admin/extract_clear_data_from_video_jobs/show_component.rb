@@ -3,7 +3,7 @@
 class Admin::ExtractClearDataFromVideoJobs::ShowComponent < ApplicationComponent
   attr_reader :job
 
-  def initialize(job)
+  def post_initialize(job:)
     @job = job
   end
 end

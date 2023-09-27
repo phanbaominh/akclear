@@ -6,7 +6,7 @@
   <div id="jobs" class="space-x-2" >
     <% @extract_clear_data_from_video_jobs.each do |job| %>
       <%= turbo_frame_tag job do %>
-        <%= render Admin::ExtractClearDataFromVideoJobs::ShowComponent.new(job) %>
+        <%= render Admin::ExtractClearDataFromVideoJobs::ShowComponent.new(job: job) %>
       <% end %>
     <% end %>
   </div>
