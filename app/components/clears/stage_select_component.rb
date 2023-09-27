@@ -34,7 +34,7 @@ class Clears::StageSelectComponent < ApplicationComponent
   end
 
   def selectable_stages
-    base = stageable.stages
+    base = stageable.stages.includes(:stageable)
     if clear_spec.challenge_mode
       base.challenge_mode
     elsif clear_spec.environment

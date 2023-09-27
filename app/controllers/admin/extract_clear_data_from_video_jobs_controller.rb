@@ -8,7 +8,7 @@ module Admin
 
     def index
       @pagy, @extract_clear_data_from_video_jobs =
-        pagy(@extract_clear_data_from_video_jobs.order(created_at: :desc).includes(:stage))
+        pagy(@extract_clear_data_from_video_jobs.order(created_at: :desc).includes(stage: :stageable))
     end
 
     def show; end
