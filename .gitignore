@@ -45,3 +45,4 @@ node_modules
 !/app/javascript/images/skills/.gitkeep
 
 .env
+.DS_Store
