@@ -1,4 +1,9 @@
-<article class="card bg-base-200 shadow-xl">
+<%= content_tag :article,
+  class: "card bg-base-200 shadow-xl #{@class}",
+  data: { **stimuluses(
+    dispatch: { values: { event: 'editJob', on_connect: true }, actions: { 'click': 'dp' }, include_controller: true },
+    effects: { actions: { 'dispatch:editJob@window': 'removeClasses'}, params: { class: 'border border-primary' }, include_controller: true }
+  ) } do %>
   <span class="badge badge-primary"><%= job.status %></span>
   <div class="card-body p-4">
     <div class="flex justify-between items-center">
@@ -39,4 +44,4 @@
       <% end %>
     <% end %>
   </div>
-</article>
+<% end %>
