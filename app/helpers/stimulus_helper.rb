@@ -6,7 +6,7 @@ module StimulusHelper
     end
 
     stimulus_data.reduce do |acc, s|
-      acc.merge(s) { |key, oldval, newval| %i[controller action].include?(key) ? "#{oldval} #{newval}" : newval }
+      acc.merge(s) { |key, oldval, newval| %i[controller action].include?(key) ? [oldval, newval].compact.join(' ') : newval }
     end
   end
 
