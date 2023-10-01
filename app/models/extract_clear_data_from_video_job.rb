@@ -1,5 +1,17 @@
+# frozen_string_literal: true
+
 class ExtractClearDataFromVideoJob < ApplicationRecord
+  include Specifiable
   belongs_to :stage
+
+  STATUSES = [
+    PENDING = 'pending',
+    STARTED = 'started',
+    PROCESSING = 'processing',
+    COMPLETED = 'completed',
+    FAILED = 'failed',
+    CLEAR_CREATED = 'clear_created'
+  ].freeze
 
   include AASM
   enum :status, { pending: 0, processing: 1, completed: 2, failed: 3, clear_created: 4, started: 5 }

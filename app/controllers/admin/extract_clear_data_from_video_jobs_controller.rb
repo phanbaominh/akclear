@@ -1,14 +1,18 @@
 module Admin
   class ExtractClearDataFromVideoJobsController < AdminController
     include Pagy::Backend
-    # load and authorized @extract_clear_data_from_video_job and @extract_clear_data_from_video_jobs
+    # load and authorized @extract_clear_data_from_video_job and
+    # @extract_clear_data_from_video_jobs (ExtracClearDataFromVideoJob.accessible_by(current_ability)
     load_and_authorize_resource
 
     before_action :redirect_if_job_started, only: %i[edit update]
 
     def index
+      @job_spec = ExtractClearDataFromVideoJob.new(filter_params)
       @pagy, @extract_clear_data_from_video_jobs =
-        pagy(@extract_clear_data_from_video_jobs.order(created_at: :desc).includes(stage: :stageable))
+        pagy(
+          @extract_clear_data_from_video_jobs.satisfy(@job_spec).order(created_at: :desc).includes(stage: :stageable), items: 10
+        )
     end
 
     def show; end
@@ -68,6 +72,14 @@ module Admin
       return if @extract_clear_data_from_video_job.pending?
 
       redirect_to admin_clear_jobs_path, alert: I18n.t('admin.extract_clear_data_from_video_jobs.job_started')
+    end
+
+    def filter_params
+      return {} unless params.key?(:extract_clear_data_from_video_job)
+
+      params.require(:extract_clear_data_from_video_job).permit(:status).tap do |filter_params|
+        filter_params[:status] = filter_params[:status].present? ? filter_params[:status].to_i : nil
+      end
     end
 
     def extract_clear_data_from_video_job_params
