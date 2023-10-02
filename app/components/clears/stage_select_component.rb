@@ -2,12 +2,14 @@
 
 class Clears::StageSelectComponent < ApplicationComponent
   include Turbo::FramesHelper
-  attr_reader :form
+  attr_reader :form, :multiple, :simple
 
   delegate :stageable, to: :clear_spec
 
-  def post_initialize(form:)
+  def post_initialize(form:, multiple: false, simple: false)
     @form = form
+    @multiple = multiple
+    @simple = simple
   end
 
   def clear_spec
@@ -31,6 +33,10 @@ class Clears::StageSelectComponent < ApplicationComponent
 
   def selectable_environments
     Episode::Environment.available_environments(stageable)
+  end
+
+  def all_stages
+    Stage.all.includes(:stageable)
   end
 
   def selectable_stages

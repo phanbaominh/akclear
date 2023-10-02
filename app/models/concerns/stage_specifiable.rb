@@ -1,7 +1,7 @@
 module StageSpecifiable
   extend ActiveSupport::Concern
   attr_writer :stageable_id, :stage_type
-  attr_reader :challenge_mode
+  attr_reader :challenge_mode, :stage_ids
 
   included do
     respond_to?(:validates) do
@@ -29,6 +29,12 @@ module StageSpecifiable
 
   def stage_id
     stageable.is_a?(Annihilation) ? stageable.stages.first.id : super
+  end
+
+  def stage_ids=(value)
+    value = value.compact_blank.map(&:to_i)
+    @stage_ids = value
+    self.stage_id = value.first
   end
 
   def challenge_mode=(value)

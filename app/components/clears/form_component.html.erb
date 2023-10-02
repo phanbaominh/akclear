@@ -35,7 +35,7 @@
         <%= f.input :name %>
       <% end %>
       <div class="js-only">
-        <%= render Clears::StageSelectComponent.new(form: f) %>
+        <%= render Clears::StageSelectComponent.new(form: f, simple: new_form, multiple: new_form) %>
         <%= f.label :operator_id, t(:operators) %>
         <div id="clears__form__operators_fields" class="hidden">
           <%= f.simple_fields_for :used_operators do |used_operator_form| %>

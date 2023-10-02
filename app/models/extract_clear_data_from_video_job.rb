@@ -2,6 +2,7 @@
 
 class ExtractClearDataFromVideoJob < ApplicationRecord
   include Specifiable
+  include MultipleStages
   belongs_to :stage
 
   STATUSES = [
@@ -75,6 +76,7 @@ class ExtractClearDataFromVideoJob < ApplicationRecord
     return unless completed?
 
     @clear ||= Clear.new(data)
+    # preload data
     operators = Operator.where(id: @clear.used_operators.map(&:operator_id))
     @clear.used_operators.each { |uo| uo.operator = operators.find { |o| o.id == uo.operator_id } }
     @clear
