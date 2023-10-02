@@ -69,7 +69,7 @@ module Admin
     private
 
     def redirect_if_job_started
-      return if @extract_clear_data_from_video_job.pending?
+      return if @extract_clear_data_from_video_job.may_start?
 
       redirect_to admin_clear_jobs_path, alert: I18n.t('admin.extract_clear_data_from_video_jobs.job_started')
     end

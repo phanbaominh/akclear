@@ -2,7 +2,6 @@
 
 class ExtractClearDataFromVideoJob < ApplicationRecord
   include Specifiable
-  include MultipleStages
   belongs_to :stage
 
   STATUSES = [
@@ -27,7 +26,7 @@ class ExtractClearDataFromVideoJob < ApplicationRecord
 
     # make sure to use bang version to trigger after_commit
     event :start, after_commit: :run do
-      transitions from: :pending, to: :started
+      transitions from: %i[pending failed], to: :started
     end
 
     event :process do

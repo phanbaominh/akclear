@@ -14,7 +14,7 @@
         <span><%= job.video_url %></span>
       </div>
       <div class="flex space-x-2">
-        <% if job.pending? %>
+        <% if job.may_start? %>
           <%= link_to edit_admin_clear_job_path(job), class: 'btn btn-primary btn-circle btn-sm' do %>
             <%= heroicon "pencil", options: { alt: 'Edit', class: 'w-3 h-3' } %>
           <% end %>
