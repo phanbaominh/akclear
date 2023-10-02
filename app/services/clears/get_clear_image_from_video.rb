@@ -6,6 +6,7 @@ module Clears
 
     def call
       return Failure(:invalid_video) unless video.valid?
+      return Failure(:missing_timestamp) unless video.timestamp
 
       download_url, status = Open3.capture2('youtube-dl', '-f', '22', '-g', video.to_url)
 
