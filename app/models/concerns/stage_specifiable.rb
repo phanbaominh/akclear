@@ -3,14 +3,32 @@ module StageSpecifiable
   attr_writer :stageable_id, :stage_type
   attr_reader :challenge_mode
 
+  STAGE_ATTRIBUTES = %i[stage_id stageable_id stage_type challenge_mode environment].freeze
+
   included do
     respond_to?(:validates) do
       validates :stage_type, inclusion: { in: Stage::STAGEABLE_TYPES }, allow_blank: true
     end
   end
 
+  def set_stage_attrs_from_params(params) # rubocop:disable Naming/AccessorMethodName
+    STAGE_ATTRIBUTES.each { |attr| send("#{attr}=", params[attr]) }
+  end
+
   def environment
     Episode::Environment.new(@environment) if @environment
+  end
+
+  def stage
+    super if defined?(super)
+  end
+
+  def stage_id=(value)
+    if defined?(super)
+      super
+    else
+      @stage_id = value
+    end
   end
 
   def stageable
@@ -28,7 +46,13 @@ module StageSpecifiable
   end
 
   def stage_id
-    stageable.is_a?(Annihilation) ? stageable.stages.first.id : super
+    if stageable.is_a?(Annihilation)
+      stageable.stages.first.id
+    elsif defined?(super)
+      super
+    else
+      @stage_id
+    end
   end
 
   def stage_ids=(value)

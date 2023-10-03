@@ -8,6 +8,7 @@ class Channel::VideosImportSpecification
     @all_channels = ActiveRecord::Type::Boolean.new.cast(params[:all_channels])
     @full_pages = ActiveRecord::Type::Boolean.new.cast(params[:full_pages])
     @check_count = 0
+    set_stage_attrs_from_params(params)
   end
 
   def channels
@@ -47,12 +48,6 @@ class Channel::VideosImportSpecification
     stages_codes.any? { |stage_code| video_data.title.include?(stage_code) }
   end
   alias has_any_stage_code_in_title? has_specified_stages_code_in_title?
-
-  def stageable
-    return if params[:stageable_id].blank?
-
-    @stageable ||= GlobalID::Locator.locate(params[:stageable_id])
-  end
 
   def stages_codes
     @stages_codes ||= (stageable&.stages || Stage.all).pluck(:code)

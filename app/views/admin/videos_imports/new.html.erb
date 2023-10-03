@@ -13,6 +13,6 @@
     <% end %>
   <% end %>
   <%= f.input :full_pages, as: :boolean, input_html: { class: '!toggle' } %>
-  <%= render Clears::StageSelectComponent.new(form: f) %>
+  <%= render Clears::StageSelectComponent.new(form: f, stage_select_path: new_admin_videos_import_path) %>
   <%= f.button :submit, t("admin.videos_imports.new.submit") %>
 <% end %>

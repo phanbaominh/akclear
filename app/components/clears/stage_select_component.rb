@@ -6,10 +6,15 @@ class Clears::StageSelectComponent < ApplicationComponent
 
   delegate :stageable, to: :clear_spec
 
-  def post_initialize(form:, multiple: false, simple: false)
+  def post_initialize(form:, multiple: false, simple: false, stage_select_path: nil)
     @form = form
     @multiple = multiple
     @simple = simple
+    @stage_select_path = stage_select_path
+  end
+
+  def stage_select_path
+    @stage_select_path || clears_stage_select_path
   end
 
   def clear_spec
