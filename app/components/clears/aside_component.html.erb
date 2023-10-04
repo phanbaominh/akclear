@@ -7,14 +7,15 @@
     <% clears.each do |clear| %>
       <li class="first:border-none border-t border-gray-700 py-4">
         <div class="flex flex-row justify-between">
-
           <div class="flex gap-2 items-center">
-            <%= link_to clear.stage.code,
-            clear_path(clear),
-            class: "text-white hover:text-primary" %>
-            <%= render Clears::DifficultyComponent.new(clear: clear, class: "h-5") %>
+            <%= render Stages::CodeComponent.new(stage: clear.stage, class: "h-5") do |c| %>
+              <%= c.with_code do %>
+                <%= link_to clear.stage.code,
+              clear_path(clear),
+              class: "text-white hover:text-primary" %>
+              <% end %>
+            <% end %>
           </div>
-
           <a href="<%= clear.link %>" target="_blank" rel="noopener noreferrer">
             <i class="fa-brands fa-youtube"></i>
           </a>

@@ -21,8 +21,12 @@ namespace :fetch_latest_game_data do
   end
 
   task all: :environment do
+    I18n.available_locales.each do |locale|
+      I18n.with_locale(locale) do
+        FetchGameData::FetchLatestOperatorsData.call
+      end
+    end
     [
-      FetchGameData::FetchLatestOperatorsData,
       FetchGameData::FetchLatestEventsData,
       FetchGameData::FetchLatestEpisodesData,
       FetchGameData::FetchAnnihilationsData,

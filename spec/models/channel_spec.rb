@@ -23,10 +23,13 @@ RSpec.describe Channel, type: :model do
 
     context 'when the channel does not exist' do
       let(:video_data) { double(channel_id: 'abc', channel_title: 'title') }
-      let(:channel_data) { double(thumbnail_url: 'thumbnail', banner_url: 'banner') }
+      let(:channel_data) do
+        instance_double(Yt::Models::ChannelMeta, thumbnail_url: 'thumbnail', banner_url: 'banner',
+                                                 uploads_playlist_id: 'UUWwuijyo4x78iXup5hOvkbw')
+      end
 
       before do
-        allow(Yt::Models::ChannelBranding).to receive(:new).and_return(channel_data)
+        allow(Yt::Models::ChannelMeta).to receive(:new).and_return(channel_data)
       end
 
       it 'initializes a new channel' do
@@ -36,7 +39,8 @@ RSpec.describe Channel, type: :model do
           title: 'title',
           external_id: 'abc',
           thumbnail_url: 'thumbnail',
-          banner_url: 'banner'
+          banner_url: 'banner',
+          uploads_playlist_id: 'UUWwuijyo4x78iXup5hOvkbw'
         )
       end
     end

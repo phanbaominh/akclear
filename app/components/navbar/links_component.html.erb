@@ -2,6 +2,9 @@
   <li><%= link_to t("clears"), clears_path %></li>
   <li><%= link_to t("channels.list"), channels_path %></li>
   <li><%= link_to t("guide"), "#" %></li>
+  <% if can?(:read, :admin)  %>
+    <li><%= link_to t('admin.title'), admin_path  %></li>
+  <% end %>
   <li aria-hidden="true" class="border-t border-gray-700 mx-0"></li>
   <%= render Navbar::LanguageDropdownComponent.new(flatten: true) %>
   <li aria-hidden="true" class="border-t border-gray-700 mx-0"></li>

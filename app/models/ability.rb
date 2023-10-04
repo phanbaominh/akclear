@@ -13,5 +13,7 @@ class Ability
     can %i[create destroy], :verification
 
     return unless user.admin?
+
+    can :manage, :all
   end
 end

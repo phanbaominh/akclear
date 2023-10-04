@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Channel < ApplicationRecord
+  include VideosImportable
+
   belongs_to :user, optional: true
 
   def self.from(link)
@@ -11,9 +13,13 @@ class Channel < ApplicationRecord
 
       c.title = video_data.channel_title
       c.external_id = external_id
-      channel_data = Yt::Models::ChannelBranding.new(id: external_id)
+      channel_data = Yt::Models::ChannelMeta.new(id: external_id)
       c.thumbnail_url = channel_data.thumbnail_url
       c.banner_url = channel_data.banner_url
+      c.uploads_playlist_id = channel_data.uploads_playlist_id
     end
+  rescue Yt::Errors::RequestError
+    Rails.logger.warn("Could not find channel using link: #{link}")
+    nil
   end
 end

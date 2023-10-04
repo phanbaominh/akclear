@@ -1,0 +1,3 @@
+<%= turbo_stream.update @extract_clear_data_from_video_job do %>
+  <%= render Admin::ExtractClearDataFromVideoJobs::ShowComponent.new(job: @extract_clear_data_from_video_job) %>
+<% end  %>

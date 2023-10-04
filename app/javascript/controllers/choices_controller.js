@@ -2,6 +2,7 @@ import { Controller } from "@hotwired/stimulus";
 import "choices.js/public/assets/styles/choices.min.css";
 import Choices from "choices.js";
 // Connects to data-controller="clears--form"
+
 export default class extends Controller {
   static values = {
     choicesOptions: Object,
@@ -14,8 +15,13 @@ export default class extends Controller {
     );
   }
 
+  disconnect() {
+    const value = this.stageSelect.getValue(true);
+    this.stageSelect.destroy();
+    this.element.querySelector("select").value = value;
+  }
+
   removeItem(itemValue) {
-    console.log({ itemValue });
     this.stageSelect.removeActiveItemsByValue(itemValue.toString());
   }
 }

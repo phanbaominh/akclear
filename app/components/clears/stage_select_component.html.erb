@@ -1,15 +1,24 @@
 <%= turbo_frame_tag 'filters__stage' do %>
-  <fieldset data-controller="clears--stage-select">
-    <button
+  <% if simple %>
+    <% if multiple %>
+      <%= form.input :stage_ids, collection: all_stages, label_method: :code_with_mods, 
+          wrapper_html: { data: { **stimulus(:choices, values: { choices_options: { removeItemButton: true }}) } },
+          input_html: { multiple: true } %>
+    <% else %>
+      <%= form.input :stage_id, collection: all_stages, label_method: :code_with_mods, 
+          wrapper_html: { data: { **stimulus(:choices) } } %>
+    <% end %>
+  <% else %>
+    <fieldset data-controller="clears--stage-select">
+      <button
       class="hidden"
       formmethod="GET"
-      formaction="<%= clears_stage_select_path %>"
+      formaction="<%= stage_select_path %>"
       data-turbo-frame="filters__stage"
       data-clears--stage-select-target="stageableButton"
     >
-    </button>
-
-    <%= form.input :stage_type,
+      </button>
+      <%= form.input :stage_type,
                label: t("clear_form.stage_type_field.label"),
                collection: [Event, Episode, Annihilation],
                value_method: :to_s,
@@ -26,17 +35,17 @@
                    action: "clears--stage-select#updateStages"
                  }
                } %>
-    <noscript>
-      <button
+      <noscript>
+        <button
         formmethod="GET"
-        formaction="<%= clears_stage_select_path %>"
+        formaction="<%= stage_select_path %>"
         class="btn btn-primary inline-block mt-2"
       >
-        <%= t("choose") %>
-      </button>
-    </noscript>
-    <% if stage_type %>
-      <%= form.input :stageable_id,
+          <%= t("choose") %>
+        </button>
+      </noscript>
+      <% if stage_type %>
+        <%= form.input :stageable_id,
                  label: t("clear_form.stageable_field.label", stage_type: stage_type),
                  as: :select,
                  collection: stageables,
@@ -55,57 +64,51 @@
                      action: "clears--stage-select#updateStages"
                    }
                  } %>
-
-      <% if stageable %>
-
-        <% if stageable.has_environments? %>
-          <fieldset class="join block">
-            <legend class="simple_form__label"><%= t("clear_form.environment_field.label") %></legend>
-            <% form.collection_radio_buttons :environment, selectable_environments, :itself, :itself, class: 'join-item btn' do |b| %>
-
-              <%= b.label(class: "hidden") %>
-              <%= b.radio_button(
+        <% if stageable %>
+          <% if stageable.has_environments? %>
+            <fieldset class="join block">
+              <legend class="simple_form__label"><%= t("clear_form.environment_field.label") %></legend>
+              <% form.collection_radio_buttons :environment, selectable_environments, :itself, :itself, class: 'join-item btn' do |b| %>
+                <%= b.label(class: "hidden") %>
+                <%= b.radio_button(
                 class: "join-item btn",
                 "aria-label": b.text,
                 data: {
                   **stimulus_attrs(:clears__stage_select, actions: { change: "updateStages" })
                 }
               ) %>
-            <% end %>
-
-          </fieldset>
-        <% end %>
-        <% if challengable? %>
-          <%= form.label :challenge_mode,
+              <% end %>
+            </fieldset>
+          <% end %>
+          <% if challengable? %>
+            <%= form.label :challenge_mode,
                      "Challenge mode",
                      class:
                        "label-text text-base #{clear_spec.challenge_mode ? "text-error" : ""} simple_form__label" %>
-          <%= form.check_box :challenge_mode,
+            <%= form.check_box :challenge_mode,
                          data: {
                            action: "clears--stage-select#updateStages"
                          },
                          class: "toggle toggle-error block focus:outline-base-content/20" %>
+          <% end %>
         <% end %>
-
-      <% end %>
-      <noscript>
-        <button
+        <noscript>
+          <button
           formmethod="GET"
-          formaction="<%= clears_stage_select_path %>"
+          formaction="<%= stage_select_path %>"
           class="btn btn-primary inline-block mt-2"
         >
-          <%= t("get_stages") %>
-        </button>
-      </noscript>
-      <% if stageable %>
-
-        <fieldset>
-          <%= form.input :stage_id,
+            <%= t("get_stages") %>
+          </button>
+        </noscript>
+        <% if stageable %>
+          <fieldset>
+            <%= form.input :stage_id,
                      as: stageable.is_a?(Annihilation) ? :hidden : :select,
                      collection: selectable_stages,
                      prompt: "Select stage",
                      required: false,
-                     label_method: :code,
+                     label_method: :code_with_mods,
                      include_blank: true,
                      input_html: {
                        id: "stage_select"
@@ -115,8 +118,9 @@
                          controller: "choices"
                        }
                      } %>
-        </fieldset>
+          </fieldset>
+        <% end %>
       <% end %>
-    <% end %>
-  </fieldset>
+    </fieldset>
+  <% end %>
 <% end %>

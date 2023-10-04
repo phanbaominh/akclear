@@ -5,8 +5,15 @@
   <%= turbo_stream.update dom_id(@used_operator.operator, :mobile) do %>
     <%= render Clears::UsedOperatorComponent.new(used_operator: @used_operator) %>
   <% end %>
+  <%= turbo_stream.update dom_id(@used_operator.operator, :basic) do %>
+    <%= render Clears::UsedOperatorMiniComponent.new(used_operator: @used_operator) %>
+  <% end %>
 <% end %>
-<%= turbo_stream.append "operators__list" do %>
+<%= turbo_stream.append "detailed_operators__list" do %>
   <%= render Clears::Form::NewOperatorButtonComponent.new %>
 <% end %>
-<%= turbo_stream.update "operators__form_container" %>
+<%= turbo_stream.append "basic_operators__list" do %>
+  <%= render Clears::Form::NewOperatorButtonComponent.new %>
+<% end %>
+<%= turbo_stream.update "basic_operators__form_container" %>
+<%= turbo_stream.update "detailed_operators__form_container" %>
