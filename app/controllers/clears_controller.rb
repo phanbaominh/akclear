@@ -10,8 +10,12 @@ class ClearsController < ApplicationController
     use_clear_spec_param
     set_clear_spec
     set_clear_spec_session
-    @clear_spec_params = clear_spec_params
-    @pagy, @clears = pagy(Clears::Index.(@clear_spec).value!.includes(used_operators: :operator, stage: :stageable))
+    @pagy, @clears = pagy(Clears::Index.(@clear_spec).value!.includes(used_operators: :operator,
+                                                                      stage: :stageable).order(created_at: :desc))
+  end
+
+  def show
+    @clear = Clear.find(params[:id])
   end
 
   def new
@@ -21,16 +25,13 @@ class ClearsController < ApplicationController
   end
 
   def create
-    @clear = Clear.new((clear_params.presence || clear_spec_session).merge(submitter: Current.user))
+    @clear = Clear.new(clear_params.presence.merge(submitter: Current.user))
     if @clear.save
+      @clear.duplicate_for_stage_ids(@clear.stage_ids)
       delete_clear_spec_session
       redirect_to @clear
     else
       render 'new', status: :unprocessable_entity
     end
-  end
-
-  def show
-    @clear = Clear.find(params[:id])
   end
 end

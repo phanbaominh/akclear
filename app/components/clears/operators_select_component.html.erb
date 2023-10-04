@@ -1,36 +1,6 @@
-<%= content_tag(:fieldset, data: { **stimulus(:clears__operators_select_component, actions: { change: 'appendOperator'}) }) do %>
-  <%= form.input :operator_id,
-             as: :select,
-             collection: selectable_operators,
-             wrapper_html: {
-               class: "w-full",
-               data: {
-                 controller: "choices"
-               }
-             },
-             input_html: {
-               id: "operators__select"
-             },
-             include_hidden: false %>
-  <%= content_tag(
-    :button,
-    nil,
-    class: "hidden",
-    formmethod: "GET",
-    formaction: new_clears_used_operator_path,
-    data: {
-      **stimulus_attrs(
-        :clears__operators_select_component,
-        target: "turboTrigger"
-      )
-    }
-  ) %>
-  <noscript>
-    <button
-      class="btn btn-circle btn-primary"
-    >
-      <i class="fa-solid fa-plus"></i>
-    </button>
-  </noscript>
+<%= content_tag(:fieldset) do %>
+  <%= form.label :operator_id do %>
+    <%= t(:operators) %>
 
+  <% end %>
 <% end %>

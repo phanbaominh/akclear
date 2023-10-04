@@ -30,6 +30,26 @@
 # available at https://guides.rubyonrails.org/i18n.html.
 
 en:
+  admin:
+    title: "Admin"
+    videos_imports:
+      new:
+        title: "Import videos"
+        submit: "Start import"
+      create:
+        success: "Videos import was successfully started."
+    extract_clear_data_from_video_jobs:
+      title: "Import clear jobs"
+      job_started: "Job already started"
+      index:
+        jobs: "Jobs"
+      update:
+        start_job: "Start job"
+        success: "Job was successfully updated."
+      create:
+        success: "Job was successfully created."
+      destroy:
+        success: "Job was successfully deleted."
   hello: "Hello world"
   add_operators: "Add operators"
   add_operator: "Add operator"
@@ -45,3 +65,35 @@ en:
   verified_by: "Verified by %{username} %{at}"
   verify: "Verify"
   unverify: "Unverify"
+  choose: "Choose"
+  challenge_mode: "Challenge Mode"
+  episode: "Episode"
+  annihilation: "Annihilation"
+  clear_form:
+    stageable_field:
+      prompt: "Select a %{stage_type}"
+      label: "%{stage_type}"
+    stage_type_field:
+      prompt: "Select stage type"
+      label: "Stage type"
+    environment_field:
+      label: "Environment"
+  used_operator_form:
+    skill_level: "Level %{skill_level}"
+    skill_mastery: "Mastery %{skill_mastery}"
+  channels:
+    list: "Channels"
+  stages:
+    environments:
+      story: "Story"
+      standard: "Standard"
+      adverse: "Adverse"
+  trending_clears: "Trending clears"
+  new_clears: "New clears"
+  clears: "Clears"
+  guide: "Guide"
+  profile: "Profile"
+  change_email: "Change email address"
+  change_password: "Change password"
+  logout: "Log out"
+  new_clear: "Submit new clear"

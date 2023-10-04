@@ -9,4 +9,12 @@ module Stageable
     scope :latest, -> { where(end_time: Time.current..).order(end_time: :desc) }
     scope :selectable, -> { all }
   end
+
+  def challengable?
+    true
+  end
+
+  def has_environments? # rubocop:disable Naming/PredicateName
+    false
+  end
 end

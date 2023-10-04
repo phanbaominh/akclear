@@ -4,10 +4,12 @@ class EpisodePresenter < StageablePresenter
   end
 
   def label
-    "#{I18n.t} #{object.index} #{object.name}"
+    "#{I18n.t(:episode)} #{object.index} - #{object.name}"
   end
 
-  def type_color
-    'badge-info'
+  def color(component)
+    {
+      badge: 'badge-info text-info-content'
+    }[component]
   end
 end

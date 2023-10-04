@@ -1,12 +1,12 @@
-<div class="md:flex flex-row">
-  <div class="grid lg:grid-cols-2 grow gap-12 pr-12 basis-0">
-    <div class="col-span-2">
+<div class="md:flex flex-row gap-12">
+  <!-- Consider using defer loading turbo frames for each component -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 grow gap-12 basis-0">
+    <div class="sm:col-span-2">
       <%= render Home::HeroComponent.new(
         stageables: Event.latest,
         title: t(:latest_events)
       ) %>
     </div>
-
     <%= render Home::HeroComponent.new(
       stageables: Episode.latest,
       title: t(:latest_events)
@@ -16,10 +16,9 @@
       title: t(:latest_events),
       remote_image: true
     ) %>
-
   </div>
   <div>
-    <% ["Trending clears", "New clears"].each do |title| %>
+    <% [t(:trending_clears), t(:new_clears)].each do |title| %>
       <%= render Clears::AsideComponent.new(
         clears: Clear.includes(:stage, used_operators: :operator).first(6),
         title: title

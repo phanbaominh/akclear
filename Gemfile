@@ -34,7 +34,7 @@ gem 'redis', '~> 4.0'
 # gem "kredis"
 
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
-gem "bcrypt", "~> 3.1.7"
+gem 'bcrypt', '~> 3.1.7'
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
@@ -48,44 +48,54 @@ gem 'bootsnap', require: false
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"
 
-gem 'authentication-zero'
-gem 'view_component'
-gem 'dry-monads'
-gem 'vite_rails'
+gem 'aasm'
 gem 'acts-as-taggable-on', '~> 9.0'
-gem 'simple_form'
-gem 'route_translator'
-gem 'pagy'
-gem 'faker', require: false
-gem 'dry-initializer-rails'
-gem 'dry-types'
-gem 'globalid'
-gem 'nokogiri'
-gem 'rack-attack'
+gem 'amatch'
+gem 'authentication-zero'
 gem 'cancancan'
+gem 'dry-initializer-rails'
+gem 'dry-monads'
+gem 'dry-types'
+gem 'faker', require: false
+gem 'globalid'
+gem 'good_job'
 gem 'heroicon'
+gem 'mobility'
+gem 'nokogiri'
+gem 'pagy'
+gem 'rack-attack'
+gem 'rmagick'
+gem 'route_translator'
+gem 'rtesseract'
+gem 'simple_form'
+gem 'view_component'
+gem 'vite_rails'
+gem 'yt'
+gem 'after_commit_everywhere', '~> 1.0'
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem 'debug', platforms: %i[mri mingw x64_mingw]
-  gem 'rspec-rails', '~> 6.0.0'
-  gem 'factory_bot_rails'
-  gem 'shoulda-matchers'
-  gem 'pry'
-  gem 'letter_opener'
   gem 'dotenv-rails'
+  gem 'factory_bot_rails'
+  gem 'letter_opener'
+  gem 'pry'
+  gem 'pry-nav'
+  gem 'rspec-rails', '~> 6.0.0'
+  gem 'shoulda-matchers'
+  gem 'syntax_suggest'
 end
 
 group :development do
-  gem "better_html", require: false
-  gem 'htmlbeautifier', require: false
+  gem 'better_html', require: false
   gem 'erb-formatter', require: false
   gem 'erb_lint', require: false
-  gem 'solargraph', require: false
+  gem 'htmlbeautifier', require: false
   gem 'rubocop', require: false
   gem 'rubocop-performance', require: false
   gem 'rubocop-rails', require: false
   gem 'rubocop-rspec', require: false
+  gem 'solargraph', require: false
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem 'web-console'
 
@@ -100,6 +110,7 @@ group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem 'capybara'
   gem 'selenium-webdriver'
+  gem 'test-prof'
   gem 'webdrivers'
-  gem "test-prof"
+  gem 'webmock'
 end

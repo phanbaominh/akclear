@@ -1,0 +1,9 @@
+<div id="<%= dom_id(used_operator.operator) %>" class="hidden sm:block">
+  <%= render Clears::UsedOperatorComponent.new(used_operator: used_operator) %>
+</div>
+<div
+  id="<%= dom_id(used_operator.operator, :mobile) %>"
+  class="block sm:hidden"
+>
+  <%= render Clears::UsedOperatorComponent.new(used_operator: used_operator) %>
+</div>

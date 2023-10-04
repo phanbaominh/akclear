@@ -11,4 +11,26 @@ RSpec.describe Episode, type: :model do
       expect(described_class.latest.first).to eq(episode_1)
     end
   end
+
+  describe '#challengable?' do
+    context 'when episode has environments' do
+      context 'when episode is episode 9' do
+        it 'returns true' do
+          expect(described_class.new(number: 9)).to be_challengable
+        end
+      end
+
+      context 'when episode is greater 9' do
+        it 'returns false' do
+          expect(described_class.new(number: 10)).not_to be_challengable
+        end
+      end
+    end
+
+    context 'when episode does not have environments' do
+      it 'returns true' do
+        expect(described_class.new(number: 1)).to be_challengable
+      end
+    end
+  end
 end

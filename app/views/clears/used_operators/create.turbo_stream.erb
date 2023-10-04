@@ -1,13 +1,21 @@
-<%= turbo_stream.replace @used_operator.operator do %>
-  <div id="<%= dom_id(@used_operator.operator) %>">
-    <%= render Clears::Form::OperatorCardComponent.new(used_operator: @used_operator) %>
-  </div>
+<%= turbo_stream.append "basic_operators__list" do %>
+  <%= render Clears::UsedOperatorMiniComponent.new(
+    used_operator: @used_operator
+  ) %>
+  <%= render Clears::Form::NewOperatorButtonComponent.new %>
 <% end %>
-<%= turbo_stream.append "used_operators_fields_wrapper" do %>
-  <div id="used_operators_fields" class="hidden">
+<%= turbo_stream.append "detailed_operators__list" do %>
+  <%= render Clears::UsedOperatorResponsiveComponent.new(
+    used_operator: @used_operator
+  ) %>
+  <%= render Clears::Form::NewOperatorButtonComponent.new %>
+<% end %>
+<%= turbo_stream.update "basic_operators__form_container" %>
+<%= turbo_stream.update "detailed_operators__form_container" %>
+<%= turbo_stream.append "clears__form__operators_fields" do %>
+  <div id="<%= dom_id(@used_operator.operator, :fields) %>">
     <%= simple_fields_for @clear_spec do |f| %>
-      <%= f.simple_fields_for :used_operators do |used_operator_form| %>
-
+      <%= f.simple_fields_for :used_operators, @used_operator, child_index: Time.now.to_i do |used_operator_form| %>
         <%= render Clears::UsedOperatorFieldsComponent.new(form: used_operator_form) %>
       <% end %>
     <% end %>

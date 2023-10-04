@@ -41,6 +41,8 @@ node_modules
 *.local
 /app/javascript/images/banners/*
 !/app/javascript/images/banners/.gitkeep
-
+/app/javascript/images/skills/*
+!/app/javascript/images/skills/.gitkeep
 
 .env
+.DS_Store

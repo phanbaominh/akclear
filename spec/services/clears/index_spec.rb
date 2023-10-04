@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe Clears::Index do
-  let(:clear_spec) { Clear::Specification.new(**clear_spec_params) }
+  let(:clear_spec) { Clear.new(**clear_spec_params) }
   let(:service) { described_class.new(clear_spec) }
   let(:result) { service.call }
 

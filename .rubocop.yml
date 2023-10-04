@@ -4,6 +4,8 @@ require:
   - rubocop-rspec
 inherit_gem:
   test-prof: config/rubocop-rspec.yml
+AllCops:
+  NewCops: enable
 Style/Documentation:
   Enabled: false
 Metrics/MethodLength:
@@ -22,9 +24,9 @@ Style/FrozenStringLiteralComment:
     - "db/**/*"
 RSpec/MultipleMemoizedHelpers:
   Enabled: false
-Rspec/VerifiedDoubles:
+RSpec/VerifiedDoubles:
   Enabled: false
-Rspec/ExampleLength:
+RSpec/ExampleLength:
   Enabled: false
 Style/ClassAndModuleChildren:
   Enabled: false
@@ -37,4 +39,12 @@ Metrics/BlockLength:
     - "spec/**/*"
     - "lib/tasks/**/*"
 RSpec/NestedGroups:
+  Enabled: false
+RSpec/ImplicitSubject:
+  Enabled: false
+Naming/PredicateName:
+  Enabled: false
+Style/MultilineBlockChain:
+  Enabled: false
+Metrics/CyclomaticComplexity:
   Enabled: false

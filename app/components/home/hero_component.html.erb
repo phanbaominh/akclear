@@ -6,7 +6,7 @@
 
       <li class="text-center ">
         <% if stageable.try(:end_time).present? %>
-          <span class="badge badge-lg badge-warning mb-2">
+          <span class="badge badge-lg badge-warning mb-2 text-sm sm:text-base">
             <%= t(:end_in) %>:
             <%= distance_of_time_in_words(Time.current, stageable.end_time) %>
           </span>

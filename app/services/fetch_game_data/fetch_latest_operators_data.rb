@@ -4,9 +4,12 @@ require 'open-uri'
 
 module FetchGameData
   class FetchLatestOperatorsData < ApplicationService
-    OPERATOR_TABLE_SOURCE = 'https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/en_US/gamedata/excel/character_table.json'
-    def initialize(source = OPERATOR_TABLE_SOURCE)
-      @source = source
+    SOURCES = {
+      en: 'https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/en_US/gamedata/excel/character_table.json',
+      jp: 'https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/ja_JP/gamedata/excel/character_table.json'
+    }
+    def initialize(source = nil)
+      @source = source || SOURCES[I18n.locale]
     end
 
     def call
@@ -18,8 +21,9 @@ module FetchGameData
 
         name = operator['name']
         rarity = operator['rarity']
+        skill_game_ids = skill_game_ids(operator)
         operator = Operator.find_or_initialize_by(game_id:)
-        operator.update!(name:, rarity:)
+        operator.update!(name:, rarity:, skill_game_ids:)
         fetch_logger.log_write(operator, game_id)
       rescue ActiveRecord::RecordInvalid
         log_info("Failed to write operator #{name}")
@@ -31,6 +35,10 @@ module FetchGameData
     private
 
     attr_reader :source
+
+    def skill_game_ids(operator)
+      operator['skills'].map { |skill| skill['skillId'] }
+    end
 
     def valid_operator?(operator)
       !operator['subProfessionId'].start_with?('notchar')

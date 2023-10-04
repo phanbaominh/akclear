@@ -27,25 +27,27 @@
   </head>
   <body>
     <% if flash.present? %>
-      <div class="toast toast-top z-50">
+      <div class="toast toast-top toast-center z-50 w-full p-0">
         <% flash.each do |name, msg| %>
-          <%= content_tag :div, class: "alert #{flash_key_to_alert_class(name)}", data: { controller: 'dismissable'} do %>
-            <div>
-              <span><%= msg %></span>
-              <button
-                class="btn btn-ghost float-right js-only"
-                data-action="dismissable#dismiss"
-              >
-                <i class="fa-solid fa-close"></i>
-              </button>
-            </div>
+          <%= content_tag :div, class: "alert #{flash_key_to_alert_class(name)} w-full flex rounded-none", data: { controller: 'dismissable'} do %>
+            <span class="text-center w-full whitespace-normal"><%= msg %></span>
+            <%= content_tag :div,
+            class: "cursor-pointer ml-auto hover:text-error ",
+            data: {
+              **stimulus_attrs(:dismissable, actions: { click: "dismiss" })
+            } do %>
+              <%= heroicon "x-mark", options: { class: "w-5 h-5 " } %>
+            <% end %>
           <% end %>
         <% end %>
       </div>
     <% end %>
-
-    <%= render NavbarComponent.new %>
-    <main class=" container mx-auto mt-28 px-5 flex flex-col pb-8 ">
+    <% if controller.class.to_s.downcase.include? 'admin' %>
+      <%= render Admin::NavbarComponent.new %>
+    <% else  %>
+      <%= render NavbarComponent.new %>
+    <% end %>
+    <main class=" container mx-auto mt-16 md:mt-28 px-5 flex flex-col pb-8 ">
       <%= yield %>
     </main>
   </body>

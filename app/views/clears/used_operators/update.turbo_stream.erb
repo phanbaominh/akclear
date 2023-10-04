@@ -1,0 +1,8 @@
+<%= render template: "clears/used_operators/show" %>
+<%= turbo_stream.update dom_id(@used_operator.operator, :fields) do %>
+  <%= simple_fields_for @clear_spec do |f| %>
+    <%= f.simple_fields_for :used_operators, @used_operator, child_index: Time.now.to_i do |used_operator_form| %>
+      <%= render Clears::UsedOperatorFieldsComponent.new(form: used_operator_form) %>
+    <% end %>
+  <% end %>
+<% end %>

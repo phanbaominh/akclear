@@ -6,7 +6,7 @@
     <h2 class="card-title">
       <%= t :select_operators %></h2>
   </header>
-  <%= simple_form_for Clear::Specification.new, url: new_clears_used_operator_path, method: :get, html: { class: 'card' } do |form| %>
+  <%= simple_form_for Clear.new, url: new_clears_used_operator_path, method: :get, html: { class: 'card' } do |form| %>
     <%= render Clears::OperatorsSelectComponent.new(form:) %>
   <% end %>
   <div id="operators" class="grid grid-cols-4 gap-2">
@@ -16,10 +16,14 @@
   </div>
   <footer class="flex justify-end space-x-2">
     <% if @modifying_clear %>
-      <%= button_to t(:create_clear), clears_path, class: "btn btn-primary" %>
+      <div class="hidden">
+
+        <%= render Clears::FormComponent.new(clear_spec: @clear_spec, new_form: true) %>
+      </div>
+      <button class="btn btn-primary" form='clears__form'><%= t(:create_clear) %></button>
     <% else %>
       <%= link_to t(:apply_filters),
-      clears_path(clear_specification: @clear_spec_params),
+      clears_path(clear: @clear_params),
       class: "btn btn-primary" %>
     <% end %>
   </footer>

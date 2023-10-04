@@ -8,10 +8,12 @@ class AnnihilationPresenter < StageablePresenter
   end
 
   def label
-    "#{object.index} #{object.name}"
+    "#{I18n.t(:annihilation)} #{object.index} - #{object.name}"
   end
 
-  def type_color
-    'badge-error'
+  def color(component)
+    {
+      badge: 'badge-error text-error-content'
+    }[component]
   end
 end

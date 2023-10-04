@@ -1,0 +1,14 @@
+<%= turbo_frame_tag @extract_clear_data_from_video_job do %>
+  <article class="card bg-base-200 shadow-xl">
+    <div class="card-body">
+      <h2 class="card-title"><%= t(:edit_video_job) %></h2>
+      <iframe src="<%= @extract_clear_data_from_video_job.video.embed_link %>" class=" w-full h-[50vh]"></iframe>
+      <%= simple_form_for @extract_clear_data_from_video_job, url: admin_clear_job_url(@extract_clear_data_from_video_job) do |f| %>
+        <%= f.input :video_url, input_html: { class: 'w-full' } %>
+        <%= render Clears::StageSelectComponent.new(form: f, simple: true) %>
+        <%= link_to t(:cancel), admin_clear_job_url(@extract_clear_data_from_video_job), class: 'btn' %>
+        <%= f.button :submit, t('admin.extract_clear_data_from_video_jobs.update.start_job') %>
+      <% end %>
+    </div>
+  </article>
+<% end %>

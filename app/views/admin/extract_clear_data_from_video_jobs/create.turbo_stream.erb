@@ -1,0 +1,6 @@
+<%= turbo_stream.update ExtractClearDataFromVideoJob.new do %>
+  <%= link_to t(:new_clear_job), new_admin_clear_job_path, class: 'btn btn-primary w-fit' %>
+<% end %>
+<%= turbo_stream.prepend "jobs" do %>
+  <%= render Admin::ExtractClearDataFromVideoJobs::ShowComponent.new(@extract_clear_data_from_video_job) %>
+<% end  %>

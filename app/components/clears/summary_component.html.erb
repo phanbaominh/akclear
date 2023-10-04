@@ -1,0 +1,95 @@
+<%= link_to clear_path(@clear), data: { turbo_frame: '_top' } do %>
+  <div class="">
+    <div
+      class="
+        card
+        bg-base-200
+        shadow-xl
+        cursor-pointer
+        hover:outline
+        hover:outline-primary
+        hover:bg-base-content
+        hover:bg-opacity-10
+        rounded-none
+      "
+    >
+      <div class="flex space-y-1 xs:space-y-0 xs:space-x-1 flex-col xs:flex-row ">
+        <% if @clear.verified? %>
+          <div class="badge xs:badge-lg rounded-sm badge-success text-success-content">
+            <%= t(:verified) %>
+          </div>
+        <% else %>
+          <div class="badge xs:badge-lg rounded-sm badge-error text-error-content">
+            <%= t(:unverified) %>
+          </div>
+        <% end %>
+        <div class="badge-error hidden"></div>
+        <div
+          class="
+            badge
+            <%= @clear.stageable.color(:badge) %>
+            xs:badge-lg
+            rounded-sm
+            max-w-64
+            line-clamp-1
+            xs:line-clamp-none
+          "
+        >
+          <%= @clear.stageable.label %>
+        </div>
+      </div>
+      <div class="card-body pb-2 pt-2">
+        <div
+          class="
+            clear-summary
+            flex
+            flex-col
+            md:flex-row
+            items-start
+            md:items-center
+            space-x-2
+          "
+        >
+          <div class="flex md:space-x-0 flex-col w-full md:w-48">
+            <div>
+              <h2 class="card-title">
+                <%= render Stages::CodeComponent.new(stage: @clear.stage, class: "h-5") %>
+              </h2>
+            </div>
+            <div class="flex space-x-2 w-full">
+              <div class="text-base-content-subdued">
+                <%= by_string(@clear.player_name) %></div>
+            </div>
+          </div>
+          <div class="clear-summary__operator-list grid grid-cols-5 xs:grid-cols-7">
+            <div class="operator-cell--container">
+              <div class="operator-cell flex items-center justify-center">
+                <%= @clear.used_operators.size %>
+              </div>
+            </div>
+            <% 13.times do |i| %>
+              <div class="operator-cell--container">
+                <% if (used_operator = @clear.used_operators[i]) %>
+                  <%# TODO: When hover expand and display stat? %>
+                  <%= image_tag used_operator.operator.avatar,
+                  class: "operator-cell",
+                  alt: used_operator.operator.name %>
+                <% else %>
+                  <div class=" operator-cell text-xs flex flex-col items-center justify-center ">
+                    <span>NO</span>
+                    <span>INFO</span>
+                  </div>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+        <div class="card-actions text-base-content-subdued justify-between">
+          <div class="text-base-content-subdued"><%= time_string @clear.created_at %>
+          </div>
+          <%= render Clears::LikeComponent.new(clear: @clear) %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

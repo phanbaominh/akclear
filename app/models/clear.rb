@@ -3,6 +3,7 @@ class Clear < ApplicationRecord
   include Clear::HardTaggable
   include Clear::Squadable
   include Clear::Likeable
+  include StageSpecifiable
   include Youtubeable
   belongs_to :submitter, class_name: 'User'
   belongs_to :stage
@@ -15,20 +16,57 @@ class Clear < ApplicationRecord
   delegate :event?, to: :stage, allow_nil: true
 
   validates :link, presence: true
+  validates :channel_id, presence: true
 
-  attribute :challenge_mode, :boolean
-  attribute :stageable_id, :string
-  attribute :operator_id, :integer
+  before_validation :assign_channel
+  before_save :normalize_link
+  after_save :mark_job_as_clear_created
 
-  def stageable
-    stage ? stage.stageable : GlobalID::Locator.locate(stageable_id)
-  end
-
-  def stage_id
-    stageable.is_a?(Annihilation) ? stageable.stages.first.id : super
-  end
+  attr_accessor :job_id
 
   def verified?
     verification.present?
+  end
+
+  def normalize_link
+    return unless link && will_save_change_to_link?
+
+    self.link = Video.new(link).to_url(normalized: true)
+  end
+
+  def mark_job_as_clear_created
+    return if job_id.blank?
+
+    job = ExtractClearDataFromVideoJob.find_by(id: job_id)
+    job&.mark_clear_created! if job&.completed?
+  end
+
+  def assign_channel
+    return if new_record? && channel.present?
+    return unless will_save_change_to_link?
+
+    self.channel = Channel.from(link)
+
+    return unless channel.present? && (channel.new_record? || will_save_change_to_channel_id?)
+
+    channel.save! if channel.new_record?
+    self.channel_id = channel.id
+  end
+
+  def duplicate_for_stage_ids(stage_ids)
+    loaded_used_operators = used_operators.includes(:operator)
+    stage_ids.reject { |si| si == stage_id }.compact.map do |stage_id|
+      duplicate_clear = dup
+      dup_used_operators = loaded_used_operators.map do |used_operator|
+        dup_used_operator = used_operator.dup
+        dup_used_operator.operator = used_operator.operator
+        dup_used_operator
+      end
+      duplicate_clear.stage_id = stage_id
+      duplicate_clear.used_operators = dup_used_operators
+      duplicate_clear.channel = channel
+      duplicate_clear.job_id = nil
+      duplicate_clear
+    end.each(&:save)
   end
 end

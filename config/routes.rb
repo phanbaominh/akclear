@@ -8,6 +8,12 @@ Rails.application.routes.draw do
     post 'sign_in', to: 'sessions#create'
     get  'sign_up', to: 'registrations#new'
     post 'sign_up', to: 'registrations#create'
+    get 'admin', to: 'admin#show'
+    namespace :admin do
+      resources :clear_jobs, controller: 'extract_clear_data_from_video_jobs'
+      resources :videos_imports, only: %i[new create]
+      resource :clear_from_job, only: %i[new]
+    end
     resources :sessions, only: %i[index show destroy]
     resource  :password, only: %i[edit update]
     namespace :identity do
@@ -21,6 +27,7 @@ Rails.application.routes.draw do
     root 'home#index'
     resources :healthz, only: %i[index]
 
+    resources :channels, only: %i[index show]
     namespace :clears do
       resource :filters, only: %i[show]
       resource :stage_select, only: %i[show]
