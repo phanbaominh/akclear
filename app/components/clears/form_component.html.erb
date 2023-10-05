@@ -13,6 +13,7 @@
       <% if job_id.present? %>
         <%= f.input :job_id, as: :hidden, input_html: { value: job_id } %>
       <% end %>
+      <%= f.input :channel_id, as: :hidden %>
       <% if new_form %>
         <%= content_tag :iframe,
         nil,

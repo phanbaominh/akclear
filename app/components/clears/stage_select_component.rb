@@ -22,7 +22,7 @@ class Clears::StageSelectComponent < ApplicationComponent
   end
 
   def stage_type
-    clear_spec.stage_type&.constantize
+    clear_spec.stage_type.constantize if clear_spec.stage_type.present?
   end
 
   def stageables

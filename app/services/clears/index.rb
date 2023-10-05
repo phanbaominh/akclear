@@ -9,6 +9,7 @@ module Clears
       filter_by_stageable
       filter_by_stage
       filter_by_operators
+      filter_by_channel
       Success(@clears)
     end
 
@@ -16,6 +17,12 @@ module Clears
 
     def base_scope
       Clear.all
+    end
+
+    def filter_by_channel
+      return if spec.channel_id.blank?
+
+      @clears = @clears.where(channel_id: spec.channel_id)
     end
 
     def filter_by_stage

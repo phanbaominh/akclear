@@ -1,4 +1,4 @@
-<%= simple_form_for 'reset', url: clears_path, method: :get, html: { data: { turbo_frame: '_top' }, id: 'reset', class: 'hidden' } do %>
+<%= simple_form_for 'reset', url: clears_path, method: :get, html: { data: { turbo_frame: 'clears_with_filters' }, id: 'reset', class: 'hidden' } do %>
 <% end %>
 <%= render Clears::FormComponent.new(clear_spec: clear_spec) do |component| %>
   <%= component.with_header do %>

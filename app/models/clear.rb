@@ -22,7 +22,7 @@ class Clear < ApplicationRecord
   before_save :normalize_link
   after_save :mark_job_as_clear_created
 
-  attr_accessor :job_id
+  attr_accessor :job_id, :channel_id
 
   def verified?
     verification.present?

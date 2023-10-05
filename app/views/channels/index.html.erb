@@ -29,41 +29,33 @@
       <% end %>
     </div>
   </section>
-
   <section>
     <%= content_tag :ul,
             class: "grid channel-list-grid",
             data: {
                 **stimulus_attrs("channels__view_mode", target: 'list')
             } do %>
-      <% for i in 1..30 do %>
+      <% @channels.map do |channel| %>
         <li class="flex">
-          <%= button_to "/channels/1",
-            method: "get",
-            class: "
-                flex-row flex text-left p-4 bg-base-200 shadow-xl flex-grow
-                hover:outline
-                hover:outline-primary
-                hover:bg-base-content
-                hover:bg-opacity-10
-            ",
-            form: {
-                class: "flex flex-grow",
-            } do %>
-            <img
-              src="https://holodex.net/statics/channelImg/UCg02KL1G0nmH0QzFuLsVoRQ/100.png"
-              alt=""
-              class="channel-list__item-img"
-            >
-            <div class="channel-list__item-body">
-              <div>
-                <p class="text-white text-base p-0">Vtuber Tengoku</p>
-                <p class="text-white opacity-70 text-sm p-0">3263 Videos</p>
-              </div>
-              <div>
-                <a href="https://www.youtube.com/channel/UCg02KL1G0nmH0QzFuLsVoRQ">
-                  <i class="fa-brands fa-youtube text-[#c4302b]"></i>
-                </a>
+          <%= link_to channel_path(channel), class: "flex flex-grow" do %>
+            <div class="
+              flex-row flex text-left p-4 bg-base-200 shadow-xl flex-grow
+              hover:outline
+              hover:outline-primary
+              hover:bg-base-content
+              hover:bg-opacity-10
+            ">
+              <img src=<%= channel.thumbnail_url %> alt="" class="channel-list__item-img" >
+              <div class="channel-list__item-body">
+                <div>
+                  <p class="text-white text-base p-0"><%= channel.title %></p>
+                  <p class="text-white opacity-70 text-sm p-0"><%= channel.clear_count %> </p>
+                </div>
+                <div>
+                  <%#= button_to channel.url, method: :get, class: 'z-10' do %>
+<!--                    <i class="fa-brands fa-youtube text-[#c4302b]"></i>-->
+                  <%# end %>
+                </div>
               </div>
             </div>
           <% end %>
