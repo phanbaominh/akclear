@@ -8,6 +8,11 @@ module FetchGameData
       en: 'https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/en_US/gamedata/excel/character_table.json',
       jp: 'https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/ja_JP/gamedata/excel/character_table.json'
     }
+
+    def self.i18n?
+      true
+    end
+
     def initialize(source = nil)
       @source = source || SOURCES[I18n.locale]
     end

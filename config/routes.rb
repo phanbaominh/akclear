@@ -2,6 +2,7 @@
 
 # rubocop:disable Metrics/BlockLength
 Rails.application.routes.draw do
+  mount GoodJob::Engine => 'good_job'
   get 'operators/show'
   localized do
     get  'sign_in', to: 'sessions#new'
@@ -10,6 +11,7 @@ Rails.application.routes.draw do
     post 'sign_up', to: 'registrations#create'
     get 'admin', to: 'admin#show'
     namespace :admin do
+      resource :game_data_import, only: %i[create]
       resources :clear_jobs, controller: 'extract_clear_data_from_video_jobs'
       resources :videos_imports, only: %i[new create]
       resource :clear_from_job, only: %i[new]

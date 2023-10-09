@@ -32,6 +32,10 @@
 en:
   admin:
     title: "Admin"
+    game_data_imports:
+      create:
+        success: "Import game data job was successfully started."
+        failed: "Import game data job already started."
     videos_imports:
       new:
         title: "Import videos"
