@@ -26,22 +26,7 @@
     </noscript>
   </head>
   <body>
-    <% if flash.present? %>
-      <div class="toast toast-top toast-center z-50 w-full p-0">
-        <% flash.each do |name, msg| %>
-          <%= content_tag :div, class: "alert #{flash_key_to_alert_class(name)} w-full flex rounded-none", data: { controller: 'dismissable'} do %>
-            <span class="text-center w-full whitespace-normal"><%= msg %></span>
-            <%= content_tag :div,
-            class: "cursor-pointer ml-auto hover:text-error ",
-            data: {
-              **stimulus_attrs(:dismissable, actions: { click: "dismiss" })
-            } do %>
-              <%= heroicon "x-mark", options: { class: "w-5 h-5 " } %>
-            <% end %>
-          <% end %>
-        <% end %>
-      </div>
-    <% end %>
+    <%= render 'shared/flash' %>
     <% if controller.class.to_s.downcase.include? 'admin' %>
       <%= render Admin::NavbarComponent.new %>
     <% else  %>
