@@ -9,16 +9,8 @@
   <%= render Navbar::LanguageDropdownComponent.new(flatten: true) %>
   <li aria-hidden="true" class="border-t border-gray-700 mx-0"></li>
   <% if authenticated? %>
-    <div class="lg:hidden contents">
-      <li>
-        <%= link_to t("change_email"), edit_identity_email_path %>
-      </li>
-      <li>
-        <%= link_to t("change_password"), edit_password_path %>
-      </li>
-      <li>
-        <%= button_to t("logout"), Current.session, method: :delete %>
-      </li>
+    <div class='lg:hidden contents'>
+      <%= render Navbar::ProfileLinksComponent.new %>
     </div>
   <% end %>
 </ul>

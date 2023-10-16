@@ -43,19 +43,10 @@
               <summary>
                 <%= t("profile") %>
               </summary>
-              <ul class="p-2 bg-base-200 shadow rounded-box z-[1] left-auto right-0">
-                <li>
-                  <%= link_to t("change_email"), edit_identity_email_path %>
-                </li>
-                <li>
-                  <%= link_to t("change_password"), edit_password_path %>
-                </li>
-                <li>
-                  <%= button_to t("logout"), Current.session, method: :delete %>
-                </li>
+              <ul class='p-2 bg-base-200 shadow rounded-box z-[1] left-auto right-0'>
+                <%= render Navbar::ProfileLinksComponent.new %>
               </ul>
             </details>
-
           </li>
         </ul>
       <% end %>
