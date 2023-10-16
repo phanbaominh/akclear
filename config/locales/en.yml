@@ -54,7 +54,14 @@ en:
         success: "Job was successfully created."
       destroy:
         success: "Job was successfully deleted."
+    users:
+      title: "Users"
+      update:
+        success: "User was successfully updated."
+        failed: "Failed to update user."
   hello: "Hello world"
+  edit: "Edit"
+  update: "Update"
   add_operators: "Add operators"
   add_operator: "Add operator"
   apply_filters: "Apply filters"

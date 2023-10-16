@@ -1,7 +1,7 @@
 <div id="flash" class="toast toast-top toast-center z-50 w-full p-0">
   <% if flash.present? %>
     <% flash.each do |name, msg| %>
-      <%= render 'flash_message', locals: { name:, msg:  } %>
+      <%= render partial: 'shared/flash_message', locals: { name: name, msg: msg  } %>
     <% end %>
   <% end %>
 </div>

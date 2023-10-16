@@ -1,0 +1,28 @@
+<table class="table">
+  <thead>
+    <tr>
+      <th> <%= t(:email) %></th>
+      <th><%=  t(:role) %></th>
+      <th><%=  t(:actions) %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @users.each do |user| %>
+      <tr>
+        <td> <%= user.email %> </td>
+        <td> <%= user.role %>  </td>
+        <td>
+          <% if can? :edit, user %>
+            <%= link_to edit_admin_user_path(user), class: 'btn btn-primary btn-circle btn-sm' do %>
+              <%= heroicon 'pencil', options: { alt: t(:edit) } %>
+            <% end %>
+          <% else %>
+            <button disabled class="btn btn-primary btn-circle btn-sm btn-disabled">
+              <%= heroicon 'pencil', options: { alt: t(:edit) } %>
+            </button>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

@@ -15,5 +15,6 @@ class Ability
     return unless user.admin?
 
     can :manage, :all
+    cannot :edit, User, id: user.id
   end
 end

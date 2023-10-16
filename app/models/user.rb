@@ -3,7 +3,11 @@ class User < ApplicationRecord
   include User::Verifiable
   has_secure_password
 
-  ROLES = %i[user verifier admin].freeze
+  ROLES = [
+    USER = :user,
+    VERIFIER = :verifier,
+    ADMIN = :admin
+  ].freeze
 
   enum :role, ROLES, default: :user
 

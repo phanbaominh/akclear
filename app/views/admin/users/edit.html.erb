@@ -1,0 +1,9 @@
+<label class="label">
+  <%= t(:email) %>:
+</label>
+<%= @user.email %>
+<%= simple_form_for @user, url: admin_user_path(@user) do |f| %>
+  <%= f.input :role, as: :select, collection: User.roles.except(User::ADMIN), include_blank: false %>
+  <div class="p-2"></div>
+  <%= f.button :submit, t(:update) %>
+<% end %>

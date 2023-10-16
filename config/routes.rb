@@ -15,6 +15,7 @@ Rails.application.routes.draw do
       resources :clear_jobs, controller: 'extract_clear_data_from_video_jobs'
       resources :videos_imports, only: %i[new create]
       resource :clear_from_job, only: %i[new]
+      resources :users, only: %i[index update edit]
     end
     resources :sessions, only: %i[index show destroy]
     resource  :password, only: %i[edit update]
