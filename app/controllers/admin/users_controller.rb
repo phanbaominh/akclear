@@ -26,6 +26,8 @@ class Admin::UsersController < ApplicationController
   private
 
   def user_params
+    return {} if action_name == 'index' && params[:user].blank?
+
     @user_params = params.require(:user).permit(:role)
   end
 end
