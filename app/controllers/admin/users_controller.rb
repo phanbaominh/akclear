@@ -6,11 +6,16 @@ class Admin::UsersController < ApplicationController
     @pagy, @users = pagy(@users.order(created_at: :desc))
   end
 
+  def show; end
+
   def edit; end
 
   def update
     if @user.update(user_params)
-      redirect_to admin_users_path, notice: t('.success')
+      respond_to do |format|
+        format.html { redirect_to admin_user_path(@user), notice: t('.success') }
+        format.turbo_stream { render }
+      end
     else
       flash.now[:alert] = t('.failed')
       render :edit
@@ -20,10 +25,6 @@ class Admin::UsersController < ApplicationController
   private
 
   def user_params
-    return @user_params if @user_params
-
     @user_params = params.require(:user).permit(:role)
-    @user_params[:role] = @user_params[:role].to_i
-    @user_params
   end
 end

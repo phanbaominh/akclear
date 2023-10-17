@@ -1,9 +1,20 @@
-<label class="label">
-  <%= t(:email) %>:
-</label>
-<%= @user.email %>
-<%= simple_form_for @user, url: admin_user_path(@user) do |f| %>
-  <%= f.input :role, as: :select, collection: User.roles.except(User::ADMIN), include_blank: false %>
-  <div class="p-2"></div>
-  <%= f.button :submit, t(:update) %>
+<%= turbo_frame_tag @user do %>
+  <article class="card shadow-xl bg-base-200">
+    <%= simple_form_for @user, url: admin_user_path(@user) do |f| %>
+      <div class="card-body flex flex-row justify-between">
+        <div>
+          <div> <%= @user.email %> </div>
+          <%= f.input_field :role, as: :select, collection: User.roles.except(User::ADMIN), value_method: :first, include_blank: false, class: 'input'  %>
+        </div>
+        <div>
+          <%= f.button :button, class: '!btn-circle !btn-sm !h-8 !w-8 !p-0' do %>
+            <%= heroicon 'check' %>
+          <% end %>
+          <%= link_to admin_user_path(@user), class: 'btn btn-circle btn-sm' do %>
+            <%= heroicon 'arrow-left', options: { alt: t(:back) } %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </article>
 <% end %>

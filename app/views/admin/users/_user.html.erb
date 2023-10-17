@@ -1,0 +1,19 @@
+<%= turbo_frame_tag user do %>
+  <article class="card shadow-xl bg-base-200">
+    <div class="card-body flex flex-row justify-between">
+      <div>
+        <div> <%= user.email %> </div>
+        <div class="badge badge-primary"><%= user.role %>  </div>
+      </div>
+      <% if can? :edit, user %>
+        <%= link_to edit_admin_user_path(user), class: 'btn btn-primary btn-circle btn-sm' do %>
+          <%= heroicon 'pencil', options: { alt: t(:edit) } %>
+        <% end %>
+      <% else %>
+        <button disabled class="btn btn-primary btn-circle btn-sm btn-disabled">
+          <%= heroicon 'pencil', options: { alt: t(:edit) } %>
+        </button>
+      <% end %>
+    </div>
+  </article>
+<% end %>
