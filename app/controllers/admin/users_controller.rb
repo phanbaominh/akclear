@@ -3,7 +3,8 @@ class Admin::UsersController < ApplicationController
   load_and_authorize_resource
 
   def index
-    @pagy, @users = pagy(@users.order(created_at: :desc))
+    @user_spec = User.new(user_params)
+    @pagy, @users = pagy(@users.satisfy(@user_spec).order(created_at: :desc))
   end
 
   def show; end

@@ -1,6 +1,7 @@
 class User < ApplicationRecord
   include User::Likeable
   include User::Verifiable
+  include Specifiable
   has_secure_password
 
   ROLES = [

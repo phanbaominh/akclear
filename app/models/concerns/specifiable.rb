@@ -5,7 +5,7 @@ module Specifiable
 
   included do
     scope :satisfy, lambda { |spec|
-      spec.spec_attributes&.compact&.reduce(self) do |relation, (attribute, value)|
+      spec.spec_attributes&.compact_blank&.reduce(self) do |relation, (attribute, value)|
         relation.where(attribute => value)
       end
     }

@@ -1,6 +1,18 @@
 <section >
   <h2><%= t(:users) %></h2>
-  <div class="grid grid-cols-3 gap-2">
-    <%= render @users %>
+  <span class="divider"></span>
+  <div class="card space-y-2">
+    <h3><%= t(:filters) %></h3>
+    <%= simple_form_for @user_spec, method: :get, url: admin_users_path, html: { class: 'card-body shadow-xl bg-base-200 flex-row justify-between' } do |f| %>
+      <%= f.input :role, as: :select, collection: User.roles, value_method: :first, wrapper_html: { class: 'flex' }  %>
+      <%= f.button :submit, t(:apply_filters) %>
+    <% end %>
   </div>
+  <span class="divider"></span>
+  <%= turbo_frame_tag 'users', data: { turbo_action: 'advance' } do %>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+      <%= render @users %>
+    </div>
+    <div class="mt-4 w-full flex justify-end"><%== render Primer::PagyComponent.new(pagy: @pagy) %></div>
+  <% end %>
 </section>
