@@ -1,4 +1,4 @@
-<%= code || stage.code %>
+<span tabindex="0"><%= code || stage.code %></span>
 <% if stage.challenge_mode? %>
   <%= content_tag :div, class: "tooltip", data: { tip: t("challenge_mode") } do %>
     <%= vite_image_tag "images/challenge_mode.png",

@@ -1,20 +1,17 @@
-<div
+<% if clear.verification %>
+  <div
   id="<%= dom_id(clear, :verification_details) %>"
+  tabindex="0"
   class="
     badge
-    <%= clear.verified? ? 'badge-success' : 'badge-error' %>
+    <%= clear.verification_color('badge') %>
     xs:badge-lg
     rounded-sm
     max-w-64
     line-clamp-1
-    xs:line-clamp-none"
-    <% if clear.verified? %>
-      title="<%= t(:verified_by, username: verification.verifier.username, at: time_string(verification.created_at)) %>"
-    <% end %>
+    xs:line-clamp-none
+    "
 >
-  <% if clear.verified? %>
-    <%= t(:verified) %>
-  <% else %>
-    <%= t(:unverified) %>
-  <% end %>
-</div>
+    <%= clear.verification_text %>
+  </div>
+<% end %>

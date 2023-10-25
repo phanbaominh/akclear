@@ -40,7 +40,10 @@ Rails.application.routes.draw do
     resources :clears do
       resources :used_operators
       resource :like, only: %i[create destroy], controller: 'clears/likes'
-      resource :verification, only: %i[create destroy], controller: 'clears/verifications'
+      resource :verification, only: %i[edit update create destroy new], controller: 'clears/verifications'
+      namespace :verification do
+        resources :used_operators, only: %i[edit update], controller: '/clears/verifications/used_operators'
+      end
     end
     resources :operators
   end

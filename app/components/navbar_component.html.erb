@@ -29,6 +29,9 @@
       <nav><%= render Navbar::LinksComponent.new(class: "menu menu-horizontal px-1") %></nav>
     </div>
     <div class="navbar-end">
+      <% if can? :create, Verification %>
+        <%= link_to t(:verify), new_clear_verification_path(latest_unverified_clear), class: 'btn btn-primary mr-2 btn-sm' %>
+      <% end %>
       <%= link_to new_clear_path, class: 'mr-2' do %>
         <%= render Primer::Button::IconComponent.new(
           icon: "plus",

@@ -10,7 +10,8 @@ class ClearsController < ApplicationController
     use_clear_spec_param
     set_clear_spec
     set_clear_spec_session
-    @pagy, @clears = pagy(Clears::Index.(@clear_spec).value!.includes(used_operators: :operator,
+    @pagy, @clears = pagy(
+      Clears::Index.(@clear_spec).value!.includes(used_operators: :operator,
                                                                       stage: :stageable).order(created_at: :desc))
   end
 

@@ -1,0 +1,39 @@
+<section class="card">
+  <h2 class="card-title"><%= t(:verify) %></h2>
+  <div class="card-body space-y-4" data-controller="clears--verify">
+    <div class="flex space-x-8">
+      <iframe src="<%= @clear.embed_link %>" class="flex-grow" ></iframe>
+      <section class="card bg-base-200">
+        <div class="card-body">
+          <h3 class="card-title"><%= t(:squad) %></h3>
+          <div class=" grid grid-cols-2 gap-2">
+            <% @used_operators.each do |used_operator| %>
+              <%= link_to edit_clear_verification_used_operator_path(@clear, used_operator), class: "cursor-pointer outline #{used_operator.verification_outline_class}" do %>
+                <%= render Clears::UsedOperatorMiniComponent.new(used_operator: used_operator) %>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      </section>
+    </div>
+    <%= simple_form_for @verification, url: clear_verification_path(@clear) do |f| %>
+      <%= f.input :status, as: :hidden, input_html: { value: Verification::ACCEPTED }  %>
+      <%= f.label :comment, class: 'label' %>
+      <%= f.simple_fields_for :used_operator_verifications do |uovf| %>
+        <%= uovf.input_field :status, as: :hidden %>
+        <%= uovf.input_field :used_operator_id, as: :hidden %>
+      <% end %>
+      <%= f.input_field :comment, as: :text, placeholder: t(".comment_placeholder"), class: 'w-full placeholder:opacity-50 textarea', maxlength: 1000 %>
+    <% end %>
+    <footer class="flex justify-between">
+      <%= content_tag :input, nil, type: :submit, name: :commit, value: t(:decline), class: 'btn btn-error', form: 'new_verification', disabled: !@verification.declineable?,
+        data: { **stimulus(:update_attribute, actions: { click: 'setAttr' }, params: { target_id: 'verification_status', name: 'value', value: Verification::DECLINED })} %>
+      <div class="grid grid-cols-2 gap-2">
+        <div></div>
+        <%= content_tag :input, nil, type: :submit, name: :commit, value: t(:accept), class: 'btn btn-primary', form: 'new_verification', disabled: !@verification.acceptable? %>
+        <%= link_to t(:prev), new_clear_verification_path(@clear.prev_unverified || @clear), class: 'btn btn-outline', disabled: !@clear.prev_unverified %>
+        <%= link_to t(:next), new_clear_verification_path(@clear.next_unverified || @clear), class: 'btn btn-outline', disabled: !@clear.next_unverified %>
+      </div>
+    </footer>
+  </div>
+</section>

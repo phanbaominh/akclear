@@ -6,4 +6,6 @@ class ClearComponent < ApplicationComponent
   def post_initialize(clear:)
     @clear = clear
   end
+
+  delegate :verification, to: :clear
 end

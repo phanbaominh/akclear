@@ -10,7 +10,7 @@ class Ability
 
     return unless user.verifier? || user.admin?
 
-    can %i[create destroy], :verification
+    can %i[create destroy], Verification
 
     return unless user.admin?
 

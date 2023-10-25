@@ -99,11 +99,6 @@ select.simple_form__input {
   @apply hidden !important;
 } */
 
-.new-clear__time::before {
-  content: "\00B7\20";
-  padding-left: 4px;
-}
-
 .clear-summary__operator-list {
   @apply border-l border-t border-neutral-content/20;
 }

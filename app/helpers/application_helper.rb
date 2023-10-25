@@ -22,4 +22,8 @@ module ApplicationHelper
   def authenticated?
     Current.user.present?
   end
+
+  def latest_unverified_clear
+    Clear.unverified.order(created_at: :desc).first
+  end
 end

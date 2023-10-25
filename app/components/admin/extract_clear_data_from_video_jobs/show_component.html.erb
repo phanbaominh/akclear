@@ -35,7 +35,6 @@
           <% job.clear.used_operators&.each do |used_operator| %>
             <%= render Clears::UsedOperatorMiniComponent.new(
                 used_operator: used_operator,
-                editable: false
               ) %>
           <% end %>
         </div>

@@ -11,6 +11,8 @@ class Clear < ApplicationRecord
   has_many :used_operators, dependent: :destroy
   has_one :verification, dependent: :destroy
 
+  scope :unverified, -> { where.missing(:verification) }
+
   accepts_nested_attributes_for :used_operators, allow_destroy: true
 
   delegate :event?, to: :stage, allow_nil: true
@@ -24,9 +26,32 @@ class Clear < ApplicationRecord
 
   attr_accessor :job_id, :channel_id
 
+  # VERIFICATION
+  def next_unverified
+    Clear.unverified.where(created_at: (created_at...)).where.not(id:).order(created_at: :asc).first
+  end
+
+  def prev_unverified
+    Clear.unverified.where(created_at: (...created_at)).where.not(id:).order(created_at: :desc).first
+  end
+
+  def other_unverified
+    next_unverified || prev_unverified
+  end
+
   def verified?
     verification.present?
   end
+
+  def accepted_used_operators
+    used_operators.select(&:verification_accepted?)
+  end
+
+  def declined_used_operators
+    used_operators.select(&:verification_declined?)
+  end
+
+  #####
 
   def normalize_link
     return unless link && will_save_change_to_link?

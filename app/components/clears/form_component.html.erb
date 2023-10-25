@@ -99,7 +99,7 @@
             <% end %>
             <div id="basic_operators__list" class="hidden sm:flex flex-wrap self-center items-center justify-items-end">
               <% clear_spec.used_operators.each do |used_operator| %>
-                <%= render Clears::UsedOperatorMiniComponent.new(used_operator: used_operator) %>
+                <%= render Clears::UsedOperatorEditMiniComponent.new(used_operator: used_operator) %>
               <% end %>
               <%= render Clears::Form::NewOperatorButtonComponent.new %>
             </div>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_11_140603) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_21_152829) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -281,6 +281,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_11_140603) do
     t.index ["name"], name: "index_tags_on_name", unique: true
   end
 
+  create_table "used_operator_verifications", force: :cascade do |t|
+    t.bigint "verification_id", null: false
+    t.bigint "used_operator_id", null: false
+    t.integer "status"
+    t.index ["used_operator_id"], name: "index_used_operator_verifications_on_used_operator_id"
+    t.index ["verification_id"], name: "index_used_operator_verifications_on_verification_id"
+  end
+
   create_table "used_operators", force: :cascade do |t|
     t.bigint "operator_id", null: false
     t.bigint "clear_id", null: false
@@ -313,6 +321,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_11_140603) do
     t.bigint "clear_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "status"
+    t.text "comment"
     t.index ["clear_id"], name: "index_verifications_on_clear_id"
     t.index ["verifier_id"], name: "index_verifications_on_verifier_id"
   end
@@ -331,6 +341,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_11_140603) do
   add_foreign_key "password_reset_tokens", "users"
   add_foreign_key "sessions", "users"
   add_foreign_key "taggings", "tags"
+  add_foreign_key "used_operator_verifications", "used_operators"
+  add_foreign_key "used_operator_verifications", "verifications"
   add_foreign_key "used_operators", "clears"
   add_foreign_key "used_operators", "operators"
   add_foreign_key "verifications", "clears"

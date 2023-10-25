@@ -3,8 +3,12 @@ module User::Verifiable
     true
   end
 
-  def verify(clear)
-    clear.create_verification(verifier: self) unless clear.verified?
+  def verify(clear, params)
+    if clear.verified?
+      clear.verification.update(verifier: self, **params)
+    else
+      clear.create_verification(verifier: self, **params)
+    end
   end
 
   def unverify(clear)

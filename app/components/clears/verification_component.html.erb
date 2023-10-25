@@ -1,16 +1,15 @@
 <%= content_tag :div, id: dom_id(clear, :verification) do %>
-
-  <% if clear.verified? %>
-    <% if can?(:destroy, :verification) %>
-      <%= button_to(
-        t(:unverify),
-        clear_verification_path(clear),
-        method: :delete,
-        class: "btn btn-error btn-sm"
-      ) %>
+  <% if clear.verification %>
+    <% if can?(:edit, clear.verification) %>
+      <%= link_to(
+        edit_clear_verification_path(clear),
+        class: 'text-primary-content'
+      ) do %>
+        <%= heroicon 'pencil' %>
+      <% end %>
     <% end %>
-  <% elsif can?(:create, :verification) %>
-    <%= button_to clear_verification_path(clear), class: "btn btn-success btn-sm" do %>
+  <% elsif can?(:create, Verification) %>
+    <%= link_to new_clear_verification_path(clear), class: "btn btn-success btn-sm" do %>
       <i class="fa-regular fa-circle-check text-white"></i>
       <span class="text-white"><%= t(:verify) %></span>
     <% end %>

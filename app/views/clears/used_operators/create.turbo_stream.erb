@@ -1,5 +1,5 @@
 <%= turbo_stream.append "basic_operators__list" do %>
-  <%= render Clears::UsedOperatorMiniComponent.new(
+  <%= render Clears::UsedOperatorEditMiniComponent.new(
     used_operator: @used_operator
   ) %>
   <%= render Clears::Form::NewOperatorButtonComponent.new %>

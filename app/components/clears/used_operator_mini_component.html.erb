@@ -1,24 +1,17 @@
-<%= link_to edit_clears_used_operator_path(used_operator: used_operator_params),
-            id: dom_id(used_operator.operator, :basic),
-            data: { 
-              turbo_stream: 'true', 
-              **stimulus(:dispatch, values: { event: 'clickEditOperator', payload: { operatorId: used_operator.operator_id } }, actions: { click: 'dp' }) 
-            } do%>
   <article
   class="flex flex-col relative "
   
 >
-    <div class="p-3" >
-      <%= image_tag avatar, class: "w-12 rounded-full operators__card", data: { operator_id: used_operator.operator_id } %>
-    </div>
-    <div class="absolute grid grid-cols-2 gap-4 text-base-content font-bold h-full ml-2">
-      <span class=""><%= level %></span>
-      <% if skill %>
-        <span class="">S<%= skill %><%= ('-' + skill_level.to_s) if skill_level %></span>
-      <% end %>
-      <% if elite %>
-        <%= vite_image_tag elite_image_url, class: "w-6" if elite %>
-      <% end %>
-    </div>
-  </article>
-<% end %>
+  <div class="p-3" >
+    <%= image_tag avatar, class: "w-12 rounded-full operators__card", data: { operator_id: used_operator.operator_id } %>
+  </div>
+  <div class="absolute grid grid-cols-2 gap-4 text-base-content font-bold h-full ml-2">
+    <span class=""><%= level %></span>
+    <% if skill %>
+      <span class="">S<%= skill %><%= ('-' + skill_level.to_s) if skill_level %></span>
+    <% end %>
+    <% if elite %>
+      <%= vite_image_tag elite_image_url, class: "w-6" if elite %>
+    <% end %>
+  </div>
+</article>

@@ -1,5 +1,5 @@
 <ul class="<%= @class %>">
-  <li><%= link_to t("clears"), clears_path %></li>
+  <li><%= link_to t("clears.title"), clears_path %></li>
   <li><%= link_to t("channels.list"), channels_path %></li>
   <li><%= link_to t("guide"), "#" %></li>
   <% if can?(:read, :admin)  %>

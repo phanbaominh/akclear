@@ -5,8 +5,9 @@
       class="absolute top-0 left-0 w-full h-full"
     ></iframe>
   </div>
-  <div class="flex">
+  <div class="flex space-x-1 items-center">
     <div
+    tabindex="0"
       class="
         badge
         <%= clear.stageable.color(:badge) %>
@@ -15,12 +16,12 @@
         max-w-64
         line-clamp-1
         xs:line-clamp-none
-        mr-1
       "
     >
       <%= clear.stageable.label %>
     </div>
     <%= render Clears::VerificationDetailsComponent.new(clear: clear) %>
+    <%= render Clears::VerificationComponent.new(clear: clear) %>
   </div>
   <div class="md:flex justify-between">
     <h2 class="flex text-2xl font-bold items-center gap-1">
@@ -28,15 +29,22 @@
     </h2>
   </div>
   <div class="md:flex justify-between">
-    <div class="flex">
-      <span class="hidden xs:inline-block"><%= t(:submitted_by) %>&nbsp;</span>
-      <a href="#" class="inline-block">
-        <%= clear.player_name %>
-      </a>
-      <span class="new-clear__time inline-block"><%= time_ago_in_words(clear.created_at) + " " + t(:ago) %></span>
+    <div>
+      <div class="flex" tabindex="0">
+        <span class="hidden xs:inline-block"><%= t(:submitted_by) %>&nbsp;</span>
+        <a href="#" class="inline-block">
+          <%= clear.player_name %>
+        </a>
+        <span class="before:content-['\00B7\20'] before:pl-1 inline-block"><%= time_ago_in_words(clear.created_at) + " " + t(:ago) %></span>
+      </div>
+      <% if verification %>
+        <div class="" tabindex="0">
+          <%= t(verification.accepted? ? :verified_by : :declined_by, verification: verification, username: verification.verifier.username) %>
+          <span class="before:content-['\00B7\20'] before:pl-1"><%= time_string(verification.created_at) %></span>
+        </div>
+      <% end %>
     </div>
     <section class="flex items-center space-x-4">
-      <%= render Clears::VerificationComponent.new(clear: clear) %>
       <%= render Clears::LikeBigComponent.new(clear: clear) %>
     </section>
   </div>

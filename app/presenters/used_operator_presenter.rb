@@ -19,4 +19,13 @@ class UsedOperatorPresenter < ApplicationPresenter
   def elite_image_url
     self.class.elite_image_url(object.elite || 0)
   end
+
+  def verification_outline_class
+    case object.verification_status
+    when Verification::ACCEPTED
+      'outline-success'
+    when Verification::DECLINED
+      'outline-error'
+    end
+  end
 end

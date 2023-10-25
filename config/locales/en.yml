@@ -59,6 +59,17 @@ en:
       update:
         success: "User was successfully updated."
         failed: "Failed to update user."
+  clears:
+    title: "Clears"
+    verifications:
+      new:
+        comment_placeholder: "Add a comment..."
+      create:
+        failed: "Failed to verify clear."
+        finished: "All done! No more clears to verify!"
+        success: "Clear was successfully verified!"
+  decline: "Decline"
+  accept: "Accept"
   hello: "Hello world"
   edit: "Edit"
   update: "Update"
@@ -73,7 +84,9 @@ en:
   end_in: "End in"
   reset: "Reset"
   verified: "Verified"
-  verified_by: "Verified by %{username} %{at}"
+  declined: "Declined"
+  verified_by: "Verified by %{username}"
+  declined_by: "Declined by %{username}"
   verify: "Verify"
   unverify: "Unverify"
   choose: "Choose"
@@ -101,7 +114,6 @@ en:
       adverse: "Adverse"
   trending_clears: "Trending clears"
   new_clears: "New clears"
-  clears: "Clears"
   guide: "Guide"
   profile: "Profile"
   change_email: "Change email address"

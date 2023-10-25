@@ -9,6 +9,7 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  before_action :manage_session_keys
   before_action :set_current_request_details
   before_action :authenticate
   before_action :authenticate!
@@ -19,9 +20,9 @@ class ApplicationController < ActionController::Base
 
   private
 
-  def switch_locale(&action)
+  def switch_locale(&)
     locale = params[:locale] || I18n.default_locale
-    I18n.with_locale(locale, &action)
+    I18n.with_locale(locale, &)
   end
 
   def authenticate
@@ -37,5 +38,45 @@ class ApplicationController < ActionController::Base
   def set_current_request_details
     Current.user_agent = request.user_agent
     Current.ip_address = request.ip
+  end
+
+  def manage_session_keys
+    slate_keys_to_be_deleted
+    keep_used_session_keys
+    delete_unused_keys
+  end
+
+  def init_used_session_key(key, value)
+    session['deleting'] ||= {}
+    session['deleting'][key] ||= true
+    session[key] = value
+  end
+
+  def delete_unused_keys
+    return if session['deleting'].blank?
+
+    session['deleting'].each do |key, value|
+      session[key] = nil if value
+    end
+  end
+
+  def keep_used_session_keys
+    return if session['deleting'].blank?
+
+    used_session_keys.each do |key|
+      session['deleting'][key] = false
+    end
+  end
+
+  def slate_keys_to_be_deleted
+    return if session['deleting'].blank?
+
+    session['deleting'].each_key do |key|
+      session['deleting'][key] = true
+    end
+  end
+
+  def used_session_keys
+    []
   end
 end

@@ -1,0 +1,8 @@
+<%= link_to edit_clears_used_operator_path(used_operator: used_operator_params),
+            id: dom_id(used_operator.operator, :basic),
+            data: { 
+              turbo_stream: 'true', 
+              **stimulus(:dispatch, values: { event: 'clickEditOperator', payload: { operatorId: used_operator.operator_id } }, actions: { click: 'dp' }) 
+            } do%>
+  <%= render Clears::UsedOperatorMiniComponent.new(used_operator: used_operator) %>
+<% end %>
