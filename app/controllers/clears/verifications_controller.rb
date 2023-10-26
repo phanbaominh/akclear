@@ -1,5 +1,6 @@
 class Clears::VerificationsController < ApplicationController
   load_and_authorize_resource :clear
+  before_action :redirect_to_edit, only: %i[new]
   load_and_authorize_resource :verification, through: :clear, singleton: true
   skip_load_resource :verification, only: %i[create]
 
@@ -52,14 +53,21 @@ class Clears::VerificationsController < ApplicationController
 
   private
 
+  def redirect_to_edit
+    redirect_to edit_clear_verification_path(@clear) if @clear.verified?
+  end
+
   def build_used_operator_verifications_from_session
     unless session.dig('verification_used_operators', 'clear_id') == params[:clear_id].to_s
       init_used_session_key('verification_used_operators', { clear_id: params[:clear_id] })
     end
+
     @verification.used_operator_verifications.each do |verification|
       session['verification_used_operators'][verification.used_operator_id.to_s] ||= verification.status
     end
+
     @used_operators = @clear.used_operators.includes(:operator, :verification)
+
     @used_operator_verifications = @used_operators.filter_map do |used_op|
       status = session['verification_used_operators'][used_op.id.to_s]
       if status

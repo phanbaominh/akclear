@@ -1,14 +1,1 @@
-<%= simple_form_for UsedOperator.new, url: clear_verification_used_operator_path(@clear), method: :patch do |f| %>
-  <%= render Clears::UsedOperatorComponent.new(
-    used_operator: @used_operator,
-    editable: false
-  ) %>
-  <%= f.input :verification_status, as: :hidden, input_html: { value: Verification::ACCEPTED, id: 'verification_status' }  %>
-  <%= f.button :submit, t(:decline), data: {
-     **stimulus(
-      :update_attribute,
-      actions: { click: 'setAttr' },
-      params: { target_id: 'verification_status', name: 'value', value: Verification::DECLINED })
-    } %>
-  <%= f.button :submit, t(:accept) %>
-<% end%>
+<%= render partial: 'edit', locals: { clear: @clear, used_operator: @used_operator } %>

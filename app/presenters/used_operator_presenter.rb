@@ -23,9 +23,9 @@ class UsedOperatorPresenter < ApplicationPresenter
   def verification_outline_class
     case object.verification_status
     when Verification::ACCEPTED
-      'outline-success'
+      'outline outline-primary'
     when Verification::DECLINED
-      'outline-error'
+      'outline outline-error'
     end
   end
 end

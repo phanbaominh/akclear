@@ -1,0 +1,2 @@
+<%= content_tag :input, nil, id: "verification_form__decline_btn", type: :submit, name: :commit, value: t(:decline), class: 'btn btn-error', form: 'verification_form', disabled: !@verification.declineable?,
+  data: { **stimulus(:update_attribute, actions: { click: 'setAttr' }, params: { target_id: 'verification_status', name: 'value', value: Verification::DECLINED })} %>
