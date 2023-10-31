@@ -52,6 +52,17 @@ class Clear < ApplicationRecord
 
   #####
 
+  def preload_operators
+    return unless persisted?
+
+    ActiveRecord::Associations::Preloader.new(
+      records: [self],
+      associations: [used_operators: :operator]
+    ).call
+    Operator.build_translations_cache(Operator.from_clear_ids([id]))
+    self
+  end
+
   def normalize_link
     return unless link && will_save_change_to_link?
 

@@ -4,7 +4,7 @@
 >
   <div class="card-body shadow-xl bg-base-100 rounded p-3 sm:w-fit">
     <div class="flex gap-2">
-      <%= image_tag avatar, class: "w-24" %>
+      <%= image_tag avatar, class: "w-24", alt: name %>
       <div class="grid grid-cols-2 gap-x-2">
         <%= vite_image_tag elite_image_url, class: "w-8 " if elite %>
         <span class="text-xl mt-1 "><%= level %></span>

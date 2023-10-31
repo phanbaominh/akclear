@@ -14,6 +14,6 @@ module User::Likeable
   end
 
   def liked?(clear)
-    liked_clears.include?(clear)
+    liked_clears.to_a.include?(clear)
   end
 end

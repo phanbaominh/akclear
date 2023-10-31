@@ -11,13 +11,14 @@ class ClearsController < ApplicationController
     set_clear_spec
     set_clear_spec_session_from_params
     @pagy, @clears = pagy(
-      Clears::Index.(@clear_spec).value!.includes(used_operators: :operator,
-                                                  stage: :stageable).order(created_at: :desc)
+      Clears::Index.(@clear_spec).value!.includes(:channel, :verification, :likers, used_operators: :operator,
+                                                                                    stage: :stageable).order(created_at: :desc)
     )
+    Operator.build_translations_cache(Operator.from_clear_ids(@clears.map(&:id)))
   end
 
   def show
-    @clear = Clear.find(params[:id])
+    @clear = Clear.find(params[:id]).preload_operators
   end
 
   def new
@@ -31,11 +32,7 @@ class ClearsController < ApplicationController
     set_modifying_clear
     init_clear_spec_session_from_existing_clear
     set_clear_spec
-    @clear = @clear_spec
-    ActiveRecord::Associations::Preloader.new(
-      records: [@clear],
-      associations: [used_operators: :operator]
-    ).call
+    @clear = @clear_spec.preload_operators
     render 'new'
   end
 
