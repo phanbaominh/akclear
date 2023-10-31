@@ -2,6 +2,8 @@
 
 class ClearsController < ApplicationController
   skip_before_action :authenticate!, only: %i[index show]
+  load_and_authorize_resource except: :edit
+
   include ClearFilterable
   include Pagy::Backend
 
@@ -18,7 +20,7 @@ class ClearsController < ApplicationController
   end
 
   def show
-    @clear = Clear.find(params[:id]).preload_operators
+    @clear.preload_operators
   end
 
   def new
@@ -33,11 +35,12 @@ class ClearsController < ApplicationController
     init_clear_spec_session_from_existing_clear
     set_clear_spec
     @clear = @clear_spec.preload_operators
+    authorize! :edit, @clear
     render 'new'
   end
 
   def create
-    @clear = Clear.new(clear_params.presence.merge(submitter: Current.user))
+    @clear.submitter = Current.user
     if @clear.save
       @clear.duplicate_for_stage_ids(@clear.stage_ids)
       delete_clear_spec_session
@@ -48,8 +51,7 @@ class ClearsController < ApplicationController
   end
 
   def update
-    @clear = Clear.find(params[:id])
-    if @clear.update(clear_params.presence)
+    if @clear.update(clear_params)
       delete_clear_spec_session
       redirect_to @clear
     else

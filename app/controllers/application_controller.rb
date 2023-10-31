@@ -1,7 +1,13 @@
 class ApplicationController < ActionController::Base
+  # check_authorization TODO: enable this and add skip authorization for public pages
   around_action :switch_locale
 
   rescue_from CanCan::AccessDenied do |exception|
+    if Rails.env.production?
+      not_found
+      return
+    end
+
     Rails.logger.info { "Access denied on #{exception.action} #{exception.subject}" } if Rails.env.development?
     respond_to do |format|
       format.json { head :forbidden }
@@ -19,6 +25,10 @@ class ApplicationController < ActionController::Base
   end
 
   private
+
+  def not_found
+    raise ActionController::RoutingError, 'Not Found'
+  end
 
   def switch_locale(&)
     locale = params[:locale] || I18n.default_locale
@@ -39,6 +49,8 @@ class ApplicationController < ActionController::Base
     Current.user_agent = request.user_agent
     Current.ip_address = request.ip
   end
+
+  # TODO: move to concern session key logic
 
   def manage_session_keys
     slate_keys_to_be_deleted

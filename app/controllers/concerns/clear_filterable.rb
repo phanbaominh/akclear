@@ -93,7 +93,7 @@ module ClearFilterable
   end
 
   def clear_params
-    return {} if params[:clear].nil?
+    return {} if params[:clear].nil? && %w[update create].exclude?(action_name)
 
     @clear_params ||= params.require(:clear).permit(
       :stageable_id, :stage_id, :challenge_mode, :stage_type, :environment, :job_id,

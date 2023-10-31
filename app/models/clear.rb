@@ -50,6 +50,10 @@ class Clear < ApplicationRecord
     used_operators.select(&:verification_declined?)
   end
 
+  def editable?
+    verification&.accepted?
+  end
+
   #####
 
   def preload_operators
