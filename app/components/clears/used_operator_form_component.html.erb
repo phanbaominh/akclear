@@ -2,18 +2,17 @@
   html: { class: 'card bg-base-200 shadow-xl w-full',
   data: { **stimulus(:click_other), turbo_stream: true } },
   namespace: form_namespace do |f| %>
-
   <div class="card-body">
     <%= content_tag :button, class: "btn btn-circle self-end", formmethod: "GET", formaction: clears_used_operator_path do %>
       <%= heroicon "x-mark", options: { class: "h-4" } %>
     <% end %>
+    <%= f.input_field :id, as: :hidden %>
+    <%= f.input_field :clear_id, as: :hidden %>
     <div class="flex justify-between">
       <% if used_operator.operator_id %>
         <%= image_tag avatar, class: "w-16 h-16", alt: name %>
-
       <% else %>
         <div class="w-16 h-16 bg-base-content">
-
         </div>
       <% end %>
       <% if edit_form? %>
@@ -45,9 +44,7 @@
                 },
                 include_hidden: false %>
       <% end %>
-
     </div>
-
     <%= content_tag(
       :button,
       nil,
@@ -59,14 +56,12 @@
         **stimulus_attrs(:click_other, target: "clickable")
       }
     ) %>
-
     <% if used_operator.operator_id %>
       <fieldset class="join block">
         <legend class="simple_form__label"><%= t("elite") %></legend>
         <div class="grid grid-cols-3 justify-between ">
           <%= f.collection_radio_buttons :elite, (max_elite + 1).times.to_a, :itself, :itself, item_wrapper_tag: nil,
            item_label_class: 'join-item !p-0 flex-grow' do |b| %>
-
             <%= b.radio_button class: "peer appearance-none",
                            data: {
                              **stimulus_attrs(
@@ -81,9 +76,7 @@
             </div>
           <% end %>
         </div>
-
       </fieldset>
-
       <% if @used_operator.elite %>
         <%= f.input :level,
                 input_html: {
@@ -94,7 +87,6 @@
                 wrapper_html: {
                   class: "flex gap-2 items-center"
                 } %>
-
         <% if @used_operator.has_skills? %>
           <fieldset class="join block">
             <legend class="simple_form__label"><%= t("skill") %></legend>
@@ -102,7 +94,6 @@
               <%= f.collection_radio_buttons :skill, (max_skill).times.to_a.map(&:succ),
                :itself, :itself, item_wrapper_tag: nil,
                item_label_class: 'join-item !p-0 flex-grow' do |b| %>
-
                 <%= b.radio_button class: "peer appearance-none" %>
                 <div class="btn animate-none peer-checked:bg-primary w-full">
                   <%= image_tag UsedOperatorPresenter.skill_image_url(
@@ -110,10 +101,8 @@
                   ),
                   class: "w-8" %>
                 </div>
-
               <% end %>
             </div>
-
           </fieldset>
           <%= f.input :skill_level,
                   as: :select,
@@ -122,11 +111,9 @@
                   value_method: :first %>
         <% end %>
         <%= f.button :submit, submit_text, class: "mt-2 !animate-none" %>
-
       <% else %>
         <%= f.button :submit, submit_text, class: "mt-2 !animate-none" %>
       <% end %>
     <% end %>
-
   </div>
 <% end %>

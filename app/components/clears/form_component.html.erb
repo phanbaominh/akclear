@@ -1,6 +1,6 @@
 <div class="card mb-8 md:mb-4 md:shadow-xl static">
   <div class="md:card-body md:bg-base-300" data-controller="clears--form-component">
-    <%= simple_form_for clear_spec, url: clears_path, method: new_form ? :post : :get, html: {
+    <%= simple_form_for clear_spec, method: (:get unless new_form), html: {
       id: "clears__form",
       data: {
         turbo_stream: "true", turbo_frame: 'clears'
@@ -23,6 +23,7 @@
         } %>
         <%= f.input :link,
                 input_html: {
+                  class: 'w-full',
                   data: {
                     **stimulus_attrs(
                       :clears__form_component,
@@ -39,8 +40,10 @@
         <%= render Clears::StageSelectComponent.new(form: f, simple: new_form, multiple: new_form) %>
         <%= f.label :operator_id, t(:operators) %>
         <div id="clears__form__operators_fields" class="hidden">
-          <%= f.simple_fields_for :used_operators do |used_operator_form| %>
-            <%= render Clears::UsedOperatorFieldsComponent.new(form: used_operator_form) %>
+          <%= f.simple_fields_for :used_operators, include_id: false do |used_operator_form| %>
+            <div id="<%= dom_id(used_operator_form.object.operator, :fields) %>">
+              <%= render Clears::UsedOperatorFieldsComponent.new(form: used_operator_form) %>
+            </div>
           <% end %>
         </div>
       </div>

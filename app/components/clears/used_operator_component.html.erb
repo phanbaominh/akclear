@@ -18,6 +18,7 @@
         <div class=" flex flex-col justify-between flex-grow items-end">
           <%= button_to clears_used_operator_path, method: :delete, class: 'btn btn-sm hover:bg-error w-8' do %>
             <%= hidden_field_tag :operator_id, used_operator.operator_id %>
+            <%= hidden_field_tag :id, used_operator.id %>
             <i class="fa-solid fa-close text-white"></i>
           <% end %>
           <%= link_to edit_clears_used_operator_path(used_operator: used_operator_params), class: 'btn btn-sm btn-secondary w-8',

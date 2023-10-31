@@ -48,7 +48,7 @@ class Clears::UsedOperatorsController < ApplicationController
   def update
     session['used_operator'] = nil
     index = clear_spec_session['used_operators_attributes']&.find do |_key, used_operator|
-      used_operator['operator_id'] == used_operator_params[:operator_id]
+      used_operator['operator_id'].to_s == used_operator_params[:operator_id]
     end&.first
     clear_spec_session['used_operators_attributes'][index] = used_operator_params if index
 
@@ -70,14 +70,22 @@ class Clears::UsedOperatorsController < ApplicationController
       format.turbo_stream do
         set_clear_spec
         @is_destroy_editing_used_operator = params[:operator_id] == session.dig('used_operator', 'operator_id')
-        @used_operator = UsedOperator.new(operator_id: params[:operator_id])
+        @used_operator = params[:id].present? ? UsedOperator.find(params[:id]) : UsedOperator.new(operator_id: params[:operator_id])
       end
     end
   end
 
   private
 
+  def clear_from_id
+    params[:used_operator] && used_operator_params[:clear_id] && Clear.find_by(id: used_operator_params[:clear_id])
+  end
+
   def used_operator_params
-    params.require(:used_operator).permit(:operator_id, :clear_id, :level, :elite, :skill_level, :skill_mastery, :skill)
+    params.require(:used_operator).permit(*PERSISTED_OPERATORS_ATTRIBUTES)
+  end
+
+  def used_session_keys
+    [clear_spec_session_key]
   end
 end
