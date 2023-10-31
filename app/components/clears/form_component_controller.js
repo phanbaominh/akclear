@@ -4,6 +4,7 @@ export default class extends Controller {
 
   connect() {
     this.element.querySelector("input[aria-label='Basic']").click();
+    this.embedLink();
   }
 
   hideVideoFrame(event, target = null) {

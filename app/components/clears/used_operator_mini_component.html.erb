@@ -6,9 +6,9 @@
     <%= image_tag avatar, class: "w-12 rounded-full operators__card #{@class}", data: { operator_id: used_operator.operator_id } %>
   </div>
   <div class="absolute grid grid-cols-2 gap-4 text-base-content font-bold h-full ml-2">
-    <span class="z-10"><%= level %></span>
+    <span class=""><%= level %></span>
     <% if skill %>
-      <span class="z-10">S<%= skill %><%= ('-' + skill_level.to_s) if skill_level %></span>
+      <span class="">S<%= skill %><%= ('-' + skill_level.to_s) if skill_level %></span>
     <% end %>
     <% if elite %>
       <%= vite_image_tag elite_image_url, class: "w-6 o" if elite %>
