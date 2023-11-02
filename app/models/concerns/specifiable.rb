@@ -5,6 +5,7 @@ module Specifiable
 
   included do
     scope :satisfy, lambda { |spec|
+    # came_from_user?
       spec.spec_attributes&.compact_blank&.reduce(self) do |relation, (attribute, value)|
         relation.where(attribute => value)
       end

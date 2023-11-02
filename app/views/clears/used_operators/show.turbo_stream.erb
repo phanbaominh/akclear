@@ -1,4 +1,4 @@
-<% if @used_operator.operator %>
+<% if @used_operator&.operator %>
   <%= turbo_stream.update @used_operator.operator do %>
     <%= render Clears::UsedOperatorComponent.new(used_operator: @used_operator) %>
   <% end %>

@@ -26,6 +26,11 @@
   <div class="md:flex justify-between">
     <h2 class="flex text-2xl font-bold items-center gap-1">
       <%= render Stages::CodeComponent.new(stage: clear.stage, class: "h-6")  %>
+      <% if can?(:edit, clear) %>
+        <%= link_to edit_clear_path(clear), class: 'btn btn-primary btn-sm' do %>
+          <%= t(:update_clear) %>
+        <% end %>
+      <% end %>
     </h2>
   </div>
   <div class="md:flex justify-between">

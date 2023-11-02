@@ -33,8 +33,8 @@ class ClearsController < ApplicationController
   def edit
     set_modifying_clear
     init_clear_spec_session_from_existing_clear
-    set_clear_spec
-    @clear = @clear_spec.preload_operators
+    @clear = clear_from_id.preload_operators(with_verification: true)
+    @clear.assign_attributes(clear_spec_attributes)
     authorize! :edit, @clear
     render 'new'
   end

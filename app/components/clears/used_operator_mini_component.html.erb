@@ -1,9 +1,9 @@
   <article
-  class="flex flex-col relative "
+  class="flex flex-col relative justify-center "
   
 >
   <div class="p-3" >
-    <%= image_tag avatar, class: "w-12 rounded-full operators__card #{@class}", data: { operator_id: used_operator.operator_id } %>
+    <%= image_tag avatar, class: "w-12 rounded-full operators__card #{used_operator.verification_color('outline', require_prefix: true) if show_verification_status}", data: { operator_id: used_operator.operator_id } %>
   </div>
   <div class="absolute grid grid-cols-2 gap-4 text-base-content font-bold h-full ml-2">
     <span class=""><%= level %></span>
@@ -14,4 +14,9 @@
       <%= vite_image_tag elite_image_url, class: "w-6 o" if elite %>
     <% end %>
   </div>
+  <% if used_operator.verified? %>
+    <div class="w-fit self-center absolute z-10">
+      <%= heroicon used_operator.verification_icon, options: { class: "#{used_operator.verification_color('text')} !w-14 !h-14 font-bold" } %>
+    </div>
+  <% end %>
 </article>

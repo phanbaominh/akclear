@@ -1,10 +1,10 @@
 class ApplicationRecord < ActiveRecord::Base
   primary_abstract_class
 
-  def method_missing(method, *args, &block)
+  def method_missing(method, ...)
     super unless presenter.respond_to?(method)
 
-    presenter.send(method, *args, &block)
+    presenter.send(method, ...)
   end
 
   def presenter

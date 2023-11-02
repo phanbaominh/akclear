@@ -1,4 +1,9 @@
 <%= render template: "clears/used_operators/show" %>
+<%= turbo_stream.replace "clears__form_submit_btn" do %>
+  <button id="clears__form_submit_btn" form="clears__form" class="btn btn-primary js-only" <%= "disabled" if @has_declined_verification %> >
+    <%= @used_operator.persisted? ? t(:update_clear) : t(:create_clear) %>
+  </button>
+<% end %>
 <%= turbo_stream.update dom_id(@used_operator.operator, :fields) do %>
   <%= simple_fields_for @clear_spec do |f| %>
     <%= f.simple_fields_for :used_operators, @used_operator, child_index: Time.now.to_i do |used_operator_form| %>

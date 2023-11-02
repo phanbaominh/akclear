@@ -2,5 +2,5 @@
   id: dom_id(used_operator),
   class: "cursor-pointer #{}",
   data: { turbo_stream: true } do %>
-  <%= render Clears::UsedOperatorMiniComponent.new(used_operator: used_operator, class: used_operator.verification_outline_class) %>
+  <%= render Clears::UsedOperatorMiniComponent.new(used_operator: used_operator, show_verification_status: true) %>
 <% end %>

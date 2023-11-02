@@ -61,6 +61,10 @@ en:
         failed: "Failed to update user."
   clears:
     title: "Clears"
+    declined_count:
+      zero: "No declined clears"
+      one: "You have 1 declined clear"
+      other: "You have %{count} declined clears"
     verifications:
       new:
         comment_placeholder: "Add a comment..."

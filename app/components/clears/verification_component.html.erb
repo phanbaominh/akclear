@@ -3,7 +3,7 @@
     <% if can?(:edit, clear.verification) %>
       <%= link_to(
         edit_clear_verification_path(clear),
-        class: 'text-primary-content'
+        class: 'text-base-content hover:text  -base-content-subdued'
       ) do %>
         <%= heroicon 'pencil' %>
       <% end %>

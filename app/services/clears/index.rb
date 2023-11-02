@@ -6,6 +6,9 @@ module Clears
 
     def call
       @clears = base_scope
+      hide_declined_clears
+      filter_by_self
+      filter_by_verification_status
       filter_by_stageable
       filter_by_stage
       filter_by_operators
@@ -17,6 +20,24 @@ module Clears
 
     def base_scope
       Clear.all
+    end
+
+    def hide_declined_clears
+      return if spec.self_only
+
+      @clears = @clears.left_outer_joins(:verification).where(verifications: { status: [nil, Verification::ACCEPTED] })
+    end
+
+    def filter_by_verification_status
+      return unless spec.verification_status
+
+      @clears = @clears.joins(:verification).where(verifications: { status: spec.verification_status })
+    end
+
+    def filter_by_self
+      return unless spec.self_only
+
+      @clears = @clears.where(submitter_id: Current.user.id)
     end
 
     def filter_by_channel

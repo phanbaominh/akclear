@@ -68,7 +68,11 @@ class ApplicationController < ActionController::Base
     return if session['deleting'].blank?
 
     session['deleting'].each do |key, value|
-      session[key] = nil if value
+      next unless value
+
+      p "Deleting #{key}"
+      session.delete(key)
+      session['deleting'].delete(key)
     end
   end
 

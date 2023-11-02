@@ -12,4 +12,8 @@ class Clears::UsedOperatorComponent < ApplicationComponent
   def used_operator_params
     used_operator.attributes.symbolize_keys.slice(*ClearFilterable::PERSISTED_OPERATORS_ATTRIBUTES)
   end
+
+  def declined?
+    !used_operator.changed? && used_operator.verification_declined?
+  end
 end

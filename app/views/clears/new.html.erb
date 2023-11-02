@@ -1,4 +1,4 @@
-<%= render Clears::FormComponent.new(clear_spec: @clear, new_form: true, job_id: @job&.id) do |component| %>
+<%= render Clears::FormComponent.new(clear_spec: @clear, write_form: true, job_id: @job&.id) do |component| %>
   <%= component.with_header do %>
     <% if @clear.errors.present? %>
       <ul class="alert alert-error">
@@ -9,13 +9,17 @@
     <% end %>
     <div>
       <h2 class="card-title">
-        <%= t(:new_clear) %>
+        <%= @clear.persisted? ? t(:updating_clear) : t(:new_clear) %>
+        <% if @clear.persisted? %>
+          <%= render Clears::VerificationDetailsComponent.new(clear: @clear) %>
+        <% end %>
       </h2>
     </div>
+    <div class="p-2"></div>
   <% end %>
   <%= component.with_footer do %>
-    <button form="clears__form" class="btn btn-primary js-only">
-      <%= t(:create_clear) %>
+    <button id="clears__form_submit_btn" form="clears__form" class="btn btn-primary js-only" <%= "disabled" if @clear.declined_used_operators.present? %> >
+      <%= @clear.persisted? ? t(:update_clear) : t(:create_clear) %>
     </button>
     <noscript>
       <%# In no js case, will submit a GET request with authenticity_token param in the URL => 

@@ -20,12 +20,43 @@ class UsedOperatorPresenter < ApplicationPresenter
     self.class.elite_image_url(object.elite || 0)
   end
 
-  def verification_outline_class
+  def verification_icon
+    return if need_to_be_verified?
+
     case object.verification_status
-    when Verification::ACCEPTED
-      'outline outline-primary'
     when Verification::DECLINED
-      'outline outline-error'
+      'x-mark'
+    when Verification::ACCEPTED
+      'check'
     end
+  end
+
+  def verification_text
+    return if need_to_be_verified?
+
+    case object.verification_status
+    when Verification::DECLINED
+      I18n.t(:declined)
+    when Verification::ACCEPTED
+      I18n.t(:verified)
+    end
+  end
+
+  def verification_color(prefix, suffix: nil, require_prefix: false)
+    # for tailwind purge: badge-success badge-error text-success-content text-error-content outline-success text-success
+    return if need_to_be_verified?
+
+    color = if object.verification_accepted?
+              "#{prefix}-success"
+            else
+              "#{prefix}-error"
+            end + (suffix ? "-#{suffix}" : '')
+    require_prefix ? "#{prefix} #{color}" : color
+  end
+
+  private
+
+  def need_to_be_verified?
+    object.changed? || !object.verified?
   end
 end

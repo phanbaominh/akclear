@@ -11,6 +11,7 @@ class Clear < ApplicationRecord
   has_one :verification, dependent: :destroy
 
   scope :unverified, -> { where.missing(:verification) }
+  scope :submitted_by, ->(user) { where(submitter_id: user.id) }
 
   accepts_nested_attributes_for :used_operators, allow_destroy: true
 
@@ -21,11 +22,14 @@ class Clear < ApplicationRecord
 
   before_validation :assign_channel
   before_save :normalize_link
+  after_update -> { verification&.destroy }
   after_save :mark_job_as_clear_created
 
-  attr_accessor :job_id, :channel_id
+  # considering separate spec logic from model
+  attr_accessor :job_id, :channel_id, :self_only, :verification_status
 
   # VERIFICATION
+
   def next_unverified
     Clear.unverified.where(created_at: (created_at...)).where.not(id:).order(created_at: :asc).first
   end
@@ -50,18 +54,21 @@ class Clear < ApplicationRecord
     used_operators.select(&:verification_declined?)
   end
 
-  def editable?
-    verification&.accepted?
-  end
-
   #####
 
-  def preload_operators
+  def preload_operators(with_verification: false)
     return unless persisted?
+
+    nested_associations =
+      if with_verification
+        %i[operator verification]
+      else
+        [:operator]
+      end
 
     ActiveRecord::Associations::Preloader.new(
       records: [self],
-      associations: [used_operators: :operator]
+      associations: [used_operators: nested_associations]
     ).call
     Operator.build_translations_cache(Operator.from_clear_ids([id]))
     self

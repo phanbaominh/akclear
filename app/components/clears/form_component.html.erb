@@ -1,6 +1,6 @@
 <div class="card mb-8 md:mb-4 md:shadow-xl static">
   <div class="md:card-body md:bg-base-300" data-controller="clears--form-component">
-    <%= simple_form_for clear_spec, method: (:get unless new_form), html: {
+    <%= simple_form_for clear_spec, method: (:get unless write_form), html: {
       id: "clears__form",
       data: {
         turbo_stream: "true", turbo_frame: 'clears'
@@ -13,8 +13,9 @@
       <% if job_id.present? %>
         <%= f.input :job_id, as: :hidden, input_html: { value: job_id } %>
       <% end %>
+      <%= f.input :self_only, as: :hidden %>
       <%= f.input :channel_id, as: :hidden %>
-      <% if new_form %>
+      <% if write_form %>
         <%= content_tag :iframe,
         nil,
         class: "hidden w-fit",
@@ -37,7 +38,7 @@
         <%= f.input :name %>
       <% end %>
       <div class="js-only">
-        <%= render Clears::StageSelectComponent.new(form: f, simple: new_form, multiple: new_form) %>
+        <%= render Clears::StageSelectComponent.new(form: f, simple: write_form, multiple: !edit_form) %>
         <%= f.label :operator_id, t(:operators) %>
         <div id="clears__form__operators_fields" class="hidden">
           <%= f.simple_fields_for :used_operators, include_id: false do |used_operator_form| %>
@@ -87,7 +88,7 @@
       <div id="basic_operators" class="hidden sm:block">
         <div class=" flex flex-col w-full  ">
           <div class="flex">
-            <% if new_form %>
+            <% if write_form %>
               <label class="label hidden  sm:flex  cursor-pointer w-fit self-center">
                 <span class="label-text"><%= t(:show_video) %></span>
                 <%= content_tag :input, nil, type: 'checkbox', class: "toggle ", data: {

@@ -1,4 +1,6 @@
 module User::Verifiable
+  extend ActiveSupport::Concern
+
   def verifier?
     true
   end
@@ -18,5 +20,13 @@ module User::Verifiable
 
   def unverify(clear)
     clear.verification&.destroy if clear.verified?
+  end
+
+  def declined_clears
+    Clear.submitted_by(self).joins(:verification).merge(Verification.declined)
+  end
+
+  def has_declined_clears?
+    declined_clears.exists?
   end
 end

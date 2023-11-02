@@ -48,10 +48,12 @@
                 <%= render Stages::CodeComponent.new(stage: @clear.stage, class: "h-5") %>
               </h2>
             </div>
-            <div class="flex space-x-2 w-full">
+            <!--Hide player name to incentivize looking at clear not based on name-recognition-->
+            <!--            <div class="flex space-x-2 w-full">
               <div class="text-base-content-subdued">
-                <%= by_string(@clear.player_name) %></div>
-            </div>
+                <%#= by_string(@clear.player_name) %>-->
+            <!--              </div>
+            </div>-->
           </div>
           <div class="clear-summary__operator-list grid grid-cols-5 xs:grid-cols-7">
             <div class="operator-cell--container">

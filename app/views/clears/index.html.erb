@@ -1,11 +1,25 @@
-<%= turbo_frame_tag 'clears_with_filters' do %>
-  <div class="js-only">
-    <%= render Clears::FiltersComponent.new(clear_spec: @clear_spec) %>
-  </div>
-  <noscript>
-    <%= link_to "Filter", clears_stage_select_path, class: "btn btn-primary" %>
-  </noscript>
-  <%= turbo_frame_tag 'clears', data: { turbo_action: 'advance'} do %>
-    <%= render Clears::ListComponent.new(clears: @clears, pagy: @pagy) %>
+<section>
+  <% if @clear_spec.self_only %>
+    <% if Current.user.has_declined_clears? %>
+      <div class="flex items-center space-x-2">
+        <div class="badge badge-error badge-lg">
+          <div><%= t('clears.declined_count', count: Current.user.declined_clears.size) %>
+          </div>
+        </div>
+        <%= link_to t(:fix), edit_clear_path(Current.user.declined_clears.first, fix_declined: true), class: 'btn btn-primary btn-xs' %>
+      </div>
+    <% end %>
+    <h2 class="text-xl"><%= t(:your_clears) %></h2>
   <% end %>
-<% end %>
+  <%= turbo_frame_tag 'clears_with_filters' do %>
+    <div class="js-only">
+      <%= render Clears::FiltersComponent.new(clear_spec: @clear_spec) %>
+    </div>
+    <noscript>
+      <%= link_to "Filter", clears_stage_select_path, class: "btn btn-primary" %>
+    </noscript>
+    <%= turbo_frame_tag 'clears', data: { turbo_action: 'advance'} do %>
+      <%= render Clears::ListComponent.new(clears: @clears, pagy: @pagy) %>
+    <% end %>
+  <% end %>
+</section>

@@ -1,4 +1,6 @@
-  
+<li>
+  <%= link_to t(:your_clears), clears_path(clear: { self_only: true }) %>
+</li>
 <li>
   <%= link_to t("change_email"), edit_identity_email_path %>
 </li>
