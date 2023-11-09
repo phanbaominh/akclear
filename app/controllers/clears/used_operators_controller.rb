@@ -36,9 +36,9 @@ class Clears::UsedOperatorsController < ApplicationController
   end
 
   def create
-    clear_spec_session['used_operators_attributes'] ||= {}
-    max_index = clear_spec_session['used_operators_attributes'].keys.max.to_i + 1
-    clear_spec_session['used_operators_attributes'][max_index.to_s] = used_operator_params
+    return flash_stream(status: :unprocessable_entity, type: 'alert', msg: t('.max_reached')) if max_used_operators?
+
+    used_operators_session.add(used_operator_params)
     respond_to do |format|
       format.html { redirect_to clears_operators_select_path(clear: clear_spec_session) }
       format.turbo_stream do
@@ -50,10 +50,7 @@ class Clears::UsedOperatorsController < ApplicationController
 
   def update
     session['used_operator'] = nil
-    index = clear_spec_session['used_operators_attributes']&.find do |_key, used_operator|
-      used_operator['operator_id'].to_s == used_operator_params[:operator_id]
-    end&.first
-    clear_spec_session['used_operators_attributes'][index] = used_operator_params if index
+    used_operators_session.update(used_operator_params)
 
     respond_to do |format|
       format.html { redirect_to clears_operators_select_path(clear: clear_spec_session) }
@@ -66,9 +63,7 @@ class Clears::UsedOperatorsController < ApplicationController
   end
 
   def destroy
-    clear_spec_session['used_operators_attributes']&.delete_if do |_key, used_operator|
-      used_operator['operator_id'] == params[:operator_id]
-    end
+    used_operators_session.remove(used_operator_params[:operator_id])
     respond_to do |format|
       format.html { redirect_to clears_operators_select_path(clear: clear_spec_session) }
       format.turbo_stream do
@@ -107,7 +102,7 @@ class Clears::UsedOperatorsController < ApplicationController
   end
 
   def used_operator_params
-    params.require(:used_operator).permit(*PERSISTED_OPERATORS_ATTRIBUTES)
+    params.require(:used_operator).permit(*UsedOperatorsSession::PERSISTED_OPERATORS_ATTRIBUTES)
   end
 
   def used_session_keys

@@ -4,7 +4,6 @@ module ClearFilterable
   extend ActiveSupport::Concern
 
   # :operator_id, :clear_id, :level, :elite, :skill_level, :skill_mastery, :skill
-  PERSISTED_OPERATORS_ATTRIBUTES = %i[operator_id clear_id level elite skill_level skill_mastery skill id].freeze
   PERSISTED_CLEAR_ATTRIBUTES = %i[stage_id link name channel_id id].freeze
 
   included do
@@ -42,13 +41,7 @@ module ClearFilterable
     init_used_session_key(clear_spec_session_key, clear.attributes.symbolize_keys.slice(
                                                     *PERSISTED_CLEAR_ATTRIBUTES
                                                   ))
-    clear_spec_session['used_operators_attributes'] = {}
-    clear.used_operators.each_with_index do |used_operator, i|
-      used_operator_params = used_operator.attributes.symbolize_keys.slice(
-        *PERSISTED_OPERATORS_ATTRIBUTES
-      )
-      clear_spec_session['used_operators_attributes'][i.to_s] = used_operator_params
-    end
+    used_operators_session.init_from_clear(clear)
   end
 
   def delete_clear_spec_session_of_existing_clear
@@ -98,11 +91,19 @@ module ClearFilterable
     @clear_params ||= params.require(:clear).permit(
       :stageable_id, :stage_id, :challenge_mode, :stage_type, :environment, :job_id,
       :operator_id, :link, :name, :channel_id, :self_only, stage_ids: [],
-                                                           used_operators_attributes: PERSISTED_OPERATORS_ATTRIBUTES + [:_destroy]
+                                                           used_operators_attributes: UsedOperatorsSession::PERSISTED_OPERATORS_ATTRIBUTES + [:_destroy]
     ).compact_blank
   end
 
   def clear_from_id
     Clear.find_by(id: params[:id])
+  end
+
+  def used_operators_session
+    return @used_operators_session if @used_operators_session
+
+    clear_spec_session['used_operators_attributes'] ||= {}
+
+    @used_operators_session ||= UsedOperatorsSession.new(clear_spec_session['used_operators_attributes'])
   end
 end

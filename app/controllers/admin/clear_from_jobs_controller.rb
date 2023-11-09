@@ -7,12 +7,7 @@ module Admin
 
       set_modifying_clear
       @clear = @job.clear
-      clear_spec_session['used_operators_attributes'] = {}
-      @clear.used_operators.each_with_index do |used_operator, index|
-        clear_spec_session['used_operators_attributes'][index.to_s] = used_operator.attributes.slice(
-          'operator_id', 'level', 'elite', 'skill'
-        )
-      end
+      used_operators_session.init_from_clear(@clear)
       render 'clears/new'
     end
   end
