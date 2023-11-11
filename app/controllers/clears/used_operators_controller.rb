@@ -13,7 +13,7 @@ class Clears::UsedOperatorsController < ApplicationController
   end
 
   def new
-    session['used_operator'] = nil
+    session['used_operator'] = {}
     @used_operator =
       squad.add(params[:used_operator] ? used_operator_params : {})
 
@@ -77,7 +77,9 @@ class Clears::UsedOperatorsController < ApplicationController
       format.html { redirect_to clears_operators_select_path(clear: clear_spec_session) }
       format.turbo_stream do
         set_clear_spec
-        @is_destroy_editing_used_operator = params[:operator_id] == session.dig('used_operator', 'operator_id')
+        @is_destroy_editing_used_operator = used_operator_params[:operator_id] == session.dig('used_operator',
+                                                                                              'operator_id')
+        @is_operator_form_active = session['used_operator'] && !@is_destroy_editing_used_operator
         get_used_operator
       end
     end
