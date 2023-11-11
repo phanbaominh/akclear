@@ -1,0 +1,6 @@
+<%= turbo_stream.append "detailed_operators__list" do %>
+  <% render Clears::Form::NewOperatorButtonComponent.new(disabled: disabled) %>
+<% end %>
+<%= turbo_stream.append "basic_operators__list" do %>
+  <%= render Clears::Form::NewOperatorButtonComponent.new(disabled: disabled) %>
+<% end %>

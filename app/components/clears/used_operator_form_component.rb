@@ -31,7 +31,8 @@ class Clears::UsedOperatorFormComponent < ApplicationComponent
   end
 
   def selectable_operators
-    Operator.i18n.order(:name).pluck(:name, :id)
+    already_in_squad = used_operator.squad.operator_ids - [used_operator.operator_id]
+    Operator.where.not(id: already_in_squad).i18n.order(:name).pluck(:name, :id)
   end
 
   def skill_levels

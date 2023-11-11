@@ -1,6 +1,6 @@
 <%= render template: "clears/used_operators/show" %>
 <%= turbo_stream.replace "clears__form_submit_btn" do %>
-  <button id="clears__form_submit_btn" form="clears__form" class="btn btn-primary js-only" <%= "disabled" if @has_declined_verification %> >
+  <button id="clears__form_submit_btn" form="clears__form" class="btn btn-primary js-only" <%= "disabled" if @submit_btn_disabled %> >
     <%= @used_operator.persisted? ? t(:update_clear) : t(:create_clear) %>
   </button>
 <% end %>

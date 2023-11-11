@@ -2,12 +2,7 @@
 <%= turbo_stream.remove @used_operator.operator %>
 <%= turbo_stream.remove dom_id(@used_operator.operator, :basic) %>
 <% if @is_destroy_editing_used_operator %>
-  <%= turbo_stream.append "detailed_operators__list" do %>
-    <% render Clears::Form::NewOperatorButtonComponent.new %>
-  <% end %>
-  <%= turbo_stream.append "basic_operators__list" do %>
-    <%= render Clears::Form::NewOperatorButtonComponent.new %>
-  <% end %>
+  <%= render partial: 'new_btn', locals: { disabled: @squad.full? } %>
 <% end %>
 <% if @used_operator.id %>
   <%= turbo_stream.update dom_id(@used_operator.operator, :fields) do %>

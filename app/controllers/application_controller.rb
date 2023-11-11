@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::Base
+  include TurboFlashable
   # check_authorization TODO: enable this and add skip authorization for public pages
   around_action :switch_locale
 

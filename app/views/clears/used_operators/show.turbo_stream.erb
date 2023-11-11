@@ -9,11 +9,6 @@
     <%= render Clears::UsedOperatorEditMiniComponent.new(used_operator: @used_operator) %>
   <% end %>
 <% end %>
-<%= turbo_stream.append "detailed_operators__list" do %>
-  <%= render Clears::Form::NewOperatorButtonComponent.new %>
-<% end %>
-<%= turbo_stream.append "basic_operators__list" do %>
-  <%= render Clears::Form::NewOperatorButtonComponent.new %>
-<% end %>
+<%= render partial: 'new_btn', locals: { disabled: @squad.full? } %>
 <%= turbo_stream.update "basic_operators__form_container" %>
 <%= turbo_stream.update "detailed_operators__form_container" %>

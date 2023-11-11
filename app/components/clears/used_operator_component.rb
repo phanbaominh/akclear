@@ -10,7 +10,7 @@ class Clears::UsedOperatorComponent < ApplicationComponent
   end
 
   def used_operator_params
-    used_operator.attributes.symbolize_keys.slice(*ClearFilterable::PERSISTED_OPERATORS_ATTRIBUTES)
+    used_operator.attributes.symbolize_keys.slice(*UsedOperatorsSession::PERSISTED_OPERATORS_ATTRIBUTES)
   end
 
   def declined?

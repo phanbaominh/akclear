@@ -17,22 +17,28 @@ class UsedOperatorsSession
   end
 
   def add(params)
-    max_index = (data.keys.map(&:to_i).max || 0) + 1
-    data[max_index.to_s] = params
-    self
+    existing = data.find { |used_operator| used_operator['operator_id'].to_s == params[:operator_id] }
+    if existing
+      params = params.merge(id: existing['id'], clear_id: existing['clear_id'])
+      update(params)
+    else
+      data << params
+    end
+    params
   end
 
   def remove(operator_id)
-    data&.delete_if do |_key, used_operator|
-      used_operator['operator_id'] == operator_id
+    attrs = data.find do |used_operator|
+      used_operator['operator_id'].to_s == operator_id
     end
+    attrs['_destroy'] = true if attrs
     self
   end
 
   def update(params)
-    index = data&.find do |_key, used_operator|
+    index = data.find_index do |used_operator|
       used_operator['operator_id'].to_s == params[:operator_id]
-    end&.first
+    end
     data[index] = params if index
     self
   end

@@ -11,6 +11,8 @@ class UsedOperator < ApplicationRecord
 
   after_update -> { verification&.destroy }
 
+  attr_accessor :squad
+
   # TODO: add default values for skill/module
 
   def verified?

@@ -65,6 +65,7 @@
           )}
         %>
     </div>
+
     <%= content_tag :div,
       class: 'space-y-2',
       data: { **stimulus_attrs(:clears__form_component,
@@ -77,10 +78,10 @@
         id="detailed_operators__list"
         class="grid grid-cols-1 sm:flex sm:flex-wrap gap-2 js-only"
       >
-          <% clear_spec.used_operators.each do |used_operator| %>
+          <% clear_spec.used_operators.reject(&:marked_for_destruction?).each do |used_operator| %>
             <%= render Clears::UsedOperatorResponsiveComponent.new(used_operator: used_operator) %>
           <% end %>
-          <%= render Clears::Form::NewOperatorButtonComponent.new %>
+          <%= render Clears::Form::NewOperatorButtonComponent.new(disabled: clear_spec.squad.full?) %>
         </div>
         <div id="detailed_operators__form_container" class=" self-center w-full">
         </div>
@@ -102,10 +103,10 @@
               </label>
             <% end %>
             <div id="basic_operators__list" class="hidden sm:flex flex-wrap self-center items-center justify-items-end">
-              <% clear_spec.used_operators.each do |used_operator| %>
+              <% clear_spec.used_operators.reject(&:marked_for_destruction?).each do |used_operator| %>
                 <%= render Clears::UsedOperatorEditMiniComponent.new(used_operator: used_operator) %>
               <% end %>
-              <%= render Clears::Form::NewOperatorButtonComponent.new %>
+              <%= render Clears::Form::NewOperatorButtonComponent.new(disabled: clear_spec.squad.full?) %>
             </div>
           </div>
         </div>

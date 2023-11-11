@@ -102,7 +102,7 @@ module ClearFilterable
   def used_operators_session
     return @used_operators_session if @used_operators_session
 
-    clear_spec_session['used_operators_attributes'] ||= {}
+    clear_spec_session['used_operators_attributes'] ||= []
 
     @used_operators_session ||= UsedOperatorsSession.new(clear_spec_session['used_operators_attributes'])
   end

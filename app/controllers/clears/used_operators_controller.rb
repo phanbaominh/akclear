@@ -3,6 +3,7 @@ class Clears::UsedOperatorsController < ApplicationController
   include ClearFilterable
 
   def show
+    load_squad
     @used_operator = get_used_operator(session['used_operator'])
     session['used_operator'] = nil
     respond_to do |format|
@@ -14,7 +15,7 @@ class Clears::UsedOperatorsController < ApplicationController
   def new
     session['used_operator'] = nil
     @used_operator =
-      UsedOperator.new(params[:used_operator] ? used_operator_params : {})
+      squad.add(params[:used_operator] ? used_operator_params : {})
 
     respond_to do |format|
       format.html
@@ -28,7 +29,7 @@ class Clears::UsedOperatorsController < ApplicationController
     has_changed_used_operator = session['used_operator']&.dig('operator_id') != used_operator_params[:operator_id]
     session['used_operator'] = used_operator_params if has_changed_used_operator
 
-    @used_operator = UsedOperator.new(used_operator_params)
+    @used_operator = squad.add(used_operator_params)
     respond_to do |format|
       format.html
       format.turbo_stream
@@ -36,34 +37,42 @@ class Clears::UsedOperatorsController < ApplicationController
   end
 
   def create
-    return flash_stream(status: :unprocessable_entity, type: 'alert', msg: t('.max_reached')) if max_used_operators?
+    squad.add(used_operator_params)
+    unless squad.valid?
+      return flash_stream(status: :unprocessable_entity, type: 'alert', msg: squad.errors.full_messages.first)
+    end
 
-    used_operators_session.add(used_operator_params)
+    new_params = used_operators_session.add(used_operator_params)
+
     respond_to do |format|
       format.html { redirect_to clears_operators_select_path(clear: clear_spec_session) }
       format.turbo_stream do
         set_clear_spec
-        @used_operator = UsedOperator.new(used_operator_params)
+        @used_operator = UsedOperator.new(new_params)
       end
     end
   end
 
   def update
     session['used_operator'] = nil
+
     used_operators_session.update(used_operator_params)
+    load_squad
 
     respond_to do |format|
       format.html { redirect_to clears_operators_select_path(clear: clear_spec_session) }
       format.turbo_stream do
         set_clear_spec
         get_used_operator
-        @has_declined_verification = has_declined_verification?
+        @submit_btn_disabled = has_declined_verification?
       end
     end
   end
 
   def destroy
     used_operators_session.remove(used_operator_params[:operator_id])
+    load_squad
+
     respond_to do |format|
       format.html { redirect_to clears_operators_select_path(clear: clear_spec_session) }
       format.turbo_stream do
@@ -76,13 +85,22 @@ class Clears::UsedOperatorsController < ApplicationController
 
   private
 
+  def squad
+    @squad ||= Squad.new(used_operators_attributes: used_operators_session.to_h)
+  end
+  alias load_squad squad
+
+  def max_used_operators?
+    clear_spec_session['used_operators_attributes'].size >= Squad::MAX_USED_OPERATORS
+  end
+
   def has_declined_verification?
     return false unless @used_operator.persisted?
 
     return true if !@used_operator.changed? && @used_operator.verification_declined?
 
     used_operator_ids_excluding_current =
-      clear_spec_session['used_operators_attributes'].values.pluck('id').map(&:to_i) - [@used_operator.id]
+      clear_spec_session['used_operators_attributes'].pluck('id').map(&:to_i) - [@used_operator.id]
     UsedOperatorVerification.exists?(
       used_operator_id: used_operator_ids_excluding_current,
       status: Verification::DECLINED

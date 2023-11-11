@@ -30,6 +30,14 @@
 # available at https://guides.rubyonrails.org/i18n.html.
 
 en:
+  activemodel:
+    errors:
+      models:
+        squad:
+          attributes:
+            used_operators:
+              duplicated: "is already in squad"
+              too_long: "maximum of 13 operators"
   admin:
     title: "Admin"
     game_data_imports:
@@ -65,6 +73,9 @@ en:
       zero: "No declined clears"
       one: "You have 1 declined clear"
       other: "You have %{count} declined clears"
+    used_operators:
+      create:
+        max_reached: "Maximum of 13 operators per clear."
     verifications:
       new:
         comment_placeholder: "Add a comment..."

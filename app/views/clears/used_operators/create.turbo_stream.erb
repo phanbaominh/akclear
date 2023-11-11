@@ -2,14 +2,13 @@
   <%= render Clears::UsedOperatorEditMiniComponent.new(
     used_operator: @used_operator
   ) %>
-  <%= render Clears::Form::NewOperatorButtonComponent.new %>
 <% end %>
 <%= turbo_stream.append "detailed_operators__list" do %>
   <%= render Clears::UsedOperatorResponsiveComponent.new(
     used_operator: @used_operator
   ) %>
-  <%= render Clears::Form::NewOperatorButtonComponent.new %>
 <% end %>
+<%= render partial: 'new_btn', locals: { disabled: @squad.full? } %>
 <%= turbo_stream.update "basic_operators__form_container" %>
 <%= turbo_stream.update "detailed_operators__form_container" %>
 <%= turbo_stream.append "clears__form__operators_fields" do %>

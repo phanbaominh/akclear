@@ -2,23 +2,20 @@ class Clear < ApplicationRecord
   include Dry::Monads[:result]
   include Clear::HardTaggable
   include Clear::Likeable
+  include Squadable
   include StageSpecifiable
   include Youtubeable
   belongs_to :submitter, class_name: 'User'
   belongs_to :stage
-  belongs_to :channel, optional: true # TODO: make this non-optional in the future
-  has_many :used_operators, dependent: :destroy
+  belongs_to :channel
   has_one :verification, dependent: :destroy
 
   scope :unverified, -> { where.missing(:verification) }
   scope :submitted_by, ->(user) { where(submitter_id: user.id) }
 
-  accepts_nested_attributes_for :used_operators, allow_destroy: true
-
   delegate :event?, to: :stage, allow_nil: true
 
   validates :link, presence: true
-  validates :channel_id, presence: true
 
   before_validation :assign_channel
   before_save :normalize_link
