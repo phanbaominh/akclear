@@ -22,6 +22,9 @@ module ClearFilterable
 
   def set_clear_spec_session_from_params
     session['clear_params'] = clear_params
+
+    return unless session['clear_params']['used_operators_attributes']
+
     session['clear_params']['used_operators_attributes'] = session['clear_params']['used_operators_attributes'].values
   end
 

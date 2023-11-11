@@ -16,7 +16,8 @@ class Squad
   end
 
   def used_operators_attributes=(attrs)
-    attrs.reject { |attr| attr['_destroy'] }.each { |attr| add(attr) }
+    @used_operators ||= []
+    attrs.reject { |attr| ActiveRecord::Type::Boolean.new.cast(attr['_destroy']) }.each { |attr| add(attr) }
   end
 
   def add(used_operator_params)

@@ -37,6 +37,7 @@ class Clears::UsedOperatorsController < ApplicationController
   end
 
   def create
+    session['used_operator'] = nil
     squad.add(used_operator_params)
     unless squad.valid?
       return flash_stream(status: :unprocessable_entity, type: 'alert', msg: squad.errors.full_messages.first)
@@ -126,6 +127,6 @@ class Clears::UsedOperatorsController < ApplicationController
   end
 
   def used_session_keys
-    [clear_spec_session_key]
+    [clear_spec_session_key, 'used_operator']
   end
 end
