@@ -2,7 +2,7 @@
 
 module FetchGameData
   class FetchLatestStagesData < ApplicationService
-    SOURCE = 'https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/en_US/gamedata/excel/stage_table.json'
+    SOURCE = 'https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData_YoStar/main/en_US/gamedata/excel/stage_table.json'
 
     def call
       stages_data = yield FetchJson.call(SOURCE)
@@ -35,7 +35,7 @@ module FetchGameData
     def valid_stage?(stage_data)
       return false if story_stage?(stage_data)
       return false if tutorial_stage?(stage_data)
-      return false if ap_cost_0?(stage_data)
+      # return false if ap_cost_0?(stage_data) TODO: e.g DC-S-1, basically stage with predetermined squad
 
       true
     end

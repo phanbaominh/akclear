@@ -44,11 +44,11 @@ describe FetchGameData::FetchAnnihilationsData do
   before do
     allow(FetchGameData::FetchJson)
       .to receive(:call)
-      .with('https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/en_US/gamedata/excel/stage_table.json')
+      .with('https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData_YoStar/main/en_US/gamedata/excel/stage_table.json')
       .and_return(Dry::Monads::Success(stages_data))
     allow(FetchGameData::FetchJson)
       .to receive(:call)
-      .with('https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/en_US/gamedata/excel/campaign_table.json')
+      .with('https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData_YoStar/main/en_US/gamedata/excel/campaign_table.json')
       .and_return(Dry::Monads::Success(end_times_data))
   end
 

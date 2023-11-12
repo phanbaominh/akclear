@@ -36,7 +36,7 @@ describe FetchGameData::FetchOperatorsSkillsIcons do
 
     expect(FetchGameData::FetchJson)
       .to have_received(:call)
-      .with('https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/en_US/gamedata/excel/skill_table.json')
+      .with('https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData_YoStar/main/en_US/gamedata/excel/skill_table.json')
 
     expect(URI).to have_received(:parse)
       .with('https://raw.githubusercontent.com/Aceship/Arknight-Images/main/skills/skill_icon_test_skchr_chyue_1.png')

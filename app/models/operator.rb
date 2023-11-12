@@ -17,7 +17,7 @@ class Operator < ApplicationRecord
   end
 
   # put here instead of Translatable because of to override reader of Mobility
-  def name(*)
-    cached_name || super
+  def name(**kwargs)
+    cached_name || super(**kwargs)
   end
 end

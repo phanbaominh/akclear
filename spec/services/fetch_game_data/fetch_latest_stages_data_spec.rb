@@ -77,7 +77,7 @@ describe FetchGameData::FetchLatestStagesData do
   before do
     allow(FetchGameData::FetchJson)
       .to receive(:call)
-      .with('https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/en_US/gamedata/excel/stage_table.json')
+      .with('https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData_YoStar/main/en_US/gamedata/excel/stage_table.json')
       .and_return(Dry::Monads::Success(stages_data))
   end
 

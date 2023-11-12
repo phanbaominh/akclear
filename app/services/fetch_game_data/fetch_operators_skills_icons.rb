@@ -3,7 +3,7 @@
 module FetchGameData
   class FetchOperatorsSkillsIcons < ApplicationService
     include ImageStorable
-    SKILL_DATA_URL = 'https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/en_US/gamedata/excel/skill_table.json'
+    SKILL_DATA_URL = 'https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData_YoStar/main/en_US/gamedata/excel/skill_table.json'
 
     def self.images_path
       Rails.root.join('app/javascript/images/skills')

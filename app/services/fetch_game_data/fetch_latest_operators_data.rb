@@ -5,8 +5,8 @@ require 'open-uri'
 module FetchGameData
   class FetchLatestOperatorsData < ApplicationService
     SOURCES = {
-      en: 'https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/en_US/gamedata/excel/character_table.json',
-      jp: 'https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/ja_JP/gamedata/excel/character_table.json'
+      en: 'https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData_YoStar/main/en_US/gamedata/excel/character_table.json',
+      jp: 'https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData_YoStar/main/ja_JP/gamedata/excel/character_table.json'
     }
 
     def self.i18n?
@@ -25,7 +25,7 @@ module FetchGameData
         next unless valid_operator?(operator)
 
         name = operator['name']
-        rarity = operator['rarity']
+        rarity = operator['rarity'].split('_').last.to_i - 1
         skill_game_ids = skill_game_ids(operator)
         operator = Operator.find_or_initialize_by(game_id:)
         operator.update!(name:, rarity:, skill_game_ids:)

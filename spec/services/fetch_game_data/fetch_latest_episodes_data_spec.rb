@@ -30,7 +30,7 @@ describe FetchGameData::FetchLatestEpisodesData do
   before do
     allow(FetchGameData::FetchJson)
       .to receive(:call)
-      .with('https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/en_US/gamedata/excel/zone_table.json')
+      .with('https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData_YoStar/main/en_US/gamedata/excel/zone_table.json')
       .and_return(Dry::Monads::Success(episodes_data))
   end
 
