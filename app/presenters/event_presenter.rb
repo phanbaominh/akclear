@@ -10,6 +10,6 @@ class EventPresenter < StageablePresenter
   def color(component)
     {
       badge: 'badge-warning text-warning-content'
-    }[component]
+    }[component] || 'warning'
   end
 end

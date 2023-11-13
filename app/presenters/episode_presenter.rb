@@ -10,6 +10,6 @@ class EpisodePresenter < StageablePresenter
   def color(component)
     {
       badge: 'badge-info text-info-content'
-    }[component]
+    }[component] || 'info'
   end
 end

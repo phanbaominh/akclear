@@ -83,6 +83,13 @@ en:
         failed: "Failed to verify clear."
         finished: "All done! No more clears to verify!"
         success: "Clear was successfully verified!"
+  home:
+    index:
+      latest_events: "Latest events"
+      latest_episode: "Latest episode"
+      latest_annihilation: "Latest annihilation"
+      trending_clears: "Trending clears"
+      latest_clears: "Latest clears"
   decline: "Decline"
   accept: "Accept"
   hello: "Hello world"

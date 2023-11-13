@@ -1,12 +1,13 @@
-<%= content_tag :div, class: 'group flex cursor-pointer text-lg', 
+<%= content_tag :div, class: "group flex #{'cursor-pointer' unless disabled} text-lg", 
   data: { **stimuluses(clears__like: { values: { liked: liked? }, include_controller: true }, 
   toggle: { classes: { on: 'fa-solid fa-heart text-primary', off: 'fa-regular fa-heart' }, include_controller: true}) }, id: dom_id(@clear, :like) do %>
-  <div class="group-hover:bg-primary/40 rounded-full px-2">
+  <div class="<%= 'group-hover:bg-primary/40' unless disabled %> rounded-full px-2">
     <%= button_to clear_like_path(clear)  , method: liked? ? :delete : :post, 
+      disabled: disabled,
       data: { **stimuluses(clears__like: { actions: { click: 'changeLikeCount' } }, 
       toggle: { 
         actions: { click: 'toggle:stop'},
-         }) }, class: 'disabled:cursor-pointer' do %>
+         }) } do %>
       <span>
         <%= content_tag :i,
         "",
@@ -15,13 +16,9 @@
           toggled: liked?,
           **stimulus_attrs(:toggle, target: "toggle")
         } %>
-
       </span>
-
       <noscript><%= liked? ? t(:unlike) : t(:like) %></noscript>
-
     <% end %>
-
   </div>
   <%= content_tag :span, data: { **stimulus_attrs(:clears__like, target: 'likeCounter') }, class: 'w-2' do %>
     <%= likes_count %>

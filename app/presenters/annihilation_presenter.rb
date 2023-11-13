@@ -14,6 +14,6 @@ class AnnihilationPresenter < StageablePresenter
   def color(component)
     {
       badge: 'badge-error text-error-content'
-    }[component]
+    }[component] || 'error'
   end
 end

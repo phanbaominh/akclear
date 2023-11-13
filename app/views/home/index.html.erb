@@ -4,23 +4,26 @@
     <div class="sm:col-span-2">
       <%= render Home::HeroComponent.new(
         stageables: Event.latest,
-        title: t(:latest_events)
+        title: t('.latest_events')
       ) %>
     </div>
     <%= render Home::HeroComponent.new(
       stageables: Episode.latest,
-      title: t(:latest_events)
+      title: t('.latest_episode')
     ) %>
     <%= render Home::HeroComponent.new(
       stageables: Annihilation.latest,
-      title: t(:latest_events),
+      title: t('.latest_annihilation'),
       remote_image: true
     ) %>
   </div>
   <div>
-    <% [t(:trending_clears), t(:new_clears)].each do |title| %>
+    <% [
+        [t('.trending_clears'), @trending_clears],
+        [t('.latest_clears'), @newest_clears]
+      ].each do |(title, clears)| %>
       <%= render Clears::AsideComponent.new(
-        clears: Clear.includes(:stage, used_operators: :operator).first(6),
+        clears: clears,
         title: title
       ) %>
     <% end %>
