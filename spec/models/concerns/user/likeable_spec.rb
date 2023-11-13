@@ -6,7 +6,8 @@ describe User::Likeable do
   describe 'associations' do
     subject { user }
 
-    it { is_expected.to have_and_belong_to_many(:liked_clears).class_name('Clear').join_table(:likes) }
+    it { is_expected.to have_many(:likes).dependent(:destroy) }
+    it { is_expected.to have_many(:liked_clears).class_name('Clear').through(:likes).source(:clear) }
   end
 
   describe '#like' do
