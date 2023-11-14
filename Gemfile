@@ -4,7 +4,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby '3.1.3'
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem 'rails', '~> 7.0.4'
+gem 'rails', '~> 7.1.0'
 
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
 gem 'sprockets-rails'
@@ -49,7 +49,8 @@ gem 'bootsnap', require: false
 # gem "image_processing", "~> 1.2"
 
 gem 'aasm'
-gem 'acts-as-taggable-on', '~> 9.0'
+gem 'acts-as-taggable-on'
+gem 'after_commit_everywhere', '~> 1.0'
 gem 'amatch'
 gem 'authentication-zero'
 gem 'cancancan'
@@ -71,7 +72,6 @@ gem 'simple_form'
 gem 'view_component'
 gem 'vite_rails'
 gem 'yt'
-gem 'after_commit_everywhere', '~> 1.0'
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
