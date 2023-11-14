@@ -14,7 +14,7 @@ module Akclear
     logger           = ActiveSupport::Logger.new($stdout)
     logger.formatter = config.log_formatter
     config.logger    = ActiveSupport::TaggedLogging.new(logger)
-    config.log_level = :info
+    config.log_level = ENV['LOG_LEVEL'] || :info
     config.active_job.queue_adapter = :good_job
 
     # Configuration for the application, engines, and railties goes here.
