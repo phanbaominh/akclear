@@ -16,12 +16,14 @@
       <%= f.input :self_only, as: :hidden %>
       <%= f.input :channel_id, as: :hidden %>
       <% if write_form %>
-        <%= content_tag :iframe,
+        <div class="iframe-responsive-container hidden">
+          <%= content_tag :iframe,
         nil,
-        class: "hidden w-fit",
+        class: "hidden iframe-responsive",
         data: {
           **stimulus_attrs(:clears__form_component, target: "videoFrame")
         } %>
+        </div>
         <%= f.input :link,
                 input_html: {
                   class: 'w-full',
@@ -65,7 +67,6 @@
           )}
         %>
     </div>
-
     <%= content_tag :div,
       class: 'space-y-2',
       data: { **stimulus_attrs(:clears__form_component,
@@ -110,13 +111,15 @@
             </div>
           </div>
         </div>
-        <div class="flex  justify-center">
-          <%= content_tag :iframe,
+        <div class="flex justify-center">
+          <div class="iframe-responsive-container hidden">
+            <%= content_tag :iframe,
               nil,
-              class: "hidden md:w-full",
+              class: "hidden md:block iframe-responsive",
               data: {
                 **stimulus_attrs(:clears__form_component, target: "toggleVideoFrame")
               } %>
+          </div>
           <div id="basic_operators__form_container" class="self-center w-fit lg:w-1/2">
           </div>
         </div>

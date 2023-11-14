@@ -10,6 +10,7 @@ export default class extends Controller {
   hideVideoFrame(event, target = null) {
     target = target || this.videoFrameTarget;
     target.classList.add("hidden");
+    target.parentElement.classList.add("hidden");
     target.src = "";
   }
 
@@ -29,6 +30,7 @@ export default class extends Controller {
     }
 
     target.classList.remove("hidden");
+    target.parentElement.classList.remove("hidden");
     target.src = this.linkTarget.value.replace(/watch\?v=/, "embed/");
   }
 

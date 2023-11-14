@@ -162,3 +162,11 @@ Only when the view mode is `grid` and the screen size is at least md (meaning th
 .channel-list-grid .channel-list__item-body {
   @apply md:block;
 }
+
+.iframe-responsive-container {
+  @apply relative w-full h-0 pb-[56.25%] col-span-2;
+}
+
+.iframe-responsive {
+  @apply top-0 left-0 w-full h-full absolute;
+}
