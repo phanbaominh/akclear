@@ -90,6 +90,57 @@ en:
       latest_annihilation: "Latest annihilation"
       trending_clears: "Trending clears"
       latest_clears: "Latest clears"
+  identity:
+    emails:
+      update:
+        success: "Your email has been changed"
+    email_verifications:
+      show:
+        success: "Thank you for verifying your email address"
+        invalid_link: "That email verification link is invalid"
+      create:
+        success: "We sent a verification email to your email address"
+    password_resets:
+      create:
+        success: "Check your email for reset instructions"
+        failed: "You can't reset your password until you verify your email"
+      update:
+        success: "Your password was reset successfully. Please sign in"
+      invalid_link: "That password reset link is invalid"
+  sessions:
+    create:
+      success: "Signed in successfully"
+      failed: "That email or password is incorrect"
+    destroy:
+      success: "That session has been logged out"
+  registrations:
+    create:
+      success: "Welcome! You have signed up successfully"
+  passwords:
+    update:
+      success: "Your password has been changed"
+
+  current_password: "Current password"
+  email: "Email"
+  new_email: "New email"
+  password: "Password"
+  password_confirmation: "Password confirmation"
+  has_account: "Already have an account?"
+  sign_in: "Sign in"
+  sign_up: "Sign up"
+  change_email: "Change email address"
+  change_password: "Change password"
+  logout: "Log out"
+  forgot_password: "Forgot your password?"
+  send_password_reset_email: "Send password reset email"
+  reset_password: "Reset your password"
+  save_changes: "Save changes"
+  sent_verification_email: We sent a verification email to the address below. Check that email and follow those instructions to confirm it's your email address.
+  change_email_title: "Change your email"
+  verify_email_title: "Verify your email"
+  resend_verification_email: "Re-send verification email"
+  email_has_changed: "Your email has been changed"
+
   decline: "Decline"
   accept: "Accept"
   hello: "Hello world"
@@ -138,7 +189,5 @@ en:
   new_clears: "New clears"
   guide: "Guide"
   profile: "Profile"
-  change_email: "Change email address"
-  change_password: "Change password"
-  logout: "Log out"
+
   new_clear: "Submit new clear"

@@ -3,41 +3,39 @@
   <div class="card-body">
     <header>
       <% if Current.user.verified? %>
-        <h1 class="card-title">Change your email</h1>
+        <h1 class="card-title"><%= t(:change_email_title) %></h1>
       <% else %>
-        <h1 class="card-title">Verify your email</h1>
-        <p class="py-4">We sent a verification email to the address below. Check that email and follow those instructions to confirm it's your email address.</p>
-        <%= button_to "Re-send verification email", identity_email_verification_path, class: "simple_form__btn" %>
+        <h1 class="card-title"><%= t(:verify_email_title) %></h1>
+        <p class="py-4"><%= t(:sent_verification_email) %></p>
+        <%= button_to t(:resend_verification_email), identity_email_verification_path, class: "simple_form__btn" %>
       <% end %>
     </header>
     <% if Current.user.verified? %>
       <div class="h-8"></div>
-      <%= form_with(url: identity_email_path, method: :patch) do |form| %>
-        <% if @user.errors.any? %>
-          <div style="color: red">
-            <h2><%= pluralize(@user.errors.count, "error") %> prohibited this user from being saved:</h2>
-            <ul>
-              <% @user.errors.each do |error| %>
-                <li><%= error.full_message %></li>
-              <% end %>
-            </ul>
-          </div>
-        <% end %>
-        <%= form.email_field :email,
+      <%= simple_form_for(@user, url: identity_email_path, method: :patch) do |form| %>
+        <%= form.input :email,
           autofocus: true,
           autocomplete: "email",
-          placeholder: t('.email'),
+          placeholder: t(:new_email),
           class: "simple_form__input w-full",
-          required: true
+          required: true,
+          label: false,
+          input_html: {
+            class: "w-full"
+          }
         %>
         <div class="h-4"></div>
-        <%= form.password_field :password_challenge,
+        <%= form.input :password_challenge,
           required: true,
-          placeholder: 'Current password', 
+          placeholder: t(:current_password), 
           autocomplete: "current-password", 
-          class: "simple_form__input w-full" %>
-        <div class="h-4"></div>
-        <%= form.submit "Change email", class:"simple_form__btn w-full" %>
+          class: "simple_form__input w-full",
+          label: false,
+          input_html: {
+            class: "w-full"
+          } %>
+        <div class="h-10"></div>
+        <%= form.submit t(:change_email), class:"simple_form__btn w-full" %>
       <% end %>
     <% end %>
   </div>

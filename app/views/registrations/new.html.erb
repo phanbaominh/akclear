@@ -1,9 +1,8 @@
 <main class="card shadow-xl bg-base-200 sm:w-1/2 m-auto">
   <div class="card-body">
     <header>
-      <h1 class="card-title">Sign up</h1>
+      <h1 class="card-title"><%= t(:sign_up) %></h1>
     </header>
-
     <div class="h-4"></div>
     <%= simple_form_for(@user, url: sign_up_path) do |form| %>
       <div>
@@ -11,7 +10,7 @@
           autofocus: true,
           autocomplete: "email",
           label: false,
-          placeholder: "Email",
+          placeholder: t(:email),
           required: true,
           input_html: {
             class: "w-full"
@@ -24,7 +23,7 @@
           required: true,
           autocomplete: "new-password",
           label: false,
-          placeholder: "Password",
+          placeholder: t(:password),
           input_html: {
             class: "w-full"
           }
@@ -36,19 +35,18 @@
           required: true,
           autocomplete: "new-password",
           label: false,
-          placeholder: "Password Confirmation",
+          placeholder: t(:password_confirmation),
           input_html: {
             class: "w-full"
           }
         %>
       </div>
       <div class="h-10"></div>
-      <%= form.submit "Sign up", class: "simple_form__btn w-full" %>
+      <%= form.submit t(:sign_up), class: "simple_form__btn w-full" %>
     <% end %>
-
     <div class="text-center">
-      <span>Already had an account?</span>
-      <%= link_to "Sign in", sign_in_path, class: "text-blue-500" %>
+      <span><%= t(:has_account) %></span>
+      <%= link_to t(:sign_in), sign_in_path, class: "text-blue-500" %>
     </div>
   </div>
 </main>
