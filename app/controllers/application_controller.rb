@@ -37,9 +37,9 @@ class ApplicationController < ActionController::Base
   end
 
   def authenticate
-    return unless (session = Session.find_by_id(cookies.signed[:session_token]))
+    return unless (session_record = Session.find_by_id(cookies.signed[:session_token]))
 
-    Current.session = session
+    Current.session = session_record
   end
 
   def authenticate!
