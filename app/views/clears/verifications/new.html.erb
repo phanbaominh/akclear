@@ -3,7 +3,9 @@
   <div class="card-body space-y-4">
     <!--flex flex-col lg:flex-row lg:space-x-8 space-y-8 lg:space-y-0-->
     <div class="grid grid-col-1 grid-rows-2 lg:flex gap-2">
-      <iframe src="<%= @clear.embed_link %>" class="w-full h-full lg:w-auto lg:h-auto lg:flex-grow" ></iframe>
+      <div class="iframe-responsive-container !w-auto flex-grow">
+        <iframe src="<%= @clear.embed_link %>" class="iframe-responsive" ></iframe>
+      </div>
       <section class="card bg-base-200">
         <div class="card-body">
           <h3 class="card-title"><%= t(:squad) %></h3>
