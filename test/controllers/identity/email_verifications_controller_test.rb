@@ -7,7 +7,7 @@ class Identity::EmailVerificationsControllerTest < ActionDispatch::IntegrationTe
   end
 
   test "should send a verification email" do
-    assert_enqueued_email_with UserMailer, :email_verification, args: { user: @user } do
+    assert_enqueued_email_with UserMailer, :email_verification, params: { user: @user } do
       post identity_email_verification_url
     end
 
@@ -15,16 +15,18 @@ class Identity::EmailVerificationsControllerTest < ActionDispatch::IntegrationTe
   end
 
   test "should verify email" do
-    sid = @user.email_verification_tokens.create.signed_id(expires_in: 2.days)
+    sid = @user.generate_token_for(:email_verification)
 
-    get edit_identity_email_verification_url(sid: sid, email: @user.email)
+    get identity_email_verification_url(sid: sid, email: @user.email)
     assert_redirected_to root_url
   end
 
   test "should not verify email with expired token" do
-    sid_exp = @user.email_verification_tokens.create.signed_id(expires_in: 0.minutes)
+    sid = @user.generate_token_for(:email_verification)
 
-    get edit_identity_email_verification_url(sid: sid_exp, email: @user.email)
+    travel 3.days
+
+    get identity_email_verification_url(sid: sid, email: @user.email)
 
     assert_redirected_to edit_identity_email_url
     assert_equal "That email verification link is invalid", flash[:alert]

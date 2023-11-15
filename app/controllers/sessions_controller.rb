@@ -7,14 +7,10 @@ class SessionsController < ApplicationController
     @sessions = Current.user.sessions.order(created_at: :desc)
   end
 
-  def new
-    @user = User.new
-  end
+  def new; end
 
   def create
-    user = User.find_by(email: params[:email])
-
-    if user && user.authenticate(params[:password])
+    if user = User.authenticate_by(email: params[:email], password: params[:password])
       @session = user.sessions.create!
       cookies.signed.permanent[:session_token] = { value: @session.id, httponly: true }
 

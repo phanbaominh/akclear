@@ -3,26 +3,26 @@
     <header>
       <h1 class="card-title">Change your password</h1>
     </header>
-
     <div class="h-4"></div>
     <%= form_with(url: password_path, method: :patch) do |form| %>
+      <% if @user.errors.any? %>
+        <div style="color: red">
+          <h2><%= pluralize(@user.errors.count, "error") %> prohibited this user from being saved:</h2>
+          <ul>
+            <% @user.errors.each do |error| %>
+              <li><%= error.full_message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
       <div>
-        <%= form.email_field :email,
-                         autofocus: true,
-                         autocomplete: "email",
-                         placeholder: :email,
-                         class: "simple_form__input w-full",
-                         required: true %>
+        <%= form.password_field :password_challenge,
+          required: true,
+          autofocus: true,
+          placeholder: :current_password, 
+          autocomplete: "current-password", 
+          class: "simple_form__input w-full" %>
       </div>
-      <div class="h-8"></div>
-      <div>
-        <%= form.password_field :current_password,
-                            required: true,
-                            placeholder: :current_password,
-                            autocomplete: "current-password",
-                            class: "simple_form__input w-full" %>
-      </div>
-
       <div class="h-8"></div>
       <div>
         <%= form.password_field :password,
