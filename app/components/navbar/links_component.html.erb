@@ -2,6 +2,9 @@
   <li><%= link_to t("clears.title"), clears_path %></li>
   <li><%= link_to t("channels.list"), channels_path %></li>
   <li><%= link_to t("guide"), "#" %></li>
+  <% if can? :create, Verification %>
+    <li><%= link_to t(:verify), new_clear_verification_path(latest_unverified_clear) %></li>
+  <% end %>
   <% if can?(:read, :admin)  %>
     <li><%= link_to t('admin.title'), admin_path  %></li>
   <% end %>

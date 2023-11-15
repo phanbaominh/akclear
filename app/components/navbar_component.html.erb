@@ -29,17 +29,13 @@
       <nav><%= render Navbar::LinksComponent.new(class: "menu menu-horizontal px-1") %></nav>
     </div>
     <div class="navbar-end">
-      <% if can? :create, Verification %>
-        <%= link_to t(:verify), new_clear_verification_path(latest_unverified_clear), class: 'btn btn-primary mr-2 btn-sm' %>
-      <% end %>
-      <% if authenticated? %>
-        <%= link_to new_clear_path, class: 'mr-2' do %>
-          <%= render Primer::Button::IconComponent.new(
-            icon: "plus",
-            sr_description: t("new_clear"),
-            class: "shadow"
-          ) %>
+
+        <%= link_to new_clear_path, class: 'mr-2 flex items-center btn btn-primary btn-sm shadow-xl' do %>
+              <%= heroicon 'plus', options: { class: '!w-4 !h-4' } %>
+          <%= t(:clear) %>
         <% end %>
+      <% if authenticated? %>
+
         <ul class="menu menu-horizontal px-1 hidden lg:flex">
           <li tabindex="0">
             <details>
@@ -53,7 +49,7 @@
           </li>
         </ul>
       <% else %>
-        <%= link_to t(:sign_in), sign_in_path, class: "btn btn-primary mr-2 btn-sm" %>
+        <%= link_to t(:sign_in), sign_in_path, class: "btn btn-neutral mr-2 btn-sm" %>
       <% end %>
       <%= render Navbar::LanguageDropdownComponent.new %>
     </div>
