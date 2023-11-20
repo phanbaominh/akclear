@@ -41,6 +41,7 @@ Rails.application.configure do
 
   config.action_mailer.perform_caching = false
 
+  # config.action_mailer.delivery_method = :smtp
   config.action_mailer.delivery_method = :letter_opener
   config.action_mailer.perform_deliveries = true
 
@@ -78,5 +79,13 @@ Rails.application.configure do
   config.action_controller.raise_on_missing_callback_actions = true
 
   config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+  # ActionMailer::Base.smtp_settings = {
+  #   address: 'email-smtp.ap-southeast-2.amazonaws.com', # use the endpoint from your AWS console
+  #   port: '587',
+  #   authentication: :plain,
+  #   user_name: '',
+  #   enable_starttls: true,
+  #   password: ''
+  # }
 end
 # rubocop:enable Metrics/BlockLength
