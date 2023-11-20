@@ -12,6 +12,7 @@ class UsedOperator < ApplicationRecord
   after_update -> { verification&.destroy }
 
   attr_accessor :squad
+  attr_reader :info
 
   # TODO: add default values for skill/module
 
@@ -29,5 +30,12 @@ class UsedOperator < ApplicationRecord
 
   def max_skill
     operator.max_skill(elite:)
+  end
+
+  def info=(value)
+    UsedOperatorsSession::PERSISTED_OPERATORS_ATTRIBUTES.each_with_index do |attr, idx|
+      send("#{attr}=", value[idx])
+    end
+    @info = value
   end
 end

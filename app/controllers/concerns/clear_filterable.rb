@@ -25,7 +25,12 @@ module ClearFilterable
 
     return unless session['clear_params']['used_operators_attributes']
 
-    session['clear_params']['used_operators_attributes'] = session['clear_params']['used_operators_attributes'].values
+    @used_operators_session = UsedOperatorsSession.new([])
+    session['clear_params']['used_operators_attributes'].each_value do |used_operator_params|
+      @used_operators_session.add(used_operator_params)
+    end
+
+    session['clear_params']['used_operators_attributes'] = @used_operators_session.data
   end
 
   def clear_spec_session_key

@@ -89,7 +89,7 @@ class Clears::UsedOperatorsController < ApplicationController
   private
 
   def squad
-    @squad ||= Squad.new(used_operators_attributes: used_operators_session.to_h)
+    @squad ||= Squad.new(used_operators_attributes: used_operators_session.data)
   end
   alias load_squad squad
 
