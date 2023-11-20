@@ -62,6 +62,7 @@ class ExtractClearDataFromVideoJob < ApplicationRecord
       end
     super video.to_url
 
+    # this is for making sure it is only set when creating the job as querying stage_id from video costs a api call
     self.stage_id = video.stage_id unless stage_id
   end
 

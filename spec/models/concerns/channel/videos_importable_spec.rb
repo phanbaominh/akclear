@@ -24,7 +24,6 @@ describe Channel::VideosImportable do
     let(:playlist) { instance_double(Yt::Playlist) }
     let(:valid_playlist_item) { instance_double(Yt::PlaylistItem, video_id: 'ygEmeAtWYvA') }
     let(:invalid_playlist_item) { instance_double(Yt::PlaylistItem, video_id: 'ygEmeAtWYvA&invalid=param') }
-    let(:unselected_playlist_item) { instance_double(Yt::PlaylistItem) }
     let(:video) { instance_double(Video, 'metadata=': nil, stage_id: 'abc', to_url: 'https://youtube.com/watch?v=ygEmeAtWYvA', valid?: true) }
     let(:video_data) { instance_double(Yt::PlaylistItem) }
     let(:spec) do
@@ -37,11 +36,9 @@ describe Channel::VideosImportable do
       allow(ExtractClearDataFromVideoJob).to receive(:new).and_return(new_clear_job)
       allow(spec).to receive(:satisfy?).with(valid_playlist_item).and_return(true)
       allow(spec).to receive(:satisfy?).with(invalid_playlist_item).and_return(false)
-      allow(spec).to receive(:satisfy?).with(unselected_playlist_item).and_return(true)
       allow(spec).to receive(:stop?).and_return(false, false, true)
       allow(Video).to receive(:from_id).with('ygEmeAtWYvA').and_return(video)
-      allow(playlist).to receive(:playlist_items).and_return([valid_playlist_item,
-                                                              invalid_playlist_item, unselected_playlist_item])
+      allow(playlist).to receive(:playlist_items).and_return([valid_playlist_item, invalid_playlist_item])
     end
 
     it 'creates extract clear data job only from valid videos' do

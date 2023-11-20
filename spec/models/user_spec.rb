@@ -14,8 +14,8 @@ describe User do
     context 'when user is guest' do
       it { is_expected.not_to be_able_to(:create, :like) }
       it { is_expected.not_to be_able_to(:destroy, :like) }
-      it { is_expected.not_to be_able_to(:create, :verification) }
-      it { is_expected.not_to be_able_to(:destroy, :verification) }
+      it { is_expected.not_to be_able_to(:create, Verification.new) }
+      it { is_expected.not_to be_able_to(:destroy, Verification.new) }
     end
 
     context 'when user is logged in' do
@@ -23,8 +23,8 @@ describe User do
 
       it { is_expected.to be_able_to(:create, :like) }
       it { is_expected.to be_able_to(:destroy, :like) }
-      it { is_expected.not_to be_able_to(:create, :verification) }
-      it { is_expected.not_to be_able_to(:destroy, :verification) }
+      it { is_expected.not_to be_able_to(:create, Verification.new) }
+      it { is_expected.not_to be_able_to(:destroy, Verification.new) }
     end
 
     context 'when user is verifier' do
@@ -32,8 +32,8 @@ describe User do
 
       it { is_expected.to be_able_to(:create, :like) }
       it { is_expected.to be_able_to(:destroy, :like) }
-      it { is_expected.to be_able_to(:create, :verification) }
-      it { is_expected.to be_able_to(:destroy, :verification) }
+      it { is_expected.to be_able_to(:create, Verification.new) }
+      it { is_expected.to be_able_to(:destroy, Verification.new) }
     end
 
     context 'when user is admin' do
@@ -41,8 +41,8 @@ describe User do
 
       it { is_expected.to be_able_to(:create, :like) }
       it { is_expected.to be_able_to(:destroy, :like) }
-      it { is_expected.to be_able_to(:create, :verification) }
-      it { is_expected.to be_able_to(:destroy, :verification) }
+      it { is_expected.to be_able_to(:create, Verification.new) }
+      it { is_expected.to be_able_to(:destroy, Verification.new) }
     end
   end
 end

@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe ClearImage do
+describe ClearImage, :slow do
   let(:clear_image) { described_class.new(image_path) }
 
   # problem: ignore frequents words? case in point La Pluma turned into La Plum

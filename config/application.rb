@@ -22,6 +22,10 @@ module Akclear
     config.log_level = ENV['RAILS_LOG_LEVEL'] || :info
     config.active_job.queue_adapter = :good_job
 
+    # need to turn on because gem yt `has_one attributes`/`has_many attributes`
+    # calls require "yt/collections/#{attributes}" which cannot be loaded due to already being autoloaded?
+    Rails.application.config.add_autoload_paths_to_load_path = true
+
     # Configuration for the application, engines, and railties goes here.
     #
     # These settings can be overridden in specific environments using the files

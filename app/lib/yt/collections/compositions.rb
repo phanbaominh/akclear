@@ -12,6 +12,7 @@ module Yt
         endpoint = @parent.kind.pluralize.camelize :lower
         super.tap do |params|
           params[:path] = "/youtube/v3/#{endpoint}"
+          # use compare_by_identity to keep the duplicate 'part' keys in params
           params[:params] = {}.compare_by_identity.tap do |query_params|
             query_params['part'] = 'snippet'
             query_params['id'] = @parent.id
