@@ -80,6 +80,7 @@ class UsedOperatorsSession
 
   def get_info(params)
     info = { 'info' => Info.new(params).raw }
+    # need to keep id separate to work with accept_nested_attributes_for
     info['id'] = params[:id] if params[:id]
     info
   end

@@ -12,7 +12,7 @@ class SessionsController < ApplicationController
   def create
     if user = User.authenticate_by(email: params[:email], password: params[:password])
       @session = user.sessions.create!
-      cookies.signed.permanent[:session_token] = { value: @session.id, httponly: true }
+      cookies.signed.permanent[:session_token] = { value: @session.id, httponly: true } # TODO: maybe expire it sooner
 
       redirect_to root_path, notice: t('.success')
     else
@@ -22,7 +22,7 @@ class SessionsController < ApplicationController
 
   def destroy
     @session.destroy
-    redirect_to(sessions_path, notice: t('.success'))
+    redirect_to(sign_in_path)
   end
 
   private
