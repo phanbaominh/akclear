@@ -1,4 +1,4 @@
-<%= content_tag :div, class: "alert #{flash_key_to_alert_class(name)} w-full flex rounded-none", data: { controller: 'dismissable'} do %>
+<%= content_tag :div, class: "alert #{flash_key_to_alert_class(name)} w-full md:w-96", data: { controller: 'dismissable'} do %>
   <span class="text-center w-full whitespace-normal"><%= msg %></span>
   <%= content_tag :div,
             class: "cursor-pointer ml-auto hover:text-error ",
