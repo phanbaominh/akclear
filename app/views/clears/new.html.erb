@@ -19,7 +19,7 @@
   <% end %>
   <%= component.with_footer do %>
     <button id="clears__form_submit_btn" form="clears__form" class="btn btn-primary js-only" <%= "disabled" if @clear.declined_used_operators.present? %> >
-      <%= @clear.persisted? ? t(:update_clear) : t(:create_clear) %>
+      <%= @clear.persisted? ? t('.update') : t('.create') %>
     </button>
     <noscript>
       <%# In no js case, will submit a GET request with authenticity_token param in the URL => 

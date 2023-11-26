@@ -83,6 +83,9 @@ en:
         failed: "Failed to verify clear."
         finished: "All done! No more clears to verify!"
         success: "Clear was successfully verified!"
+    new:
+      create: "Create clear"
+      update: "Update clear"
   home:
     index:
       latest_events: "Latest events"

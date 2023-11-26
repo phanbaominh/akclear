@@ -4,6 +4,7 @@
 >
   <div class="p-3" >
     <%= image_tag avatar,
+    alt: name,
     class: "w-12 rounded-full operators__card #{used_operator.verification_color('outline', require_prefix: true) if show_verification_status}", 
     data: { operator_id: used_operator.operator_id } %>
   </div>
