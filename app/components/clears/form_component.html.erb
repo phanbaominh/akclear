@@ -37,7 +37,7 @@
                     )
                   }
                 } %>
-        <%= f.input :name %>
+        <%= f.input :name, input_html: { class: 'w-full' } %>
       <% end %>
       <div class="js-only">
         <%= render Clears::StageSelectComponent.new(form: f, simple: write_form, multiple: !edit_form) %>

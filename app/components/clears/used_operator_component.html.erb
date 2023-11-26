@@ -21,17 +21,13 @@
       </div>
       <% if editable %>
         <div class=" flex flex-col justify-between flex-grow items-end">
-          <%= button_to clears_used_operator_path, method: :delete, class: 'btn btn-sm hover:bg-error w-8' do %>
-            <%= hidden_field_tag "used_operator[operator_id]", used_operator.operator_id %>
-            <%= hidden_field_tag "used_operator[id]", used_operator.id %>
-            <i class="fa-solid fa-close text-white"></i>
-          <% end %>
-          <%= link_to edit_clears_used_operator_path(used_operator: used_operator_params), class: 'btn btn-sm btn-secondary w-8',
+          <%= render Clears::UsedOperatorDeleteBtnComponent.new(used_operator: used_operator) %>
+          <%= link_to edit_clears_used_operator_path(used_operator: used_operator_params), class: 'btn btn-sm btn-circle btn-secondary',
             data: { 
               turbo_stream: 'true', 
               **stimulus(:dispatch, values: { event: 'clickEditOperator', payload: { operatorId: used_operator.operator_id } }, actions: { click: 'dp' }) } do %>
             <%= hidden_field_tag :operator_id, used_operator.operator_id %>
-            <i class="fa-solid fa-pen-to-square text-white"></i>
+            <%= heroicon 'pencil-square' %>
           <% end %>
         </div>
       <% end %>
