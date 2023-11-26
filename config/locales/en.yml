@@ -38,6 +38,10 @@ en:
             used_operators:
               duplicated: "is already in squad"
               too_long: "maximum of 13 operators"
+  simple_form:
+    labels:
+      clear:
+        name: "Title"
   admin:
     title: "Admin"
     game_data_imports:
@@ -123,6 +127,7 @@ en:
     update:
       success: "Your password has been changed"
 
+  delete_operator: 'Delete operator'
   current_password: "Current password"
   email: "Email"
   new_email: "New email"

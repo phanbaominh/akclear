@@ -4,7 +4,8 @@
     <%= render Clears::UsedOperatorFormComponent.new(
       used_operator: @used_operator,
       submit_text: t(:update_operator),
-      method: :patch
+      method: :patch,
+      prefix_namespace: "basic"
     ) %>
   </div>
 <% end %>

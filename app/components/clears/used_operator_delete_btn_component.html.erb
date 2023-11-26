@@ -1,4 +1,4 @@
-<%= button_to clears_used_operator_path, method: :delete, class: 'btn btn-sm btn-circle hover:bg-error' do %>
+<%= button_to clears_used_operator_path, method: :delete, class: 'btn btn-sm btn-circle hover:bg-error', aria: { label: t(:delete_operator)} do %>
   <%= hidden_field_tag "used_operator[operator_id]", used_operator.operator_id %>
   <%= hidden_field_tag "used_operator[id]", used_operator.id %>
   <%= heroicon 'trash' %>

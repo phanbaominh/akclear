@@ -54,6 +54,16 @@ class UsedOperatorPresenter < ApplicationPresenter
     require_prefix ? "#{prefix} #{color}" : color
   end
 
+  def skill_level_option
+    return unless (skill_level = object.skill_level)
+
+    if skill_level < 8
+      I18n.t('used_operator_form.skill_level', skill_level:)
+    else
+      I18n.t('used_operator_form.skill_mastery', skill_mastery: skill_level - 7)
+    end
+  end
+
   private
 
   def need_to_be_verified?
