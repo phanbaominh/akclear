@@ -7,7 +7,7 @@ class Clear < ApplicationRecord
   include Youtubeable
   belongs_to :submitter, class_name: 'User'
   belongs_to :stage
-  belongs_to :channel
+  belongs_to :channel, optional: true
   has_one :verification, dependent: :destroy
 
   scope :unverified, -> { where.missing(:verification) }
@@ -17,10 +17,10 @@ class Clear < ApplicationRecord
 
   validates :link, presence: true
 
-  before_validation :assign_channel
   before_save :normalize_link
   after_update -> { verification&.destroy }
   after_save :mark_job_as_clear_created
+  after_commit :assign_channel
 
   # considering separate spec logic from model
   attr_accessor :job_id, :channel_id, :self_only, :verification_status
@@ -85,15 +85,10 @@ class Clear < ApplicationRecord
   end
 
   def assign_channel
-    return if new_record? && channel.present?
-    return unless will_save_change_to_link?
+    return if previously_new_record? && channel.present?
+    return unless saved_change_to_link?
 
-    self.channel = Channel.from(link)
-
-    return unless channel.present? && (channel.new_record? || will_save_change_to_channel_id?)
-
-    channel.save! if channel.new_record?
-    self.channel_id = channel.id
+    Clears::AssignChannelJob.perform_later(id, link)
   end
 
   def duplicate_for_stage_ids(stage_ids)

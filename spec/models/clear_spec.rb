@@ -4,7 +4,7 @@ RSpec.describe Clear do
   describe 'associations' do
     it { is_expected.to belong_to(:submitter) }
     it { is_expected.to belong_to(:stage) }
-    it { is_expected.to belong_to(:channel) }
+    it { is_expected.to belong_to(:channel).optional }
     it { is_expected.to have_many(:used_operators) }
   end
 
@@ -59,45 +59,37 @@ RSpec.describe Clear do
   end
 
   describe '#assign_channel' do
-    context 'when the link has changed' do
-      let(:link) { 'https://youtube.com/watch?v=123' }
+    let_it_be(:clear, reload: true) { create(:clear) }
+    let(:link) { 'https://youtube.com/watch?v=123' }
 
-      before { allow(Channel).to receive(:from).with(link).and_return(channel) }
+    before { allow(Clears::AssignChannelJob).to receive(:perform_later) }
 
-      context 'when new channel' do
-        let_it_be(:channel) { build(:channel) }
+    context 'when clear is new and already has a channel' do
+      it 'does not assign the channel' do
+        clear = build(:clear)
+        clear.channel = build(:channel)
 
-        it 'assigns the channel' do
-          clear = build(:clear, link:, channel: nil)
+        clear.update!(link:, updated_at: Time.current)
 
-          clear.save!
-
-          expect(channel).to be_persisted
-          expect(clear.channel).to eq(channel)
-        end
+        expect(Clears::AssignChannelJob).not_to have_received(:perform_later)
       end
+    end
 
-      context 'when existing channel' do
-        let_it_be(:channel) { create(:channel) }
+    context 'when the link has changed' do
+      it 'runs assigns the channel job' do
+        clear.link = link
 
-        it 'assigns the channel' do
-          clear = build(:clear, link:, channel: nil)
+        clear.save!
 
-          clear.save!
-
-          expect(clear.channel).to eq(channel)
-        end
+        expect(Clears::AssignChannelJob).to have_received(:perform_later).with(clear.id, link)
       end
     end
 
     context 'when the link has not changed' do
       it 'does not assign the channel' do
-        allow(Channel).to receive(:from)
-        clear = create(:clear)
-
         clear.update!(updated_at: Time.current)
 
-        expect(Channel).not_to have_received(:from)
+        expect(Clears::AssignChannelJob).not_to have_received(:perform_later)
       end
     end
   end
