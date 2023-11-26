@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe ExtractClearDataFromVideoJobRunner, type: :job do
+RSpec.describe ExtractClearDataFromVideoJobRunner do
   let_it_be(:job, reload: true) do
     create(
       :extract_clear_data_from_video_job,

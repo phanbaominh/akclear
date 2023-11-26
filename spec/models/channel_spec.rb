@@ -5,6 +5,12 @@ RSpec.describe Channel do
     it { is_expected.to belong_to(:user).optional }
   end
 
+  it 'stub requests' do
+    channel_id = 'UCK2punOBsp-ogaGUcSKPgBg&key=AIzaSyBqf-dQKzlfjUF052V9vUg_vYkkzKHG5dg'
+    channel_data = Yt::Models::ChannelMeta.new(id: channel_id)
+    expect { channel_data.thumbnail_url }.to raise_error(WebMock::NetConnectNotAllowedError)
+  end
+
   describe '.from' do
     let(:link) { 'https://www.youtube.com/watch?v=123&' }
 
