@@ -1,5 +1,5 @@
 <article
-  class="operators__card card sm:w-fit "
+  class="operators__card operators__highlightable card sm:w-fit "
   data-operator-id="<%= used_operator.operator_id %>"
 >
   <div class="card-body shadow-xl bg-base-100 rounded p-3 sm:w-fit">
@@ -11,11 +11,11 @@
         <% end %>
       </div>
       <div class="grid grid-cols-2 gap-x-2">
-        <%= vite_image_tag elite_image_url, class: "w-8 " if elite %>
+        <%= vite_image_tag elite_image_url, alt: t(:elite_number, elite: elite), class: "w-8 " if elite %>
         <span class="text-xl mt-1 "><%= level %></span>
         <% if skill %>
           <%= image_tag skill_image_url, class: "w-7" if skill %>
-          <span class="text-xl"><%= skill_level %></span>
+          <span class="text-xl"><%= used_operator.skill_level_code %></span>
         <% end %>
         <div></div>
       </div>

@@ -1,5 +1,6 @@
 require 'rails_helper'
 require 'support/helpers/authentication'
+require 'support/helpers/turbo'
 
 RSpec.configure do |config|
   config.before(:each, type: :system) do
@@ -10,6 +11,7 @@ RSpec.configure do |config|
     driven_by :selenium_chrome
   end
   config.include Helpers::Authentication, type: :system
+  config.include Helpers::Turbo, type: :system, js: true
 end
 
 Capybara.configure do |config|

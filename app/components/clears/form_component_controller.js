@@ -16,12 +16,14 @@ export default class extends Controller {
   }
 
   highlight({ detail: { operatorId } }) {
-    this.element.querySelectorAll(".operators__card").forEach((card) => {
-      card.classList.remove("outline", "outline-primary");
-      if (card.dataset.operatorId == operatorId) {
-        card.classList.add("outline", "outline-primary");
-      }
-    });
+    this.element
+      .querySelectorAll(".operators__highlightable")
+      .forEach((card) => {
+        card.classList.remove("outline", "outline-primary");
+        if (card.dataset.operatorId == operatorId) {
+          card.classList.add("outline", "outline-primary");
+        }
+      });
   }
   embedLink(event, target = null) {
     target = target || this.videoFrameTarget;

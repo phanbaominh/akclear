@@ -54,6 +54,16 @@ class UsedOperatorPresenter < ApplicationPresenter
     require_prefix ? "#{prefix} #{color}" : color
   end
 
+  def skill_level_code
+    return unless (skill_level = object.skill_level)
+
+    if skill_level < 8
+      "L#{skill_level}"
+    else
+      "M#{skill_level - 7}"
+    end
+  end
+
   def skill_level_option
     return unless (skill_level = object.skill_level)
 

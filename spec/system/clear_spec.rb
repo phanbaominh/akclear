@@ -26,6 +26,10 @@ describe 'Clears' do
         end
         find("label[for='basic_#{id}_used_operator_elite_#{elite}']").click if elite
 
+        return unless elite
+
+        wait_for_turbo
+
         fill_in('Level', with: level) if level
         find("label[for='basic_#{id}_used_operator_skill_#{skill}']").click if skill
 
@@ -43,6 +47,8 @@ describe 'Clears' do
 
       # TODO: find better way, for some reason, waiting for the image which is part of same stream doesn't work
       wait_for_operator_update_completed(used_operator)
+      expect_page_have_operator_details(used_operator)
+      used_operator
     end
 
     def operator_css(used_operator)
@@ -78,6 +84,13 @@ describe 'Clears' do
       expect(page).not_to have_css(operator_css(used_operator))
     end
 
+    def expect_page_have_operator_details(used_operator)
+      operator_card = find(operator_css(used_operator)).ancestor('article.operators__card')
+      expect(operator_card).to have_content(used_operator.level) if used_operator.level
+      expect(operator_card).to have_content(used_operator.skill_level_code) if used_operator.skill_level
+      expect(operator_card).to have_css("img[alt='Elite #{used_operator.elite}']") if used_operator.elite
+    end
+
     def edit_an_operator(operator)
       used_operator = UsedOperator.new(operator)
       expect_page_have_operator(used_operator)
@@ -89,6 +102,8 @@ describe 'Clears' do
         click_button('Update operator')
       end
       wait_for_operator_update_completed(used_operator)
+      expect_page_have_operator_details(used_operator)
+      used_operator
     end
 
     def fill_in_clear_detail
@@ -117,13 +132,13 @@ describe 'Clears' do
 
       select_stage('0-1')
 
-      add_an_operator(operator: new_op, elite: 2, level: 90, skill: 1, skill_level: 7)
+      new_used_operator = add_an_operator(operator: new_op, elite: 2, level: 90, skill: 1, skill_level: 7)
 
       add_an_operator(operator: deleted_op)
       delete_an_operator(operator: deleted_op)
 
       add_an_operator(operator: edited_op, elite: 1, level: 70, skill: 2, skill_level: 7)
-      edit_an_operator(operator: edited_op, elite: 2, level: 90, skill: 3, skill_level: 10)
+      edited_used_operator = edit_an_operator(operator: edited_op, elite: 2, level: 90, skill: 3, skill_level: 10)
 
       click_button 'Create clear'
 
@@ -131,9 +146,9 @@ describe 'Clears' do
       expect(page).to have_current_path(clear_path(new_clear))
       expect(page).to have_content('0-1')
       expect(page).to have_css('iframe[src="https://youtube.com/embed/R9XnYuyQEVM"]')
-      expect_page_have_operator(new_op)
+      expect_page_have_operator_details(new_used_operator)
       expect_page_not_have_operator(deleted_op)
-      expect_page_have_operator(edited_op)
+      expect_page_have_operator_details(edited_used_operator)
 
       expect(Clears::AssignChannelJob)
         .to have_received(:perform_later)
