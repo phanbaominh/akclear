@@ -125,7 +125,9 @@ en:
   passwords:
     update:
       success: "Your password has been changed"
+
   create_clear: "Create clear"
+  edit_clear: "Edit clear"
   update_clear: "Update clear"
   elite_number: "Elite %{elite}"
   edit_operator: "Edit operator"

@@ -17,15 +17,25 @@ describe 'Clears' do
       within(operator_form_css(used_operator, edit:), &)
     end
 
+    def operator_name_option_css
+      'div.choices__item--selectable'
+    end
+
+    def show_operator_name_options
+      find('label', text: 'Operator', exact: true).click
+    end
+
+    def select_operator_name(name)
+      show_operator_name_options
+      find(operator_name_option_css, text: name, exact_text: true).click
+    end
+
     def fill_in_operator_details(used_operator, edit: false)
       name, elite, level, skill, skill_level_option, id =
         used_operator.values_at(:name, :elite, :level, :skill, :skill_level_option, :operator_id)
 
       within_operator_form(used_operator, edit:) do
-        unless edit
-          find('label', text: 'Operator', exact: true).click
-          find('div.choices__item--selectable', text: name, exact_text: true).click
-        end
+        select_operator_name(name) unless edit
         find("label[for='#{mode}_#{id}_used_operator_elite_#{elite}']").click if elite
 
         return unless elite
@@ -39,10 +49,18 @@ describe 'Clears' do
       end
     end
 
+    def add_operator_button_css
+      '.operators__new_operator_btn'
+    end
+
+    def click_add_operator_button
+      find(add_operator_button_css).click
+    end
+
     def add_an_operator(operator)
       used_operator = UsedOperator.new(operator)
 
-      find('.operators__new_operator_btn').click
+      click_add_operator_button
 
       fill_in_operator_details(used_operator)
       within_operator_form(used_operator) { click_button 'Add operator' }
@@ -139,6 +157,11 @@ describe 'Clears' do
       expect(page).to have_content('Submit new clear')
     end
 
+    def visit_edit_clear_page(clear)
+      sign_in(clear.submitter)
+      visit edit_clear_path(clear)
+    end
+
     shared_examples 'creating a new clear' do
       it 'creates a new clear' do
         new_op = create(:operator, name: 'Amiya', rarity: Operator::FIVE_STARS,
@@ -149,7 +172,6 @@ describe 'Clears' do
         create(:stage, code: '0-1')
 
         visit_new_clear_page
-
         fill_in_clear_detail
 
         select_stage('0-1')
@@ -192,6 +214,34 @@ describe 'Clears' do
       let(:mode) { :basic }
 
       include_examples 'creating a new clear'
+
+      it 'does not allow duplicated operator' do
+        op = create(:operator)
+
+        visit_new_clear_page
+
+        add_an_operator(operator: op)
+
+        click_add_operator_button
+
+        within_operator_form do
+          show_operator_name_options
+          expect(page).not_to have_css(operator_name_option_css, text: op.name, exact_text: true)
+        end
+      end
+
+      it 'does not allow more than 13 operators' do
+        clear = create(:clear, :declined, submitter: create(:user))
+        ops = create_list(:operator, 13)
+        ops.first(12).each do |op|
+          create(:used_operator, clear:, operator: op)
+        end
+
+        visit_edit_clear_page(clear)
+        add_an_operator(operator: ops.last)
+
+        expect(page).to have_css(add_operator_button_css + ':disabled')
+      end
     end
 
     context 'when in detailed mode' do

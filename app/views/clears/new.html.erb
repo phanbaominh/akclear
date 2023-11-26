@@ -9,7 +9,7 @@
     <% end %>
     <div>
       <h2 class="card-title">
-        <%= @clear.persisted? ? t(:updating_clear) : t(:new_clear) %>
+        <%= @clear.persisted? ? t(:edit_clear) : t(:new_clear) %>
         <% if @clear.persisted? %>
           <%= render Clears::VerificationDetailsComponent.new(clear: @clear) %>
         <% end %>

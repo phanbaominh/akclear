@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :operator do
-    name { 'Texas' }
+    name { |i| "Operator_#{i}" }
     rarity { Operator::FIVE_STARS }
   end
 end
