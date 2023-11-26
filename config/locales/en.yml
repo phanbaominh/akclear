@@ -87,6 +87,8 @@ en:
         failed: "Failed to verify clear."
         finished: "All done! No more clears to verify!"
         success: "Clear was successfully verified!"
+    create:
+      success: "Clear was successfully created!"
   home:
     index:
       latest_events: "Latest events"
@@ -126,6 +128,7 @@ en:
   create_clear: "Create clear"
   update_clear: "Update clear"
   elite_number: "Elite %{elite}"
+  edit_operator: "Edit operator"
   delete_operator: "Delete operator"
   current_password: "Current password"
   email: "Email"

@@ -8,8 +8,13 @@ RSpec.configure do |config|
   end
 
   config.before(:each, :js, type: :system) do
-    driven_by :selenium_chrome
+    driven_by :selenium_chrome_headless
   end
+
+  config.before(:each, :js, :mobile, type: :system) do
+    driven_by :selenium, using: :headless_chrome, screen_size: [375, 667]
+  end
+
   config.include Helpers::Authentication, type: :system
   config.include Helpers::Turbo, type: :system, js: true
 end

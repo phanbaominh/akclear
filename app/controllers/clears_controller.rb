@@ -44,7 +44,7 @@ class ClearsController < ApplicationController
     if @clear.save
       @clear.duplicate_for_stage_ids(@clear.stage_ids)
       delete_clear_spec_session
-      redirect_to @clear
+      redirect_to @clear, notice: t('.success')
     else
       render 'new', status: :unprocessable_entity
     end

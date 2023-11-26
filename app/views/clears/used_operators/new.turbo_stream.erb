@@ -2,6 +2,6 @@
   <%= render Clears::UsedOperatorFormComponent.new(used_operator: @used_operator, prefix_namespace: :basic) %>
 <% end %>
 <%= turbo_stream.update "detailed_operators__form_container" do %>
-  <%= render Clears::UsedOperatorFormComponent.new(used_operator: @used_operator) %>
+  <%= render Clears::UsedOperatorFormComponent.new(used_operator: @used_operator, prefix_namespace: :detailed) %>
 <% end %>
 <%= turbo_stream.remove_all ".operators__new_operator_btn" %>

@@ -1,5 +1,5 @@
 <article
-  class="operators__card operators__highlightable card sm:w-fit "
+  class="operators__card operators__highlightable card w-full sm:w-fit "
   data-operator-id="<%= used_operator.operator_id %>"
 >
   <div class="card-body shadow-xl bg-base-100 rounded p-3 sm:w-fit">
@@ -10,12 +10,12 @@
           <span class="absolute <%= used_operator.verification_color('badge', require_prefix: true) %>"><%= used_operator.verification_text %></span>
         <% end %>
       </div>
-      <div class="grid grid-cols-2 gap-x-2">
+      <div class="grid grid-cols-2 grid-rows-2 gap-x-2 text-base sm:text-xl">
         <%= vite_image_tag elite_image_url, alt: t(:elite_number, elite: elite), class: "w-8 " if elite %>
-        <span class="text-xl mt-1 "><%= level %></span>
+        <span class="mt-1 "><%= level %></span>
         <% if skill %>
           <%= image_tag skill_image_url, class: "w-7" if skill %>
-          <span class="text-xl"><%= used_operator.skill_level_code %></span>
+          <span class=""><%= used_operator.skill_level_code %></span>
         <% end %>
         <div></div>
       </div>
@@ -23,9 +23,11 @@
         <div class=" flex flex-col justify-between flex-grow items-end">
           <%= render Clears::UsedOperatorDeleteBtnComponent.new(used_operator: used_operator) %>
           <%= link_to edit_clears_used_operator_path(used_operator: used_operator_params), class: 'btn btn-sm btn-circle btn-secondary',
+            aria: { label: t(:edit_operator) },
             data: { 
               turbo_stream: 'true', 
-              **stimulus(:dispatch, values: { event: 'clickEditOperator', payload: { operatorId: used_operator.operator_id } }, actions: { click: 'dp' }) } do %>
+              **stimulus(:dispatch, values: { event: 'clickEditOperator', payload: { operatorId: used_operator.operator_id } }, actions: { click: 'dp' })
+            } do %>
             <%= hidden_field_tag :operator_id, used_operator.operator_id %>
             <%= heroicon 'pencil-square' %>
           <% end %>
