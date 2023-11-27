@@ -88,7 +88,11 @@ en:
         finished: "All done! No more clears to verify!"
         success: "Clear was successfully verified!"
     create:
-      success: "Clear was successfully created!"
+      success:
+        one: "Clear was successfully created!"
+        other: "%{count} clears were successfully created!"
+    new:
+      stage_ids_hint: "Each stage chosen will create a new clear."
     update:
       success: "Clear was successfully updated!"
   home:
@@ -127,7 +131,7 @@ en:
   passwords:
     update:
       success: "Your password has been changed"
-
+  select_max_items: "Cannot select more than %{count}"
   create_clear: "Create clear"
   edit_clear: "Edit clear"
   update_clear: "Update clear"

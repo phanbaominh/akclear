@@ -42,9 +42,9 @@ class ClearsController < ApplicationController
   def create
     @clear.submitter = Current.user
     if @clear.save
-      @clear.duplicate_for_stage_ids(@clear.stage_ids)
+      duplicated_clears = @clear.duplicate_for_stage_ids(@clear.stage_ids)
       delete_clear_spec_session
-      redirect_to @clear, notice: t('.success')
+      redirect_to @clear, notice: t('.success', count: duplicated_clears.count(&:persisted?) + 1)
     else
       render 'new', status: :unprocessable_entity
     end

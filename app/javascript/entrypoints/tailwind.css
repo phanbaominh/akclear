@@ -11,7 +11,11 @@
 }
 
 .simple_form__label {
-  @apply label w-fit;
+  @apply label w-fit pb-0 only:py-2;
+}
+
+.simple_form__hint {
+  @apply text-base-content-subdued px-1 text-sm pb-1;
 }
 
 .field_with_errors label {

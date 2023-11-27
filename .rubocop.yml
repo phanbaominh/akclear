@@ -38,6 +38,7 @@ Metrics/BlockLength:
   Exclude:
     - "spec/**/*"
     - "lib/tasks/**/*"
+    - "config/intializers/**/*"
 RSpec/NestedGroups:
   Enabled: false
 RSpec/ImplicitSubject:
