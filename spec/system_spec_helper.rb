@@ -8,11 +8,13 @@ RSpec.configure do |config|
   end
 
   config.before(:each, :js, type: :system) do
-    driven_by :selenium_chrome_headless
+    driven_by :selenium, using: :headless_chrome, screen_size: [1400, 1400]
   end
 
   config.before(:each, :js, :mobile, type: :system) do
-    driven_by :selenium, using: :headless_chrome, screen_size: [375, 667]
+    # name option is important, otherwise Capybara won't switch between two same driver types
+    # due to how rails system test register (actionpack) all drivers with driver type as name unless specified
+    driven_by :selenium, using: :headless_chrome, screen_size: [375, 667], options: { name: :selenium_mobile }
   end
 
   config.include Helpers::Authentication, type: :system
