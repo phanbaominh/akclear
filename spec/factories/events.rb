@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :event do
-    name { |n| "Event #{n}" }
+    sequence(:name) { |n| "Event #{n}" }
 
     trait :latest do
       latest { true }

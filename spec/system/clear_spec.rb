@@ -1,15 +1,19 @@
 require 'system_spec_helper'
 
 describe 'Clears' do
-  def select_stage(stage_code, edit: false, index: 1)
+  def open_stage_dropdown(edit: false)
     find('label', text: edit ? 'Stage' : 'Stage ids').click
+  end
+
+  def select_stage(stage_code, edit: false, index: 1)
+    open_stage_dropdown(edit:)
     if edit
       find_by_id("choices--clear_stage_id-item-choice-#{index}", text: stage_code).click
     else
       find_by_id("choices--clear_stage_ids-item-choice-#{index}", text: stage_code).click
     end
     # click away so that the dropdown closes and the add operator button is not covered
-    find('body').click
+    click_outside
   end
 
   def within_operator_form(used_operator = nil, edit: false, &)
@@ -64,7 +68,8 @@ describe 'Clears' do
     fill_in_operator_details(used_operator)
     within_operator_form(used_operator) { click_button 'Add operator' }
 
-    wait_for_operator_update_completed(used_operator)
+    wait_for_turbo
+    # wait_for_operator_update_completed(used_operator)
     expect_page_have_operator_details(used_operator)
     expect_page_not_have_form(used_operator)
     used_operator
@@ -94,6 +99,10 @@ describe 'Clears' do
     expect(page).not_to have_css(operator_form_css(used_operator))
   end
 
+  def expect_page_to_have_embeded_link
+    expect(page).to have_css("iframe[src='#{embeded_link}']")
+  end
+
   def select_an_operator(used_operator)
     if mode == :basic
       find(operator_css(used_operator)).ancestor('a').click
@@ -104,6 +113,7 @@ describe 'Clears' do
 
   def wait_for_operator_update_completed(used_operator)
     # TODO: find better way, for some reason, waiting for the image which is part of same stream doesn't work
+    # need to wait for all fields looks like, otherwise it will be inconsistent
     expect(page).to have_css("#fields_operator_#{used_operator.operator_id}", visible: :all)
   end
 
@@ -137,17 +147,18 @@ describe 'Clears' do
     within_operator_form(used_operator, edit: true) do
       click_button('Update operator')
     end
-    wait_for_operator_update_completed(used_operator)
+    wait_for_turbo
+    # wait_for_operator_update_completed(used_operator)
     expect_page_have_operator_details(used_operator)
     expect_page_not_have_form(used_operator)
     used_operator
   end
 
   def fill_in_clear_detail
-    fill_in 'Link', with: 'https://www.youtube.com/watch?v=R9XnYuyQEVM'
+    fill_in 'Link', with: example_link
     fill_in 'Title', with: 'Test Clear'
     # Fill in title first so to trigger onChange event for iframe to appear
-    expect(page).to have_css("iframe[src='https://www.youtube.com/embed/R9XnYuyQEVM']")
+    expect(page).to have_css("iframe[src='#{embeded_link}']")
   end
 
   def visit_new_clear_page
@@ -162,6 +173,8 @@ describe 'Clears' do
   end
 
   let(:mobile_mode) { false }
+  let(:example_link) { 'https://youtube.com/watch?v=R9XnYuyQEVM' }
+  let(:embeded_link) { 'https://youtube.com/embed/R9XnYuyQEVM' }
 
   def switch_mode
     nil
@@ -198,7 +211,7 @@ describe 'Clears' do
         new_clear = Clear.last
         expect(page).to have_content('0-1')
         expect(page).to have_current_path(clear_path(new_clear))
-        expect(page).to have_css('iframe[src="https://youtube.com/embed/R9XnYuyQEVM"]')
+        expect(page).to have_css("iframe[src='#{embeded_link}']")
 
         expect_page_have_operator_details(new_used_operator)
         expect_page_not_have_operator(deleted_op)
@@ -210,57 +223,103 @@ describe 'Clears' do
       end
     end
 
-    context 'when in basic mode' do
-      let(:mode) { :basic }
+    let(:mode) { :basic }
 
-      include_examples 'creating a new clear'
+    it 'does not allow duplicated operator' do
+      op = create(:operator)
 
-      it 'does not allow duplicated operator' do
+      visit_new_clear_page
+
+      add_an_operator(operator: op)
+
+      click_add_operator_button
+
+      within_operator_form do
+        show_operator_name_options
+        expect(page).not_to have_css(operator_name_option_css, text: op.name, exact_text: true)
+      end
+    end
+
+    it 'does not allow more than 13 operators' do
+      clear = create(:clear, :declined, submitter: create(:user))
+      ops = create_list(:operator, 13)
+      ops.first(12).each do |op|
+        create(:used_operator, clear:, operator: op)
+      end
+
+      visit_edit_clear_page(clear)
+      add_an_operator(operator: ops.last)
+
+      expect(page).to have_css(add_operator_button_css + ':disabled')
+    end
+
+    describe 'multiple stages' do
+      def select_multiple_stages(stages)
+        stages.each_with_index do |stage, index|
+          select_stage(stage.code, index: index + 1)
+        end
+      end
+
+      it 'does not allows more than 5 stages' do
+        stages = create_list(:stage, 6)
+
+        visit_new_clear_page
+        select_multiple_stages(stages.first(5))
+        open_stage_dropdown
+        expect(page).to have_content('Cannot select more than 5')
+      end
+
+      it 'creates a clear for each stage' do
+        stages = [create(:stage, code: '1-ori_clear_stage'), create(:stage, code: '2-dup_clear_stage')]
         op = create(:operator)
 
         visit_new_clear_page
 
-        add_an_operator(operator: op)
+        fill_in 'Link', with: example_link
+        click_outside
 
-        click_add_operator_button
+        expect(page).to have_content('Each stage chosen will create a new clear.')
+        select_multiple_stages(stages)
 
-        within_operator_form do
-          show_operator_name_options
-          expect(page).not_to have_css(operator_name_option_css, text: op.name, exact_text: true)
-        end
-      end
+        used_op = add_an_operator(operator: op, elite: 2)
 
-      it 'does not allow more than 13 operators' do
-        clear = create(:clear, :declined, submitter: create(:user))
-        ops = create_list(:operator, 13)
-        ops.first(12).each do |op|
-          create(:used_operator, clear:, operator: op)
-        end
+        click_button 'Create clear'
 
-        visit_edit_clear_page(clear)
-        add_an_operator(operator: ops.last)
+        expect(page).to have_content('2 clears were successfully created!')
 
-        expect(page).to have_css(add_operator_button_css + ':disabled')
-      end
+        expect(Clear.count).to eq(2)
+        expect_page_to_have_embeded_link
+        expect(page).to have_current_path(clear_path(Clear.first))
+        expect(page).to have_content('1-ori_clear_stage')
+        expect_page_have_operator_details(used_op)
 
-      it 'allows multiple stages' do
+        visit clear_path(Clear.last)
+        expect_page_to_have_embeded_link
+        expect(page).to have_content('2-dup_clear_stage')
+        expect_page_have_operator_details(used_op)
       end
     end
 
-    context 'when in detailed mode' do
-      def switch_mode
-        choose 'Detailed'
-      end
-      let(:mode) { :detailed }
-
+    context 'when in basic mode' do
       include_examples 'creating a new clear'
     end
 
-    context 'when in mobile mode', :mobile do
-      let(:mode) { :detailed }
-      let(:mobile_mode) { true }
+    context 'test' do
+      context 'when in detailed mode' do
+        def switch_mode
+          choose 'Detailed'
+        end
+        let(:mode) { :detailed }
 
-      include_examples 'creating a new clear'
+        include_examples 'creating a new clear'
+      end
+
+      context 'when in mobile mode', :mobile do
+        let(:mode) { :detailed }
+        let(:mobile_mode) { true }
+
+        include_examples 'creating a new clear'
+      end
     end
   end
 
@@ -275,13 +334,13 @@ describe 'Clears' do
         stage = create(:stage, code: '0-1')
         create(:stage, code: '0-2')
 
-        clear = create(:clear, :declined, stage:, link: 'https://www.youtube.com/watch?v=R9XnYuyQEVM')
+        clear = create(:clear, :declined, stage:, link: example_link)
         create(:used_operator, operator: edited_op, elite: 1, level: 70, skill: 2, skill_level: 7, clear:)
         create(:used_operator, operator: deleted_op, clear:)
 
         visit_edit_clear_page(clear)
 
-        expect(page).to have_css("iframe[src='https://youtube.com/embed/R9XnYuyQEVM']")
+        expect(page).to have_css("iframe[src='#{embeded_link}']")
 
         select_stage('0-2', edit: true, index: 3)
 
@@ -295,6 +354,8 @@ describe 'Clears' do
 
         delete_an_operator(operator: deleted_op)
 
+        Timecop.travel(1.second.from_now)
+
         edited_used_operator = edit_an_operator(operator: edited_op, elite: 2, level: 90, skill: 3, skill_level: 10)
 
         click_button 'Update clear'
@@ -304,7 +365,7 @@ describe 'Clears' do
 
         expect(page).to have_content('0-2')
         expect(page).to have_current_path(clear_path(clear))
-        expect(page).to have_css('iframe[src="https://youtube.com/embed/R9XnYuyQEVM"]')
+        expect(page).to have_css("iframe[src='#{embeded_link}']")
 
         expect_page_have_operator_details(new_used_operator)
         expect_page_not_have_operator(deleted_op)
