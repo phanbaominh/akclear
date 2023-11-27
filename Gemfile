@@ -111,6 +111,7 @@ group :test do
   gem 'capybara'
   gem 'selenium-webdriver'
   gem 'test-prof'
+  gem 'timecop'
   gem 'webdrivers'
   gem 'webmock'
 end

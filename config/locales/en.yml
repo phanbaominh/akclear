@@ -89,6 +89,8 @@ en:
         success: "Clear was successfully verified!"
     create:
       success: "Clear was successfully created!"
+    update:
+      success: "Clear was successfully updated!"
   home:
     index:
       latest_events: "Latest events"
