@@ -3,5 +3,9 @@ FactoryBot.define do
     data { '' }
     video_url { 'https://www.youtube.com/watch?v=aAfeBGKoZeI' }
     stage
+
+    trait :completed do
+      status { :completed }
+    end
   end
 end

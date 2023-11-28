@@ -8,5 +8,9 @@ module Helpers
       expect(page).to have_content('Signed in successfully')
       user
     end
+
+    def sign_in_as_admin
+      sign_in(create(:user, :admin))
+    end
   end
 end

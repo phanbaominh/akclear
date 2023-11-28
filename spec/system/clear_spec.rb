@@ -100,7 +100,7 @@ describe 'Clears' do
   end
 
   def expect_page_to_have_embeded_link
-    expect(page).to have_css("iframe[src='#{embeded_link}']")
+    expect_page_have_embeded_video
   end
 
   def select_an_operator(used_operator)
@@ -137,6 +137,10 @@ describe 'Clears' do
     expect(operator_card).to have_css("img[alt='Elite #{used_operator.elite}']") if used_operator.elite
   end
 
+  def expect_page_have_embeded_video
+    expect(page).to have_css("iframe[src='#{embeded_link}']")
+  end
+
   def edit_an_operator(operator)
     used_operator = UsedOperator.new(operator)
     expect_page_have_operator(used_operator)
@@ -158,7 +162,7 @@ describe 'Clears' do
     fill_in 'Link', with: example_link
     fill_in 'Title', with: 'Test Clear'
     # Fill in title first so to trigger onChange event for iframe to appear
-    expect(page).to have_css("iframe[src='#{embeded_link}']")
+    expect_page_have_embeded_video
   end
 
   def visit_new_clear_page
@@ -172,6 +176,7 @@ describe 'Clears' do
     visit edit_clear_path(clear)
   end
 
+  let(:mode) { :basic }
   let(:mobile_mode) { false }
   let(:example_link) { 'https://youtube.com/watch?v=R9XnYuyQEVM' }
   let(:embeded_link) { 'https://youtube.com/embed/R9XnYuyQEVM' }
@@ -181,50 +186,6 @@ describe 'Clears' do
   end
 
   describe 'Creating a new clear', :js do
-    shared_examples 'creating a new clear' do
-      it 'creates a new clear' do
-        new_op = create(:operator, name: 'Amiya', rarity: Operator::FIVE_STARS,
-                                   skill_game_ids: %w[amiya_1 amiya_2 amiya_3])
-        deleted_op = create(:operator, name: 'Deleted op')
-        edited_op = create(:operator, name: 'Edited op', rarity: Operator::SIX_STARS,
-                                      skill_game_ids: %w[edit_1 edit_2 edit_3])
-        create(:stage, code: '0-1')
-
-        visit_new_clear_page
-        fill_in_clear_detail
-
-        select_stage('0-1')
-
-        switch_mode
-        new_used_operator = add_an_operator(operator: new_op, elite: 2, level: 90, skill: 1, skill_level: 7)
-
-        add_an_operator(operator: deleted_op)
-        delete_an_operator(operator: deleted_op)
-
-        add_an_operator(operator: edited_op, elite: 1, level: 70, skill: 2, skill_level: 7)
-        edited_used_operator = edit_an_operator(operator: edited_op, elite: 2, level: 90, skill: 3, skill_level: 10)
-
-        click_button 'Create clear'
-
-        expect(page).to have_content('Clear was successfully created!')
-
-        new_clear = Clear.last
-        expect(page).to have_content('0-1')
-        expect(page).to have_current_path(clear_path(new_clear))
-        expect(page).to have_css("iframe[src='#{embeded_link}']")
-
-        expect_page_have_operator_details(new_used_operator)
-        expect_page_not_have_operator(deleted_op)
-        expect_page_have_operator_details(edited_used_operator)
-
-        expect(Clears::AssignChannelJob)
-          .to have_received(:perform_later)
-          .with(new_clear.id, 'https://youtube.com/watch?v=R9XnYuyQEVM')
-      end
-    end
-
-    let(:mode) { :basic }
-
     it 'does not allow duplicated operator' do
       op = create(:operator)
 
@@ -300,11 +261,55 @@ describe 'Clears' do
       end
     end
 
-    context 'when in basic mode' do
-      include_examples 'creating a new clear'
+    shared_examples 'creating a new clear' do
+      it 'creates a new clear' do
+        visit_new_clear_page
+        fill_in_clear_detail
+
+        select_stage('0-1')
+
+        switch_mode
+        new_used_operator = add_an_operator(operator: new_op, elite: 2, level: 90, skill: 1, skill_level: 7)
+
+        add_an_operator(operator: deleted_op)
+        delete_an_operator(operator: deleted_op)
+
+        add_an_operator(operator: edited_op, elite: 1, level: 70, skill: 2, skill_level: 7)
+        edited_used_operator = edit_an_operator(operator: edited_op, elite: 2, level: 90, skill: 3, skill_level: 10)
+
+        click_button 'Create clear'
+
+        expect(page).to have_content('Clear was successfully created!')
+
+        new_clear = Clear.last
+        expect(page).to have_content('0-1')
+        expect(page).to have_current_path(clear_path(new_clear))
+        expect_page_have_embeded_video
+
+        expect_page_have_operator_details(new_used_operator)
+        expect_page_not_have_operator(deleted_op)
+        expect_page_have_operator_details(edited_used_operator)
+
+        expect(Clears::AssignChannelJob)
+          .to have_received(:perform_later)
+          .with(new_clear.id, 'https://youtube.com/watch?v=R9XnYuyQEVM')
+      end
     end
 
-    context 'test' do
+    describe 'creating clear from scratch' do
+      let_it_be(:new_op) do
+        create(:operator, name: 'Amiya', rarity: Operator::FIVE_STARS, skill_game_ids: %w[amiya_1 amiya_2 amiya_3])
+      end
+      let_it_be(:deleted_op) { create(:operator, name: 'Deleted op') }
+      let_it_be(:edited_op) do
+        create(:operator, name: 'Edited op', rarity: Operator::SIX_STARS, skill_game_ids: %w[edit_1 edit_2 edit_3])
+      end
+      let_it_be(:stage) { create(:stage, code: '0-1') }
+
+      context 'when in basic mode' do
+        include_examples 'creating a new clear'
+      end
+
       context 'when in detailed mode' do
         def switch_mode
           choose 'Detailed'
@@ -319,6 +324,55 @@ describe 'Clears' do
         let(:mobile_mode) { true }
 
         include_examples 'creating a new clear'
+      end
+    end
+
+    describe 'creating clear from job' do
+      it 'fills out the form with data from job' do
+        ops = create_list(:operator, 5, skill_game_ids: %w[skill_1 skill_2])
+        job_stage = create(:stage, code: '0-1')
+        used_operators = ops.first(3).map do |op|
+          build(:used_operator, operator: op, elite: 2, level: 90, skill: 1,
+                                skill_level: 7)
+        end
+        job = create(:extract_clear_data_from_video_job, :completed, data: {
+                       link: example_link,
+                       stage_id: job_stage.id,
+                       used_operators_attributes: used_operators.map(&:attributes)
+                     }, stage: job_stage, video_url: example_link)
+
+        sign_in_as_admin
+
+        click_link 'Admin'
+
+        click_link 'Import clear jobs'
+
+        within("#extract_clear_data_from_video_job_#{job.id}") do
+          expect(page).to have_content('0-1')
+          expect(page).to have_content(example_link)
+          click_link 'Create clear'
+        end
+
+        expect(page).to have_current_path(new_admin_clear_from_job_path(job_id: job.id))
+        expect(page).to have_field('Link', with: example_link)
+        expect(page).to have_content('0-1')
+        used_operators.each do |used_op|
+          expect_page_have_operator_details(used_op)
+        end
+
+        click_button 'Create clear'
+
+        expect(page).to have_content('Clear was successfully created!')
+
+        new_clear = Clear.last
+        expect(page).to have_content('0-1')
+        expect(page).to have_current_path(clear_path(new_clear))
+        expect_page_have_embeded_video
+
+        used_operators.each do |used_op|
+          expect_page_have_operator_details(used_op)
+        end
+        expect(job.reload).to be_clear_created
       end
     end
   end
@@ -340,7 +394,7 @@ describe 'Clears' do
 
         visit_edit_clear_page(clear)
 
-        expect(page).to have_css("iframe[src='#{embeded_link}']")
+        expect_page_have_embeded_video
 
         select_stage('0-2', edit: true, index: 3)
 
@@ -365,7 +419,7 @@ describe 'Clears' do
 
         expect(page).to have_content('0-2')
         expect(page).to have_current_path(clear_path(clear))
-        expect(page).to have_css("iframe[src='#{embeded_link}']")
+        expect_page_have_embeded_video
 
         expect_page_have_operator_details(new_used_operator)
         expect_page_not_have_operator(deleted_op)
@@ -378,8 +432,6 @@ describe 'Clears' do
     end
 
     context 'when in basic mode' do
-      let(:mode) { :basic }
-
       include_examples 'editing a clear'
     end
   end
