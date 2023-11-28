@@ -3,7 +3,6 @@ export default class extends Controller {
   static targets = ["link", "videoFrame", "toggleVideoFrame"];
 
   connect() {
-    this.element.querySelector("input[aria-label='Basic']").click();
     this.embedLink();
   }
 
@@ -43,22 +42,6 @@ export default class extends Controller {
       this.embedLink(event, this.toggleVideoFrameTarget);
     } else {
       this.hideVideoFrame(event, this.toggleVideoFrameTarget);
-    }
-  }
-
-  switchView(event) {
-    if (event.target.value == "detailed") {
-      this.element
-        .querySelector("#detailed_operators")
-        .classList.remove("sm:hidden");
-      this.element
-        .querySelector("#basic_operators")
-        .classList.remove("sm:block");
-    } else {
-      this.element
-        .querySelector("#detailed_operators")
-        .classList.add("sm:hidden");
-      this.element.querySelector("#basic_operators").classList.add("sm:block");
     }
   }
 }

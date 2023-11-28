@@ -52,49 +52,39 @@
         </div>
       </div>
     <% end %>
-    <div class="join hidden sm:block">
-      <%= content_tag :input, nil, class: "join-item btn", type: "radio", name: "options", "aria-label" => "Basic", value: :basic, data: { **stimulus_attrs(
-            :clears__form_component,
-            actions: {
-              click: "switchView"
-            },
-          )}
-        %>
-      <%= content_tag :input, nil, class: "join-item btn", type: "radio", name: "options", "aria-label" => "Detailed", value: :detailed, data: { **stimulus_attrs(
-            :clears__form_component,
-            actions: {
-              click: "switchView"
-            },
-          )}
-        %>
-    </div>
-    <%= content_tag :div,
+    <%= render Primer::TabsComponent.new(tab_names: ['basic', 'detailed'], hidden_class: 'sm:hidden') do |tabs_comp| %>
+      <%= content_tag :div,
       class: 'space-y-2',
       data: { **stimulus_attrs(:clears__form_component,
         actions: {
           'dispatch:clickEditOperator': 'highlight',
         }
       )} do %>
-      <div id="detailed_operators" class="grid grid-cols-1 sm:grid-cols-2 sm:hidden">
-        <div
-        id="detailed_operators__list"
-        class="grid grid-cols-1 sm:flex sm:flex-wrap gap-2 js-only"
-      >
-          <% clear_spec.used_operators.reject(&:marked_for_destruction?).each do |used_operator| %>
-            <%= render Clears::UsedOperatorResponsiveComponent.new(used_operator: used_operator) %>
+        <% tabs_comp.with_tab do %>
+          <%= content_tag :div, id: "detailed_operators", class: "grid grid-cols-1 sm:grid-cols-2 sm:hidden",
+        data: { **stimulus_attrs(:tabber, target: 'tab'), tab_name: 'detailed' } do %>
+            <div
+          id="detailed_operators__list"
+          class="grid grid-cols-1 sm:flex sm:flex-wrap gap-2 js-only"
+        >
+              <% clear_spec.used_operators.reject(&:marked_for_destruction?).each do |used_operator| %>
+                <%= render Clears::UsedOperatorResponsiveComponent.new(used_operator: used_operator) %>
+              <% end %>
+              <%= render Clears::Form::NewOperatorButtonComponent.new(disabled: clear_spec.squad.full?) %>
+            </div>
+            <div id="detailed_operators__form_container" class=" self-center w-full">
+            </div>
           <% end %>
-          <%= render Clears::Form::NewOperatorButtonComponent.new(disabled: clear_spec.squad.full?) %>
-        </div>
-        <div id="detailed_operators__form_container" class=" self-center w-full">
-        </div>
-      </div>
-      <div id="basic_operators" class="hidden sm:block">
-        <div class=" flex flex-col w-full  ">
-          <div class="flex">
-            <% if write_form %>
-              <label class="label hidden  lg:flex  cursor-pointer w-fit self-center">
-                <span class="label-text"><%= t(:show_video) %></span>
-                <%= content_tag :input, nil, type: 'checkbox', class: "toggle ", data: {
+        <% end %>
+        <% tabs_comp.with_tab do %>
+          <%= content_tag :div, id: 'basic_operators', class: 'hidden sm:block',
+        data: { **stimulus_attrs(:tabber, target: 'tab'), tab_name: 'basic', default_tab: true } do %>
+            <div class=" flex flex-col w-full  ">
+              <div class="flex">
+                <% if write_form %>
+                  <label class="label hidden  lg:flex  cursor-pointer w-fit self-center">
+                    <span class="label-text"><%= t(:show_video) %></span>
+                    <%= content_tag :input, nil, type: 'checkbox', class: "toggle ", data: {
                     **stimulus_attrs(
                       :clears__form_component,
                       actions: {
@@ -102,29 +92,31 @@
                       },
                     )
                   } %>
-              </label>
-            <% end %>
-            <div id="basic_operators__list" class="hidden sm:flex flex-wrap self-center items-center justify-items-end">
-              <% clear_spec.used_operators.reject(&:marked_for_destruction?).each do |used_operator| %>
-                <%= render Clears::UsedOperatorEditMiniComponent.new(used_operator: used_operator) %>
-              <% end %>
-              <%= render Clears::Form::NewOperatorButtonComponent.new(disabled: clear_spec.squad.full?) %>
+                  </label>
+                <% end %>
+                <div id="basic_operators__list" class="hidden sm:flex flex-wrap self-center items-center justify-items-end">
+                  <% clear_spec.used_operators.reject(&:marked_for_destruction?).each do |used_operator| %>
+                    <%= render Clears::UsedOperatorEditMiniComponent.new(used_operator: used_operator) %>
+                  <% end %>
+                  <%= render Clears::Form::NewOperatorButtonComponent.new(disabled: clear_spec.squad.full?) %>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-        <div class="flex items-stretch justify-center" >
-          <div class="iframe-responsive-container hidden !w-auto flex-grow peer" aria-hidden="true">
-            <%= content_tag :iframe,
+            <div class="flex items-stretch justify-center" >
+              <div class="iframe-responsive-container hidden !w-auto flex-grow peer" aria-hidden="true">
+                <%= content_tag :iframe,
               nil,
               class: "hidden lg:block iframe-responsive",
               data: {
                 **stimulus_attrs(:clears__form_component, target: "toggleVideoFrame")
               } %>
-          </div>
-          <div id="basic_operators__form_container" class="w-full lg:w-fit lg:peer-aria-hidden:w-1/2">
-          </div>
-        </div>
-      </div>
+              </div>
+              <div id="basic_operators__form_container" class="w-full lg:w-fit lg:peer-aria-hidden:w-1/2">
+              </div>
+            </div>
+          <% end %>
+        <% end %>
+      <% end %>
     <% end %>
     <footer class="flex justify-end mt-4 space-x-2">
       <%= footer %>
