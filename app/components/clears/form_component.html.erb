@@ -53,20 +53,34 @@
       </div>
     <% end %>
     <%= render Primer::TabsComponent.new(tab_names: ['basic', 'detailed'], hidden_class: 'sm:hidden') do |tabs_comp| %>
-      <%= content_tag :div,
-      class: 'space-y-2',
-      data: { **stimulus_attrs(:clears__form_component,
-        actions: {
-          'dispatch:clickEditOperator': 'highlight',
-        }
-      )} do %>
-        <% tabs_comp.with_tab do %>
+      <%= tabs_comp.with_content_with_tabs do %>
+        <% if write_form %>
+          <%= content_tag :label, class: "label hidden sm:flex cursor-pointer w-fit self-center",
+          data: { **stimulus_attrs(:tabber, target: 'tab'), tab_name: 'basic', default_tab: true } do %>
+            <span class="label-text"><%= t(:show_video) %></span>
+            <div class="p-1"></div>
+            <%= content_tag :input, nil, type: 'checkbox', class: "toggle ", data: {
+                    **stimulus_attrs(
+                      :clears__form_component,
+                      actions: {
+                        change: "toggleShowVideo"
+                      },
+                    )
+                  } %>
+          <% end %>
+        <% end %>
+        <%= content_tag :div,
+          data: { **stimulus_attrs(:clears__form_component,
+            actions: {
+              'dispatch:clickEditOperator': 'highlight',
+            }
+          )} do %>
           <%= content_tag :div, id: "detailed_operators", class: "grid grid-cols-1 sm:grid-cols-2 sm:hidden",
-        data: { **stimulus_attrs(:tabber, target: 'tab'), tab_name: 'detailed' } do %>
+            data: { **stimulus_attrs(:tabber, target: 'tab'), tab_name: 'detailed' } do %>
             <div
-          id="detailed_operators__list"
-          class="grid grid-cols-1 sm:flex sm:flex-wrap gap-2 js-only"
-        >
+              id="detailed_operators__list"
+              class="grid grid-cols-1 sm:flex sm:flex-wrap gap-2 js-only"
+            >
               <% clear_spec.used_operators.reject(&:marked_for_destruction?).each do |used_operator| %>
                 <%= render Clears::UsedOperatorResponsiveComponent.new(used_operator: used_operator) %>
               <% end %>
@@ -75,25 +89,10 @@
             <div id="detailed_operators__form_container" class=" self-center w-full">
             </div>
           <% end %>
-        <% end %>
-        <% tabs_comp.with_tab do %>
           <%= content_tag :div, id: 'basic_operators', class: 'hidden sm:block',
-        data: { **stimulus_attrs(:tabber, target: 'tab'), tab_name: 'basic', default_tab: true } do %>
+            data: { **stimulus_attrs(:tabber, target: 'tab'), tab_name: 'basic', default_tab: true } do %>
             <div class=" flex flex-col w-full  ">
               <div class="flex">
-                <% if write_form %>
-                  <label class="label hidden  lg:flex  cursor-pointer w-fit self-center">
-                    <span class="label-text"><%= t(:show_video) %></span>
-                    <%= content_tag :input, nil, type: 'checkbox', class: "toggle ", data: {
-                    **stimulus_attrs(
-                      :clears__form_component,
-                      actions: {
-                        change: "toggleShowVideo"
-                      },
-                    )
-                  } %>
-                  </label>
-                <% end %>
                 <div id="basic_operators__list" class="hidden sm:flex flex-wrap self-center items-center justify-items-end">
                   <% clear_spec.used_operators.reject(&:marked_for_destruction?).each do |used_operator| %>
                     <%= render Clears::UsedOperatorEditMiniComponent.new(used_operator: used_operator) %>
@@ -102,14 +101,15 @@
                 </div>
               </div>
             </div>
+            <div class="p-2"></div>
             <div class="flex items-stretch justify-center" >
               <div class="iframe-responsive-container hidden !w-auto flex-grow peer" aria-hidden="true">
                 <%= content_tag :iframe,
-              nil,
-              class: "hidden lg:block iframe-responsive",
-              data: {
-                **stimulus_attrs(:clears__form_component, target: "toggleVideoFrame")
-              } %>
+                  nil,
+                  class: "hidden lg:block iframe-responsive",
+                  data: {
+                    **stimulus_attrs(:clears__form_component, target: "toggleVideoFrame")
+                  } %>
               </div>
               <div id="basic_operators__form_container" class="w-full lg:w-fit lg:peer-aria-hidden:w-1/2">
               </div>
