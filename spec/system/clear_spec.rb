@@ -63,15 +63,26 @@ describe 'Clears' do
   def add_an_operator(operator)
     used_operator = UsedOperator.new(operator)
 
+    if mode == :basic
+      within('.operators__new_operator_form') do
+        find('div[aria-label="Select operator"]').click
+        find(operator_name_option_css, text: used_operator.name, exact_text: true).click
+      end
+    end
+
     click_add_operator_button
 
-    fill_in_operator_details(used_operator)
-    within_operator_form(used_operator) { click_button 'Add operator' }
+    if mode == :basic
+      edit_an_operator(operator)
+    else
+      fill_in_operator_details(used_operator)
+      within_operator_form(used_operator) { click_button 'Add operator' }
 
-    wait_for_turbo
-    # wait_for_operator_update_completed(used_operator)
-    expect_page_have_operator_details(used_operator)
-    expect_page_not_have_form(used_operator)
+      wait_for_turbo
+      # wait_for_operator_update_completed(used_operator)
+      expect_page_have_operator_details(used_operator)
+      expect_page_not_have_form(used_operator)
+    end
     used_operator
   end
 
@@ -186,26 +197,6 @@ describe 'Clears' do
   end
 
   describe 'Creating a new clear', :js do
-    it 'does not allow duplicated operator' do
-      op = create(:operator)
-
-      visit_new_clear_page
-
-      add_an_operator(operator: op)
-
-      within('.operators__new_operator_form') do
-        find('div[aria-label="Select operator"]').click
-        expect(page).not_to have_css(operator_name_option_css, text: op.name, exact_text: true)
-      end
-
-      click_add_operator_button
-
-      within_operator_form do
-        show_operator_name_options
-        expect(page).not_to have_css(operator_name_option_css, text: op.name, exact_text: true)
-      end
-    end
-
     it 'does not allow more than 13 operators' do
       clear = create(:clear, :declined, submitter: create(:user))
       ops = create_list(:operator, 13)
@@ -313,6 +304,19 @@ describe 'Clears' do
 
       context 'when in basic mode' do
         include_examples 'creating a new clear'
+
+        it 'does not allow duplicated operator' do
+          op = create(:operator)
+
+          visit_new_clear_page
+
+          add_an_operator(operator: op)
+
+          within('.operators__new_operator_form') do
+            find('div[aria-label="Select operator"]').click
+            expect(page).not_to have_css(operator_name_option_css, text: op.name, exact_text: true)
+          end
+        end
       end
 
       context 'when in detailed mode' do
@@ -322,6 +326,23 @@ describe 'Clears' do
         let(:mode) { :detailed }
 
         include_examples 'creating a new clear'
+
+        it 'does not allow duplicated operator' do
+          op = create(:operator)
+
+          visit_new_clear_page
+
+          switch_mode
+
+          add_an_operator(operator: op)
+
+          click_add_operator_button
+
+          within_operator_form do
+            show_operator_name_options
+            expect(page).not_to have_css(operator_name_option_css, text: op.name, exact_text: true)
+          end
+        end
       end
 
       context 'when in mobile mode', :mobile do
@@ -439,5 +460,8 @@ describe 'Clears' do
     context 'when in basic mode' do
       include_examples 'editing a clear'
     end
+  end
+
+  describe 'Filtering a clear' do
   end
 end
