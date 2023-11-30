@@ -116,7 +116,7 @@ describe 'Clears' do
 
   def select_an_operator(used_operator)
     if mode == :basic
-      find(operator_css(used_operator)).ancestor('a').click
+      click_link "Edit operator #{used_operator.name}"
     else
       find(operator_css(used_operator)).ancestor('article').click_link('Edit operator')
     end

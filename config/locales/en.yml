@@ -74,6 +74,7 @@ en:
   clears:
     title: "Clears"
     select_operator_prompt: "Select operator"
+    edit_operator: "Edit operator %{operator}"
     declined_count:
       zero: "No declined clears"
       one: "You have 1 declined clear"
