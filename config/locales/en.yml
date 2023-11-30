@@ -73,6 +73,7 @@ en:
         failed: "Failed to update user."
   clears:
     title: "Clears"
+    select_operator_prompt: "Select operator"
     declined_count:
       zero: "No declined clears"
       one: "You have 1 declined clear"

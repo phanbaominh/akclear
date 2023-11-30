@@ -193,6 +193,11 @@ describe 'Clears' do
 
       add_an_operator(operator: op)
 
+      within('.operators__new_operator_form') do
+        find('div[aria-label="Select operator"]').click
+        expect(page).not_to have_css(operator_name_option_css, text: op.name, exact_text: true)
+      end
+
       click_add_operator_button
 
       within_operator_form do

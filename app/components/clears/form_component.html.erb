@@ -70,7 +70,7 @@
               <% clear_spec.used_operators.reject(&:marked_for_destruction?).each do |used_operator| %>
                 <%= render Clears::UsedOperatorResponsiveComponent.new(used_operator: used_operator) %>
               <% end %>
-              <%= render Clears::Form::NewOperatorButtonComponent.new(disabled: clear_spec.squad.full?) %>
+              <%= render Clears::Form::NewOperatorButtonComponent.new(squad: clear_spec.squad) %>
             </div>
             <div id="detailed_operators__form_container" class=" self-center w-full">
             </div>
@@ -98,7 +98,7 @@
                   <% clear_spec.used_operators.reject(&:marked_for_destruction?).each do |used_operator| %>
                     <%= render Clears::UsedOperatorEditMiniComponent.new(used_operator: used_operator) %>
                   <% end %>
-                  <%= render Clears::Form::NewOperatorButtonComponent.new(disabled: clear_spec.squad.full?) %>
+                  <%= render Clears::Form::NewOperatorButtonComponent.new(squad: clear_spec.squad) %>
                 </div>
               </div>
             </div>

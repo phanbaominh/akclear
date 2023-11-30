@@ -1,11 +1,19 @@
-<%= content_tag(
-          :button,
-          nil,
-          class: "operators__new_operator_btn btn btn-circle btn-primary",
-          formmethod: "GET",
-          formaction: new_clears_used_operator_path,
-          disabled: disabled,
-          form: 'clears__form'
-        ) do %>
-  <%= heroicon "plus", options: { class: "h-4" } %>
+  <%= simple_form_for UsedOperator.new, url: new_clears_used_operator_path, method: :get,
+  html: { class: 'operators__new_operator_form w-full', data: { turbo_stream: true } } do |f| %>
+  <div class="flex w-full">
+    <%= f.input :operator_id,
+              as: :select,
+              collection: selectable_operators,
+              wrapper_html: {
+                data: { **stimulus(:choices) },
+                class: "w-96",
+                 aria: { label: t("clears.select_operator_prompt") },
+              },
+              prompt: t("clears.select_operator_prompt"),
+              include_hidden: false, label: false %>
+    <div class="p-1"></div>
+    <%= content_tag :button, class: 'btn btn-circle btn-primary operators__new_operator_btn', disabled: disabled do %>
+      <%= heroicon "plus", options: { class: "h-4" } %>
+    <% end %>
+  </div>
 <% end %>

@@ -9,6 +9,6 @@
     <%= render Clears::UsedOperatorEditMiniComponent.new(used_operator: @used_operator) %>
   <% end %>
 <% end %>
-<%= render partial: 'new_btn', locals: { disabled: @squad.full? } %>
+<%= render partial: 'new_btn', locals: { squad: @squad } %>
 <%= turbo_stream.update "basic_operators__form_container" %>
 <%= turbo_stream.update "detailed_operators__form_container" %>

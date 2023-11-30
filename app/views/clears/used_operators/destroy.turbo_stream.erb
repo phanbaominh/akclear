@@ -6,8 +6,8 @@
   <%= turbo_stream.update "detailed_operators__form_container" %>
 <% end %>
 <% unless @is_operator_form_active %>
-  <%= turbo_stream.remove_all ".operators__new_operator_btn" %>
-  <%= render partial: 'new_btn', locals: { disabled: @squad.full? } %>
+  <%= turbo_stream.remove_all ".operators__new_operator_form" %>
+  <%= render partial: 'new_btn', locals: { squad: @squad } %>
 <% end %>
 <% if @used_operator.id %>
   <%= turbo_stream.update dom_id(@used_operator.operator, :fields) do %>

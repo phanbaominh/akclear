@@ -1,4 +1,4 @@
-<%= turbo_stream.remove_all ".operators__new_operator_btn" %>
+<%= turbo_stream.remove_all ".operators__new_operator_form" %>
 <%= turbo_stream.update "basic_operators__form_container" do %>
   <div class="hidden sm:block">
     <%= render Clears::UsedOperatorFormComponent.new(
