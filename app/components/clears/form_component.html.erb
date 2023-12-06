@@ -1,6 +1,6 @@
 <div class="card mb-8 md:mb-4 md:shadow-xl static">
   <div class="md:card-body md:bg-base-300" data-controller="clears--form-component">
-    <%= simple_form_for clear_spec, method: (:get unless write_form), html: {
+    <%= simple_form_for clear_spec, html: {
       id: "clears__form",
       data: {
         turbo_stream: "true", turbo_frame: 'clears'
@@ -14,18 +14,15 @@
       <% if job_id.present? %>
         <%= f.input :job_id, as: :hidden, input_html: { value: job_id } %>
       <% end %>
-      <%= f.input :self_only, as: :hidden %>
-      <%= f.input :channel_id, as: :hidden %>
-      <% if write_form %>
-        <div class="iframe-responsive-container hidden">
-          <%= content_tag :iframe,
+      <div class="iframe-responsive-container hidden">
+        <%= content_tag :iframe,
         nil,
         class: "hidden iframe-responsive",
         data: {
           **stimulus_attrs(:clears__form_component, target: "videoFrame")
         } %>
-        </div>
-        <%= f.input :link,
+      </div>
+      <%= f.input :link,
                 input_html: {
                   class: 'w-full',
                   data: {
@@ -38,10 +35,9 @@
                     )
                   }
                 } %>
-        <%= f.input :name, input_html: { class: 'w-full' } %>
-      <% end %>
+      <%= f.input :name, input_html: { class: 'w-full' } %>
       <div class="js-only">
-        <%= render Clears::StageSelectComponent.new(form: f, simple: write_form, multiple: !edit_form) %>
+        <%= render Clears::StageSelectComponent.new(form: f, simple: true, multiple: !edit_form) %>
         <%= f.label :operator_id, t(:operators) %>
         <div id="clears__form__operators_fields" class="hidden">
           <%= f.simple_fields_for :used_operators, include_id: false do |used_operator_form| %>
@@ -54,12 +50,11 @@
     <% end %>
     <%= render Primer::TabsComponent.new(tab_names: ['basic', 'detailed'], hidden_class: 'sm:hidden') do |tabs_comp| %>
       <%= tabs_comp.with_content_with_tabs do %>
-        <% if write_form %>
-          <%= content_tag :label, class: "label hidden sm:flex cursor-pointer w-fit self-center",
+        <%= content_tag :label, class: "label hidden sm:flex cursor-pointer w-fit self-center",
           data: { **stimulus_attrs(:tabber, target: 'tab'), tab_name: 'basic', default_tab: true } do %>
-            <span class="label-text"><%= t(:show_video) %></span>
-            <div class="p-1"></div>
-            <%= content_tag :input, nil, type: 'checkbox', class: "toggle ", data: {
+          <span class="label-text"><%= t(:show_video) %></span>
+          <div class="p-1"></div>
+          <%= content_tag :input, nil, type: 'checkbox', class: "toggle ", data: {
                     **stimulus_attrs(
                       :clears__form_component,
                       actions: {
@@ -67,7 +62,6 @@
                       },
                     )
                   } %>
-          <% end %>
         <% end %>
         <%= content_tag :div,
           data: { **stimulus_attrs(:clears__form_component,

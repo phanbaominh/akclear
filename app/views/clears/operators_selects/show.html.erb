@@ -17,7 +17,7 @@
   <footer class="flex justify-end space-x-2">
     <% if @modifying_clear %>
       <div class="hidden">
-        <%= render Clears::FormComponent.new(clear_spec: @clear_spec, write_form: true) %>
+        <%= render Clears::FormComponent.new(clear_spec: @clear_spec) %>
       </div>
       <button class="btn btn-primary" form='clears__form'><%= t(:create_clear) %></button>
     <% else %>
