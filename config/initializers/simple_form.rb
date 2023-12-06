@@ -54,7 +54,7 @@ SimpleForm.setup do |config|
 
     ## Inputs
     # b.use :label, class: 'simple_form__label'
-    b.wrapper tag: :div do |comp|
+    b.wrapper tag: :div, class: 'simple_form__label_wrapper' do |comp|
       comp.use :label, class: 'simple_form__label'
       comp.use :error, wrap_with: { tag: :span, class: :error }
       comp.use :hint,  wrap_with: { tag: :span, class: 'simple_form__hint' }

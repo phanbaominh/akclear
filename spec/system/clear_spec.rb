@@ -1,19 +1,12 @@
 require 'system_spec_helper'
 
 describe 'Clears' do
-  def open_stage_dropdown(edit: false)
-    find('label', text: edit ? 'Stage' : 'Stage ids').click
+  def open_stage_dropdown(single: false)
+    find('label', text: single ? 'Stage' : 'Stage ids').click
   end
 
-  def select_stage(stage_code, edit: false, index: 1)
-    open_stage_dropdown(edit:)
-    if edit
-      find_by_id("choices--clear_stage_id-item-choice-#{index}", text: stage_code).click
-    else
-      find_by_id("choices--clear_stage_ids-item-choice-#{index}", text: stage_code).click
-    end
-    # click away so that the dropdown closes and the add operator button is not covered
-    click_outside
+  def select_stage(stage_code, single: false)
+    choicesjs_select stage_code, from: single ? 'Stage' : 'Stage ids', single:
   end
 
   def within_operator_form(used_operator = nil, edit: false, &)
@@ -25,7 +18,7 @@ describe 'Clears' do
   end
 
   def show_operator_name_options
-    find('label', text: 'Operator', exact: true).click
+    find('label', text: 'Operator', exact_text: true).click
   end
 
   def select_operator_name(name)
@@ -142,10 +135,12 @@ describe 'Clears' do
   end
 
   def expect_page_have_operator_details(used_operator)
-    operator_card = find(operator_css(used_operator)).ancestor('article.operators__card')
-    expect(operator_card).to have_content(used_operator.level) if used_operator.level
-    expect(operator_card).to have_content(used_operator.skill_level_code) if used_operator.skill_level
-    expect(operator_card).to have_css("img[alt='Elite #{used_operator.elite}']") if used_operator.elite
+    within '#clears_operators' do
+      operator_card = find(operator_css(used_operator)).ancestor('article.operators__card')
+      expect(operator_card).to have_content(used_operator.level) if used_operator.level
+      expect(operator_card).to have_content(used_operator.skill_level_code) if used_operator.skill_level
+      expect(operator_card).to have_css("img[alt='Elite #{used_operator.elite}']") if used_operator.elite
+    end
   end
 
   def expect_page_have_embeded_video
@@ -212,8 +207,8 @@ describe 'Clears' do
 
     describe 'multiple stages' do
       def select_multiple_stages(stages)
-        stages.each_with_index do |stage, index|
-          select_stage(stage.code, index: index + 1)
+        stages.each_with_index do |stage, _index|
+          select_stage(stage.code)
         end
       end
 
@@ -422,7 +417,7 @@ describe 'Clears' do
 
         expect_page_have_embeded_video
 
-        select_stage('0-2', edit: true, index: 3)
+        select_stage('0-2', single: true)
 
         switch_mode
 
@@ -462,6 +457,283 @@ describe 'Clears' do
     end
   end
 
-  describe 'Filtering a clear' do
+  describe 'Filtering a clear', :js do
+    let_it_be(:annihilation) { create(:annihilation, name: 'Chernobog', game_id: 'camp_r_01') }
+    let_it_be(:episode) { create(:episode, number: 1) }
+    let_it_be(:event) { create(:event, name: 'Test Event') }
+
+    let_it_be(:annihilation_stage) { create(:stage, code: 'Chernobog', stageable: annihilation) }
+    let_it_be(:episode_stage) { create(:stage, code: '1-1', stageable: episode) }
+    let_it_be(:event_stage) { create(:stage, code: 'EV-1', stageable: event, game_id: 'ev_01') }
+
+    let_it_be(:annihilation_clear) { create(:clear, stage: annihilation_stage) }
+    let_it_be(:episode_clear) { create(:clear, stage: episode_stage) }
+    let_it_be(:event_clear) { create(:clear, stage: event_stage) }
+
+    let_it_be(:filtered_op) { create(:operator, name: 'Filtered op') }
+    let_it_be(:non_filtered_op) { create(:operator, name: 'Non filtered op') }
+
+    let_it_be(:filtered_used_op) { create(:used_operator, operator: filtered_op, clear: annihilation_clear) }
+    let_it_be(:filtered_used_op_2) { create(:used_operator, operator: filtered_op, clear: episode_clear) }
+
+    let_it_be(:non_filtered_used_op) { create(:used_operator, operator: non_filtered_op, clear: event_clear) }
+    let_it_be(:non_filtered_used_op_2) { create(:used_operator, operator: non_filtered_op, clear: episode_clear) }
+
+    def clear_card_css
+      '.clears_card'
+    end
+
+    def expect_page_to_have_clear(clear)
+      all(clear_card_css, text: clear.stage.code).each do |card|
+        valid = true
+        within card do
+          valid &&= if clear.stage.challenge_mode?
+                      page.has_css?('img[alt="Challenge mode"]')
+                    else
+                      page.has_no_css?('img[alt="Challenge mode"]')
+                    end
+        end
+        next unless valid
+
+        within card do
+          valid &&= if clear.stage.has_environments?
+                      page.has_css?("img[alt~='#{clear.stage.environment.titleize}']")
+
+                    else
+                      page.has_no_css?('img[alt~="Environment"]')
+                    end
+        end
+        return true if valid
+      end
+      RSpec::Expectations.fail_with("page does not have clear with stage #{clear.stage.code_with_mods}")
+    end
+
+    def expect_page_not_to_have_clear(clear)
+      expect(page).not_to have_css(clear_card_css, text: clear.stage.code)
+    end
+
+    def expect_page_to_only_have_clears(clears)
+      clears.each do |clear|
+        expect_page_to_have_clear(clear)
+      end
+      expect(page).to have_css(clear_card_css, count: clears.size)
+    end
+
+    def apply_filters
+      click_button 'Apply filters'
+      wait_for_turbo
+    end
+
+    def switch_to_cm
+      find('label', text: 'Challenge mode').click
+    end
+
+    it 'paginates' do
+      create_list(:clear, 20)
+
+      visit clears_path
+
+      expect(page).to have_css(clear_card_css, count: 20)
+      expect(page).to have_css('.page', count: 4)
+      expect(page).to have_css('.page.current', text: '1')
+      expect(page).to have_link('2')
+
+      click_link '2'
+      expect(page).to have_css(clear_card_css, count: 3)
+      expect(page).to have_css('.page.current', text: '2')
+      expect(page).to have_link('1')
+    end
+
+    context 'when in basic mode' do
+      it 'filters correctly' do
+        visit clears_path
+
+        switch_mode
+
+        expect_page_to_have_clear(annihilation_clear)
+        expect_page_to_have_clear(episode_clear)
+        expect_page_to_have_clear(event_clear)
+
+        add_an_operator({ operator: filtered_op })
+
+        apply_filters
+
+        expect_page_to_have_clear(annihilation_clear)
+        expect_page_to_have_clear(episode_clear)
+        expect_page_not_to_have_clear(event_clear)
+
+        select_stage(annihilation_stage.code, single: true)
+
+        apply_filters
+
+        expect_page_to_have_clear(annihilation_clear)
+        expect_page_not_to_have_clear(episode_clear)
+        expect_page_not_to_have_clear(event_clear)
+      end
+    end
+
+    context 'when in detailed mode' do
+      let(:mode) { :detailed }
+
+      it 'filters correctly' do
+        visit clears_path
+        choose 'Detailed'
+
+        expect_page_to_have_clear(annihilation_clear)
+        expect_page_to_have_clear(episode_clear)
+        expect_page_to_have_clear(event_clear)
+
+        add_an_operator({ operator: filtered_op })
+
+        apply_filters
+
+        expect_page_to_have_clear(annihilation_clear)
+        expect_page_to_have_clear(episode_clear)
+        expect_page_not_to_have_clear(event_clear)
+
+        choicesjs_select 'Annihilation', from: 'Stage type'
+        choicesjs_select 'Annihilation 01 - Chernobog', from: 'Annihilation'
+
+        apply_filters
+
+        expect_page_to_have_clear(annihilation_clear)
+        expect_page_not_to_have_clear(episode_clear)
+        expect_page_not_to_have_clear(event_clear)
+      end
+
+      it 'filters event correctly' do
+        cm_event_stage = create(:stage, code: 'EV-1', game_id: 'ev_01#f#', stageable: event)
+        cm_event_clear = create(:clear, stage: cm_event_stage)
+
+        visit clears_path
+        choose 'Detailed'
+
+        choicesjs_select 'Event', from: 'Stage type'
+        choicesjs_select 'Test Event', from: 'Event'
+        apply_filters
+        expect_page_to_only_have_clears([event_clear, cm_event_clear])
+
+        choicesjs_select('Test Event: EV-1', from: 'Stage')
+        apply_filters
+        expect_page_to_only_have_clears([event_clear])
+
+        switch_to_cm
+
+        choicesjs_select('Test Event: EV-1 CM', from: 'Stage')
+        apply_filters
+        expect_page_to_only_have_clears([cm_event_clear])
+      end
+
+      context 'when filters by episode' do
+        it 'filters episode < 9 correctly' do
+          cm_episode_stage = create(:stage, :challenge_mode, stageable: episode, code: '1-1')
+          cm_episode_stage_clear = create(:clear, stage: cm_episode_stage)
+
+          visit clears_path
+          choose 'Detailed'
+
+          choicesjs_select 'Episode', from: 'Stage type'
+          choicesjs_select 'Episode 1', from: 'Episode'
+          wait_for_turbo
+          apply_filters
+          expect_page_to_only_have_clears([episode_clear, cm_episode_stage_clear])
+
+          choicesjs_select('Episode 1: 1-1', from: 'Stage')
+          apply_filters
+          expect_page_to_only_have_clears([episode_clear])
+
+          switch_to_cm
+          choicesjs_select('Episode 1: 1-1 CM', from: 'Stage')
+          apply_filters
+          expect_page_to_only_have_clears([cm_episode_stage_clear])
+        end
+
+        it 'filters episode = 9 correctly' do
+          episode = create(:episode, number: 9)
+          story_episode_stage = create(:story_stage, stageable: episode, code: '9-1')
+          standard_episode_stage = create(:standard_stage, stageable: episode, code: '9-1')
+          cm_standard_episode_stage = create(:standard_stage, :challenge_mode, stageable: episode, code: '9-1')
+
+          story_episode_stage_clear = create(:clear, stage: story_episode_stage)
+          standard_episode_stage_clear = create(:clear, stage: standard_episode_stage)
+          cm_standard_episode_stage_clear = create(:clear, stage: cm_standard_episode_stage)
+
+          visit clears_path
+          choose 'Detailed'
+
+          choicesjs_select 'Episode', from: 'Stage type'
+          choicesjs_select 'Episode 9', from: 'Episode'
+          wait_for_turbo
+          apply_filters
+          expect_page_to_only_have_clears(
+            [story_episode_stage_clear, standard_episode_stage_clear, cm_standard_episode_stage_clear]
+          )
+
+          choose 'story'
+          choicesjs_select('Episode 9: 9-1 story', from: 'Stage')
+          apply_filters
+          expect_page_to_only_have_clears(
+            [story_episode_stage_clear]
+          )
+
+          choose 'standard'
+          choicesjs_select('Episode 9: 9-1 standard', from: 'Stage')
+          apply_filters
+          expect_page_to_only_have_clears(
+            [standard_episode_stage_clear]
+          )
+
+          switch_to_cm
+          choicesjs_select('Episode 9: 9-1 CM standard', from: 'Stage')
+          apply_filters
+          expect_page_to_only_have_clears(
+            [cm_standard_episode_stage_clear]
+          )
+        end
+
+        it 'filters episode > 9 correctly' do
+          episode = create(:episode, number: 10)
+          story_episode_stage = create(:story_stage, stageable: episode, code: '10-1')
+          standard_episode_stage = create(:standard_stage, stageable: episode, code: '10-1')
+          adverse_episode_stage = create(:adverse_stage, stageable: episode, code: '10-1')
+
+          story_episode_stage_clear = create(:clear, stage: story_episode_stage)
+          standard_episode_stage_clear = create(:clear, stage: standard_episode_stage)
+          adverse_episode_stage_clear = create(:clear, stage: adverse_episode_stage)
+
+          visit clears_path
+          choose 'Detailed'
+
+          choicesjs_select 'Episode', from: 'Stage type'
+          choicesjs_select 'Episode 10', from: 'Episode'
+          wait_for_turbo
+          apply_filters
+          expect_page_to_only_have_clears(
+            [story_episode_stage_clear, standard_episode_stage_clear, adverse_episode_stage_clear]
+          )
+
+          choose 'story'
+          choicesjs_select('Episode 10: 10-1 story', from: 'Stage')
+          apply_filters
+          expect_page_to_only_have_clears(
+            [story_episode_stage_clear]
+          )
+
+          choose 'standard'
+          choicesjs_select('Episode 10: 10-1 standard', from: 'Stage')
+          apply_filters
+          expect_page_to_only_have_clears(
+            [standard_episode_stage_clear]
+          )
+
+          choose 'adverse'
+          choicesjs_select('Episode 10: 10-1 adverse', from: 'Stage')
+          apply_filters
+          expect_page_to_only_have_clears(
+            [adverse_episode_stage_clear]
+          )
+        end
+      end
+    end
   end
 end

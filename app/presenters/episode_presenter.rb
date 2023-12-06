@@ -4,7 +4,7 @@ class EpisodePresenter < StageablePresenter
   end
 
   def label
-    "#{I18n.t(:episode)} #{object.index} - #{object.name}"
+    "#{I18n.t(:episode)} #{object.index}"
   end
 
   def color(component)

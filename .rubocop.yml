@@ -49,3 +49,5 @@ Style/MultilineBlockChain:
   Enabled: false
 Metrics/CyclomaticComplexity:
   Enabled: false
+BlockGivenWithExplicitBlock:
+  Enabled: false

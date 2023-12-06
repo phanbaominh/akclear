@@ -74,7 +74,7 @@
             actions: {
               'dispatch:clickEditOperator': 'highlight',
             }
-          )} do %>
+          )}, id: 'clears_operators' do %>
           <%= content_tag :div, id: "detailed_operators", class: "grid grid-cols-1 sm:grid-cols-2 sm:hidden",
             data: { **stimulus_attrs(:tabber, target: 'tab'), tab_name: 'detailed' } do %>
             <div

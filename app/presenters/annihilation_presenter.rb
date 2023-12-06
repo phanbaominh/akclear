@@ -8,7 +8,7 @@ class AnnihilationPresenter < StageablePresenter
   end
 
   def label
-    "#{I18n.t(:annihilation)} #{object.index} - #{object.name}"
+    "#{I18n.t(:annihilation)} #{index} - #{object.name}"
   end
 
   def color(component)

@@ -6,6 +6,8 @@ class Stage < ApplicationRecord
   scope :challenge_mode, -> { where('game_id LIKE ?', "%#{CHALLENGE_MODE_ID}") }
   scope :with_environment, ->(environment) { where('game_id LIKE ?', "#{environment.to_game_id}%") }
 
+  delegate :annihilation?, :has_environments?, to: :stageable
+
   def event?
     stageable.is_a?(Event)
   end

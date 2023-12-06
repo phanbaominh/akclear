@@ -14,7 +14,11 @@ module Stageable
     true
   end
 
-  def has_environments? # rubocop:disable Naming/PredicateName
+  def has_environments?
     false
+  end
+
+  def annihilation?
+    is_a?(Annihilation)
   end
 end

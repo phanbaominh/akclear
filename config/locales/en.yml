@@ -183,7 +183,7 @@ en:
   verify: "Verify"
   unverify: "Unverify"
   choose: "Choose"
-  challenge_mode: "Challenge Mode"
+  challenge_mode: "Challenge mode"
   episode: "Episode"
   annihilation: "Annihilation"
   clear_form:
@@ -202,9 +202,9 @@ en:
     list: "Channels"
   stages:
     environments:
-      story: "Story"
-      standard: "Standard"
-      adverse: "Adverse"
+      story: "Story Environment"
+      standard: "Standard Environment"
+      adverse: "Adverse Environment"
   trending_clears: "Trending clears"
   new_clears: "New clears"
   guide: "Guide"
