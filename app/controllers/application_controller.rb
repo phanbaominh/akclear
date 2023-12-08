@@ -43,7 +43,7 @@ class ApplicationController < ActionController::Base
   end
 
   def authenticate!
-    redirect_to sign_in_path, alert: 'You need to sign in or sign up before continuing' unless current_user
+    redirect_to sign_in_path, alert: t('sign_in_redirect') unless current_user
   end
 
   def set_current_request_details

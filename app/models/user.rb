@@ -1,6 +1,7 @@
 class User < ApplicationRecord
   include User::Likeable
   include User::Verifiable
+  include Reportable
   include Specifiable
   ROLES = [
     USER = :user,

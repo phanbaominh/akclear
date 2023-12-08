@@ -72,6 +72,7 @@ en:
         success: "User was successfully updated."
         failed: "Failed to update user."
   clears:
+    item: "Clears"
     title: "Clears"
     select_operator_prompt: "Select operator"
     edit_operator: "Edit operator %{operator}"
@@ -97,6 +98,16 @@ en:
       stage_ids_hint: "Each stage chosen will create a new clear."
     update:
       success: "Clear was successfully updated!"
+    show:
+      flag_tooltip: "Flag this clear for review (wrong squad, video, title, etc.)"
+      flagged_tooltip: "You have flagged this clear for review"
+      flag: "Flag for review"
+      unflag: "Unflag"
+    reports:
+      create:
+        success: "Thank you for flagging this clear. We will review it shortly."
+      destroy:
+        success: "You have unflagged this clear."
   home:
     index:
       latest_events: "Latest events"
@@ -133,6 +144,8 @@ en:
   passwords:
     update:
       success: "Your password has been changed"
+  sign_in_redirect: "You need to sign in or sign up before continuing"
+  failed: "Some"
   select_max_items: "Cannot select more than %{count}"
   create_clear: "Create clear"
   edit_clear: "Edit clear"

@@ -12,6 +12,7 @@ class Ability
     can :update, Clear, submitter: user, verification: { status: Verification::DECLINED }
 
     can %i[create destroy], :like
+    can %i[create destroy], :report
 
     return unless user.verifier? || user.admin?
 

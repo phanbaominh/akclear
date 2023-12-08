@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_11_14_134615) do
+ActiveRecord::Schema[7.1].define(version: 2023_12_08_084107) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -234,6 +234,15 @@ ActiveRecord::Schema[7.1].define(version: 2023_11_14_134615) do
     t.index ["user_id"], name: "index_password_reset_tokens_on_user_id"
   end
 
+  create_table "reports", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "clear_id"
+    t.datetime "created_at", null: false
+    t.index ["clear_id"], name: "index_reports_on_clear_id"
+    t.index ["created_at"], name: "index_reports_on_created_at"
+    t.index ["user_id"], name: "index_reports_on_user_id"
+  end
+
   create_table "sessions", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.string "user_agent"
@@ -341,6 +350,8 @@ ActiveRecord::Schema[7.1].define(version: 2023_11_14_134615) do
   add_foreign_key "likes", "clears"
   add_foreign_key "likes", "users"
   add_foreign_key "password_reset_tokens", "users"
+  add_foreign_key "reports", "clears"
+  add_foreign_key "reports", "users"
   add_foreign_key "sessions", "users"
   add_foreign_key "taggings", "tags"
   add_foreign_key "used_operator_verifications", "used_operators"

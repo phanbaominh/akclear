@@ -21,6 +21,7 @@ WebMock.disable_net_connect!(
   # for google chrome updates when running system specs
   allow: %w[
     googlechromelabs.github.io
+    edgedl.me.gvt1.com
   ]
 )
 

@@ -1,0 +1,15 @@
+<%= content_tag :div, id: dom_id(@clear, :report) do %>
+  <% if Current.user && clear.reported? %>
+    <div class="tooltip" data-tip="<%= t('clears.show.flagged_tooltip') %>">
+      <%= button_to clear_report_path(clear), class: 'btn btn-outline btn-circle btn-sm btn-warning', aria: { label: t('clears.show.unflag' )}, method: :delete  do%>
+        <%= heroicon 'flag' %>
+      <% end %>
+    </div>
+  <% else  %>
+    <div class="tooltip " data-tip="<%= t('clears.show.flag_tooltip') %>">
+      <%= button_to clear_report_path(clear), class: 'btn btn-outline btn-circle btn-sm', aria: { label: t('clears.show.flag' )}  do%>
+        <%= heroicon 'flag' %>
+      <% end %>
+    </div>
+  <% end %>
+<% end %>

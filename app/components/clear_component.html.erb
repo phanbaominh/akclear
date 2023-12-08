@@ -5,26 +5,29 @@
       class="absolute top-0 left-0 w-full h-full"
     ></iframe>
   </div>
-  <div class="flex space-x-1 items-center">
-    <div
-    tabindex="0"
-      class="
-        badge
-        <%= clear.stageable.color(:badge) %>
-        xs:badge-lg
-        rounded-sm
-        max-w-64
-        line-clamp-1
-        xs:line-clamp-none
-      "
-    >
-      <%= clear.stageable.label %>
+  <div class="flex items-center justify-between">
+    <div class="flex space-x-1 items-center">
+      <div
+        tabindex="0"
+        class="
+          badge
+          <%= clear.stageable.color(:badge) %>
+          xs:badge-lg
+          rounded-sm
+          max-w-64
+          line-clamp-1
+          xs:line-clamp-none
+        "
+      >
+        <%= clear.stageable.label %>
+      </div>
+      <%= render Clears::VerificationDetailsComponent.new(clear: clear) %>
+      <%= render Clears::VerificationComponent.new(clear: clear) %>
     </div>
-    <%= render Clears::VerificationDetailsComponent.new(clear: clear) %>
-    <%= render Clears::VerificationComponent.new(clear: clear) %>
+    <%= render Clears::ReportComponent.new(clear: clear) %>
   </div>
   <div class="md:flex justify-between">
-    <h2 class="flex text-2xl font-bold items-center gap-1">
+    <h2 class="flex text- 2xl font-bold items-center gap-1">
       <%= render Stages::CodeComponent.new(stage: clear.stage, class: "h-6")  %>
       <% if can?(:edit, clear) %>
         <%= link_to edit_clear_path(clear), class: 'btn btn-primary btn-sm' do %>

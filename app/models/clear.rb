@@ -2,6 +2,7 @@ class Clear < ApplicationRecord
   include Dry::Monads[:result]
   include Clear::HardTaggable
   include Clear::Likeable
+  include Reportable
   include Squadable
   include StageSpecifiable
   include Youtubeable

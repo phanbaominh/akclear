@@ -174,3 +174,8 @@ Only when the view mode is `grid` and the screen size is at least md (meaning th
 .iframe-responsive {
   @apply top-0 left-0 w-full h-full absolute;
 }
+
+.tooltip:before {
+  text-wrap: balance;
+  @apply max-w-[12rem];
+}
