@@ -11,7 +11,7 @@ RSpec.describe 'Sessions' do
 
     context 'when enter incorrect information' do
       it 'shows errors' do
-        sign_in(password: 'wrong')
+        sign_in(password: 'wrong', expect: false)
 
         expect(page).to have_content('That email or password is incorrect')
       end

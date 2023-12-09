@@ -31,7 +31,7 @@ describe 'Passwords' do
         fill_in 'Current password', with: 'a'
         click_button 'Change password'
 
-        expect(find_field('Current password')).to have_sibling('span', text: 'is invalid')
+        expect(find_field('Current password')).to have_sibling('div.simple_form__label_wrapper', text: 'is invalid')
       end
     end
   end
@@ -91,7 +91,8 @@ describe 'Passwords' do
           fill_in 'Password', with: 'a'
           click_button 'Save changes'
 
-          expect(find_field('Password').sibling('span')).to have_text('is too short (minimum is 12 characters)')
+          expect(find_field('Password')).to have_sibling('div.simple_form__label_wrapper',
+                                                         text: 'is too short (minimum is 12 characters)')
         end
       end
 
