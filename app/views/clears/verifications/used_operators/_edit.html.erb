@@ -5,15 +5,17 @@
   ) %>
   <%= f.input :verification_status, as: :hidden, input_html: { value: Verification::ACCEPTED, id: 'verification_status' }  %>
   <div class="flex justify-between -mt-2 z-10">
-    <%= content_tag :button, class: 'btn btn-error btn-circle btn-sm text-error-content hover:bg-opacity-80 z-10', type: :submit, data: {
-     **stimulus(
-      :update_attribute,
-      actions: { click: 'setAttr' },
-      params: { target_id: 'verification_status', name: 'value', value: Verification::DECLINED })
-    } do %>
+    <%= content_tag :button, class: 'btn btn-error btn-circle btn-sm text-error-content hover:bg-opacity-80 z-10', type: :submit,
+      aria: { label: t('.decline') },
+      data: {
+      **stimulus(
+        :update_attribute,
+        actions: { click: 'setAttr' },
+        params: { target_id: 'verification_status', name: 'value', value: Verification::DECLINED })
+      } do %>
       <%= heroicon 'x-mark' %>
     <% end %>
-    <%= content_tag :button, type: :submit, class: 'btn btn-primary btn-circle btn-sm text-error-content z-10' do %>
+    <%= content_tag :button, type: :submit, class: 'btn btn-success btn-circle btn-sm text-error-content z-10', aria: { label: t('.verify') } do %>
       <%= heroicon 'check' %>
     <% end %>
   </div>

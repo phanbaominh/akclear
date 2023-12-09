@@ -1,1 +1,2 @@
-<%= content_tag :input, nil, id: "verification_form__accept_btn", type: :submit, name: :commit, value: t(:accept), class: 'btn btn-primary', form: 'verification_form', disabled: !@verification.acceptable? %>
+<%= content_tag :input, nil, id: "verification_form__accept_btn", type: :submit, name: :commit, value: t(:accept), class: 'btn btn-primary', form: 'verification_form', disabled: !@verification.acceptable?,
+  data: { turbo_frame: '_top' } %>

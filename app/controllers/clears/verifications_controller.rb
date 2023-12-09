@@ -12,7 +12,6 @@ class Clears::VerificationsController < ApplicationController
 
   def edit
     build_used_operator_verifications_from_session
-    @verification = @verification.dup
     @verification.used_operator_verifications = @used_operator_verifications
     @verification.clear = @clear
     render 'new'
@@ -30,13 +29,27 @@ class Clears::VerificationsController < ApplicationController
         if (other_unverified_clear = @clear.other_unverified)
           redirect_to new_clear_verification_path(other_unverified_clear), flash: { success: t('.success') }
         else
-          redirect_to home_path, notice: t('.finished')
+          redirect_to root_path, notice: t('.finished')
         end
       end
     end
   end
-  alias update create
 
+  def update
+    session['verification_used_operators'] = nil
+    unless current_user.verify(@clear, verification_params.to_h)
+      flash[:alert] = t('.failed_to_verify')
+      return redirect_to edit_clear_verification_path(@clear)
+    end
+
+    respond_to do |format|
+      format.html do
+        redirect_to clear_path(@clear), flash: { success: t('.success') }
+      end
+    end
+  end
+
+  # deprecated, use accepted/declined status now
   def destroy
     unless current_user.unverify(@clear)
       flash[:alert] = I18n.t(:failed_to_unverify)
@@ -83,6 +96,6 @@ class Clears::VerificationsController < ApplicationController
 
   def verification_params
     params.require(:verification).permit(:status, :comment,
-                                         used_operator_verifications_attributes: %i[status used_operator_id])
+                                         used_operator_verifications_attributes: %i[status used_operator_id id])
   end
 end

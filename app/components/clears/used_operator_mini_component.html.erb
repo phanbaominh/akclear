@@ -24,7 +24,7 @@
   </div>
   <% if used_operator.verified? %>
     <div class="w-fit self-center absolute z-1">
-      <%= heroicon used_operator.verification_icon, options: { class: "#{used_operator.verification_color('text')} !w-14 !h-14 font-bold" } %>
+      <%= heroicon used_operator.verification_icon, options: { class: "#{used_operator.verification_color('text')} !w-14 !h-14 font-bold", alt: used_operator.verification_text } %>
     </div>
   <% end %>
 </article>

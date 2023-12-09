@@ -7,7 +7,7 @@ module Clear::Likeable
   end
 
   def likes_count
-    likers.size
+    likes.size
   end
 
   def liked?

@@ -1,7 +1,7 @@
 class Clears::Verifications::UsedOperatorsController < ApplicationController
   load_and_authorize_resource :clear
-  authorize_resource :verification
   load_resource :used_operator, through: :clear
+  before_action :authorize_verification!
 
   def edit
     respond_to do |format|
@@ -37,6 +37,10 @@ class Clears::Verifications::UsedOperatorsController < ApplicationController
   end
 
   private
+
+  def authorize_verification!
+    authorize!(:create, Verification)
+  end
 
   def used_operator_params
     params.require(:used_operator).permit(:verification_status)

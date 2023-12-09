@@ -16,7 +16,8 @@ class Ability
 
     return unless user.verifier? || user.admin?
 
-    can %i[create destroy], Verification
+    can %i[create], Verification
+    can %i[update destroy], Verification, verifier: user # TODO: allow other users to edit too? (if clear is flagged)
 
     return unless user.admin?
 

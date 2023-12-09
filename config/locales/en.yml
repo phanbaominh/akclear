@@ -86,10 +86,23 @@ en:
     verifications:
       new:
         comment_placeholder: "Add a comment..."
+        reports_count:
+          one: "A user flagged this clear for review"
+          other: "%{count} users flagged this clear for review"
+        go_to_clear: "Go to clear"
+        title: "Clear verification"
+        flag: "Flagged for review"
       create:
         failed: "Failed to verify clear."
         finished: "All done! No more clears to verify!"
         success: "Clear was successfully verified!"
+      update:
+        success: "Verification was successfully updated!"
+      used_operators:
+        view_details: "View details of %{operator}"
+        edit:
+          decline: "Decline operator"
+          verify: "Verify operator"
     create:
       success:
         one: "Clear was successfully created!"
@@ -103,6 +116,7 @@ en:
       flagged_tooltip: "You have flagged this clear for review"
       flag: "Flag for review"
       unflag: "Unflag"
+      edit_verification: "Edit verification"
     reports:
       create:
         success: "Thank you for flagging this clear. We will review it shortly."

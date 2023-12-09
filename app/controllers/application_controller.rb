@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
       return
     end
 
-    Rails.logger.info { "Access denied on #{exception.action} #{exception.subject}" } if Rails.env.development?
+    Rails.logger.info { "Access denied on #{exception.action} #{exception.subject}" } if Rails.env.local?
     respond_to do |format|
       format.json { head :forbidden }
       format.html { redirect_to root_path, alert: exception.message }

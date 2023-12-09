@@ -12,5 +12,9 @@ module Helpers
     def sign_in_as_admin
       sign_in(create(:user, :admin))
     end
+
+    def sign_in_as_verifier
+      sign_in(create(:user, :verifier))
+    end
   end
 end

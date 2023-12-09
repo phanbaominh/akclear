@@ -1,39 +1,63 @@
-<section class="card">
-  <h2 class="card-title"><%= t(:verify) %></h2>
-  <div class="card-body space-y-4">
-    <!--flex flex-col lg:flex-row lg:space-x-8 space-y-8 lg:space-y-0-->
-    <div class="grid grid-col-1 grid-rows-2 lg:flex gap-2">
-      <div class="iframe-responsive-container !w-auto flex-grow">
-        <iframe src="<%= @clear.embed_link %>" class="iframe-responsive" ></iframe>
-      </div>
-      <section class="card bg-base-200">
-        <div class="card-body">
-          <h3 class="card-title"><%= t(:squad) %></h3>
-          <div class=" grid gap-1 grid-cols-7 lg:grid-cols-2 lg:gap-2">
-            <%= render partial: 'used_operator', collection: @used_operators %>
-          </div>
+<%= turbo_frame_tag 'clear_verification' do %>
+  <section class="card">
+    <h2 class="card-title"><%= t('.title') %></h2>
+    <div class="card-body space-y-4">
+      <!--flex flex-col lg:flex-row lg:space-x-8 space-y-8 lg:space-y-0-->
+      <div class="grid grid-col-1 grid-rows-2 lg:flex gap-2">
+        <div class="iframe-responsive-container !w-auto flex-grow">
+          <iframe src="<%= @clear.embed_link %>" class="iframe-responsive" ></iframe>
         </div>
-      </section>
+        <section class="card bg-base-200">
+          <div class="card-body">
+            <h3 class="card-title"><%= t(:squad) %></h3>
+            <div class=" grid gap-1 grid-cols-7 lg:grid-cols-2 lg:gap-2">
+              <%= render partial: 'used_operator', collection: @used_operators %>
+            </div>
+          </div>
+        </section>
+      </div>
+      <%= simple_form_for @verification, url: clear_verification_path(@clear), html: { id: 'verification_form', class: '!mt-0' } do |f| %>
+        <%= f.input :status, as: :hidden, input_html: { value: Verification::ACCEPTED }  %>
+        <div class="flex justify-between">
+          <% if @clear.verification.persisted? || !(reports_count = @clear.reports_count).zero? %>
+            <div class="flex space-x-1 items-center">
+              <%= render Clears::VerificationDetailsComponent.new(clear: @clear) %>
+              <% unless (reports_count = @clear.reports_count).zero? %>
+                <div class="flex w-fit py-1 px-2 rounded text-warning tooltip"
+                  data-tip="<%= t('.reports_count', count: reports_count) %>"
+                  aria-description="<%= t('.reports_count', count: reports_count) %>"
+                >
+                  <%= heroicon 'flag', options: { alt: t('.flag') } %>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+          <%= link_to t('.go_to_clear'), clear_path(@clear), class: 'btn btn-outline btn-sm', data: { turbo_frame: '_top' } %>
+        </div>
+        <div class='label'>
+          <%= t(:stage) %>
+        </div>
+        <div class="px-1">
+          <%= @clear.stage.code_with_mods %>
+        </div>
+        <%= f.label :comment, class: 'label' %>
+        <div id="verification_from__used_operator_fields">
+          <%= f.simple_fields_for :used_operator_verifications do |uovf| %>
+            <%= uovf.input_field :status, as: :hidden %>
+            <%= uovf.input_field :used_operator_id, as: :hidden %>
+          <% end %>
+        </div>
+        <%= f.input_field :comment, as: :text, placeholder: t(".comment_placeholder"), class: 'w-full placeholder:opacity-50 textarea', maxlength: 1000 %>
+      <% end %>
+      <footer class="flex justify-between">
+        <%= render 'decline_btn', locals: { verification: @verification } %>
+        <div class="grid grid-cols-2 gap-2">
+          <div></div>
+          <%= render 'accept_btn', locals: { verification: @verification } %>
+          <%= link_to t(:prev), new_clear_verification_path(@clear.prev_unverified || @clear), class: 'btn btn-outline', disabled: !@clear.prev_unverified %>
+          <%= link_to t(:next), new_clear_verification_path(@clear.next_unverified || @clear), class: 'btn btn-outline', disabled: !@clear.next_unverified %>
+        </div>
+      </footer>
     </div>
-    <%= simple_form_for @verification, url: clear_verification_path(@clear), html: { id: 'verification_form' } do |f| %>
-      <%= f.input :status, as: :hidden, input_html: { value: Verification::ACCEPTED }  %>
-      <%= f.label :comment, class: 'label' %>
-      <div id="verification_from__used_operator_fields">
-        <%= f.simple_fields_for :used_operator_verifications do |uovf| %>
-          <%= uovf.input_field :status, as: :hidden %>
-          <%= uovf.input_field :used_operator_id, as: :hidden %>
-        <% end %>
-      </div>
-      <%= f.input_field :comment, as: :text, placeholder: t(".comment_placeholder"), class: 'w-full placeholder:opacity-50 textarea', maxlength: 1000 %>
-    <% end %>
-    <footer class="flex justify-between">
-      <%= render 'decline_btn', locals: { verification: @verification } %>
-      <div class="grid grid-cols-2 gap-2">
-        <div></div>
-        <%= render 'accept_btn', locals: { verification: @verification } %>
-        <%= link_to t(:prev), new_clear_verification_path(@clear.prev_unverified || @clear), class: 'btn btn-outline', disabled: !@clear.prev_unverified %>
-        <%= link_to t(:next), new_clear_verification_path(@clear.next_unverified || @clear), class: 'btn btn-outline', disabled: !@clear.next_unverified %>
-      </div>
-    </footer>
-  </div>
-</section>
+  </section>
+<% end %>

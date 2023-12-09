@@ -7,12 +7,11 @@ class Clear < ApplicationRecord
   include StageSpecifiable
   include Youtubeable
   include Duplicatable
+  include Verifiable
   belongs_to :submitter, class_name: 'User'
   belongs_to :stage
   belongs_to :channel, optional: true
-  has_one :verification, dependent: :destroy
 
-  scope :unverified, -> { where.missing(:verification) }
   scope :submitted_by, ->(user) { where(submitter_id: user.id) }
 
   delegate :event?, to: :stage, allow_nil: true
@@ -20,40 +19,11 @@ class Clear < ApplicationRecord
   validates :link, presence: true
 
   before_save :normalize_link
-  after_update -> { verification&.destroy }
   after_save :mark_job_as_clear_created
   after_commit :assign_channel
 
   # considering separate spec logic from model
-  attr_accessor :job_id, :channel_id, :self_only, :verification_status
-
-  # VERIFICATION
-
-  def next_unverified
-    Clear.unverified.where(created_at: (created_at...)).where.not(id:).order(created_at: :asc).first
-  end
-
-  def prev_unverified
-    Clear.unverified.where(created_at: (...created_at)).where.not(id:).order(created_at: :desc).first
-  end
-
-  def other_unverified
-    next_unverified || prev_unverified
-  end
-
-  def verified?
-    verification.present?
-  end
-
-  def accepted_used_operators
-    used_operators.select(&:verification_accepted?)
-  end
-
-  def declined_used_operators
-    used_operators.select(&:verification_declined?)
-  end
-
-  #####
+  attr_accessor :job_id, :channel_id, :self_only
 
   def preload_operators(with_verification: false)
     return unless persisted?
