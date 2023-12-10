@@ -349,6 +349,41 @@ describe 'Clears' do
       end
     end
 
+    describe 'create clear from existing squad' do
+      it 'fills out the form with data from squad' do
+        existing_clear = create(:clear)
+        deleted_existing_used_op = create(:full_used_operator, clear: existing_clear)
+        edited_existing_used_op = create(:full_used_operator, clear: existing_clear)
+        new_op = create(:operator, skill_game_ids: %w[1 2])
+
+        sign_in
+
+        visit clear_path(existing_clear)
+        click_link 'Use squad'
+
+        fill_in_clear_detail
+        select_stage(existing_clear.stage.code)
+
+        expect_page_have_operator_details(deleted_existing_used_op)
+        expect_page_have_operator_details(edited_existing_used_op)
+        new_used_op = add_an_operator(operator: new_op, elite: 1, level: 50, skill: 1, skill_level: 7)
+        delete_an_operator(operator: deleted_existing_used_op.operator)
+        newly_edited_existing_used_op = edit_an_operator(operator: edited_existing_used_op.operator, elite: 1,
+                                                         level: 50, skill: 1, skill_level: 7)
+
+        click_button 'Create clear'
+
+        expect(page).to have_content('Clear was successfully created!')
+
+        new_clear = Clear.last
+        expect(page).to have_current_path(clear_path(new_clear))
+
+        expect_page_have_operator_details(new_used_op)
+        expect_page_not_have_operator(deleted_existing_used_op.operator)
+        expect_page_have_operator_details(newly_edited_existing_used_op)
+      end
+    end
+
     describe 'creating clear from job' do
       it 'fills out the form with data from job' do
         ops = create_list(:operator, 5, skill_game_ids: %w[skill_1 skill_2])

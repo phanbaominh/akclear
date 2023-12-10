@@ -76,8 +76,12 @@
   </div>
   <section class="card shadow-xl bg-base-200">
     <div class="card-body">
-      <h3 class="card-title">
-        <%= t(:squad) %></h3>
+      <div class="flex space-x-2">
+        <h3 class="card-title">
+          <%= t(:squad) %>
+        </h3>
+        <%= link_to t('clears.use_squad'), new_clear_path(use_squad_clear_id: clear.id), class: 'btn btn-primary btn-sm' %>
+      </div>
       <span class="divider m-0"></span>
       <div class="flex justify-center">
         <div id="clears_operators" class="grid grid-cols-1 xs:grid-cols-2 sm:flex sm:flex-wrap gap-2">

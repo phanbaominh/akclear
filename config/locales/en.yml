@@ -72,6 +72,7 @@ en:
         success: "User was successfully updated."
         failed: "Failed to update user."
   clears:
+    use_squad: "Use squad"
     item: "Clears"
     title: "Clears"
     select_operator_prompt: "Select operator"

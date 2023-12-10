@@ -26,8 +26,14 @@ class ClearsController < ApplicationController
   def new
     set_modifying_clear
     delete_clear_spec_session_of_existing_clear
-    set_clear_spec
-    @clear = @clear_spec
+    if params[:use_squad_clear_id]
+      @clear = Clear.new
+      @clear.used_operators = Clear.find(params[:use_squad_clear_id]).duplicate_squad
+      used_operators_session.init_from_clear(@clear)
+    else
+      set_clear_spec
+      @clear = @clear_spec
+    end
   end
 
   def edit
