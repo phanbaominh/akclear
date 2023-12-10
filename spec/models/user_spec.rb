@@ -33,7 +33,7 @@ describe User do
       it { is_expected.to be_able_to(:create, :like) }
       it { is_expected.to be_able_to(:destroy, :like) }
       it { is_expected.to be_able_to(:create, Verification.new) }
-      it { is_expected.to be_able_to(:destroy, Verification.new) }
+      it { is_expected.to be_able_to(:destroy, Verification.new(verifier: user)) }
     end
 
     context 'when user is admin' do
