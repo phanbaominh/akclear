@@ -398,7 +398,7 @@ describe 'Clears' do
                        used_operators_attributes: used_operators.map(&:attributes)
                      }, stage: job_stage, video_url: example_link)
 
-        sign_in_as_admin
+        admin = sign_in_as_admin
 
         click_link 'Admin'
 
@@ -424,6 +424,9 @@ describe 'Clears' do
         new_clear = Clear.last
         expect(page).to have_content('0-1')
         expect(page).to have_current_path(clear_path(new_clear))
+        expect(page).to have_content('Verified')
+        find('details', text: "Verified by #{admin.username}").click
+        expect(page).to have_content('Clear was submitted by trusted users and was automatically verified.')
         expect_page_have_embeded_video
 
         used_operators.each do |used_op|

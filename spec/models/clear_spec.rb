@@ -93,4 +93,30 @@ RSpec.describe Clear do
       end
     end
   end
+
+  describe '#created_by_trusted_users?' do
+    context 'when the submitter is a verifier' do
+      it 'returns true' do
+        clear = build(:clear, submitter: build(:user, :verifier))
+
+        expect(clear.created_by_trusted_users?).to eq(true)
+      end
+    end
+
+    context 'when the submitter is an admin' do
+      it 'returns true' do
+        clear = build(:clear, submitter: build(:user, :admin))
+
+        expect(clear.created_by_trusted_users?).to eq(true)
+      end
+    end
+
+    context 'when the submitter is a regular user' do
+      it 'returns false' do
+        clear = build(:clear, submitter: build(:user))
+
+        expect(clear.created_by_trusted_users?).to eq(false)
+      end
+    end
+  end
 end

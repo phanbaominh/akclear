@@ -72,6 +72,7 @@ en:
         success: "User was successfully updated."
         failed: "Failed to update user."
   clears:
+    auto_verified_by_trusted_users: "Clear was submitted by trusted users and was automatically verified."
     use_squad: "Use squad"
     item: "Clears"
     title: "Clears"
