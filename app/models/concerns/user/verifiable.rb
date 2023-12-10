@@ -5,6 +5,7 @@ module User::Verifiable
     true
   end
 
+  # Move this to Clear::Verifiable
   def verify(clear, params)
     if clear.verified?
       params[:used_operator_verifications_attributes].each do |_, used_operator_verification|
@@ -16,6 +17,7 @@ module User::Verifiable
     else
       clear.create_verification(verifier: self, **params)
     end
+    clear.reports.destroy_all
   end
 
   def unverify(clear)

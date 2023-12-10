@@ -17,6 +17,8 @@ module Clear::Verifiable
                               }
 
     attr_accessor :verification_status
+
+    delegate :accepted?, :declined?, to: :verification, allow_nil: true
   end
 
   def next_unverified
