@@ -5,8 +5,8 @@
   <%= turbo_stream.update dom_id(@used_operator.operator, :mobile) do %>
     <%= render Clears::UsedOperatorComponent.new(used_operator: @used_operator) %>
   <% end %>
-  <%= turbo_stream.update dom_id(@used_operator.operator, :basic) do %>
-    <%= render Clears::UsedOperatorMiniComponent.new(used_operator: @used_operator) %>
+  <%= turbo_stream.replace dom_id(@used_operator.operator, :basic) do %>
+    <%= render Clears::UsedOperatorEditMiniComponent.new(used_operator: @used_operator) %>
   <% end %>
 <% end %>
 <%= render partial: 'new_btn', locals: { squad: @squad } %>
