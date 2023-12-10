@@ -36,7 +36,7 @@ describe 'Verifications', :js do
       accepted_used_op = create(:full_used_operator, clear:)
       declined_used_op = create(:full_used_operator, clear:)
 
-      sign_in_as_verifier
+      verifier = sign_in_as_verifier
 
       # Create verification
       visit clear_path(clear)
@@ -60,6 +60,7 @@ describe 'Verifications', :js do
 
       expect(page).to have_content('1-1')
       expect(page).to have_button('Accept', disabled: true)
+      fill_in 'Comment', with: 'Boohoo'
 
       click_button 'Decline'
 
@@ -72,6 +73,8 @@ describe 'Verifications', :js do
       visit clear_path(clear)
       expect(page).to have_content('Declined')
 
+      find('details', text: "Declined by #{verifier.username}").click
+      expect(page).to have_content('Boohoo')
       click_link 'Edit verification'
       expect(page).to have_content('Clear verification')
       expect(page).to have_content('Declined')

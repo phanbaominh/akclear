@@ -203,6 +203,7 @@ en:
   anonymous: "Anonymous"
   end_in: "End in"
   reset: "Reset"
+  no_comment: "No comment."
   verified: "Verified"
   declined: "Declined"
   verified_by: "Verified by %{username}"

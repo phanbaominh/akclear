@@ -22,7 +22,6 @@
         <%= clear.stageable.label %>
       </div>
       <%= render Clears::VerificationDetailsComponent.new(clear: clear) %>
-      <%= render Clears::VerificationComponent.new(clear: clear) %>
     </div>
     <%= render Clears::ReportComponent.new(clear: clear) %>
   </div>
@@ -45,16 +44,35 @@
         </a>
         <span class="before:content-['\00B7\20'] before:pl-1 inline-block"><%= time_ago_in_words(clear.created_at) + " " + t(:ago) %></span>
       </div>
-      <% if verification %>
-        <div class="" tabindex="0">
-          <%= t(verification.accepted? ? :verified_by : :declined_by, verification: verification, username: verification.verifier.username) %>
-          <span class="before:content-['\00B7\20'] before:pl-1"><%= time_string(verification.created_at) %></span>
-        </div>
-      <% end %>
     </div>
     <section class="flex items-center space-x-4">
       <%= render Clears::LikeBigComponent.new(clear: clear) %>
     </section>
+  </div>
+  <div>
+    <% if verification %>
+      <details class="collapse bg-base-200 lg:!w-1/2">
+        <summary class="collapse-title !list-item"  tabindex="0">
+          <%= t(verification.accepted? ? :verified_by : :declined_by, verification: verification, username: verification.verifier.username) %>
+          <span class="before:content-['\00B7\20'] before:pl-1"><%= time_string(verification.created_at) %></span>
+        </summary>
+        <div class="collapse-content flex items-center justify-between">
+          <p class="whitespace-pre-wrap"><%= verification.comment.presence || t(:no_comment) %></p>
+          <span>
+            <% if verification && can?(:edit, verification) %>
+              <%= link_to(edit_clear_verification_path(clear),
+                class: 'btn btn-outline  btn-circle btn-sm',
+                aria: { label: t('clears.show.edit_verification')}
+              ) do %>
+                <%= heroicon 'pencil' %>
+              <% end %>
+            <% end %>
+          </span>
+        </div>
+      </details>
+    <% else %>
+      <%= render Clears::VerificationComponent.new(clear: clear) %>
+    <% end %>
   </div>
   <section class="card shadow-xl bg-base-200">
     <div class="card-body">
