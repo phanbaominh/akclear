@@ -11,7 +11,7 @@
       **stimulus(
         :update_attribute,
         actions: { click: 'setAttr' },
-        params: { target_id: 'verification_status', name: 'value', value: Verification::DECLINED })
+        params: { target_css: '#verification_status', name: 'value', value: Verification::DECLINED })
       } do %>
       <%= heroicon 'x-mark' %>
     <% end %>

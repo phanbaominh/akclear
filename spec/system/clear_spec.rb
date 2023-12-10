@@ -31,7 +31,6 @@ describe 'Clears' do
       used_operator.values_at(:name, :elite, :level, :skill, :skill_level_option, :operator_id)
 
     within_operator_form(used_operator, edit:) do
-      select_operator_name(name) unless edit
       find("label[for='#{mode}_#{id}_used_operator_elite_#{elite}']").click if elite
 
       return unless elite
@@ -53,17 +52,19 @@ describe 'Clears' do
     find(add_operator_button_css).click
   end
 
-  def add_an_operator(operator)
-    used_operator = UsedOperator.new(operator)
-
-    if mode == :basic
-      within('.operators__new_operator_form') do
-        find('div[aria-label="Select operator"]').click
-        find(operator_name_option_css, text: used_operator.name, exact_text: true).click
-      end
+  def select_operator_to_add(operator)
+    within('.operators__new_operator_form') do
+      find('div[aria-label="Select operator"]').click
+      find(operator_name_option_css, text: operator.name, exact_text: true).click
     end
 
     click_add_operator_button
+  end
+
+  def add_an_operator(operator)
+    used_operator = UsedOperator.new(operator)
+
+    select_operator_to_add(used_operator)
 
     if mode == :basic
       edit_an_operator(operator)
@@ -331,7 +332,7 @@ describe 'Clears' do
 
           add_an_operator(operator: op)
 
-          click_add_operator_button
+          select_operator_to_add(new_op)
 
           within_operator_form do
             show_operator_name_options
