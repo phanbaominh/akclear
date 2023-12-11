@@ -24,11 +24,10 @@ module Helpers
 
     def choicesjs_select(option, from:, single: true)
       open_choicesjs_dropdown(from) do
-        find(choicesjs_select_option_css, text: option).click
+        Array(option).each do |opt|
+          find(choicesjs_select_option_css, text: opt).click
+        end
       end
-
-      # click away so that the dropdown closes
-      click_outside unless single
     end
   end
 end

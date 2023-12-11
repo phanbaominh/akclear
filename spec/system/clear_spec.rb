@@ -174,7 +174,7 @@ describe 'Clears' do
 
   def visit_new_clear_page
     sign_in
-    within('header') do
+    within('header .navbar') do
       click_link 'Clear'
     end
     expect(page).to have_content('Submit new clear')
@@ -210,9 +210,8 @@ describe 'Clears' do
 
     describe 'multiple stages' do
       def select_multiple_stages(stages)
-        stages.each_with_index do |stage, _index|
-          select_stage(stage.code)
-        end
+        select_stage(stages.map(&:code))
+        click_outside
       end
 
       it 'does not allows more than 5 stages' do
