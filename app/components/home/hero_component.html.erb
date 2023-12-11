@@ -2,27 +2,33 @@
   <h1 class="text-3xl"><%= title %></h1>
   <div class="h-4"></div>
   <ul>
-    <% stageables.each do |stageable| %>
-      <li class="text-center ">
-        <div class="w-full">
-          <!-- TAILWIND: text-info text-warning -->
-          <h2 class="text-lg font-semibold text-<%= stageable.color(:text) %>"><%= stageable.name %></h2>
-        </div>
-        <%= link_to stageable.filter_link do %>
-          <% if remote_image %>
-            <%= image_tag stageable.banner_image_path, class: "w-full", alt: stageable.name %>
-          <% else %>
-            <%= vite_image_tag stageable.banner_image_path, class: "w-full", alt: stageable.name %>
-          <% end %>
-        <% end %>
-        <% if stageable.try(:end_time).present? %>
-          <span class="text-sm sm:text-base whitespace-normal" >
-            <%= t(:end_in) %>:
-            <span class="ml-1" data-controller="timer" data-timer-end-time-value="<%= stageable.end_time.to_s %>">
-            </span>
-          </span>
-        <% end %>
+    <% if stageables.empty? %>
+      <li class="">
+        <h2 class="text-lg font-semibold text-gray-400"><%= t('no_events') %></h2>
       </li>
+    <% else %>
+      <% stageables.each do |stageable| %>
+        <li class="text-center ">
+          <div class="w-full">
+            <!-- TAILWIND: text-info text-warning -->
+            <h2 class="text-lg font-semibold text-<%= stageable.color(:text) %>"><%= stageable.name %></h2>
+          </div>
+          <%= link_to stageable.filter_link do %>
+            <% if remote_image %>
+              <%= image_tag stageable.banner_image_path, class: "w-full", alt: stageable.name %>
+            <% else %>
+              <%= vite_image_tag stageable.banner_image_path, class: "w-full", alt: stageable.name %>
+            <% end %>
+          <% end %>
+          <% if stageable.try(:end_time).present? %>
+            <span class="text-sm sm:text-base whitespace-normal" >
+              <%= t(:end_in) %>:
+              <span class="ml-1" data-controller="timer" data-timer-end-time-value="<%= stageable.end_time.to_s %>">
+              </span>
+            </span>
+          <% end %>
+        </li>
+      <% end %>
     <% end %>
   </ul>
 </section>

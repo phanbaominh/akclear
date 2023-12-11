@@ -4,3 +4,6 @@
 <%= turbo_stream.append "basic_operators__list" do %>
   <%= render Clears::Form::NewOperatorButtonComponent.new(squad: squad, create: true) %>
 <% end %>
+<%= turbo_stream.append "home_operators__list" do %>
+  <%= render Clears::Form::NewOperatorButtonComponent.new(squad: squad, create: true) %>
+<% end %>

@@ -174,7 +174,9 @@ describe 'Clears' do
 
   def visit_new_clear_page
     sign_in
-    click_link 'Clear'
+    within('header') do
+      click_link 'Clear'
+    end
     expect(page).to have_content('Submit new clear')
   end
 

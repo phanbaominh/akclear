@@ -72,6 +72,7 @@ en:
         success: "User was successfully updated."
         failed: "Failed to update user."
   clears:
+    stage_prompt: "Select a stage"
     auto_verified_by_trusted_users: "Clear was submitted by trusted users and was automatically verified."
     use_squad: "Use squad"
     item: "Clears"
@@ -126,6 +127,14 @@ en:
         success: "You have unflagged this clear."
   home:
     index:
+      title_1: 'Find a clear that match your squad in just a few clicks'
+      desc_1: 
+        first_line: 'Tired of searching Youtube for a CLEAR that can work with your squad, that does not include shiny OP operators? Just follow these steps:'
+        choose_stage: 'Choose a stage'
+        choose_your_favorite_operators: 'Choose your favorite operators'
+        click_the_button: 'Click the button'
+      title_2: 'OR want to share your awesome clears to help other people out or just to show off?'
+      desc_2: 'and click this button'
       latest_events: "Latest events"
       latest_episode: "Latest episode"
       latest_annihilation: "Latest annihilation"
@@ -160,6 +169,7 @@ en:
   passwords:
     update:
       success: "Your password has been changed"
+  no_events: "No event currently"
   sign_in_redirect: "You need to sign in or sign up before continuing"
   failed: "Some"
   select_max_items: "Cannot select more than %{count}"

@@ -12,6 +12,11 @@
     used_operator: @used_operator
   ) %>
 <% end %>
+<%= turbo_stream.append "home_operators__list" do %>
+  <%= render Clears::UsedOperatorMiniComponent.new(
+    used_operator: @used_operator
+  ) %>
+<% end %>
 <%= turbo_stream.append "detailed_operators__list" do %>
   <%= render Clears::UsedOperatorResponsiveComponent.new(
     used_operator: @used_operator

@@ -8,7 +8,7 @@
             input_html: { multiple: true }, hint: t('clears.new.stage_ids_hint') %>
   <% else %>
     <%= form.input :stage_id, collection: all_stages, label_method: :code_with_mods, 
-          wrapper_html: { data: { **stimulus(:choices) } } %>
+          wrapper_html: { data: { **stimulus(:choices) } }, prompt: t('clears.stage_prompt'), label: stage_label %>
   <% end %>
 <% else %>
   <%= turbo_frame_tag 'filters__stage' do %>
