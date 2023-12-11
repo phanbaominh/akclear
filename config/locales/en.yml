@@ -169,6 +169,16 @@ en:
   passwords:
     update:
       success: "Your password has been changed"
+  footer:
+    about:
+      blurb: 'A clear videos aggregator for Arknights'
+      self: 'Developed by pbminh'
+    credit:
+      thanks: 'Thanks'
+      ak_ccs: 'Featured Arknights content creators'
+      kengxiao: 'Keng Xiao for game data'
+      prts: 'PRTS wiki for event banner images'
+      ak_wiki: 'Arknights EN wiki for episode banner images'
   no_events: "No event currently"
   sign_in_redirect: "You need to sign in or sign up before continuing"
   failed: "Some"
