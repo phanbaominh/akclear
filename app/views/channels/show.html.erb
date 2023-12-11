@@ -23,7 +23,7 @@
                 @vtengoku
               </a>
             </p> %>
-            <p class="text-sm text-white opacity-70"><%= @channel.clear_count %></p>
+            <p class="text-sm text-white opacity-70"><%= @channel.clear_count_text %></p>
           </div>
         </div>
         <div>
@@ -34,7 +34,7 @@
       </div>
     </section>
     <section class="pt-8">
-      <%= turbo_frame_tag 'clears', src: clears_path(clear: { channel_id: @channel.id }), loading: 'lazy' do %>
+      <%= turbo_frame_tag 'clears', data: { turbo_temporary: 'true' }, src: clears_path(clear: { channel_id: @channel.id }), loading: 'lazy' do %>
         <span class="loading loading-spinner loading-lg"></span>
       <% end %>
     </section>

@@ -1,13 +1,15 @@
-<%= content_tag :div, data: { **stimulus(:channels__view_mode)} do %>
-  <section class="mb-8">
-    <input type="text" placeholder="Search" class="simple_form__input w-full"/>
+<%= content_tag :section, data: { **stimulus(:channels__view_mode)} do %>
+  <header class="mb-8">
+    <!--<input type="text" placeholder="Search" class="simple_form__input w-full"/>-->
+    <h2 class="text-xl"><%= t('.title') %></h2>
     <div class="flex justify-between mt-2">
-      <select class="select text-base font-normal">
+      <!--      <select class="select text-base font-normal">
         <option value="" disabled selected hidden>Sort by</option>
         <option>Name</option>
         <option>Video Count</option>
         <option>Recently Added</option>
-      </select>
+      </select>-->
+      <div><%= t('.credit') %></div>
       <%= content_tag(:button,
                 data: {
                     **stimuluses(
@@ -28,39 +30,42 @@
         <% end %>
       <% end %>
     </div>
-  </section>
-  <section>
-    <%= content_tag :ul,
+  </header>
+  <%= turbo_frame_tag 'channels', data: { turbo_action: 'advance' } do %>
+    <section>
+      <%= content_tag :ul,
             class: "grid channel-list-grid",
             data: {
                 **stimulus_attrs("channels__view_mode", target: 'list')
             } do %>
-      <% @channels.map do |channel| %>
-        <li class="flex">
-          <%= link_to channel_path(channel), class: "flex flex-grow" do %>
-            <div class="
+        <% @channels.map do |channel| %>
+          <li class="flex">
+            <%= link_to channel_path(channel), class: "flex flex-grow", data: { turbo_frame: '_top' } do %>
+              <div class="
               flex-row flex text-left p-4 bg-base-200 shadow-xl flex-grow
               hover:outline
               hover:outline-primary
               hover:bg-base-content
               hover:bg-opacity-10
             ">
-              <img src=<%= channel.thumbnail_url %> alt="" class="channel-list__item-img" >
-              <div class="channel-list__item-body">
-                <div>
-                  <p class="text-white text-base p-0"><%= channel.title %></p>
-                  <p class="text-white opacity-70 text-sm p-0"><%= channel.clear_count %> </p>
+                <img src=<%= channel.thumbnail_url %> alt="" class="channel-list__item-img" >
+                <div class="channel-list__item-body">
+                  <div>
+                    <p class="text-white text-base p-0"><%= channel.title %></p>
+                    <p class="text-white opacity-70 text-sm p-0"><%= channel.clear_count_text %> </p>
+                  </div>
+                  <div>
+                    <%#= button_to channel.url, method: :get, class: 'z-10' do %>
+                      <!--                    <i class="fa-brands fa-youtube text-[#c4302b]"></i>-->
+                      <%# end %>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <%#= button_to channel.url, method: :get, class: 'z-10' do %>
-<!--                    <i class="fa-brands fa-youtube text-[#c4302b]"></i>-->
-                  <%# end %>
-                </div>
-              </div>
-            </div>
+              <% end %>
+            </li>
           <% end %>
-        </li>
-      <% end %>
+        <% end %>
+      </section>
+      <div class="mt-4 w-full flex justify-end"><%== render Primer::PagyComponent.new(pagy: @pagy) %></div>
     <% end %>
-  </section>
-<% end %>
+  <% end %>

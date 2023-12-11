@@ -19,4 +19,11 @@ export default class extends Controller {
       this.listTarget.classList.add("channel-list-list");
     }
   }
+
+  listTargetConnected() {
+    if (this.isGrid !== undefined) {
+      this.isGrid = !this.isGrid;
+      this.toggle();
+    }
+  }
 }

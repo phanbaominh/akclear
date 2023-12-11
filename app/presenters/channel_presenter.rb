@@ -1,6 +1,6 @@
 class ChannelPresenter < ApplicationPresenter
-  def clear_count
-    "#{object.clears.count} #{I18n.t('.clears.item')}"
+  def clear_count_text
+    "#{object[:clear_count] || object.clears.count} #{I18n.t('.clears.item')}"
   end
 
   def url

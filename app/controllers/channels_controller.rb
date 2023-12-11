@@ -4,7 +4,7 @@ class ChannelsController < ApplicationController
   include Pagy::Backend
 
   def index
-    @pagy, @channels = pagy(Channel.all)
+    @pagy, @channels = pagy(Channel.joins(:clears).group(:id).select('channels.*', 'COUNT(clears.id) as clear_count'))
   end
 
   def show; end
