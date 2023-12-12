@@ -5,6 +5,7 @@ class Ability
 
   def initialize(user)
     can :read, Clear
+    can :read, Channel
 
     return if user.blank?
 
