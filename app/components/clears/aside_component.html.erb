@@ -20,8 +20,8 @@
             <i class="fa-brands fa-youtube"></i>
           </a>
         </div>
-        <div class="flex flex-row">
-          <%= link_to by_string(clear.player_name), "#", class: "text-xs block" %>
+        <div class="flex flex-row justify-between gap-2">
+          <%= link_to by_string(clear.player_name), clear.channel.link, class: "text-xs block" %>
           <span class="text-xs block new-clear__time"><%= time_string(clear.created_at) %></span>
         </div>
         <div class="flex flex-row items-center justify-between pt-2">

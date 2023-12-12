@@ -2,10 +2,8 @@
   <h1 class="text-3xl"><%= title %></h1>
   <div class="h-4"></div>
   <ul>
-    <% if stageables.empty? %>
-      <li class="">
-        <h2 class="text-lg font-semibold text-gray-400"><%= t('no_events') %></h2>
-      </li>
+    <% if stageables.to_a.empty? %>
+      <p class="text-xl text-gray-400 m-auto w-full sm:w-1/2 text-center"><%= t('no_events') %></p>
     <% else %>
       <% stageables.each do |stageable| %>
         <li class="text-center ">

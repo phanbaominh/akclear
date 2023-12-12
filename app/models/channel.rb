@@ -6,6 +6,10 @@ class Channel < ApplicationRecord
   belongs_to :user, optional: true
   has_many :clears, dependent: :nullify
 
+  def link
+    "https://www.youtube.com/channel/#{external_id}"
+  end
+
   def self.from(link)
     video_data = Yt::Video.new(url: link)
     external_id = video_data.channel_id

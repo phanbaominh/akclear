@@ -1,11 +1,11 @@
 <div class="md:flex flex-row gap-12">
   <!-- Consider using defer loading turbo frames for each component -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 grow gap-12 basis-0">
-    <section class=" col-span-2">
+  <div class="grid grid-cols-1 sm:grid-cols-2 grow gap-6 sm:gap-12 basis-0">
+    <section class=" sm:col-span-2">
       <h2 class="text-2xl">
         <%= t('.title_1') %>
       </h2>
-      <div class="p-1"></div>
+      <div class="p-2"></div>
       <p>
         <%= t('.desc_1.first_line') %>
         <section class="space-y-2">
@@ -29,32 +29,31 @@
             <% end %>
             <%= render Clears::Form::NewOperatorButtonComponent.new(squad: @clear_spec.squad, create: true) %>
           </div>
-          <span><%= t('.desc_1.click_the_button') %> </span>
+          <span class="label"><%= t('.desc_1.click_the_button') %> </span>
           <div>
-            <%= heroicon 'arrow-right', options: { class: 'inline' } %>
-            <button form="clears__form" class="btn btn-primary" type="submit">
+            <button form="clears__form" class="btn btn-primary btn-sm" type="submit">
               <%= t(:search) %>
             </button>
           </div>
         </section>
-        <div class="p-4"></div>
+        <div class="divider"></div>
         <h2 class="text-2xl">
           <%= t('.title_2') %>
         </h2>
-        <div class="p-1"></div>
-        <div class="flex">
+        <div class="p-2"></div>
+        <div class="flex flex-col sm:flex-row">
           <span>
-            Just <%= link_to t(:sign_in), sign_in_path, class: 'btn btn-primary btn-sm' %> <%= t('.desc_2') %>:
+            Just <%= link_to t(:sign_in), sign_in_path, class: 'btn btn-outline btn-sm sm:mx-1' %> <%= t('.desc_2') %>:
           </span>
-          <%= link_to new_clear_path, class: 'btn btn-primary shadow-xl btn-sm ml-2' do %>
+          <%= link_to new_clear_path, class: 'btn btn-primary shadow-xl w-fit btn-sm mt-2 sm:mt-0 sm:mx-2' do %>
             <%= heroicon 'plus', options: { class: '!w-4 !h-4' } %>
             <%= t(:clear) %>
           <% end %>
         </div>
-        <div class="p-2"></div>
       </p>
     </section>
     <div class="sm:col-span-2">
+      <div class="divider"></div>
       <%= render Home::HeroComponent.new(
         stageables: Event.latest,
         title: t('.latest_events')
@@ -75,10 +74,10 @@
         [t('.trending_clears'), @trending_clears],
         [t('.latest_clears'), @newest_clears]
       ].each do |(title, clears)| %>
-      <%= render Clears::AsideComponent.new(
+      <%= (render Clears::AsideComponent.new(
         clears: clears,
         title: title
-      ) %>
+      ) if clears.size > 0) %>
     <% end %>
   </div>
 </div>

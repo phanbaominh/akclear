@@ -140,6 +140,7 @@ en:
       latest_annihilation: "Latest annihilation"
       trending_clears: "Trending clears"
       latest_clears: "Latest clears"
+      empty_aside: "No clears yet"
   identity:
     emails:
       update:
@@ -176,15 +177,15 @@ en:
       credit: "Special thanks to all the content creators featured here"
   footer:
     about:
-      blurb: 'A clear videos aggregator for Arknights'
-      self: 'Developed by pbminh'
+      blurb: "A clear videos aggregator for Arknights"
+      self: "Developed by pbminh"
     credit:
-      thanks: 'Thanks'
-      ak_ccs: 'Featured Arknights content creators'
-      kengxiao: 'Keng Xiao for game data'
-      prts: 'PRTS wiki for event banner images'
-      ak_wiki: 'Arknights EN wiki for episode banner images'
-  no_events: "No event currently"
+      thanks: "Thanks"
+      ak_ccs: "Featured Arknights content creators"
+      kengxiao: "Keng Xiao for game data"
+      prts: "PRTS wiki for event banner images"
+      ak_wiki: "Arknights EN wiki for episode banner images"
+  no_events: "No event currently..."
   sign_in_redirect: "You need to sign in or sign up before continuing"
   failed: "Some"
   select_max_items: "Cannot select more than %{count}"
