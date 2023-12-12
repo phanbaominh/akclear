@@ -1,4 +1,4 @@
-<section class="-mt-28">
+<section class="-mt-12">
   <div class="w-full h-0 pb-[16%] relative">
     <div class="absolute inset-0">
       <img
@@ -27,14 +27,15 @@
           </div>
         </div>
         <div>
-          <a href="https://www.youtube.com/channel/UCg02KL1G0nmH0QzFuLsVoRQ">
+          <a href="<%= @channel.link %>">
             <i class="fa-brands fa-youtube text-[#c4302b] text-xl"></i>
           </a>
         </div>
       </div>
     </section>
     <section class="pt-8">
-      <%= turbo_frame_tag 'clears', data: { turbo_temporary: 'true' }, src: clears_path(clear: { channel_id: @channel.id }), loading: 'lazy' do %>
+      <!--TODO: looks weird when application visit with cache, cache version => loading spinner => new version-->
+      <%= turbo_frame_tag 'clears', src: clears_path(clear: { channel_id: @channel.id }), loading: 'lazy' do %>
         <span class="loading loading-spinner loading-lg"></span>
       <% end %>
     </section>

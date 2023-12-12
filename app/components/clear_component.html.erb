@@ -1,10 +1,11 @@
-<article class="space-y-2">
+<article class="">
   <div class="relative pb-[56.25%] ">
     <iframe
       src="<%= clear.embed_link %>"
       class="absolute top-0 left-0 w-full h-full"
     ></iframe>
   </div>
+  <div class="p-1"></div>
   <div class="flex items-center justify-between">
     <div class="flex space-x-1 items-center">
       <div
@@ -26,7 +27,7 @@
     <%= render Clears::ReportComponent.new(clear: clear) %>
   </div>
   <div class="md:flex justify-between">
-    <h2 class="flex text- 2xl font-bold items-center gap-1">
+    <h2 class="flex text-xl sm:text-2xl font-bold items-center gap-1">
       <%= render Stages::CodeComponent.new(stage: clear.stage, class: "h-6")  %>
       <% if can?(:edit, clear) %>
         <%= link_to edit_clear_path(clear), class: 'btn btn-primary btn-sm' do %>
@@ -45,10 +46,11 @@
         <span class="before:content-['\00B7\20'] before:pl-1 inline-block"><%= time_ago_in_words(clear.created_at) + " " + t(:ago) %></span>
       </div>
     </div>
-    <section class="flex items-center space-x-4">
+    <section class="flex items-center space-x-4 mt-1 sm:mt-0">
       <%= render Clears::LikeBigComponent.new(clear: clear) %>
     </section>
   </div>
+  <div class="p-2"></div>
   <div>
     <% if verification %>
       <details class="collapse bg-base-200 lg:!w-1/2">
@@ -74,6 +76,7 @@
       <%= render Clears::VerificationComponent.new(clear: clear) %>
     <% end %>
   </div>
+  <div class="p-2"></div>
   <section class="card shadow-xl bg-base-200">
     <div class="card-body">
       <div class="flex space-x-2">
@@ -84,7 +87,8 @@
       </div>
       <span class="divider m-0"></span>
       <div class="flex justify-center">
-        <div id="clears_operators" class="grid grid-cols-1 xs:grid-cols-2 sm:flex sm:flex-wrap gap-2">
+        <div id="clears_operators" class="grid grid-cols-1  xs:grid-cols-2 sm:flex sm:flex-wrap gap-2">
+          <!--TODO: allow switch between mini and full list-->
           <% clear.used_operators.each do |used_operator| %>
             <%= render Clears::UsedOperatorComponent.new(
               used_operator: used_operator,
