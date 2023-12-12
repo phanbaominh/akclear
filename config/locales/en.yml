@@ -111,7 +111,6 @@ en:
         one: "Clear was successfully created!"
         other: "%{count} clears were successfully created!"
     new:
-      stage_ids_hint: "Each stage chosen will create a new clear."
     update:
       success: "Clear was successfully updated!"
     show:
@@ -185,6 +184,7 @@ en:
       kengxiao: "Keng Xiao for game data"
       prts: "PRTS wiki for event banner images"
       ak_wiki: "Arknights EN wiki for episode banner images"
+  operators: "Operators"
   no_events: "No event currently..."
   sign_in_redirect: "You need to sign in or sign up before continuing"
   failed: "Some"
@@ -243,6 +243,9 @@ en:
   episode: "Episode"
   annihilation: "Annihilation"
   clear_form:
+    stage_ids_field:
+      label: "Stages"
+      hint: "Each stage chosen will create a new clear."
     stageable_field:
       prompt: "Select a %{stage_type}"
       label: "%{stage_type}"

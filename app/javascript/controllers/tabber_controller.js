@@ -6,16 +6,16 @@ export default class extends Controller {
   };
   static targets = ["tab", "tabHeader"];
 
-  connect() {
-    this.tabHeaderTargets[0].click();
-  }
-
   switchTab(event) {
     this.tabTargets.forEach((tab) => {
       if (tab.dataset.tabName == event.target.value) {
-        tab.classList.remove(this.hiddenClassValue);
+        this.hiddenClassValue.split(" ").forEach((className) => {
+          tab.classList.remove(className);
+        });
       } else {
-        tab.classList.add(this.hiddenClassValue);
+        this.hiddenClassValue.split(" ").forEach((className) => {
+          tab.classList.add(className);
+        });
       }
     });
   }

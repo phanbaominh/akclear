@@ -38,7 +38,7 @@
       <%= f.input :name, input_html: { class: 'w-full' } %>
       <div class="js-only">
         <%= render Clears::StageSelectComponent.new(form: f, simple: true, multiple: !edit_form) %>
-        <%= f.label :operator_id, t(:operators) %>
+        <%= f.label :operator_id, t(:operators), class: 'label' %>
         <div id="clears__form__operators_fields" class="hidden">
           <%= f.simple_fields_for :used_operators, include_id: false do |used_operator_form| %>
             <div id="<%= dom_id(used_operator_form.object.operator, :fields) %>">
@@ -48,7 +48,7 @@
         </div>
       </div>
     <% end %>
-    <%= render Primer::TabsComponent.new(tab_names: ['basic', 'detailed'], hidden_class: 'sm:hidden') do |tabs_comp| %>
+    <%= render Primer::TabsComponent.new(tab_names: ['basic', 'detailed'], hidden_class: 'sm:hidden', tab_header_class: 'hidden sm:block') do |tabs_comp| %>
       <%= tabs_comp.with_content_with_tabs do %>
         <%= content_tag :label, class: "label hidden sm:flex cursor-pointer w-fit self-center",
           data: { **stimulus_attrs(:tabber, target: 'tab'), tab_name: 'basic', default_tab: true } do %>

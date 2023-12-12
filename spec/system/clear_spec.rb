@@ -2,11 +2,11 @@ require 'system_spec_helper'
 
 describe 'Clears' do
   def open_stage_dropdown(single: false)
-    find('label', text: single ? 'Stage' : 'Stage ids').click
+    find('label', text: single ? 'Stage' : 'Stages').click
   end
 
   def select_stage(stage_code, single: false)
-    choicesjs_select stage_code, from: single ? 'Stage' : 'Stage ids', single:
+    choicesjs_select stage_code, from: single ? 'Stage' : 'Stages', single:
   end
 
   def within_operator_form(used_operator = nil, edit: false, &)
