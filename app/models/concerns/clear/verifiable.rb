@@ -19,7 +19,7 @@ module Clear::Verifiable
 
     attr_accessor :verification_status
 
-    delegate :accepted?, :declined?, to: :verification, allow_nil: true
+    delegate :accepted?, :rejected?, to: :verification, allow_nil: true
   end
 
   def next_unverified
@@ -42,8 +42,8 @@ module Clear::Verifiable
     used_operators.select(&:verification_accepted?)
   end
 
-  def declined_used_operators
-    used_operators.select(&:verification_declined?)
+  def rejected_used_operators
+    used_operators.select(&:verification_rejected?)
   end
 
   def mark_as_verified

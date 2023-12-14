@@ -95,10 +95,10 @@ en:
     title: "Clears"
     select_operator_prompt: "Select operator"
     edit_operator: "Edit operator %{operator}"
-    declined_count:
-      zero: "No declined clears"
-      one: "You have 1 declined clear"
-      other: "You have %{count} declined clears"
+    rejected_count:
+      zero: "No rejected clears"
+      one: "You have 1 rejected clear"
+      other: "You have %{count} rejected clears"
     used_operators:
       create:
         max_reached: "Maximum of 13 operators per clear."
@@ -120,7 +120,7 @@ en:
       used_operators:
         view_details: "View details of %{operator}"
         edit:
-          decline: "Decline operator"
+          reject: "Reject operator"
           verify: "Verify operator"
     create:
       success:
@@ -232,7 +232,7 @@ en:
   resend_verification_email: "Re-send verification email"
   email_has_changed: "Your email has been changed"
 
-  decline: "Decline"
+  reject: "Reject"
   accept: "Accept"
   hello: "Hello world"
   edit: "Edit"
@@ -249,9 +249,9 @@ en:
   reset: "Reset"
   no_comment: "No comment."
   verified: "Verified"
-  declined: "Declined"
+  rejected: "Rejected"
   verified_by: "Verified by %{username}"
-  declined_by: "Declined by %{username}"
+  rejected_by: "Rejected by %{username}"
   verify: "Verify"
   unverify: "Unverify"
   choose: "Choose"

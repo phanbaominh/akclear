@@ -1,0 +1,2 @@
+<%= content_tag :input, nil, id: "verification_form__reject_btn", type: :submit, name: :commit, value: t(:reject), class: 'btn btn-error', form: 'verification_form', disabled: !@verification.rejectable?,
+  data: { turbo_frame: '_top', **stimulus(:update_attribute, actions: { click: 'setAttr' }, params: { target_css: '#verification_status', name: 'value', value: Verification::REJECTED })} %>

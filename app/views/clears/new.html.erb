@@ -7,32 +7,32 @@
       <%# end %>
       <!--      </ul>-->
       <%# end %>
-    <div>
-      <h2 class="card-title">
-        <%= @clear.persisted? ? t(:edit_clear) : t(:new_clear) %>
-        <% if @clear.persisted? %>
-          <%= render Clears::VerificationDetailsComponent.new(clear: @clear) %>
-        <% end %>
-      </h2>
-    </div>
-    <div class="p-2"></div>
-  <% end %>
-  <%= component.with_footer do %>
-    <button id="clears__form_submit_btn" form="clears__form" class="btn btn-primary js-only" <%= "disabled" if @clear.declined_used_operators.present? %> >
-      <%= @clear.persisted? ? t(:update_clear) : t(:create_clear) %>
-    </button>
-    <noscript>
-      <%# In no js case, will submit a GET request with authenticity_token param in the URL => 
+      <div>
+        <h2 class="card-title">
+          <%= @clear.persisted? ? t(:edit_clear) : t(:new_clear) %>
+          <% if @clear.persisted? %>
+            <%= render Clears::VerificationDetailsComponent.new(clear: @clear) %>
+          <% end %>
+        </h2>
+      </div>
+      <div class="p-2"></div>
+    <% end %>
+    <%= component.with_footer do %>
+      <button id="clears__form_submit_btn" form="clears__form" class="btn btn-primary js-only" <%= "disabled" if @clear.rejected_used_operators.present? %> >
+        <%= @clear.persisted? ? t(:update_clear) : t(:create_clear) %>
+      </button>
+      <noscript>
+        <%# In no js case, will submit a GET request with authenticity_token param in the URL => 
       undesired but should not cause any issue as Rails generate a new token per request 
       and also check for origin of request %>
-      <button
+        <button
         form="clears__form"
         formmethod="GET"
         formaction="<%= clears_stage_select_path %>"
         class="btn btn-primary"
       >
-        <%= t(:select_stage) %>
-      </button>
-    </noscript>
+          <%= t(:select_stage) %>
+        </button>
+      </noscript>
+    <% end %>
   <% end %>
-<% end %>

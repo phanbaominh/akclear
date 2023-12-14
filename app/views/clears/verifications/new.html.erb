@@ -50,7 +50,7 @@
         <%= f.input_field :comment, as: :text, placeholder: t(".comment_placeholder"), class: 'w-full placeholder:opacity-50 textarea', maxlength: 1000 %>
       <% end %>
       <footer class="flex justify-between">
-        <%= render 'decline_btn', locals: { verification: @verification } %>
+        <%= render 'reject_btn', locals: { verification: @verification } %>
         <div class="grid grid-cols-2 gap-2">
           <div></div>
           <%= render 'accept_btn', locals: { verification: @verification } %>

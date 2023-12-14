@@ -9,7 +9,7 @@
     } do |f| %>
       <header>
         <%= header %>
-        <!--TODO: Show declined comment?-->
+        <!--TODO: Show rejected comment?-->
       </header>
       <% if job_id.present? %>
         <%= f.input :job_id, as: :hidden, input_html: { value: job_id } %>

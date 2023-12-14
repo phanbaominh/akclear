@@ -196,7 +196,7 @@ describe 'Clears' do
 
   describe 'Creating a new clear', :js do
     it 'does not allow more than 13 operators' do
-      clear = create(:clear, :declined, submitter: create(:user))
+      clear = create(:clear, :rejected, submitter: create(:user))
       ops = create_list(:operator, 13)
       ops.first(12).each do |op|
         create(:used_operator, clear:, operator: op)
@@ -453,7 +453,7 @@ describe 'Clears' do
         stage = create(:stage, code: '0-1')
         create(:stage, code: '0-2')
 
-        clear = create(:clear, :declined, stage:, link: example_link)
+        clear = create(:clear, :rejected, stage:, link: example_link)
         create(:used_operator, operator: edited_op, elite: 1, level: 70, skill: 2, skill_level: 7, clear:)
         create(:used_operator, operator: deleted_op, clear:)
 

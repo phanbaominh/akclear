@@ -9,11 +9,11 @@ class Verification < ApplicationRecord
   accepts_nested_attributes_for :used_operator_verifications
 
   STATUSES = [
-    DECLINED = 'declined',
+    REJECTED = 'rejected',
     ACCEPTED = 'accepted'
   ].freeze
 
-  enum :status, { DECLINED => 0, ACCEPTED => 1 }
+  enum :status, { REJECTED => 0, ACCEPTED => 1 }
 
   validates :status, inclusion: { in: STATUSES }, presence: true
   validates :comment, length: { maximum: 1000 }
@@ -22,7 +22,7 @@ class Verification < ApplicationRecord
     used_operator_verifications.all?(&:accepted?) && used_operator_verifications.size == clear.used_operators.size
   end
 
-  def declineable?
-    used_operator_verifications.any?(&:declined?)
+  def rejectable?
+    used_operator_verifications.any?(&:rejected?)
   end
 end

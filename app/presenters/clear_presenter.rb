@@ -9,7 +9,7 @@ class ClearPresenter < ApplicationPresenter
     if verification.accepted?
       I18n.t(:verified)
     else
-      I18n.t(:declined)
+      I18n.t(:rejected)
     end
   end
 

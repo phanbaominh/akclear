@@ -7,7 +7,7 @@ class UsedOperator < ApplicationRecord
   attribute :need_to_be_destroyed, :boolean
 
   delegate :name, :avatar, :max_elite, :max_skill, :max_skill_level, :max_level, :has_skills?, to: :operator
-  delegate :accepted?, :declined?, :status, to: :verification, prefix: true, allow_nil: true
+  delegate :accepted?, :rejected?, :status, to: :verification, prefix: true, allow_nil: true
 
   after_update -> { verification&.destroy }
 

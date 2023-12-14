@@ -65,7 +65,7 @@ class Clears::UsedOperatorsController < ApplicationController
       format.turbo_stream do
         set_clear_spec
         get_used_operator
-        @submit_btn_disabled = has_declined_verification?
+        @submit_btn_disabled = has_rejected_verification?
       end
     end
   end
@@ -97,16 +97,16 @@ class Clears::UsedOperatorsController < ApplicationController
     clear_spec_session['used_operators_attributes'].size >= Squad::MAX_USED_OPERATORS
   end
 
-  def has_declined_verification?
+  def has_rejected_verification?
     return false unless @used_operator.persisted?
 
-    return true if !@used_operator.changed? && @used_operator.verification_declined?
+    return true if !@used_operator.changed? && @used_operator.verification_rejected?
 
     used_operator_ids_excluding_current =
       clear_spec_session['used_operators_attributes'].pluck('id').map(&:to_i) - [@used_operator.id]
     UsedOperatorVerification.exists?(
       used_operator_id: used_operator_ids_excluding_current,
-      status: Verification::DECLINED
+      status: Verification::REJECTED
     )
   end
 

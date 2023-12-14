@@ -10,7 +10,7 @@ class Ability
     return if user.blank?
 
     can :create, Clear
-    can :update, Clear, submitter: user, verification: { status: Verification::DECLINED }
+    can :update, Clear, submitter: user, verification: { status: Verification::REJECTED }
 
     can %i[create destroy], :like
     can %i[create destroy], :report

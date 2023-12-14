@@ -58,7 +58,7 @@ class ClearsController < ApplicationController
   end
 
   def update
-    # TODO: reset like count when updated|declined? | not allowed liking when not verified yet?
+    # TODO: reset like count when updated|rejected? | not allowed liking when not verified yet?
     if @clear.update(clear_params)
       delete_clear_spec_session
       redirect_to @clear, notice: t('.success')

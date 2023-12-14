@@ -6,7 +6,7 @@ module Clears
 
     def call
       @clears = base_scope
-      hide_declined_clears
+      hide_rejected_clears
       filter_by_self
       filter_by_verification_status
       filter_by_stageable
@@ -22,7 +22,7 @@ module Clears
       Clear.all
     end
 
-    def hide_declined_clears
+    def hide_rejected_clears
       return if spec.self_only
 
       @clears = @clears.left_outer_joins(:verification).where(verifications: { status: [nil, Verification::ACCEPTED] })

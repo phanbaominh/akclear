@@ -8,9 +8,9 @@ FactoryBot.define do
     end
     stage { association :event_stage, code: }
 
-    trait :declined do
+    trait :rejected do
       after(:create) do |clear|
-        create(:verification, status: Verification::DECLINED, clear:)
+        create(:verification, status: Verification::REJECTED, clear:)
       end
     end
 

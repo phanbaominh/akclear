@@ -24,11 +24,11 @@ module User::Verifiable
     clear.verification&.destroy if clear.verified?
   end
 
-  def declined_clears
-    Clear.submitted_by(self).joins(:verification).merge(Verification.declined)
+  def rejected_clears
+    Clear.submitted_by(self).joins(:verification).merge(Verification.rejected)
   end
 
-  def has_declined_clears?
-    declined_clears.exists?
+  def has_rejected_clears?
+    rejected_clears.exists?
   end
 end

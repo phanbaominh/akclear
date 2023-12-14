@@ -49,7 +49,7 @@ class Clears::VerificationsController < ApplicationController
     end
   end
 
-  # deprecated, use accepted/declined status now
+  # deprecated, use accepted/rejected status now
   def destroy
     unless current_user.unverify(@clear)
       flash[:alert] = I18n.t(:failed_to_unverify)

@@ -24,7 +24,7 @@ class UsedOperatorPresenter < ApplicationPresenter
     return if need_to_be_verified?
 
     case object.verification_status
-    when Verification::DECLINED
+    when Verification::REJECTED
       'x-mark'
     when Verification::ACCEPTED
       'check'
@@ -35,8 +35,8 @@ class UsedOperatorPresenter < ApplicationPresenter
     return if need_to_be_verified?
 
     case object.verification_status
-    when Verification::DECLINED
-      I18n.t(:declined)
+    when Verification::REJECTED
+      I18n.t(:rejected)
     when Verification::ACCEPTED
       I18n.t(:verified)
     end

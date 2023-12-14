@@ -1,12 +1,12 @@
 <section>
   <% if @clear_spec.self_only %>
-    <% if Current.user.has_declined_clears? %>
+    <% if Current.user.has_rejected_clears? %>
       <div class="flex items-center space-x-2">
         <div class="badge badge-error badge-lg">
-          <div><%= t('clears.declined_count', count: Current.user.declined_clears.size) %>
+          <div><%= t('clears.rejected_count', count: Current.user.rejected_clears.size) %>
           </div>
         </div>
-        <%= link_to t(:fix), edit_clear_path(Current.user.declined_clears.first, fix_declined: true), class: 'btn btn-primary btn-xs' %>
+        <%= link_to t(:fix), edit_clear_path(Current.user.rejected_clears.first, fix_rejected: true), class: 'btn btn-primary btn-xs' %>
       </div>
     <% end %>
     <h2 class="text-xl"><%= t(:your_clears) %></h2>

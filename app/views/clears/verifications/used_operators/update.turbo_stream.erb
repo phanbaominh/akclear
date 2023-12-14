@@ -1,6 +1,6 @@
 <%= turbo_stream.replace(@used_operator, partial: 'clears/verifications/used_operator', object: @used_operator) %>
 <%= turbo_stream.replace "verification_form__accept_btn", partial: 'clears/verifications/accept_btn', locals: { verification: @verification } %>
-<%= turbo_stream.replace "verification_form__decline_btn", partial: 'clears/verifications/decline_btn', locals: { verification: @verification } %>
+<%= turbo_stream.replace "verification_form__reject_btn", partial: 'clears/verifications/reject_btn', locals: { verification: @verification } %>
 <%= simple_form_for @verification, url: clear_verification_path(@clear) do |f| %>
   <%= turbo_stream.update "verification_from__used_operator_fields" do %>
     <%= f.simple_fields_for :used_operator_verifications do |uovf| %>

@@ -34,7 +34,7 @@ describe 'Verifications', :js do
       stage = create(:stage, code: '1-1')
       clear = create(:clear, stage:)
       accepted_used_op = create(:full_used_operator, clear:)
-      declined_used_op = create(:full_used_operator, clear:)
+      rejected_used_op = create(:full_used_operator, clear:)
 
       verifier = sign_in_as_verifier
 
@@ -52,39 +52,39 @@ describe 'Verifications', :js do
       wait_for_turbo
       expect_operator_verification(accepted_used_op, 'Verified')
 
-      click_link "View details of #{declined_used_op.name}"
-      expect_page_have_operator_details(declined_used_op)
-      click_button 'Decline operator'
+      click_link "View details of #{rejected_used_op.name}"
+      expect_page_have_operator_details(rejected_used_op)
+      click_button 'Reject operator'
       wait_for_turbo
-      expect_operator_verification(declined_used_op, 'Declined')
+      expect_operator_verification(rejected_used_op, 'Rejected')
 
       expect(page).to have_content('1-1')
       expect(page).to have_button('Accept', disabled: true)
       fill_in 'Comment', with: 'Boohoo'
 
-      click_button 'Decline'
+      click_button 'Reject'
 
       expect(page).to have_content('All done! No more clears to verify!')
-      expect(clear.verification).to be_declined
+      expect(clear.verification).to be_rejected
       expect(accepted_used_op).to be_verification_accepted
-      expect(declined_used_op).to be_verification_declined
+      expect(rejected_used_op).to be_verification_rejected
 
       # Edit verification
       visit clear_path(clear)
-      expect(page).to have_content('Declined')
+      expect(page).to have_content('Rejected')
 
-      find('details', text: "Declined by #{verifier.username}").click
+      find('details', text: "Rejected by #{verifier.username}").click
       expect(page).to have_content('Boohoo')
       click_link 'Edit verification'
       expect(page).to have_content('Clear verification')
-      expect(page).to have_content('Declined')
+      expect(page).to have_content('Rejected')
       expect_operator_verification(accepted_used_op, 'Verified')
-      expect_operator_verification(declined_used_op, 'Declined')
+      expect_operator_verification(rejected_used_op, 'Rejected')
       expect(page).to have_button('Accept', disabled: true)
 
-      click_link "View details of #{declined_used_op.name}"
+      click_link "View details of #{rejected_used_op.name}"
       click_button 'Verify operator'
-      expect_operator_verification(declined_used_op, 'Verified')
+      expect_operator_verification(rejected_used_op, 'Verified')
       click_button 'Accept'
 
       expect(page).to have_content('Verification was successfully updated!')

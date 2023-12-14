@@ -13,7 +13,7 @@ class Clears::UsedOperatorComponent < ApplicationComponent
     used_operator.attributes.symbolize_keys.slice(*UsedOperatorsSession::PERSISTED_OPERATORS_ATTRIBUTES)
   end
 
-  def declined?
-    !used_operator.changed? && used_operator.verification_declined?
+  def rejected?
+    !used_operator.changed? && used_operator.verification_rejected?
   end
 end

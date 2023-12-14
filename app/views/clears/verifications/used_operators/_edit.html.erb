@@ -6,12 +6,12 @@
   <%= f.input :verification_status, as: :hidden, input_html: { value: Verification::ACCEPTED, id: 'verification_status' }  %>
   <div class="flex justify-between -mt-2 z-10">
     <%= content_tag :button, class: 'btn btn-error btn-circle btn-sm text-error-content hover:bg-opacity-80 z-10', type: :submit,
-      aria: { label: t('.decline') },
+      aria: { label: t('.reject') },
       data: {
       **stimulus(
         :update_attribute,
         actions: { click: 'setAttr' },
-        params: { target_css: '#verification_status', name: 'value', value: Verification::DECLINED })
+        params: { target_css: '#verification_status', name: 'value', value: Verification::REJECTED })
       } do %>
       <%= heroicon 'x-mark' %>
     <% end %>
