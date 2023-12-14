@@ -20,7 +20,6 @@ class Clear < ApplicationRecord
 
   before_save :normalize_link
   after_create :mark_job_as_clear_created
-  after_create :mark_as_verified
   after_commit :assign_channel
 
   # considering separate spec logic from model
@@ -59,12 +58,6 @@ class Clear < ApplicationRecord
 
   def created_by_trusted_users?
     submitter.verifier? || submitter.admin?
-  end
-
-  def mark_as_verified
-    return unless created_by_trusted_users?
-
-    submitter.verify(self, { status: Verification::ACCEPTED, comment: I18n.t('clears.auto_verified_by_trusted_users') })
   end
 
   def assign_channel

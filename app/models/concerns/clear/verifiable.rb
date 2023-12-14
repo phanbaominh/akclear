@@ -5,6 +5,7 @@ module Clear::Verifiable
     has_one :verification, dependent: :destroy
     has_one :verifier, through: :verification
 
+    after_create :mark_as_verified
     after_update -> { verification&.destroy }
 
     scope :unverified, -> { where.missing(:verification) }
@@ -43,5 +44,11 @@ module Clear::Verifiable
 
   def declined_used_operators
     used_operators.select(&:verification_declined?)
+  end
+
+  def mark_as_verified
+    return unless created_by_trusted_users?
+
+    submitter.verify(self, { status: Verification::ACCEPTED, comment: I18n.t('clears.auto_verified_by_trusted_users') })
   end
 end
