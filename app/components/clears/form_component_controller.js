@@ -26,6 +26,8 @@ export default class extends Controller {
   }
   embedLink(event, target = null) {
     target = target || this.videoFrameTarget;
+    if (!target) return;
+
     if (!this.linkTarget.value.match(/http.*youtube.*watch\?v=/)) {
       this.hideVideoFrame();
       return;
