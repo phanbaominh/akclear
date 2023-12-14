@@ -72,6 +72,10 @@ en:
         success: "User was successfully updated."
         failed: "Failed to update user."
   clears:
+    list:
+      empty:
+        title: "No clears"
+        desc: "No clears match this description. Be the first to submit a clear!"
     stage_prompt: "Select a stage"
     auto_verified_by_trusted_users: "Clear was submitted by trusted users and was automatically verified."
     use_squad: "Use squad"

@@ -45,10 +45,7 @@
           <span>
             Just <%= link_to t(:sign_in), sign_in_path, class: 'btn btn-outline btn-sm sm:mx-1' %> <%= t('.desc_2') %>:
           </span>
-          <%= link_to new_clear_path, class: 'btn btn-primary shadow-xl w-fit btn-sm mt-4 sm:mt-0 sm:mx-2' do %>
-            <%= heroicon 'plus', options: { class: '!w-4 !h-4' } %>
-            <%= t(:clear) %>
-          <% end %>
+          <%= render Clears::NewBtnComponent.new %>
         </div>
       </p>
     </section>
