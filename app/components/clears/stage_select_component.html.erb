@@ -5,10 +5,10 @@
               :choices,
               values: { choices_options: { removeItemButton: true, maxItemCount: Clear::DUPLICATION_LIMIT, maxItemText: t(:select_max_items, count: Clear::DUPLICATION_LIMIT) }}) 
             } },
-            input_html: { multiple: true }, hint: t('clear_form.stage_ids_field.hint') %>
+            input_html: { multiple: true }, hint: t('clear_form.stage_ids_field.hint'), required: required %>
   <% else %>
     <%= form.input :stage_id, collection: all_stages, label_method: :code_with_mods, 
-          wrapper_html: { data: { **stimulus(:choices) } }, prompt: t('clears.stage_prompt'), label: stage_label %>
+          wrapper_html: { data: { **stimulus(:choices) } }, prompt: t('clears.stage_prompt'), label: stage_label, required: required %>
   <% end %>
 <% else %>
   <%= turbo_frame_tag 'filters__stage' do %>

@@ -34,11 +34,11 @@
                       target: "link"
                     )
                   }
-                } %>
+                }, hint: t('clear_form.link_field.hint') %>
       <%= f.input :name, input_html: { class: 'w-full' } %>
       <div class="js-only">
-        <%= render Clears::StageSelectComponent.new(form: f, simple: true, multiple: !edit_form) %>
-        <%= f.label :operator_id, t(:operators), class: 'label' %>
+        <%= render Clears::StageSelectComponent.new(form: f, simple: true, multiple: !edit_form, required: true) %>
+        <%= f.label :operator_id, class: 'label' %>
         <div id="clears__form__operators_fields" class="hidden">
           <%= f.simple_fields_for :used_operators, include_id: false do |used_operator_form| %>
             <div id="<%= dom_id(used_operator_form.object.operator, :fields) %>">

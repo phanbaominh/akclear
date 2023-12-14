@@ -30,6 +30,16 @@
 # available at https://guides.rubyonrails.org/i18n.html.
 
 en:
+  activerecord:
+    errors:
+      models:
+        clear:
+          attributes:
+            stage:
+              required: "must be selected"
+    attributes:
+      clear:
+        used_operators: "Squad"
   activemodel:
     errors:
       models:
@@ -37,11 +47,13 @@ en:
           attributes:
             used_operators:
               duplicated: "is already in squad"
-              too_long: "maximum of 13 operators"
+              too_long: "cannot have more than 13 operators"
+
   simple_form:
     labels:
       clear:
         name: "Title"
+        operator_id: "Operators"
   admin:
     title: "Admin"
     game_data_imports:
@@ -247,9 +259,11 @@ en:
   episode: "Episode"
   annihilation: "Annihilation"
   clear_form:
+    link_field:
+      hint: "Only Youtube link work for now."
     stage_ids_field:
       label: "Stages"
-      hint: "Each stage chosen will create a new clear."
+      hint: "A clear will be created for each stage chosen."
     stageable_field:
       prompt: "Select a %{stage_type}"
       label: "%{stage_type}"

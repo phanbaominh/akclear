@@ -2,11 +2,11 @@ require 'system_spec_helper'
 
 describe 'Clears' do
   def open_stage_dropdown(single: false)
-    find('label', text: single ? 'Stage' : 'Stages').click
+    find('label', text: single ? 'Stage' : "*\nStages").click
   end
 
-  def select_stage(stage_code, single: false)
-    choicesjs_select stage_code, from: single ? 'Stage' : 'Stages', single:
+  def select_stage(stage_code, single: false, required: false)
+    choicesjs_select stage_code, from: single ? [("*\n" if required), 'Stage'].join : "*\nStages", single:
   end
 
   def within_operator_form(used_operator = nil, edit: false, &)
@@ -232,7 +232,7 @@ describe 'Clears' do
         fill_in 'Link', with: example_link
         click_outside
 
-        expect(page).to have_content('Each stage chosen will create a new clear.')
+        expect(page).to have_content('A clear will be created for each stage chosen.')
         select_multiple_stages(stages)
 
         used_op = add_an_operator(operator: op, elite: 2)
@@ -461,7 +461,7 @@ describe 'Clears' do
 
         expect_page_have_embeded_video
 
-        select_stage('0-2', single: true)
+        select_stage('0-2', single: true, required: true)
 
         switch_mode
 

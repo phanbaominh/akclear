@@ -1,12 +1,12 @@
 <%= render Clears::FormComponent.new(clear_spec: @clear, job_id: @job&.id) do |component| %>
   <%= component.with_header do %>
-    <% if @clear.errors.present? %>
-      <ul class="alert alert-error">
-        <% @clear.errors.each do |error| %>
-          <li><%= error.full_message %></li>
-        <% end %>
-      </ul>
-    <% end %>
+    <%# if @clear.errors.present? %>
+    <!--      <ul class="alert alert-error list-item">-->
+    <%# @clear.errors.each do |error| %>
+      <!--          <li><%#= error.full_message %></li>-->
+      <%# end %>
+      <!--      </ul>-->
+      <%# end %>
     <div>
       <h2 class="card-title">
         <%= @clear.persisted? ? t(:edit_clear) : t(:new_clear) %>
@@ -23,8 +23,8 @@
     </button>
     <noscript>
       <%# In no js case, will submit a GET request with authenticity_token param in the URL => 
-        undesired but should not cause any issue as Rails generate a new token per request 
-        and also check for origin of request %>
+      undesired but should not cause any issue as Rails generate a new token per request 
+      and also check for origin of request %>
       <button
         form="clears__form"
         formmethod="GET"

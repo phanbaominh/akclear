@@ -56,8 +56,8 @@ SimpleForm.setup do |config|
     # b.use :label, class: 'simple_form__label'
     b.wrapper tag: :div, class: 'simple_form__label_wrapper' do |comp|
       comp.use :label, class: 'simple_form__label'
-      comp.use :error, wrap_with: { tag: :span, class: :error }
-      comp.use :hint,  wrap_with: { tag: :span, class: 'simple_form__hint' }
+      comp.use :hint,  wrap_with: { tag: :div, class: 'simple_form__hint' }
+      comp.use :error, wrap_with: { tag: :div, class: :error }
     end
     b.use :input, class: 'simple_form__input', error_class: 'is-invalid', valid_class: 'is-valid'
 

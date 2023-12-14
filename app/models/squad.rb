@@ -22,7 +22,6 @@ class Squad
 
   def add(used_operator_params)
     @used_operators ||= []
-    p used_operator_params
     used_operator = UsedOperator.new(used_operator_params)
     @used_operators << used_operator
     used_operator.squad = self

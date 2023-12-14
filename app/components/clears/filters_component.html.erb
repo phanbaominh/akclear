@@ -2,7 +2,7 @@
   <%= f.input :self_only, as: :hidden %>
 <% end %>
 <div class="card mb-8 md:mb-4 md:shadow-xl static">
-  <div class="md:card-body md:bg-base-300" data-controller="clears--form-component">
+  <div class="md:card-body md:bg-base-300">
     <%= render Primer::TabsComponent.new(tab_names: ['basic', 'detailed'], hidden_class: 'hidden sm:hidden') do |tabs_comp| %>
       <%= tabs_comp.with_content_with_tabs do %>
         <%= simple_form_for clear_spec, method: :get, html: {
