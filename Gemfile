@@ -87,6 +87,7 @@ group :development, :test do
 end
 
 group :development do
+  gem 'active_record_query_trace'
   gem 'better_html', require: false
   gem 'erb-formatter', require: false
   gem 'erb_lint', require: false
