@@ -51,7 +51,7 @@
               'dispatch:clickEditOperator': 'highlight',
             }
           )}, id: 'clears_operators' do %>
-          <%= content_tag :div, id: "detailed_operators", class: "grid grid-cols-1 sm:grid-cols-2 sm:hidden",
+          <%= content_tag :div, id: "detailed_operators", class: "grid grid-cols-1 hidden sm:flex sm:items-start sm:justify-between sm:hidden",
             data: { **stimulus_attrs(:tabber, target: 'tab'), tab_name: 'detailed' } do %>
             <div
               id="detailed_operators__list"
@@ -62,18 +62,18 @@
               <% end %>
               <%= render Clears::Form::NewOperatorButtonComponent.new(squad: clear_spec.squad) %>
             </div>
-            <div id="detailed_operators__form_container" class="self-center w-full">
+            <div id="detailed_operators__form_container" class="self-center mt-2 sm:mt-0 sm:w-1/2">
             </div>
           <% end %>
-          <%= content_tag :div, id: 'basic_operators', class: 'hidden sm:block',
+          <%= content_tag :div, id: 'basic_operators', class: 'sm:block',
             data: { **stimulus_attrs(:tabber, target: 'tab'), tab_name: 'basic' } do %>
             <div class="flex flex-col w-full  ">
               <div class="flex">
-                <div id="basic_operators__list" class="hidden sm:flex flex-wrap self-center items-center justify-items-end">
+                <div id="basic_operators__list" class="grid grid-cols-4 sm:flex flex-wrap self-center items-center justify-items-end">
                   <% clear_spec.used_operators.each do |used_operator| %>
                     <%= render Clears::UsedOperatorEditMiniComponent.new(used_operator: used_operator) %>
                   <% end %>
-                  <%= render Clears::Form::NewOperatorButtonComponent.new(squad: clear_spec.squad, create: true) %>
+                  <%= render Clears::Form::NewOperatorButtonComponent.new(squad: clear_spec.squad, create: true, class: 'col-span-4') %>
                 </div>
               </div>
             </div>

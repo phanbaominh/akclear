@@ -346,6 +346,10 @@ describe 'Clears' do
         let(:mode) { :detailed }
         let(:mobile_mode) { true }
 
+        def switch_mode
+          choose 'Detailed'
+        end
+
         include_examples 'creating a new clear'
       end
     end

@@ -23,7 +23,7 @@
             </div>
           <% end %>
           <div id="home_operators__list" class="flex flex-wrap self-center items-center justify-items-end">
-            <span class="label"><%= t('.desc_1.choose_your_favorite_operators') %></span>
+            <span class="label w-full sm:w-fit"><%= t('.desc_1.choose_your_favorite_operators') %></span>
             <% @clear_spec.used_operators.each do |used_operator| %>
               <%= render Clears::UsedOperatorMiniComponent.new(used_operator: used_operator) %>
             <% end %>

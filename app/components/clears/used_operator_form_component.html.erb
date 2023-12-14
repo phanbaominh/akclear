@@ -64,7 +64,7 @@
           <div class="grid grid-cols-3 justify-between ">
             <%= f.collection_radio_buttons :elite, (max_elite + 1).times.to_a, :itself, :itself, item_wrapper_tag: nil,
            item_label_class: 'join-item !p-0 flex-grow' do |b| %>
-              <%= b.radio_button class: "peer appearance-none",
+              <%= b.radio_button class: "peer hidden",
                            data: {
                              **stimulus_attrs(
                                :click_other,
@@ -82,12 +82,12 @@
         <% if @used_operator.elite %>
           <%= f.input :level,
                 input_html: {
-                  class: "w-20 p-0 !h-8",
+                  class: "w-20",
                   max: max_level,
                   min: 0
                 },
                 wrapper_html: {
-                  class: "flex gap-2 items-center"
+                  class: ""
                 } %>
           <% if @used_operator.has_skills? %>
             <fieldset class="join block">
@@ -96,7 +96,7 @@
                 <%= f.collection_radio_buttons :skill, (max_skill).times.to_a.map(&:succ),
                :itself, :itself, item_wrapper_tag: nil,
                item_label_class: 'join-item !p-0 flex-grow' do |b| %>
-                  <%= b.radio_button class: "peer appearance-none" %>
+                  <%= b.radio_button class: "peer hidden" %>
                   <div class="btn animate-none peer-checked:bg-primary w-full">
                     <%= image_tag UsedOperatorPresenter.skill_image_url(
                     operator.skill_game_ids[b.value - 1]
@@ -112,9 +112,9 @@
                   label_method: :last,
                   value_method: :first %>
           <% end %>
-          <%= f.button :submit, submit_text, class: "mt-2 md:w-fit self-end !animate-none" %>
+          <%= f.button :submit, submit_text, class: "mt-4 w-full md:w-fit self-end !animate-none" %>
         <% else %>
-          <%= f.button :submit, submit_text, class: "mt-2 md:w-fit self-end !animate-none" %>
+          <%= f.button :submit, submit_text, class: "mt-4 w-full md:w-fit self-end !animate-none" %>
         <% end %>
       <% end %>
     <% end %>

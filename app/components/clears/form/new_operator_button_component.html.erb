@@ -1,5 +1,5 @@
   <%= simple_form_for UsedOperator.new, url: create ? clears_used_operator_path : new_clears_used_operator_path, method: create ? :post : :get,
-  html: { class: 'operators__new_operator_form w-full', data: { turbo_stream: true, **stimulus(:update_attribute) } } do |f| %>
+  html: { class: "operators__new_operator_form w-full #{@class}", data: { turbo_stream: true, **stimulus(:update_attribute) } } do |f| %>
   <div class="flex w-full">
     <%= f.input :operator_id,
               as: :select,
