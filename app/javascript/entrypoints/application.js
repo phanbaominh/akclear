@@ -25,3 +25,5 @@ import "~/controllers";
 
 // Example: Import a stylesheet in app/frontend/index.css
 // import '~/index.css'
+
+// TODO: listen to turbo:before-cache and cleanup form data

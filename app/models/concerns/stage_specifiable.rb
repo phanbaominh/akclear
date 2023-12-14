@@ -32,7 +32,12 @@ module StageSpecifiable
   end
 
   def stageable
-    @stageable_id ? GlobalID::Locator.locate(stageable_id) : stage&.stageable
+    if @stageable_id
+      # causing CACHE HIT in stage_select_component
+      GlobalID::Locator.locate(stageable_id)
+    else
+      stage&.stageable
+    end
   end
 
   # autofill value when only stage_id is present
