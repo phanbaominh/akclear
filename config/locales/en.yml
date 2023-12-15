@@ -84,6 +84,7 @@ en:
         success: "User was successfully updated."
         failed: "Failed to update user."
   clears:
+    no_channel_info: "Channel info not available yet."
     list:
       empty:
         title: "No clears"
@@ -158,6 +159,7 @@ en:
       trending_clears: "Trending clears"
       latest_clears: "Latest clears"
       empty_aside: "No clears yet"
+      no_operators: "No operators"
   identity:
     emails:
       update:

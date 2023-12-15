@@ -48,6 +48,7 @@
               <h2 class="card-title">
                 <%= render Stages::CodeComponent.new(stage: @clear.stage, class: "h-5") %>
               </h2>
+              <div class="line-clamp-2 text-sm"><%= @clear.name %></div>
             </div>
             <!--Hide player name to incentivize looking at clear not based on name-recognition-->
             <!--            <div class="flex space-x-2 w-full">
@@ -80,7 +81,14 @@
           </div>
         </div>
         <div class="card-actions text-base-content-subdued justify-between">
-          <div class="text-base-content-subdued"><%= time_string @clear.created_at %>
+          <div class="flex text-sm text-base-content-subdued flex-col lg:flex-row">
+            <% if @clear.channel %>
+              <span class="line-clamp-1">
+                <%= @clear.player_name %>
+              </span>
+            <% end %>
+            <span class="lg:before:content-['\00B7\20'] lg:before:pl-1"><%= time_string @clear.created_at %>
+            </span>
           </div>
           <%= render Clears::LikeComponent.new(clear: @clear) %>
         </div>
