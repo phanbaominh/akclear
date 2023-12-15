@@ -1,16 +1,17 @@
 <%= content_tag :div, id: dom_id(@clear, :report) do %>
   <% if Current.user && clear.reported? %>
-  <!--Move tooltip left to avoid tooltip:before extrude outside the screen on small screen-->
+    <!--Move tooltip left to avoid tooltip:before extrude outside the screen on small screen-->
     <div class="tooltip tooltip-left" data-tip="<%= t('clears.show.flagged_tooltip') %>">
       <%= button_to clear_report_path(clear), class: 'btn btn-outline btn-circle btn-xs xs:btn-sm btn-warning', aria: { label: t('clears.show.unflag' )}, method: :delete  do%>
         <%= heroicon 'flag', options: { class: '!h-3 !w-3 xs:!h-5 xs:!w-5' } %>
       <% end %>
     </div>
-  <% else  %>
-    <div class="tooltip tooltip-left" data-tip="<%= t('clears.show.flag_tooltip') %>">
+  <% elsif !clear.submitted_by? %>
+    <div class="tooltip tooltip-left flex items-center gap-1" data-tip="<%= t('clears.show.flag_tooltip') %>">
       <%= button_to clear_report_path(clear), class: 'btn btn-outline btn-circle btn-xs xs:btn-sm', aria: { label: t('clears.show.flag' )}  do%>
         <%= heroicon 'flag', options: { class: '!h-3 !w-3 xs:!h-5 xs:!w-5' } %>
       <% end %>
+      <span class="block sm:hidden text-sm"> <%= t('clears.show.flag_tooltip') %> </span>
     </div>
   <% end %>
 <% end %>

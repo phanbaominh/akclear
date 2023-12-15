@@ -3,5 +3,5 @@
   class: "cursor-pointer #{}",
   aria: { label: t('clears.verifications.used_operators.view_details', operator: used_operator.name) },
   data: { turbo_stream: true } do %>
-  <%= render Clears::UsedOperatorMiniComponent.new(used_operator: used_operator, show_verification_status: true) %>
+  <%= render Clears::UsedOperatorMiniComponent.new(used_operator: used_operator, show_verification_status: true, class: '') %>
 <% end %>

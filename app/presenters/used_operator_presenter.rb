@@ -74,8 +74,6 @@ class UsedOperatorPresenter < ApplicationPresenter
     end
   end
 
-  private
-
   def need_to_be_verified?
     object.changed? || !object.verified?
   end

@@ -1,16 +1,32 @@
 <%= turbo_frame_tag 'clear_verification' do %>
   <section class="card">
     <h2 class="card-title"><%= t('.title') %></h2>
-    <div class="card-body space-y-4">
+    <div class="card-body space-y-4 !p-2 xs:!p-8">
       <!--flex flex-col lg:flex-row lg:space-x-8 space-y-8 lg:space-y-0-->
-      <div class="grid grid-col-1 grid-rows-2 lg:flex gap-2">
-        <div class="iframe-responsive-container !w-auto flex-grow">
-          <iframe src="<%= @clear.embed_link %>" class="iframe-responsive" ></iframe>
+      <div class="lg:flex lg:space-y-0">
+        <div class="relative flex-grow">
+          <% if (prev_unverified_clear = @clear.prev_unverified) %>
+            <%= link_to new_clear_verification_path(prev_unverified_clear), data: { turbo_action: 'advance' },
+            class: 'btn btn-sm sm:btn-md  btn-outline btn-circle absolute z-10 -left-[8%] lg:-left-12 xl:-left-16 bottom-0 lg:top-[50%]',
+            aria: { label: t(:prev) } do %>
+              <%= heroicon 'arrow-left' %>
+            <% end %>
+          <% end %>
+          <% if (next_unverified_clear = @clear.next_unverified) %>
+            <%= link_to new_clear_verification_path(next_unverified_clear), data: { turbo_action: 'advance' },
+            class: 'btn btn-sm sm:btn-md  btn-outline btn-circle absolute z-10 -right-[8%] lg:-right-[40%] xl:-right-[30%] bottom-0 lg:top-[50%]',
+            aria: { label: t(:next) } do %>
+              <%= heroicon 'arrow-right' %>
+            <% end %>
+          <% end %>
+          <div class="iframe-responsive-container !w-auto ">
+            <iframe src="<%= @clear.embed_link %>" class="iframe-responsive" ></iframe>
+          </div>
         </div>
-        <section class="card bg-base-200">
+        <section class="card bg-base-200 mt-2 lg:mt-0 lg:w-1/4 xl:w-1/5">
           <div class="card-body">
             <h3 class="card-title"><%= t(:squad) %></h3>
-            <div class=" grid gap-1 grid-cols-7 lg:grid-cols-2 lg:gap-2">
+            <div class=" grid gap-x-2 gap-y-4 grid-cols-3 sm:grid-cols-7 lg:grid-cols-2 lg:gap-2">
               <%= render partial: 'used_operator', collection: @used_operators %>
             </div>
           </div>
@@ -54,8 +70,6 @@
         <div class="grid grid-cols-2 gap-2">
           <div></div>
           <%= render 'accept_btn', locals: { verification: @verification } %>
-          <%= link_to t(:prev), new_clear_verification_path(@clear.prev_unverified || @clear), class: 'btn btn-outline', disabled: !@clear.prev_unverified %>
-          <%= link_to t(:next), new_clear_verification_path(@clear.next_unverified || @clear), class: 'btn btn-outline', disabled: !@clear.next_unverified %>
         </div>
       </footer>
     </div>

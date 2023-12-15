@@ -6,8 +6,8 @@
     ></iframe>
   </div>
   <div class="p-1"></div>
-  <div class="flex items-center justify-between">
-    <div class="flex space-x-1 items-center">
+  <div class="flex flex-col gap-1 xs:flex-row xs:items-center xs:justify-between">
+    <div class="flex  space-x-1 items-center">
       <div
         tabindex="0"
         class="
@@ -29,11 +29,6 @@
   <div class="md:flex justify-between">
     <h2 class="flex text-xl sm:text-2xl font-bold items-center gap-1">
       <%= render Stages::CodeComponent.new(stage: clear.stage, class: "h-6")  %>
-      <% if can?(:edit, clear) %>
-        <%= link_to edit_clear_path(clear), class: 'btn btn-primary btn-sm' do %>
-          <%= t(:update_clear) %>
-        <% end %>
-      <% end %>
     </h2>
   </div>
   <div class="md:flex justify-between">
@@ -51,25 +46,40 @@
     </section>
   </div>
   <div class="p-2"></div>
-  <div>
+  <div class="">
     <% if verification %>
+      <% if verification.rejected? && clear.submitted_by? %>
+        <div class="flex flex-row  items-center mb-2">
+          <p class="simple_form__hint !text-error"><%= t('clears.verifications.rejected_hint') %></p>
+          <% if can?(:edit, clear) %>
+            <%= link_to edit_clear_path(clear), class: 'btn btn-primary btn-sm' do %>
+              <%= t(:update) %>
+            <% end %>
+          <% end %>
+        </div>
+      <% end %>
       <details class="collapse bg-base-200 lg:!w-1/2">
         <summary class="collapse-title !list-item"  tabindex="0">
           <%= t(verification.accepted? ? :verified_by : :rejected_by, verification: verification, username: verification.verifier.username) %>
           <span class="before:content-['\00B7\20'] before:pl-1"><%= time_string(verification.created_at) %></span>
+          <div class="divider m-0"></div>
         </summary>
-        <div class="collapse-content flex items-center justify-between">
-          <p class="whitespace-pre-wrap"><%= verification.comment.presence || t(:no_comment) %></p>
-          <span>
-            <% if verification && can?(:edit, verification) %>
-              <%= link_to(edit_clear_verification_path(clear),
+        <div class="collapse-content ">
+          <div class="flex items-center justify-between">
+            <p class="whitespace-pre-wrap">
+              <%= verification.comment.presence || t(:no_comment) %>
+            </p>
+            <span>
+              <% if verification && can?(:edit, verification) %>
+                <%= link_to(edit_clear_verification_path(clear),
                 class: 'btn btn-outline  btn-circle btn-sm',
                 aria: { label: t('clears.show.edit_verification')}
               ) do %>
-                <%= heroicon 'pencil' %>
+                  <%= heroicon 'pencil' %>
+                <% end %>
               <% end %>
-            <% end %>
-          </span>
+            </span>
+          </div>
         </div>
       </details>
     <% else %>
@@ -83,7 +93,9 @@
         <h3 class="card-title">
           <%= t(:squad) %>
         </h3>
-        <%= link_to t('clears.use_squad'), new_clear_path(use_squad_clear_id: clear.id), class: 'btn btn-primary btn-sm' %>
+        <% if can?(:create, Clear) %>
+          <%= link_to t('clears.use_squad'), new_clear_path(use_squad_clear_id: clear.id), class: 'btn btn-primary btn-sm' %>
+        <% end %>
       </div>
       <span class="divider m-0"></span>
       <div class="flex justify-center">

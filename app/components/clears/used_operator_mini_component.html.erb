@@ -1,25 +1,27 @@
   <article
-  class="operators__card flex flex-col relative justify-center "
+  class="operators__card flex flex-col relative justify-center items-center "
   
 >
   <div class="p-2" >
     <%= image_tag avatar,
     alt: name,
-    class: "w-12 rounded-full operators__highlightable #{used_operator.verification_color('outline', require_prefix: true) if show_verification_status}", 
+    class: "w-14 rounded-full operators__highlightable #{used_operator.verification_color('outline', require_prefix: true) if show_verification_status}", 
     data: { operator_id: used_operator.operator_id } %>
   </div>
   <div class="absolute grid grid-cols-2 gap-4 text-base-content font-bold h-full ml-2">
     <% if elite %>
-      <%= vite_image_tag elite_image_url, alt: t(:elite_number, elite: elite), class: "w-6 o" if elite %>
+      <%= vite_image_tag elite_image_url, alt: t(:elite_number, elite: elite), class: "w-6 -mt-1" if elite %>
+    <% else %>
+      <span></span>
     <% end %>
-    <span class=""><%= level %></span>
+    <span class="-mt-1"><%= level %></span>
     <% if skill %>
-      <span class="">S<%= skill %></span>
+      <span class="-mb-6 sm:-mb-8">S<%= skill %></span>
     <% else %>
       <span></span>
     <% end %>
     <% if skill && skill_level %>
-      <span><%= used_operator.skill_level_code %></span>
+      <span class="-mb-6 sm:-mb-8"><%= used_operator.skill_level_code %></span>
     <% end %>
   </div>
   <% if used_operator.verified? %>

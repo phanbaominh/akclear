@@ -93,9 +93,9 @@ describe 'Verifications', :js do
     end
 
     it 'can quickly verify clears' do
+      clear = create(:clear)
       reported_verified_clear = create(:clear, :verified)
       create(:report, clear: reported_verified_clear)
-      clear = create(:clear)
       verifier = reported_verified_clear.verifier
 
       sign_in(verifier)
@@ -105,14 +105,14 @@ describe 'Verifications', :js do
       expect(page).to have_content('Clear verification')
       expect(page).to have_content(clear.stage.code)
 
-      click_link 'Prev'
+      click_link 'Next'
 
       expect(page).to have_content('Clear verification')
       expect(page).to have_content(reported_verified_clear.stage.code)
       expect(page).to have_css("svg[alt='Flagged for review']")
       expect(page).to have_content('Verified')
 
-      click_link 'Next'
+      click_link 'Prev'
 
       expect(page).to have_content(clear.stage.code)
       click_link 'Go to clear'

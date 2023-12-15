@@ -34,11 +34,14 @@
                       target: "link"
                     )
                   }
-                }, hint: t('clear_form.link_field.hint') %>
+                }, hint: t('clear_form.link_field.hint'), disabled: edit_form %>
       <%= f.input :name, input_html: { class: 'w-full' } %>
       <div class="js-only">
         <%= render Clears::StageSelectComponent.new(form: f, simple: true, multiple: !edit_form, required: true) %>
         <%= f.label :operator_id, class: 'label' %>
+        <% if clear_spec.rejected? %>
+          <%= f.hint t('clear_form.operator_field.fix_rejection_hint'), class: '!text-error' %>
+        <% end %>
         <div id="clears__form__operators_fields" class="hidden">
           <%= f.simple_fields_for :used_operators, include_id: false do |used_operator_form| %>
             <div id="<%= dom_id(used_operator_form.object.operator, :fields) %>">
@@ -87,7 +90,7 @@
             data: { **stimulus_attrs(:tabber, target: 'tab'), tab_name: 'basic', default_tab: true } do %>
             <div class=" flex flex-col w-full  ">
               <div class="flex">
-                <div id="basic_operators__list" class="grid grid-cols-4 sm:flex flex-wrap self-center items-center justify-items-end">
+                <div id="basic_operators__list" class="grid grid-cols-4 gap-y-2 sm:flex flex-wrap self-center items-center justify-items-end">
                   <% clear_spec.used_operators.reject(&:marked_for_destruction?).each do |used_operator| %>
                     <%= render Clears::UsedOperatorEditMiniComponent.new(used_operator: used_operator) %>
                   <% end %>
@@ -112,7 +115,7 @@
         <% end %>
       <% end %>
     <% end %>
-    <footer class="flex justify-end mt-4 space-x-2">
+    <footer class="mt-4 space-x-2">
       <%= footer %>
     </footer>
   </div>

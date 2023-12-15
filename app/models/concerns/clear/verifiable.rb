@@ -11,8 +11,12 @@ module Clear::Verifiable
     scope :unverified, -> { where.missing(:verification) }
     scope :verified, -> { joins(:verification) }
     scope :need_verification, lambda {
+                                reported_verified_clears = Clear.verified.reported
+                                if Current.ability
+                                  reported_verified_clears = reported_verified_clears.merge(Verification.accessible_by(Current.ability, :update))
+                                end
                                 Clear.from("(#{[
-                                  Clear.verified.reported.select(:id),
+                                  reported_verified_clears.select(:id),
                                   Clear.unverified.select(:id)
                                 ].map(&:to_sql).join(' UNION ')}) clears").select(:id)
                               }

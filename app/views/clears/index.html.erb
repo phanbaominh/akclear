@@ -1,15 +1,17 @@
 <section>
   <% if @clear_spec.self_only %>
-    <% if Current.user.has_rejected_clears? %>
-      <div class="flex items-center space-x-2">
-        <div class="badge badge-error badge-lg">
-          <div><%= t('clears.rejected_count', count: Current.user.rejected_clears.size) %>
+    <div class="flex items-center gap-2 mb-2 sm:mb-0">
+      <h2 class="text-xl"><%= t(:your_clears) %></h2>
+      <% unless (count = Current.user.rejected_clears.count).zero? %>
+        <div class="flex items-center space-x-2">
+          <div class="badge badge-error badge-lg">
+            <div><%= count %> <%= t('rejected') %>
+            </div>
           </div>
+          <%= link_to t(:update), edit_clear_path(Current.user.rejected_clears.first, fix_rejected: true), class: 'btn btn-primary btn-xs' %>
         </div>
-        <%= link_to t(:fix), edit_clear_path(Current.user.rejected_clears.first, fix_rejected: true), class: 'btn btn-primary btn-xs' %>
-      </div>
-    <% end %>
-    <h2 class="text-xl"><%= t(:your_clears) %></h2>
+      <% end %>
+    </div>
   <% end %>
   <%= turbo_frame_tag 'clears_with_filters' do %>
     <div class="js-only">

@@ -8,6 +8,7 @@ class Ability
     can :read, Channel
 
     return if user.blank?
+    # make sure user is verified too
 
     can :create, Clear
     can :update, Clear, submitter: user, verification: { status: Verification::REJECTED }

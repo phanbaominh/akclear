@@ -1,5 +1,16 @@
 <li>
-  <%= link_to t(:your_clears), clears_path(clear: { self_only: true }) %>
+  <%= link_to clears_path(clear: { self_only: true }) do %>
+    <span class="relative">
+      <span>
+        <%= t(:your_clears) %>
+      </span>
+      <% unless (count = Current.user.rejected_clears.count).zero? %>
+        <span class="rounded-full bg-error text-error-content text-sm px-[6px]">
+          <%= count %>
+        </span>
+      <% end %>
+    </span>
+  <% end %>
 </li>
 <li>
   <%= link_to t("change_email"), edit_identity_email_path %>

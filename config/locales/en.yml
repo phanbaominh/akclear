@@ -97,12 +97,13 @@ en:
     edit_operator: "Edit operator %{operator}"
     rejected_count:
       zero: "No rejected clears"
-      one: "You have 1 rejected clear"
-      other: "You have %{count} rejected clears"
+      one: "1 rejected clear"
+      other: "%{count} rejected clears"
     used_operators:
       create:
         max_reached: "Maximum of 13 operators per clear."
     verifications:
+      rejected_hint: "Your clear has been rejected. It will not be visible to other people until it is updated."
       new:
         comment_placeholder: "Add a comment..."
         reports_count:
@@ -127,10 +128,11 @@ en:
         one: "Clear was successfully created!"
         other: "%{count} clears were successfully created!"
     new:
+      correct_information_warning: "Please make sure you fill in correct information before submitting.\n It will be viewable by other people after submitted. Our verifiers can reject your submission which will hide it."
     update:
       success: "Clear was successfully updated!"
     show:
-      flag_tooltip: "Flag this clear for review (wrong squad, video, title, etc.)"
+      flag_tooltip: "Flag this clear for review (wrong information)"
       flagged_tooltip: "You have flagged this clear for review"
       flag: "Flag for review"
       unflag: "Unflag"
@@ -200,6 +202,8 @@ en:
       kengxiao: "Keng Xiao for game data"
       prts: "PRTS wiki for event banner images"
       ak_wiki: "Arknights EN wiki for episode banner images"
+  prev: "Prev"
+  next: "Next"
   operators: "Operators"
   no_events: "No event currently..."
   sign_in_redirect: "You need to sign in or sign up before continuing"
@@ -232,6 +236,7 @@ en:
   resend_verification_email: "Re-send verification email"
   email_has_changed: "Your email has been changed"
 
+  your_clears: "Your clears"
   reject: "Reject"
   accept: "Accept"
   hello: "Hello world"
@@ -259,6 +264,8 @@ en:
   episode: "Episode"
   annihilation: "Annihilation"
   clear_form:
+    operator_field:
+      fix_rejection_hint: "Please update all rejected operators before submitting again."
     link_field:
       hint: "Only Youtube link work for now."
     stage_ids_field:

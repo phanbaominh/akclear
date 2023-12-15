@@ -104,6 +104,7 @@ class Clears::UsedOperatorsController < ApplicationController
 
     used_operator_ids_excluding_current =
       clear_spec_session['used_operators_attributes'].pluck('id').map(&:to_i) - [@used_operator.id]
+    # TODO: What happened when verifier update verification when user updating clears?
     UsedOperatorVerification.exists?(
       used_operator_id: used_operator_ids_excluding_current,
       status: Verification::REJECTED
