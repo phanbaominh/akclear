@@ -1,29 +1,16 @@
-<%= button_to clear_like_path(clear),
-  method: liked? ? :delete : :post, 
-  data: {
-    **stimuluses(
-      clears__like: { actions: { click: 'changeLikeCount' } }, 
-      toggle: { 
-        actions: { click: 'toggle:stop'},
-      }
-    )
-  },
-  class: 'flex btn btn-neutral btn-sm pl-1 pr-3',
+<%= button_to clear_like_path(clear), method: liked? ? :delete : :post, class: 'flex btn btn-neutral btn-sm',
   form: { id: dom_id(@clear, :like_big) } do %>
-  <div class="rounded-full px-2">
+  <div class="rounded-full">
     <span>
-      <%= content_tag :i,
-        "",
-        class: liked? ? "fa-solid fa-heart text-primary clear__like-icon" : "fa-regular fa-heart",
-        data: {
-          toggled: liked?,
-          **stimulus_attrs(:toggle, target: "toggle")
-        } %>
+      <% if liked? %>
+        <%= heroicon 'hand-thumb-up', options: { class: 'text-primary' } %>
+      <% else %>
+        <%= heroicon 'hand-thumb-up', variant: :outline %>
+      <% end %>
     </span>
-
     <noscript><%= liked? ? t(:unlike) : t(:like) %></noscript>
   </div>
-  <%= content_tag :span, data: { **stimulus_attrs(:clears__like, target: 'likeCounter') }, class: 'w-2' do %>
+  <%= content_tag :span, class: 'font-bold' do %>
     <%= likes_count %>
   <% end %>
 <% end %>

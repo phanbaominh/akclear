@@ -132,7 +132,7 @@ en:
     update:
       success: "Clear was successfully updated!"
     show:
-      flag_tooltip: "Flag this clear for review (wrong information)"
+      flag_tooltip: "Flag this clear for review"
       flagged_tooltip: "You have flagged this clear for review"
       flag: "Flag for review"
       unflag: "Unflag"
@@ -236,7 +236,10 @@ en:
   resend_verification_email: "Re-send verification email"
   email_has_changed: "Your email has been changed"
 
+  anonymous: "Anonymous"
   your_clears: "Your clears"
+  report: "Report"
+  reported: "Reported"
   reject: "Reject"
   accept: "Accept"
   hello: "Hello world"

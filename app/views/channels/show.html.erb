@@ -17,25 +17,26 @@
         class="mr-4 rounded-full w-20 h-20"
       >
           <div>
-            <h1 class="text-base text-white"><%= @channel.title %></h1>
+            <h1 class="text-base font-bold"><%= @channel.title %></h1>
             <%# <p class="text-xs text-white opacity-70 mb-2">
               <a href="https://www.youtube.com/channel/UCg02KL1G0nmH0QzFuLsVoRQ">
                 @vtengoku
               </a>
             </p> %>
-            <p class="text-sm text-white opacity-70"><%= @channel.clear_count_text %></p>
+            <p class="text-sm text-base-content-subdued"><%= @channel.clear_count_text %></p>
           </div>
         </div>
         <div>
           <a href="<%= @channel.link %>">
-            <i class="fa-brands fa-youtube text-[#c4302b] text-xl"></i>
+            <%= vite_image_tag 'images/youtube.svg', class: 'w-5 h-5' %>
           </a>
         </div>
       </div>
-    </section>
-    <section class="pt-8">
-      <!--TODO: looks weird when application visit with cache, cache version => loading spinner => new version-->
-      <%= turbo_frame_tag 'clears', src: clears_path(clear: { channel_id: @channel.id }), loading: 'lazy' do %>
-        <span class="loading loading-spinner loading-lg"></span>
-      <% end %>
-    </section>
+    </div>
+  </section>
+  <section class="pt-8">
+    <!--TODO: looks weird when application visit with cache, cache version => loading spinner => new version-->
+    <%= turbo_frame_tag 'clears', src: clears_path(clear: { channel_id: @channel.id }), loading: 'lazy' do %>
+      <span class="loading loading-spinner loading-lg"></span>
+    <% end %>
+  </section>

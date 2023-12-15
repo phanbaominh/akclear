@@ -7,5 +7,5 @@ class ClearComponent < ApplicationComponent
     @clear = clear
   end
 
-  delegate :verification, to: :clear
+  delegate :verification, :channel, to: :clear
 end
