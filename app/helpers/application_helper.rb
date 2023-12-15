@@ -8,6 +8,15 @@ module ApplicationHelper
     }[key.to_sym]
   end
 
+  def flash_key_to_icon_class(key)
+    {
+      notice: 'information-circle',
+      alert: 'exclamation-triangle',
+      success: 'check-circle',
+      error: 'x-circle'
+    }[key.to_sym]
+  end
+
   def current_user
     Current.user
   end
