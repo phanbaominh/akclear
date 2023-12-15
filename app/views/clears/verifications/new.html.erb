@@ -3,18 +3,18 @@
     <h2 class="card-title"><%= t('.title') %></h2>
     <div class="card-body space-y-4 !p-2 xs:!p-8">
       <!--flex flex-col lg:flex-row lg:space-x-8 space-y-8 lg:space-y-0-->
-      <div class="lg:flex lg:space-y-0">
+      <div class="2xl:flex lg:space-y-0">
         <div class="relative flex-grow">
           <% if (prev_unverified_clear = @clear.prev_unverified) %>
             <%= link_to new_clear_verification_path(prev_unverified_clear), data: { turbo_action: 'advance' },
-            class: 'btn btn-sm sm:btn-md  btn-outline btn-circle absolute z-10 -left-[8%] lg:-left-12 xl:-left-16 bottom-0 lg:top-[50%]',
+            class: 'btn btn-sm sm:btn-md  btn-outline btn-circle absolute z-10 -left-[8%] 2xl:-left-12 xl:-left-16 bottom-0 2xl:top-[50%]',
             aria: { label: t(:prev) } do %>
               <%= heroicon 'arrow-left' %>
             <% end %>
           <% end %>
           <% if (next_unverified_clear = @clear.next_unverified) %>
             <%= link_to new_clear_verification_path(next_unverified_clear), data: { turbo_action: 'advance' },
-            class: 'btn btn-sm sm:btn-md  btn-outline btn-circle absolute z-10 -right-[8%] lg:-right-[40%] xl:-right-[30%] bottom-0 lg:top-[50%]',
+            class: 'btn btn-sm sm:btn-md  btn-outline btn-circle absolute z-10 -right-[8%] 2xl:-right-[40%] xl:-right-[30%] bottom-0 2xl:top-[50%]',
             aria: { label: t(:next) } do %>
               <%= heroicon 'arrow-right' %>
             <% end %>
@@ -23,10 +23,10 @@
             <iframe src="<%= @clear.embed_link %>" class="iframe-responsive" ></iframe>
           </div>
         </div>
-        <section class="card bg-base-200 mt-2 lg:mt-0 lg:w-1/4 xl:w-1/5">
+        <section class="card bg-base-200 mt-2 2xl:mt-0 2xl:w-1/5">
           <div class="card-body">
             <h3 class="card-title"><%= t(:squad) %></h3>
-            <div class=" grid gap-x-2 gap-y-4 grid-cols-3 sm:grid-cols-7 lg:grid-cols-2 lg:gap-2">
+            <div class=" grid gap-x-2 gap-y-4 grid-cols-3 sm:grid-cols-7 lg:gap-2 xl:flex xl:gap-2 2xl:grid 2xl:grid-cols-2 2xl:gap-2">
               <%= render partial: 'used_operator', collection: @used_operators %>
             </div>
           </div>
@@ -53,8 +53,8 @@
         <div class='label'>
           <%= t(:stage) %>
         </div>
-        <div class="px-1">
-          <%= @clear.stage.code_with_mods %>
+        <div class="flex font-bold items-center gap-2 pl-1 text-xl">
+          <%= render Stages::CodeComponent.new(stage: @clear.stage, class: "h-6")  %>
         </div>
         <%= f.label :comment, class: 'label' %>
         <div id="verification_from__used_operator_fields">
