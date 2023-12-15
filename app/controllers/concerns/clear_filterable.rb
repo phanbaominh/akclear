@@ -3,7 +3,6 @@
 module ClearFilterable
   extend ActiveSupport::Concern
 
-  # :operator_id, :clear_id, :level, :elite, :skill_level, :skill_mastery, :skill
   PERSISTED_CLEAR_ATTRIBUTES = %i[stage_id link name channel_id id].freeze
 
   included do
@@ -75,8 +74,10 @@ module ClearFilterable
 
   def set_clear_spec
     @clear_spec = clear_from_attributes
+  end
 
-    return unless @clear_spec&.stage_type&.constantize != @clear_spec&.stageable&.class
+  def reset_stage_spec_if_needed
+    return if @clear_spec&.stage_type&.constantize == @clear_spec&.stageable&.class
 
     @clear_spec.reset_spec
   end

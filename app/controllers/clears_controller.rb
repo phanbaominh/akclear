@@ -34,6 +34,9 @@ class ClearsController < ApplicationController
       set_clear_spec
       @clear = @clear_spec
     end
+    return if @clear.used_operators.blank?
+
+    Operator.build_translations_cache(Operator.where(id: @clear.used_operators.map(&:operator_id)))
   end
 
   def edit

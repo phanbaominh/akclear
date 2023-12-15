@@ -7,6 +7,7 @@ module Operator::Translatable
   end
 
   class_methods do
+    # considering calling this once in initializer
     def build_translations_cache(scope)
       @translations ||= {}
       @translations[I18n.locale] ||= {}

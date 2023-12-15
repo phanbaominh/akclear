@@ -7,6 +7,7 @@ module User::Verifiable
 
   # Move this to Clear::Verifiable
   def verify(clear, params)
+    # need to eager load used_operators for updated verifications first somehow
     if clear.verified?
       params[:used_operator_verifications_attributes].each do |_, used_operator_verification|
         used_operator_verification[:id] = clear.verification.used_operator_verifications.find do |v|

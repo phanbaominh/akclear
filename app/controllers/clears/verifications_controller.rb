@@ -80,6 +80,7 @@ class Clears::VerificationsController < ApplicationController
     end
 
     @used_operators = @clear.used_operators.includes(:operator, :verification)
+    Operator.build_translations_cache(Operator.where(id: @used_operators.map(&:operator_id)))
 
     @used_operator_verifications = @used_operators.filter_map do |used_op|
       status = session['verification_used_operators'][used_op.id.to_s]

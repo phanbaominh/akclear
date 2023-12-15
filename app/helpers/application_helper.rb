@@ -25,6 +25,6 @@ module ApplicationHelper
   end
 
   def latest_unverified_clear
-    Clear.unverified.order(created_at: :desc).first
+    @latest_unverified_clear ||= Clear.need_verification.first
   end
 end
