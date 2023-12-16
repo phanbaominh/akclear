@@ -48,7 +48,13 @@
               hover:bg-base-content
               hover:bg-opacity-10
             ">
-                <img src=<%= channel.thumbnail_url %> alt="" class="channel-list__item-img" >
+                <% if channel.thumbnail_url %>
+                  <img src=<%= channel.thumbnail_url %> alt="" class="channel-list__item-img" >
+                <% else %>
+                  <div class="channel-list__item-img flex items-center justify-center border border-base-content">
+                    <span> <%= t("channels.show.no_avatar_yet") %></span>
+                  </div>
+                <% end %>
                 <div class="channel-list__item-body">
                   <div>
                     <p class="font-bold text-base p-0"><%= channel.title %></p>

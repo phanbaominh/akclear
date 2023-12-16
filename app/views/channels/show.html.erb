@@ -1,42 +1,40 @@
 <section class="-mt-12">
   <div class="w-full h-0 pb-[16%] relative">
     <div class="absolute inset-0">
-      <img
-        src="<%= @channel.banner_url + '=s1080' %>"
-        alt=""
-        class="w-full h-full object-cover"
-      >
-      </div>
+      <% if @channel.banner_url %>
+        <img src="<%= @channel.banner_url + '=s1080' %>" alt="" class="w-full h-full object-cover">
+      <% else %>
+        <div class="w-full h-full justify-center border  border-base-content flex items-center">
+          <%= t('channels.show.no_banner_yet') %>
+        </div>
+      <% end %>
     </div>
-    <div class="h-4"></div>
-    <div class="flex flex-row items-center justify-between">
-      <div class="flex flex-row items-center">
-        <img
-        src="<%= @channel.thumbnail_url %>"
-        alt=""
-        class="mr-4 rounded-full w-20 h-20"
-      >
-          <div>
-            <h1 class="text-base font-bold"><%= @channel.title %></h1>
-            <%# <p class="text-xs text-white opacity-70 mb-2">
+  </div>
+  <div class="h-4"></div>
+  <div class="flex flex-row items-center justify-between">
+    <div class="flex flex-row items-center">
+      <%= render Channels::AvatarComponent.new(thumbnail_url: @channel.thumbnail_url) %>
+      <div>
+        <h1 class="text-base font-bold"><%= @channel.title %></h1>
+        <%# <p class="text-xs text-white opacity-70 mb-2">
               <a href="https://www.youtube.com/channel/UCg02KL1G0nmH0QzFuLsVoRQ">
                 @vtengoku
               </a>
             </p> %>
-            <p class="text-sm text-base-content-subdued"><%= @channel.clear_count_text %></p>
-          </div>
-        </div>
-        <div>
-          <a href="<%= @channel.link %>">
-            <%= vite_image_tag 'images/youtube.svg', class: 'w-5 h-5' %>
-          </a>
-        </div>
+        <p class="text-sm text-base-content-subdued"><%= @channel.clear_count_text %></p>
       </div>
     </div>
-  </section>
-  <section class="pt-8">
-    <!--TODO: looks weird when application visit with cache, cache version => loading spinner => new version-->
-    <%= turbo_frame_tag 'clears', src: clears_path(clear: { channel_id: @channel.id }), loading: 'lazy' do %>
-      <span class="loading loading-spinner loading-lg"></span>
-    <% end %>
-  </section>
+    <div>
+      <a href="<%= @channel.link %>">
+        <%= vite_image_tag 'images/youtube.svg', class: 'w-5 h-5' %>
+      </a>
+    </div>
+  </div>
+</div>
+</section>
+<section class="pt-8">
+  <!--TODO: looks weird when application visit with cache, cache version => loading spinner => new version-->
+  <%= turbo_frame_tag 'clears', src: clears_path(clear: { channel_id: @channel.id }), loading: 'lazy' do %>
+    <span class="loading loading-spinner loading-lg"></span>
+  <% end %>
+</section>

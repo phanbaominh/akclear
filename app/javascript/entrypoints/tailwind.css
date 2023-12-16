@@ -148,7 +148,7 @@ select.simple_form__input {
 }
 
 .channel-list__item-img {
-  @apply mr-4 rounded-full w-12 h-12;
+  @apply mr-4 rounded-full w-12 h-12 text-xs md:text-base text-center;
 }
 
 .channel-list__item-body {

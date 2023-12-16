@@ -12,22 +12,17 @@
       <div class="flex flex-row items-center justify-between mt-2">
         <div class="flex flex-row items-center">
           <%= link_to channel_path(channel) do %>
-            <img
-            src="<%= channel.thumbnail_url %>"
-            alt=""
-            class="mr-4 rounded-full w-10 h-10 sm:w-12 sm:h-12"
-          >
-            <% end %>
-            <div>
-              <h3 class="text-base font-semibold"><%= channel.title %></h3>
-              <p class="text-sm text-base-content-subdued "><%= channel.clear_count_text %></p>
-            </div>
-          </div>
+            <%= render Channels::AvatarComponent.new(thumbnail_url: channel.thumbnail_url, size_class: 'w-10 h-10 sm:w-12 sm:h-12') %>
+          <% end %>
           <div>
-            <a href="<%= channel.link %>">
-              <%= vite_image_tag 'images/youtube.svg', class: 'w-5 h-5' %>
-            </a>
+            <h3 class="text-base font-semibold"><%= channel.title %></h3>
+            <p class="text-sm text-base-content-subdued "><%= channel.clear_count_text %></p>
           </div>
+        </div>
+        <div>
+          <a href="<%= channel.link %>">
+            <%= vite_image_tag 'images/youtube.svg', class: 'w-5 h-5' %>
+          </a>
         </div>
       </div>
     <% else %>

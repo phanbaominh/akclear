@@ -203,6 +203,9 @@ en:
       success: "Your password has been changed"
   channels:
     list: "Channels"
+    show:
+      no_banner_yet: "NO IMAGE"
+      no_avatar_yet: "NO IMAGE"
     index:
       title: "Channels"
       credit: "Special thanks to all the content creators featured here"
