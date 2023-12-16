@@ -6,16 +6,16 @@
         <%= f.input :all_channels,  as: :boolean, input_html: {
       class: '!toggle', data: { **stimulus_attrs(:click_other, actions: { click: 'clickOther'}) } } %>
         <%= content_tag :button, nil, class: 'hidden', formmethod: "GET",
-      formaction: new_admin_videos_import_url,
-      data: { **stimulus_attrs(:click_other, target: 'clickable') } %>
+          formaction: new_admin_videos_import_url,
+          data: { **stimulus_attrs(:click_other, target: 'clickable') } %>
         <% unless @spec.all_channels? %>
           <%= f.input :channel_ids, label: 'Channels', as: :select, collection: Channel.all,
-        input_html: { multiple: true }, wrapper_html: { data: { **stimulus(:choices, values: { choices_options: { removeItemButton: true }}) } } %>
+            input_html: { multiple: true }, wrapper_html: { data: { **stimulus(:choices, values: { choices_options: { removeItemButton: true }}) } } %>
         <% end %>
       <% end %>
     <% end %>
     <%= f.input :full_pages, as: :boolean, input_html: { class: '!toggle' } %>
     <%= render Clears::StageSelectComponent.new(form: f, stage_select_path: new_admin_videos_import_path) %>
-    <%= f.button :submit, t("admin.videos_imports.new.submit"), class: 'w-full sm:w-fit self-end mt-2' %>
+    <%= f.button :submit, t("admin.videos_imports.new.submit"), class: 'w-full sm:w-fit self-end mt-2', data: { turbo: false } %>
   <% end %>
 </div>

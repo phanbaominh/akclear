@@ -68,6 +68,7 @@ class ExtractClearDataFromVideoJob < ApplicationRecord
 
     self.stage_id = video.stage_id
     self.channel = Channel.find_by(external_id: video.channel_external_id) unless channel
+    self.data = { title: video.title }
   end
 
   def valid_video

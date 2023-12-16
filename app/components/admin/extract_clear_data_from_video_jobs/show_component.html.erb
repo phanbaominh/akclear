@@ -12,7 +12,7 @@
           <%= render Stages::CodeComponent.new(stage: job.stage, class: 'h-5') %>
         </h2>
         <div><%= job.channel&.title %></div>
-        <div><%= job.video_url %></div>
+        <div><%= job&.data&.dig('title') || job.video_url %></div>
       </div>
       <% if job.data %>
         <div class="p-2"></div>

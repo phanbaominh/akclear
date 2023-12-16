@@ -25,7 +25,7 @@ describe Channel::VideosImportable do
     let(:playlist) { instance_double(Yt::Playlist) }
     let(:valid_playlist_item) { instance_double(Yt::PlaylistItem, video_id: 'ygEmeAtWYvA') }
     let(:invalid_playlist_item) { instance_double(Yt::PlaylistItem, video_id: 'ygEmeAtWYvA&invalid=param') }
-    let(:video) { instance_double(Video, 'metadata=': nil, stage_id: stage.id, to_url: 'https://youtube.com/watch?v=ygEmeAtWYvA', valid?: true) }
+    let(:video) { instance_double(Video, 'metadata=': nil, stage_id: stage.id, to_url: 'https://youtube.com/watch?v=ygEmeAtWYvA', valid?: true, title: 'new title') }
     let(:video_data) { instance_double(Yt::PlaylistItem) }
     let(:spec) do
       instance_double(Channel::VideosImportSpecification)
@@ -51,6 +51,7 @@ describe Channel::VideosImportable do
       expect(new_job.channel).to eq(channel)
       expect(new_job.stage).to eq(stage)
       expect(new_job.video_url).to eq('https://youtube.com/watch?v=ygEmeAtWYvA')
+      expect(new_job.data['title']).to eq('new title')
     end
   end
 end
