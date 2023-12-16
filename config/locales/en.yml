@@ -70,11 +70,16 @@ en:
     extract_clear_data_from_video_jobs:
       title: "Import clear jobs"
       job_started: "Job already started"
+      new_btn: "New"
       index:
         jobs: "Jobs"
       update:
         start_job: "Start job"
         success: "Job was successfully updated."
+        title: 'Start import clear job'
+      new:
+        submit: 'Start job'
+        title: 'New job'
       create:
         success: "Job was successfully created."
       destroy:
@@ -205,6 +210,12 @@ en:
       kengxiao: "Keng Xiao for game data"
       prts: "PRTS wiki for event banner images"
       ak_wiki: "Arknights EN wiki for episode banner images"
+  start_video_job: 'Start video job'
+  cancel: 'Cancel'
+  error: 'Error'
+  clear: 'Clear'
+  start: 'Start'
+  delete: 'Delete'
   prev: "Prev"
   next: "Next"
   operators: "Operators"
@@ -239,6 +250,7 @@ en:
   resend_verification_email: "Re-send verification email"
   email_has_changed: "Your email has been changed"
 
+  import_videos: "Import videos"
   anonymous: "Anonymous"
   your_clears: "Your clears"
   report: "Report"

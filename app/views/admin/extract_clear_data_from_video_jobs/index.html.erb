@@ -1,13 +1,17 @@
-<%= turbo_frame_tag ExtractClearDataFromVideoJob.new do %>
-  <%= link_to t(:new_clear_job), new_admin_clear_job_path, class: 'btn btn-primary w-fit' %>
-<% end %>
 <section>
-  <h1><%= t("admin.extract_clear_data_from_video_jobs.index.jobs") %></h1>
-  <%= simple_form_for @job_spec, url: admin_clear_jobs_path, method: :get, data: { turbo_frame: 'jobs_frame' }, html: { class: 'card shadow-xl bg-base-200' } do |f| %>
+  <h1 class="text-xl"><%= t("admin.extract_clear_data_from_video_jobs.index.jobs") %></h1>
+  <%= simple_form_for @job_spec, url: admin_clear_jobs_path, method: :get,
+    data: { turbo_frame: 'jobs_frame' }, html: { id: 'jobs_filters', class: 'card shadow-xl bg-base-200' } do |f| %>
     <div class="card-body">
-      <%= f.input :status, as: :select, collection: ExtractClearDataFromVideoJob.statuses, label_method: :first, value_method: :second, data: { **stimulus(:choices) }, include_blank: t(:all) %>
-      <%= f.button :submit, t(:apply_filters) %>
+      <h3 class="card-title"> <%= t(:filters) %></h3>
+      <%= f.input :status, as: :select, collection: ExtractClearDataFromVideoJob.statuses,
+        label_method: :first, value_method: :second, data: { **stimulus(:choices) }, include_blank: t(:all) %>
+      <%= f.button :submit, t(:apply_filters), class: 'self-end w-full sm:w-fit mt-2' %>
     </div>
+  <% end %>
+  <div class="p-2"></div>
+  <%= turbo_frame_tag ExtractClearDataFromVideoJob.new do %>
+    <%= render 'new_btn' %>
   <% end %>
   <div class="p-2"></div>
   <%= turbo_frame_tag 'jobs_frame', data: { turbo_action: 'advance' } do  %>

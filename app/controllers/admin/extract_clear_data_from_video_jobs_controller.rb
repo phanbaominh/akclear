@@ -8,11 +8,20 @@ module Admin
     before_action :redirect_if_job_started, only: %i[edit update]
 
     def index
-      @job_spec = ExtractClearDataFromVideoJob.new(filter_params)
-      @pagy, @extract_clear_data_from_video_jobs =
-        pagy(
-          @extract_clear_data_from_video_jobs.satisfy(@job_spec).order(created_at: :desc).includes(stage: :stageable), items: 10
-        )
+      respond_to do |format|
+        format.turbo_stream
+        format.html do
+          @job_spec = ExtractClearDataFromVideoJob.new(filter_params)
+          @pagy, @extract_clear_data_from_video_jobs =
+            pagy(
+              @extract_clear_data_from_video_jobs.satisfy(@job_spec).order(created_at: :desc).includes(stage: :stageable),
+              items: 10
+            )
+          operator_ids = @extract_clear_data_from_video_jobs
+                         .filter_map(&:clear).map(&:used_operators).flatten.map(&:operator_id)
+          Operator.build_translations_cache(Operator.where(id: operator_ids))
+        end
+      end
     end
 
     def show; end

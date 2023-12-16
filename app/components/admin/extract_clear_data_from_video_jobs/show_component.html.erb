@@ -4,49 +4,58 @@
     dispatch: { values: { event: 'editJob', on_connect: true }, actions: { 'click': 'dp' }, include_controller: true },
     effects: { actions: { 'dispatch:editJob@window': 'removeClasses'}, params: { class: 'border border-primary' }, include_controller: true }
   ) } do %>
-  <span class="badge badge-primary"><%= job.status %></span>
+  <span class="badge rounded-none <%= status_to_badge_color %> font-bold"><%= job.status.upcase %></span>
   <div class="card-body p-4">
-    <div class="flex justify-between items-center">
+    <div class="flex flex-col">
       <div>
         <h2 class="card-title  gap-1 flex">
           <%= render Stages::CodeComponent.new(stage: job.stage, class: 'h-5') %>
         </h2>
-        <span><%= job.video_url %></span>
+        <div><%= job.channel&.title %></div>
+        <div><%= job.video_url %></div>
       </div>
-      <div class="flex space-x-2">
+      <% if job.data %>
+        <div class="p-2"></div>
+        <% if job.completed? %>
+          <div class="grid grid-cols-4 sm:flex sm:flex-wrap gap-2">
+            <% job.clear.used_operators&.each do |used_operator| %>
+              <%= render Clears::UsedOperatorMiniComponent.new(
+                used_operator: used_operator,
+              ) %>
+            <% end %>
+          </div>
+        <% elsif job.failed? %>
+          <span class="badge badge-error">
+            <%= t(:error) %>
+          </span>
+          <span> <%= job.data['error'] %> </span>
+        <% end %>
+      <% end %>
+      <div class="flex justify-between mt-4">
         <% if job.may_start? %>
           <%= link_to edit_admin_clear_job_path(job),
-            class: 'btn btn-primary btn-circle btn-sm',
-            aria: { label: 'Edit' } do %>
-            <%= heroicon "pencil", options: { class: 'w-3 h-3' } %>
+            class: 'btn btn-outline btn-sm',
+            aria: { label: t(:edit) } do %>
+            <%= heroicon "chevron-double-right", variant: :outline %>
+            <%= t(:start) %>
           <% end %>
-        <% end %>
-        <% if job.completed? %>
+        <% elsif job.completed? %>
           <%= link_to new_admin_clear_from_job_path(job_id: job.id),
-            class: 'btn btn-primary btn-circle btn-sm', data: { turbo_frame: "_top" },
-            aria: { label: 'Create clear' } do %>
-            <%= heroicon "check", options: { class: 'w-3 h-3' } %>
+            class: 'btn btn-primary btn-sm', data: { turbo_frame: "_top" },
+            aria: { label: t(:create_clear) } do %>
+            <%= heroicon "plus", variant: :outline, options: { class: 'w-3 h-3' } %>
+            <%= t('clear') %>
           <% end %>
+        <% else %>
+          <div></div>
         <% end %>
         <%= button_to admin_clear_job_path(job),
-          method: :delete, aria: { label: 'Delete' },
-          class: 'btn btn-error btn-circle hover:bg-opacity-80 btn-sm' do %>
-          <%= heroicon "x-mark", options: { class: 'w-3 h-3' } %>
+          method: :delete, aria: { label: t(:delete) },
+          class: 'btn btn-error btn-outline btn-sm' do %>
+          <%= heroicon "trash", variant: :outline, options: { class: 'w-3 h-3' } %>
+          <%= t(:delete) %>
         <% end %>
       </div>
     </div>
-    <% if job.data %>
-      <% if job.completed? %>
-        <div class="grid grid-cols-2 xs:grid-cols-3 sm:flex sm:flex-wrap gap-2">
-          <% job.clear.used_operators&.each do |used_operator| %>
-            <%= render Clears::UsedOperatorMiniComponent.new(
-                used_operator: used_operator,
-              ) %>
-          <% end %>
-        </div>
-      <% elsif job.failed? %>
-        <%= job.data['error'] %>
-      <% end %>
-    <% end %>
   </div>
 <% end %>

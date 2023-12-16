@@ -1,18 +1,21 @@
-<%= simple_form_for @spec, as: :videos_import, method: :post, url: admin_videos_imports_url do |f| %>
-  <%= turbo_frame_tag 'videos_import__channels' do %>
-    <%= content_tag :div, data: { **stimulus(:click_other) } do %>
-      <%= f.input :all_channels,  as: :boolean, input_html: {
+<div class="card shadow-xl bg-base-200">
+  <%= simple_form_for @spec, as: :videos_import, method: :post, url: admin_videos_imports_url, html: { class: 'card-body' } do |f| %>
+    <h2 class="card-title"><%= t(:import_videos) %></h2>
+    <%= turbo_frame_tag 'videos_import__channels' do %>
+      <%= content_tag :div, data: { **stimulus(:click_other) } do %>
+        <%= f.input :all_channels,  as: :boolean, input_html: {
       class: '!toggle', data: { **stimulus_attrs(:click_other, actions: { click: 'clickOther'}) } } %>
-      <%= content_tag :button, nil, class: 'hidden', formmethod: "GET",
+        <%= content_tag :button, nil, class: 'hidden', formmethod: "GET",
       formaction: new_admin_videos_import_url,
       data: { **stimulus_attrs(:click_other, target: 'clickable') } %>
-      <% unless @spec.all_channels? %>
-        <%= f.input :channel_ids, label: 'Channels', as: :select, collection: Channel.all,
+        <% unless @spec.all_channels? %>
+          <%= f.input :channel_ids, label: 'Channels', as: :select, collection: Channel.all,
         input_html: { multiple: true }, wrapper_html: { data: { **stimulus(:choices, values: { choices_options: { removeItemButton: true }}) } } %>
+        <% end %>
       <% end %>
     <% end %>
+    <%= f.input :full_pages, as: :boolean, input_html: { class: '!toggle' } %>
+    <%= render Clears::StageSelectComponent.new(form: f, stage_select_path: new_admin_videos_import_path) %>
+    <%= f.button :submit, t("admin.videos_imports.new.submit"), class: 'w-full sm:w-fit self-end mt-2' %>
   <% end %>
-  <%= f.input :full_pages, as: :boolean, input_html: { class: '!toggle' } %>
-  <%= render Clears::StageSelectComponent.new(form: f, stage_select_path: new_admin_videos_import_path) %>
-  <%= f.button :submit, t("admin.videos_imports.new.submit") %>
-<% end %>
+</div>

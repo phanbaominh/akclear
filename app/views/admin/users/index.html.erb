@@ -1,11 +1,11 @@
 <section >
-  <h2><%= t(:users) %></h2>
+  <h2 class="text-xl"><%= t(:users) %></h2>
   <span class="divider"></span>
   <div class="card space-y-2">
-    <h3><%= t(:filters) %></h3>
-    <%= simple_form_for @user_spec, method: :get, url: admin_users_path, html: { class: 'card-body shadow-xl bg-base-200 flex-row justify-between' } do |f| %>
-      <%= f.input :role, as: :select, collection: User.roles, value_method: :first, wrapper_html: { class: 'flex' }  %>
-      <%= f.button :submit, t(:apply_filters) %>
+    <%= simple_form_for @user_spec, method: :get, url: admin_users_path, html: { class: 'card-body shadow-xl bg-base-200' } do |f| %>
+      <h3 class="card-title"><%= t(:filters) %></h3>
+      <%= f.input :role, as: :select, collection: User.roles, value_method: :first %>
+      <%= f.button :submit, t(:apply_filters), class: 'self-end w-full sm:w-fit' %>
     <% end %>
   </div>
   <span class="divider"></span>
