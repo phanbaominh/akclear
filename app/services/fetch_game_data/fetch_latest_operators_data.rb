@@ -13,8 +13,9 @@ module FetchGameData
       true
     end
 
-    def initialize(source = nil)
+    def initialize(source = nil, destroy_invalid: false)
       @source = source || SOURCES[I18n.locale]
+      @destroy_invalid = destroy_invalid
     end
 
     def call
@@ -22,7 +23,11 @@ module FetchGameData
       fetch_logger = FetchLogger.new(Operator.name)
 
       operator_table.each do |game_id, operator|
-        next unless valid_operator?(operator)
+        valid = valid_operator?(operator)
+        unless valid
+          delete_invalid_operators(game_id) if destroy_invalid
+          next
+        end
 
         name = operator['name']
         rarity = operator['rarity'].split('_').last.to_i - 1
@@ -39,14 +44,25 @@ module FetchGameData
 
     private
 
-    attr_reader :source
+    attr_reader :source, :destroy_invalid
+
+    def delete_invalid_operators(game_id)
+      operator = Operator.find_by(game_id:)
+
+      return if operator.blank?
+
+      UsedOperator.where(operator_id: operator).destroy_all
+      operator.destroy
+    end
 
     def skill_game_ids(operator)
       operator['skills'].map { |skill| skill['skillId'] }
     end
 
     def valid_operator?(operator)
-      !operator['subProfessionId'].start_with?('notchar')
+      !operator['subProfessionId']&.start_with?('notchar') && # Everyone's summon
+        operator['profession'] != 'TOKEN' && # Phantom's summon
+        !operator['isNotObtainable'] # IS extra ops
     end
   end
 end
