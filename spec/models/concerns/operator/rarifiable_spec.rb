@@ -22,7 +22,7 @@ describe Operator::Rarifiable do
     context 'when elite is 1' do
       it 'returns the min number of skills for the operator\'s rarity' do
         [0, 0, 1, 2, 2, 2].each_with_index do |max_skill, rarity|
-          expect(build_stubbed(:operator, rarity:).max_skill(elite: 1)).to eq(max_skill)
+          expect(build_stubbed(:operator, rarity:, skill_game_ids: nil).max_skill(elite: 1)).to eq(max_skill)
         end
       end
 
