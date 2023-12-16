@@ -9,7 +9,7 @@ FactoryBot.define do
       elite { rand(1..2) }
       operator do
         association :operator, rarity: [Operator::FOUR_STARS, Operator::FIVE_STARS, Operator::SIX_STARS].sample,
-                               skill_game_ids: %w[1 2]
+                               skill_number: 2
       end
     end
   end

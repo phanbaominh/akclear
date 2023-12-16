@@ -291,11 +291,11 @@ describe 'Clears' do
 
     describe 'creating clear from scratch' do
       let_it_be(:new_op) do
-        create(:operator, name: 'Amiya', rarity: Operator::FIVE_STARS, skill_game_ids: %w[amiya_1 amiya_2 amiya_3])
+        create(:operator, name: 'Amiya', rarity: Operator::FIVE_STARS, skill_number: 3)
       end
       let_it_be(:deleted_op) { create(:operator, name: 'Deleted op') }
       let_it_be(:edited_op) do
-        create(:operator, name: 'Edited op', rarity: Operator::SIX_STARS, skill_game_ids: %w[edit_1 edit_2 edit_3])
+        create(:operator, name: 'Edited op', rarity: Operator::SIX_STARS, skill_number: 3)
       end
       let_it_be(:stage) { create(:stage, code: '0-1') }
 
@@ -359,7 +359,7 @@ describe 'Clears' do
         existing_clear = create(:clear)
         deleted_existing_used_op = create(:full_used_operator, clear: existing_clear)
         edited_existing_used_op = create(:full_used_operator, clear: existing_clear)
-        new_op = create(:operator, skill_game_ids: %w[1 2])
+        new_op = create(:operator, skill_number: 2)
 
         sign_in
 
@@ -391,7 +391,7 @@ describe 'Clears' do
 
     describe 'creating clear from job' do
       it 'fills out the form with data from job' do
-        ops = create_list(:operator, 5, skill_game_ids: %w[skill_1 skill_2])
+        ops = create_list(:operator, 5, skill_number: 2)
         job_stage = create(:stage, code: '0-1')
         used_operators = ops.first(3).map do |op|
           build(:used_operator, operator: op, elite: 2, level: 90, skill: 1,
@@ -448,11 +448,9 @@ describe 'Clears' do
   describe 'Editing a clear', :js do
     shared_examples 'editing a clear' do
       it 'updates the clear' do
-        new_op = create(:operator, name: 'Amiya', rarity: Operator::FIVE_STARS,
-                                   skill_game_ids: %w[amiya_1 amiya_2 amiya_3])
+        new_op = create(:operator, name: 'Amiya', rarity: Operator::FIVE_STARS, skill_number: 3)
         deleted_op = create(:operator, name: 'Deleted op')
-        edited_op = create(:operator, name: 'Edited op', rarity: Operator::SIX_STARS,
-                                      skill_game_ids: %w[edit_1 edit_2 edit_3])
+        edited_op = create(:operator, name: 'Edited op', rarity: Operator::SIX_STARS, skill_number: 3)
         stage = create(:stage, code: '0-1')
         create(:stage, code: '0-2')
 
