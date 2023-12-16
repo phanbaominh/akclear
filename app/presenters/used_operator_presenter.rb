@@ -9,7 +9,7 @@ class UsedOperatorPresenter < ApplicationPresenter
   end
 
   def self.skill_image_url(skill_id)
-    "https://raw.githubusercontent.com/Aceship/Arknight-Images/main/skills/skill_icon_#{skill_id}.png"
+    "images/skills/#{skill_id}.jpg"
   end
 
   def skill_image_url

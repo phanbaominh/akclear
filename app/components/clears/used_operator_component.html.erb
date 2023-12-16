@@ -15,7 +15,7 @@
         <%= vite_image_tag elite_image_url, alt: t(:elite_number, elite: elite), class: "w-8 " if elite %>
         <span class="mt-1 "><%= level %></span>
         <% if skill %>
-          <%= image_tag skill_image_url, class: "w-7" if skill %>
+          <%= vite_image_tag skill_image_url, class: "w-7" if skill %>
           <span class=""><%= used_operator.skill_level_code %></span>
         <% end %>
         <div></div>
