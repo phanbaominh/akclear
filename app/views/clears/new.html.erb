@@ -14,6 +14,13 @@
             <%= render Clears::VerificationDetailsComponent.new(clear: @clear) %>
           <% end %>
         </h2>
+        <% unless Current.user[:username] %>
+          <div class="text-warning flex items-center gap-1">
+            <%= heroicon 'exclamation-triangle' %>
+            <%= t('clears.new.no_username_warning') %>
+            <%= link_to  t('set'), edit_username_path, class: 'btn btn-outline btn-xs ml-2' %>
+          </div>
+        <% end %>
       </div>
       <div class="p-2"></div>
     <% end %>

@@ -19,6 +19,7 @@ Rails.application.routes.draw do
     end
     resources :sessions, only: %i[index show destroy]
     resource  :password, only: %i[edit update]
+    resource  :username, only: %i[edit update]
     namespace :identity do
       resource :email,              only: %i[edit update]
       resource :email_verification, only: %i[show create]

@@ -136,6 +136,7 @@ en:
         other: "%{count} clears were successfully created!"
     new:
       correct_information_warning: "Please make sure you fill in correct information before submitting.\n It will be viewable by other people after submitted. Our verifiers can reject your submission which will hide it."
+      no_username_warning: "You have not set a username yet. Any clears submitted will be anonymous until you have set it"
     update:
       success: "Clear was successfully updated!"
     show:
@@ -189,7 +190,12 @@ en:
       failed: "That email or password is incorrect"
     destroy:
       success: "That session has been logged out"
+  usernames:
+    update:
+      success: "Your username has been changed!"
   registrations:
+    new:
+      email_hint: 'Email will not be visible to other users'
     create:
       success: "Welcome! You have signed up successfully"
   passwords:
@@ -249,6 +255,10 @@ en:
   verify_email_title: "Verify your email"
   resend_verification_email: "Re-send verification email"
   email_has_changed: "Your email has been changed"
+  change_username: "Change username"
+  update_username: "Change username"
+  update_password: "Change password"
+  username: 'Username'
 
   import_videos: "Import videos"
   anonymous: "Anonymous"

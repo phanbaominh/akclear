@@ -2,6 +2,14 @@ require 'rails_helper'
 require 'cancan/matchers'
 
 describe User do
+  describe 'validations' do
+    it { is_expected.to validate_presence_of(:email) }
+    it { expect(create(:user)).to validate_uniqueness_of(:email).ignoring_case_sensitivity }
+    it { is_expected.to validate_length_of(:password).is_at_least(12) }
+    it { expect(create(:user)).to validate_uniqueness_of(:username) }
+    it { is_expected.to validate_length_of(:username).is_at_most(20).is_at_least(3) }
+  end
+
   describe '#role' do
     it { is_expected.to define_enum_for(:role).with_values(%i[user verifier admin]) }
   end

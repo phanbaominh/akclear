@@ -1,7 +1,7 @@
 <div class="card shadow-xl bg-base-200 sm:w-1/2 m-auto">
   <div class="card-body">
     <header>
-      <h1 class="card-title">Change your password</h1>
+      <h1 class="card-title"><%= t(:change_password) %></h1>
     </header>
     <div class="h-4"></div>
     <%= simple_form_for(@user, url: password_path, method: :patch) do |form| %>
@@ -44,7 +44,7 @@
                             required: true %>
       </div>
       <div class="h-10"></div>
-      <%= form.submit "Change password", class: "simple_form__btn w-full" %>
+      <%= form.submit t(:update_password), class: "simple_form__btn w-full" %>
     <% end %>
   </div>
 </div>

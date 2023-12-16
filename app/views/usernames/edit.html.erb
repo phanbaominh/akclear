@@ -1,0 +1,24 @@
+<div class="card shadow-xl bg-base-200 sm:w-1/2 m-auto">
+  <div class="card-body">
+    <header>
+      <h1 class="card-title"><%= t(:change_username) %></h1>
+    </header>
+    <div class="h-4"></div>
+    <%= simple_form_for(@user, url: username_path, method: :patch) do |form| %>
+      <div>
+        <%= form.input :username,
+          label: false,
+          required: true,
+          autofocus: true,
+          placeholder: t(:username), 
+          autocomplete: "username", 
+          class: "simple_form__input w-full",
+          input_html: {
+            class: "w-full"
+          } %>
+      </div>
+      <div class="h-10"></div>
+      <%= form.submit t(:update_username), class: "simple_form__btn w-full" %>
+    <% end %>
+  </div>
+</div>
