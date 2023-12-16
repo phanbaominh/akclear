@@ -10,7 +10,11 @@ FactoryBot.define do
 
     trait :rejected do
       after(:create) do |clear|
-        create(:verification, status: Verification::REJECTED, clear:)
+        if clear.verification
+          clear.verification.update(status: Verification::REJECTED)
+        else
+          create(:verification, status: Verification::REJECTED, clear:)
+        end
       end
     end
 

@@ -19,38 +19,83 @@ describe User do
 
     let_it_be(:user) { nil }
 
+    let(:abilities_dict) do
+      {
+        read_clear: [Clear, :read],
+        read_channel: [Channel, :read],
+        like: [:like, %i[create destroy]],
+        create_clear: [Clear, :create],
+        update_submitted_clear: [submitted_clear, :update],
+        update_rejected_submitted_clear: [rejected_submitted_clear, :update],
+        report: [:report, %i[create destroy]],
+        create_verification: [Verification, %i[create]],
+        change_verification: [verification, %i[update destroy]],
+        change_self_verification: [self_verification, %i[update destroy]],
+        all: %i[all manage],
+        edit_user: [other_user, :edit],
+        edit_self: [user, :edit]
+      }
+    end
+
+    shared_examples 'has abilities' do
+      let(:submitted_clear) { build(:clear, submitter: user || build(:user)) }
+      let(:rejected_submitted_clear) { create(:clear, :rejected, submitter: user || build(:user)) }
+      let(:verification) { build(:verification) }
+      let(:self_verification) { build(:verification, verifier: user || build(:user)) }
+      let(:other_user) { build(:user) }
+
+      it 'has abilities' do
+        abilities_dict.each do |ability, (resource, actions)|
+          if abilities.include?(ability)
+            Array(actions).each { |action| is_expected.to be_able_to(action, resource) }
+          else
+            Array(actions).each { |action| is_expected.not_to be_able_to(action, resource) }
+          end
+        end
+      end
+    end
+
     context 'when user is guest' do
-      it { is_expected.not_to be_able_to(:create, :like) }
-      it { is_expected.not_to be_able_to(:destroy, :like) }
-      it { is_expected.not_to be_able_to(:create, Verification.new) }
-      it { is_expected.not_to be_able_to(:destroy, Verification.new) }
+      let(:abilities) do
+        %i[read_clear read_channel]
+      end
+
+      it_behaves_like 'has abilities'
     end
 
     context 'when user is logged in' do
       let_it_be(:user) { create(:user) }
+      let(:abilities) do
+        %i[
+          read_clear read_channel create_clear update_rejected_submitted_clear like report
+        ]
+      end
 
-      it { is_expected.to be_able_to(:create, :like) }
-      it { is_expected.to be_able_to(:destroy, :like) }
-      it { is_expected.not_to be_able_to(:create, Verification.new) }
-      it { is_expected.not_to be_able_to(:destroy, Verification.new) }
+      it_behaves_like 'has abilities'
     end
 
     context 'when user is verifier' do
       let_it_be(:user) { create(:verifier) }
 
-      it { is_expected.to be_able_to(:create, :like) }
-      it { is_expected.to be_able_to(:destroy, :like) }
-      it { is_expected.to be_able_to(:create, Verification.new) }
-      it { is_expected.to be_able_to(:destroy, Verification.new(verifier: user)) }
+      let(:abilities) do
+        %i[
+          read_clear read_channel create_clear update_rejected_submitted_clear like report create_verification change_self_verification
+        ]
+      end
+
+      it_behaves_like 'has abilities'
     end
 
     context 'when user is admin' do
       let_it_be(:user) { create(:admin) }
 
-      it { is_expected.to be_able_to(:create, :like) }
-      it { is_expected.to be_able_to(:destroy, :like) }
-      it { is_expected.to be_able_to(:create, Verification.new) }
-      it { is_expected.to be_able_to(:destroy, Verification.new) }
+      let(:abilities) do
+        %i[
+          read_clear read_channel create_clear update_submitted_clear update_rejected_submitted_clear like report create_verification change_verification change_self_verification all edit_user
+        ]
+      end
+
+      it_behaves_like 'has abilities'
     end
   end
 end

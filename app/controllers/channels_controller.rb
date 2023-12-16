@@ -1,5 +1,7 @@
 class ChannelsController < ApplicationController
   load_and_authorize_resource
+
+  skip_before_action :authenticate!, only: %i[index show]
   include ClearFilterable
   include Pagy::Backend
 
