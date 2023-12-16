@@ -50,6 +50,7 @@ class ClearsController < ApplicationController
 
   def create
     @clear.submitter = Current.user
+    @clear.job_id = nil unless can?(:create, ExtractClearDataFromVideoJob)
     if @clear.save
       duplicated_clears = @clear.duplicate_for_stage_ids(@clear.stage_ids)
       delete_clear_spec_session

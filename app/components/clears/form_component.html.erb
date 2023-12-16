@@ -11,8 +11,10 @@
         <%= header %>
         <!--TODO: Show rejected comment?-->
       </header>
-      <% if job_id.present? %>
-        <%= f.input :job_id, as: :hidden, input_html: { value: job_id } %>
+      <% if clear_spec.job_id.present? %>
+        <%= f.input :job_id, as: :hidden %>
+        <!--Channel only come from job-->
+        <%= f.input :channel_id, as: :hidden %>
       <% end %>
       <div class="iframe-responsive-container hidden">
         <%= content_tag :iframe,

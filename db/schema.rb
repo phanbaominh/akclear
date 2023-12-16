@@ -106,6 +106,8 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_16_022745) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "stage_id", null: false
+    t.bigint "channel_id"
+    t.index ["channel_id"], name: "index_extract_clear_data_from_video_jobs_on_channel_id"
     t.index ["stage_id"], name: "index_extract_clear_data_from_video_jobs_on_stage_id"
     t.index ["video_url"], name: "index_extract_clear_data_from_video_jobs_on_video_url", unique: true
   end
@@ -347,6 +349,7 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_16_022745) do
   add_foreign_key "clears", "users", column: "submitter_id"
   add_foreign_key "email_verification_tokens", "users"
   add_foreign_key "events", "events", column: "original_event_id"
+  add_foreign_key "extract_clear_data_from_video_jobs", "channels"
   add_foreign_key "extract_clear_data_from_video_jobs", "stages"
   add_foreign_key "likes", "clears"
   add_foreign_key "likes", "users"

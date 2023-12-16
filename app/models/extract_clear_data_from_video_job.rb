@@ -3,6 +3,7 @@
 class ExtractClearDataFromVideoJob < ApplicationRecord
   include Specifiable
   belongs_to :stage
+  belongs_to :channel, optional: true
 
   STATUSES = [
     PENDING = 'pending',
@@ -79,6 +80,7 @@ class ExtractClearDataFromVideoJob < ApplicationRecord
     # preload data
     operators = Operator.where(id: @clear.used_operators.map(&:operator_id))
     @clear.used_operators.each { |uo| uo.operator = operators.find { |o| o.id == uo.operator_id } }
+    @clear.job_id = id
     @clear
   end
 

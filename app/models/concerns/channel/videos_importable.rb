@@ -2,7 +2,7 @@ module Channel::VideosImportable
   extend ActiveSupport::Concern
 
   class_methods do
-    def import_videos(spec)
+    def import_videos_from_channels(spec)
       spec.channels.find_each do |channel|
         channel.import_videos(spec)
         spec.reset
@@ -20,7 +20,7 @@ module Channel::VideosImportable
       video = Video.from_id(playlist_item.video_id)
       video.metadata = playlist_item
 
-      ExtractClearDataFromVideoJob.new(video_url: video)
+      ExtractClearDataFromVideoJob.new(video_url: video, channel: self)
     end.map(&:save)
   end
 end

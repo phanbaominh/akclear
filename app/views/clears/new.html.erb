@@ -1,4 +1,4 @@
-<%= render Clears::FormComponent.new(clear_spec: @clear, job_id: @job&.id) do |component| %>
+<%= render Clears::FormComponent.new(clear_spec: @clear) do |component| %>
   <%= component.with_header do %>
     <%# if @clear.errors.present? %>
     <!--      <ul class="alert alert-error list-item">-->

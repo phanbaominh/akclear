@@ -14,7 +14,8 @@ class ExtractClearDataFromVideoJobRunner < ApplicationJob
       job.data = {
         stage_id: clear.stage_id,
         link: clear.link,
-        used_operators_attributes: clear.used_operators.map(&:attributes)
+        used_operators_attributes: clear.used_operators.map(&:attributes),
+        channel_id: job.channel_id
       }
       job.complete!
     in Failure(error)

@@ -14,6 +14,7 @@ RSpec.describe ExtractClearDataFromVideoJob, type: :model do
 
   describe 'associations' do
     it { is_expected.to belong_to(:stage) }
+    it { is_expected.to belong_to(:channel).optional }
   end
 
   describe 'aasm' do

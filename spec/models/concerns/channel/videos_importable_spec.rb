@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe Channel::VideosImportable do
-  describe '.import_videos' do
+  describe '.import_videos_from_channels' do
     let(:channels) { double }
     let(:spec) do
       double(Channel::VideosImportSpecification, channels:, reset: nil)
@@ -12,7 +12,7 @@ describe Channel::VideosImportable do
       allow(channels).to receive(:find_each).and_yield(specified_channel)
       allow(specified_channel).to receive(:import_videos)
 
-      Channel.import_videos(spec)
+      Channel.import_videos_from_channels(spec)
 
       expect(specified_channel).to have_received(:import_videos).with(spec)
       expect(spec).to have_received(:reset)
@@ -47,7 +47,7 @@ describe Channel::VideosImportable do
 
       expect(video).to have_received(:metadata=).with(valid_playlist_item)
 
-      expect(ExtractClearDataFromVideoJob).to have_received(:new).with(video_url: video)
+      expect(ExtractClearDataFromVideoJob).to have_received(:new).with(video_url: video, channel:)
       expect(new_clear_job).to have_received(:save)
     end
   end

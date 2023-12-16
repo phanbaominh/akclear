@@ -397,11 +397,13 @@ describe 'Clears' do
           build(:used_operator, operator: op, elite: 2, level: 90, skill: 1,
                                 skill_level: 7)
         end
+        channel = create(:channel)
         job = create(:extract_clear_data_from_video_job, :completed, data: {
                        link: example_link,
                        stage_id: job_stage.id,
-                       used_operators_attributes: used_operators.map(&:attributes)
-                     }, stage: job_stage, video_url: example_link)
+                       used_operators_attributes: used_operators.map(&:attributes),
+                       channel_id: channel.id
+                     }, stage: job_stage, video_url: example_link, channel:)
 
         admin = sign_in_as_admin
 
@@ -438,6 +440,7 @@ describe 'Clears' do
           expect_page_have_operator_details(used_op)
         end
         expect(job.reload).to be_clear_created
+        expect(new_clear.channel).to eq(job.channel)
       end
     end
   end
