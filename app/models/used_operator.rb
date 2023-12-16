@@ -9,6 +9,11 @@ class UsedOperator < ApplicationRecord
   delegate :name, :avatar, :max_elite, :max_skill, :max_skill_level, :max_level, :has_skills?, to: :operator
   delegate :accepted?, :rejected?, :status, to: :verification, prefix: true, allow_nil: true
 
+  validates :skill, inclusion: { in: 1..3 }, allow_nil: true
+  validates :level, numericality: { in: 1..90 }, allow_nil: true
+  validates :elite, inclusion: { in: 0..2 }, allow_nil: true
+  validates :skill_level, inclusion: { in: 1..10 }, allow_nil: true
+
   after_update -> { verification&.destroy }
 
   attr_accessor :squad

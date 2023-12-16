@@ -16,7 +16,8 @@ class Clear < ApplicationRecord
 
   delegate :event?, to: :stage, allow_nil: true
 
-  validates :link, presence: true
+  validates :link, presence: true, length: { maximum: 255 }
+  validates :name, length: { maximum: 255 }
 
   before_save :normalize_link
   after_create :mark_job_as_clear_created
