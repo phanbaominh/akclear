@@ -1,26 +1,20 @@
-<%= content_tag :div, class: "group flex #{'cursor-pointer' unless disabled} text-lg", 
-  data: { **stimuluses(clears__like: { values: { liked: liked? }, include_controller: true }, 
-  toggle: { classes: { on: 'fa-solid fa-heart text-primary', off: 'fa-regular fa-heart' }, include_controller: true}) }, id: dom_id(@clear, :like) do %>
-  <div class="<%= 'group-hover:bg-primary/40' unless disabled %> rounded-full px-2">
-    <%= button_to clear_like_path(clear)  , method: liked? ? :delete : :post, 
-      disabled: disabled,
-      data: { **stimuluses(clears__like: { actions: { click: 'changeLikeCount' } }, 
-      toggle: { 
-        actions: { click: 'toggle:stop'},
-         }) } do %>
-      <span>
-        <%= content_tag :i,
-        "",
-        class: liked? ? "fa-solid fa-heart text-primary" : "fa-regular fa-heart",
-        data: {
-          toggled: liked?,
-          **stimulus_attrs(:toggle, target: "toggle")
-        } %>
-      </span>
-      <noscript><%= liked? ? t(:unlike) : t(:like) %></noscript>
-    <% end %>
-  </div>
-  <%= content_tag :span, data: { **stimulus_attrs(:clears__like, target: 'likeCounter') }, class: 'w-2' do %>
+<%= button_to clear_like_path(clear), method: liked? ? :delete : :post, disabled: disabled,
+  class: @class.presence || 'flex items-center gap-2',
+  form: { class: hover_class, id: turbo_id },
+  data: { **stimuluses(
+    clears__like: { actions: { click: 'changeLikeCount' }, values: { liked: liked? }, include_controller: true },
+    toggle: { actions: { click: 'toggle:stop'}, classes: { off: 'hidden' }, include_controller: true })
+  }, disabled: disabled do %>
+  <%= content_tag :span, class: "#{'hidden' unless liked?}", data: { toggled: liked?, **stimulus_attrs(:toggle, target: 'toggle') } do %>
+    <%= heroicon 'hand-thumb-up', options: { class: "text-primary h-5 w-5 ",
+          disable_default_class: true } %>
+  <% end %>
+  <%= content_tag :span, class: "#{'hidden' if liked?}", data: { toggled: !liked?, **stimulus_attrs(:toggle, target: 'toggle') } do %>
+    <%= heroicon 'hand-thumb-up', variant: :outline, options: { class: "h-5 w-5 ",
+          disable_default_class: true } %>
+  <% end %>
+  <noscript><%= liked? ? t(:unlike) : t(:like) %></noscript>
+  <%= content_tag :span, data: { **stimulus_attrs(:clears__like, target: 'likeCounter') }, class: 'font-bold' do %>
     <%= likes_count %>
   <% end %>
 <% end %>

@@ -1,16 +1,3 @@
-<%= button_to clear_like_path(clear), method: liked? ? :delete : :post, class: 'flex btn btn-neutral btn-sm',
-  form: { id: dom_id(@clear, :like_big) } do %>
-  <div class="rounded-full">
-    <span>
-      <% if liked? %>
-        <%= heroicon 'hand-thumb-up', options: { class: 'text-primary' } %>
-      <% else %>
-        <%= heroicon 'hand-thumb-up', variant: :outline %>
-      <% end %>
-    </span>
-    <noscript><%= liked? ? t(:unlike) : t(:like) %></noscript>
-  </div>
-  <%= content_tag :span, class: 'font-bold' do %>
-    <%= likes_count %>
-  <% end %>
-<% end %>
+<%= render Clears::LikeComponent.new(
+  clear: clear, class: 'flex btn btn-neutral btn-sm', have_hover: false, turbo_id: dom_id(clear, :like_big)
+) %>
