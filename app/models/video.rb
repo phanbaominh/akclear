@@ -52,7 +52,8 @@ class Video
   private
 
   def stages_ids_and_codes
-    @stages_ids_and_codes ||= Stage.all.non_challenge_mode.pluck(:id, :code)
+    # sort by last so that CW-10 will be checked before CW-1
+    @stages_ids_and_codes ||= Stage.all.non_challenge_mode.pluck(:id, :code).sort_by(&:last).reverse
   end
 
   def params_contains_only_allowed_keys?

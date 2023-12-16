@@ -87,7 +87,7 @@ describe Video do
       let(:metadata) { double(title: 'CODE | title') }
 
       it 'returns the stage with correct code' do
-        expect(video.stage_id).to eq(stage.id)
+        expect(video.stage_id).to eq(challenge_mode_stage.id)
       end
     end
   end
