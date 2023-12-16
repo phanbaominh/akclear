@@ -20,13 +20,13 @@
                         }
                     )
                 },
-                class: "btn btn-ghost rounded-full w-12 h-12 no-animation hidden md:block flex items-center justify-center",
+                class: "btn btn-ghost rounded-full no-animation hidden md:block flex items-center justify-center",
                 type: "button") do %>
-        <%= content_tag :i,
-                    data: {
-                        **stimulus_attrs("channels__view_mode", target: 'mode')
-                    },
-                    class: "text-lg fa-solid fa-grip" do %>
+        <%= content_tag :span, data: { **stimulus_attrs(:channels__view_mode, target: 'gridMode')} do %>
+          <%= heroicon 'view-columns', options: { disable_default_class: true, class: 'h-5 w-5' } %>
+        <% end %>
+        <%= content_tag :span, class: 'hidden', data: { **stimulus_attrs(:channels__view_mode, target: 'listMode')} do %>
+          <%= heroicon 'list-bullet', options: { disable_default_class: true, class: 'h-5 w-5' } %>
         <% end %>
       <% end %>
     </div>
@@ -54,18 +54,13 @@
                     <p class="font-bold text-base p-0"><%= channel.title %></p>
                     <p class="text-base-content-subdued text-sm p-0"><%= channel.clear_count_text %> </p>
                   </div>
-                  <div>
-                    <%#= button_to channel.url, method: :get, class: 'z-10' do %>
-                      <!--                    <i class="fa-brands fa-youtube text-[#c4302b]"></i>-->
-                      <%# end %>
-                    </div>
-                  </div>
                 </div>
-              <% end %>
-            </li>
-          <% end %>
+              </div>
+            <% end %>
+          </li>
         <% end %>
-      </section>
-      <div class="mt-4 w-full flex justify-end"><%== render Primer::PagyComponent.new(pagy: @pagy) %></div>
-    <% end %>
+      <% end %>
+    </section>
+    <div class="mt-4 w-full flex justify-end"><%== render Primer::PagyComponent.new(pagy: @pagy) %></div>
   <% end %>
+<% end %>

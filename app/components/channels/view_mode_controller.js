@@ -1,6 +1,6 @@
 import { Controller } from "@hotwired/stimulus";
 export default class extends Controller {
-  static targets = ["mode", "list"];
+  static targets = ["listMode", "gridMode", "list"];
   static values = { isGrid: Boolean };
 
   connect() {
@@ -9,13 +9,14 @@ export default class extends Controller {
 
   toggle() {
     this.isGrid = !this.isGrid;
-    this.modeTarget.classList.remove("fa-grip", "fa-list");
+    this.listModeTarget.classList.add("hidden");
+    this.gridModeTarget.classList.add("hidden");
     this.listTarget.classList.remove("channel-list-grid", "channel-list-list");
     if (this.isGrid) {
-      this.modeTarget.classList.add("fa-grip");
+      this.gridModeTarget.classList.remove("hidden");
       this.listTarget.classList.add("channel-list-grid");
     } else {
-      this.modeTarget.classList.add("fa-list");
+      this.listModeTarget.classList.remove("hidden");
       this.listTarget.classList.add("channel-list-list");
     }
   }

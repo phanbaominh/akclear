@@ -7,7 +7,7 @@
     <% clears.each do |clear| %>
       <li class="first:border-none border-t border-gray-700 py-4">
         <div class="flex flex-row justify-between gap-2">
-          <div class="flex gap-2 justify-items-center">
+          <div class="flex gap-2 items-center">
             <%= render Stages::CodeComponent.new(stage: clear.stage, class: "h-5") do |c| %>
               <%= c.with_code do %>
                 <%= link_to clear.stage.code,
@@ -17,7 +17,7 @@
             <% end %>
           </div>
           <a href="<%= clear.link %>" target="_blank" rel="noopener noreferrer">
-            <i class="fa-brands fa-youtube"></i>
+            <%= vite_image_tag 'images/youtube.svg', class: 'w-5 h-5 mt-1' %>
           </a>
         </div>
         <div class="flex flex-row justify-between gap-2 text-base-content-subdued">
