@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.describe Channel do
   describe 'associations' do
     it { is_expected.to belong_to(:user).optional }
+    it { is_expected.to have_many(:clears).dependent(:nullify) }
   end
 
   it 'stub requests' do

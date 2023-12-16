@@ -90,7 +90,7 @@ en:
         success: "User was successfully updated."
         failed: "Failed to update user."
   clears:
-    no_channel_info: "Channel info not available yet."
+    no_channel_info: "Channel info will be available soon..."
     list:
       empty:
         title: "No clears"
