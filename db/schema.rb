@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_12_08_084107) do
+ActiveRecord::Schema[7.1].define(version: 2023_12_16_022745) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -107,6 +107,7 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_08_084107) do
     t.datetime "updated_at", null: false
     t.bigint "stage_id", null: false
     t.index ["stage_id"], name: "index_extract_clear_data_from_video_jobs_on_stage_id"
+    t.index ["video_url"], name: "index_extract_clear_data_from_video_jobs_on_video_url", unique: true
   end
 
   create_table "good_job_batches", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

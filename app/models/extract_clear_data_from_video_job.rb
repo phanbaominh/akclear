@@ -46,7 +46,7 @@ class ExtractClearDataFromVideoJob < ApplicationRecord
     end
   end
 
-  validates :video_url, presence: true
+  validates :video_url, presence: true, uniqueness: true
   validate :valid_video
 
   def video
