@@ -29,6 +29,10 @@ class Video
     metadata&.title
   end
 
+  def channel_external_id
+    metadata&.channel_id
+  end
+
   def stage_id
     @stage_id ||= stages_ids_and_codes.find { |(_id, code)| title&.include?(code) }&.first
   end

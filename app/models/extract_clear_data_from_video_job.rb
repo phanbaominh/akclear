@@ -63,8 +63,11 @@ class ExtractClearDataFromVideoJob < ApplicationRecord
       end
     super video.to_url
 
-    # this is for making sure it is only set when creating the job as querying stage_id from video costs a api call
-    self.stage_id = video.stage_id unless stage_id
+    # this is for making sure it is only set when creating the job from scratch as querying stage_id from video costs a api call
+    return if stage_id
+
+    self.stage_id = video.stage_id
+    self.channel = Channel.find_by(external_id: video.channel_external_id) unless channel
   end
 
   def valid_video

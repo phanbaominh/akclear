@@ -29,8 +29,9 @@ RSpec.describe ExtractClearDataFromVideoJob, type: :model do
   end
 
   describe '#video_url=' do
+    let_it_be(:channel) { create(:channel, external_id: 'abc') }
     let(:video_url) { 'https://www.youtube.com/watch?v=aAfeBGKoZeI&t=34' }
-    let(:video) { instance_double(Video, stage_id: 1, to_url: video_url) }
+    let(:video) { instance_double(Video, stage_id: 1, to_url: video_url, channel_external_id: 'abc') }
 
     before { allow(Video).to receive(:new).with(video_url).and_return(video) }
 
@@ -40,6 +41,10 @@ RSpec.describe ExtractClearDataFromVideoJob, type: :model do
       it 'sets the stage_id' do
         expect(job.stage_id).to eq(1)
       end
+
+      it 'sets the channel' do
+        expect(job.channel).to eq(channel)
+      end
     end
 
     context 'when video is Video' do
@@ -47,6 +52,10 @@ RSpec.describe ExtractClearDataFromVideoJob, type: :model do
 
       it 'sets the stage_id' do
         expect(job.stage_id).to eq(1)
+      end
+
+      it 'sets the channel' do
+        expect(job.channel).to eq(channel)
       end
     end
   end
