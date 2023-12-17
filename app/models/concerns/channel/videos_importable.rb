@@ -17,7 +17,8 @@ module Channel::VideosImportable
         break selected_videos if spec.stop?
       end
     selected_playlist_items.map do |playlist_item|
-      video = Video.from_id(playlist_item.video_id) \
+      video = Video.from_id(playlist_item.video_id)
+
       # reuse to avoid calling API to get video
       video.metadata = playlist_item
 

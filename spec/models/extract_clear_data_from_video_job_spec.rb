@@ -32,7 +32,8 @@ RSpec.describe ExtractClearDataFromVideoJob, type: :model do
     let_it_be(:channel) { create(:channel, external_id: 'abc') }
     let(:video_url) { 'https://www.youtube.com/watch?v=aAfeBGKoZeI&t=34' }
     let(:video) do
-      instance_double(Video, stage_id: 1, to_url: video_url, channel_external_id: 'abc', title: 'new title')
+      instance_double(Video, stage_id: 1, to_url: video_url, channel_external_id: 'abc', title: 'new title',
+                             valid?: true)
     end
 
     before { allow(Video).to receive(:new).with(video_url).and_return(video) }

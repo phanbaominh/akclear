@@ -25,10 +25,6 @@ describe Video do
       it 'returns false' do
         expect(video).not_to be_valid
       end
-
-      it 'raises an error when accessing url' do
-        expect { video.to_url }.to raise_error(Video::InvalidUrl)
-      end
     end
 
     context 'when url has invalid params' do

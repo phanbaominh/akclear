@@ -18,6 +18,7 @@ class Clear < ApplicationRecord
 
   validates :link, presence: true, length: { maximum: 255 }
   validates :name, length: { maximum: 255 }
+  validate :valid_link
 
   before_save :normalize_link
   after_create :mark_job_as_clear_created
@@ -46,6 +47,10 @@ class Clear < ApplicationRecord
     ).call
     Operator.build_translations_cache(Operator.from_clear_ids([id]))
     self
+  end
+
+  def valid_link
+    errors.add(:link, :invalid) unless Video.new(link).valid?
   end
 
   def normalize_link
