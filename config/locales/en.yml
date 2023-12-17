@@ -56,11 +56,18 @@ en:
         name: "Title"
         operator_id: "Operators"
   admin:
+    show:
+      import_game_data: "Import game data"
+      import_channels: "Import channels"
     title: "Admin"
     game_data_imports:
       create:
         success: "Import game data job was successfully started."
         failed: "Import game data job already started."
+    channels_imports:
+      create:
+        success: "Import channels job was successfully started."
+        failed: "Import channels job already started."
     videos_imports:
       new:
         title: "Import videos"
@@ -135,7 +142,7 @@ en:
         one: "Clear was successfully created!"
         other: "%{count} clears were successfully created!"
     new:
-      correct_information_warning: "Please make sure you fill in correct information before submitting.\n It will be viewable by other people after submitted. Our verifiers can reject your submission which will hide it."
+      correct_information_warning: "Please make sure you fill in correct information before submitting.\n It will be viewable by other people after submitted. Our verifiers can reject your submission when it contains wrong info, which will hide it."
       no_username_warning: "You have not set a username yet. Any clears submitted will be anonymous until you have set it"
     update:
       success: "Clear was successfully updated!"

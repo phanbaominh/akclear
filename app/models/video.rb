@@ -50,6 +50,10 @@ class Video
     self.class.normalized_url(video_id).gsub('watch?v=', 'embed/')
   end
 
+  def video_id
+    params['v']&.first || uri.path.slice(1..-1)
+  end
+
   private
 
   attr_reader :url
@@ -65,10 +69,6 @@ class Video
     return if params.blank? || (params.keys - ALLOWED_YOUTUBE_PARAM_KEYS).empty?
 
     errors.add(:url, :invalid)
-  end
-
-  def video_id
-    params['v']&.first || uri.path.slice(1..-1)
   end
 
   def uri

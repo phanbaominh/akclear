@@ -12,6 +12,7 @@ Rails.application.routes.draw do
     get 'admin', to: 'admin#show'
     namespace :admin do
       resource :game_data_import, only: %i[create]
+      resource :channels_import, only: %i[create]
       resources :clear_jobs, controller: 'extract_clear_data_from_video_jobs'
       resources :videos_imports, only: %i[new create]
       resource :clear_from_job, only: %i[new]

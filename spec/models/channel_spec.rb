@@ -29,10 +29,10 @@ RSpec.describe Channel do
     end
 
     context 'when the channel does not exist' do
-      let(:video_data) { double(channel_id: 'abc', channel_title: 'title') }
+      let(:video_data) { double(channel_id: 'abc') }
       let(:channel_data) do
         instance_double(Yt::Models::ChannelMeta, thumbnail_url: 'thumbnail', banner_url: 'banner',
-                                                 uploads_playlist_id: 'UUWwuijyo4x78iXup5hOvkbw')
+                                                 uploads_playlist_id: 'UUWwuijyo4x78iXup5hOvkbw', title: 'title')
       end
 
       before do
