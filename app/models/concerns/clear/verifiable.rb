@@ -16,8 +16,10 @@ module Clear::Verifiable
                                   reported_verified_clears = reported_verified_clears.merge(Verification.accessible_by(Current.ability, :update))
                                 end
                                 Clear.from("(#{[
-                                  reported_verified_clears.select(:id),
-                                  Clear.unverified.select(:id)
+                                  # should be .merge(Verification.accessible_by(Current.ability, :update)) instead of .joins
+                                  # but it make the query to complex
+                                  reported_verified_clears.joins(:channel).select(:id),
+                                  Clear.unverified.joins(:channel).select(:id)
                                 ].map(&:to_sql).join(' UNION ')}) clears").select(:id)
                               }
 

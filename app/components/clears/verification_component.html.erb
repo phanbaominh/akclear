@@ -1,5 +1,5 @@
 <%= content_tag :div, id: dom_id(clear, :verification) do %>
-  <% if !clear.verification && can?(:create, Verification) %>
+  <% if !clear.verification && can_create_verification? %>
     <%= link_to new_clear_verification_path(clear), class: "btn btn-neutral btn-sm" do %>
       <%= heroicon 'check-circle', variant: :outline %>
       <span><%= t(:verify) %></span>

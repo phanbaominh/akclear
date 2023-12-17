@@ -28,7 +28,8 @@ describe User do
         update_submitted_clear: [submitted_clear, :update],
         update_rejected_submitted_clear: [rejected_submitted_clear, :update],
         report: [:report, %i[create destroy]],
-        create_verification: [Verification, %i[create]],
+        create_verification_with_no_channel: [Verification.new(clear: Clear.new), %i[create]],
+        create_verification_with_channel: [verification_with_channel, %i[create]],
         change_verification: [verification, %i[update destroy]],
         change_self_verification: [self_verification, %i[update destroy]],
         all: %i[all manage],
@@ -41,6 +42,8 @@ describe User do
     shared_examples 'has abilities' do
       let(:submitted_clear) { build(:clear, submitter: user || build(:user)) }
       let(:rejected_submitted_clear) { create(:clear, :rejected, submitter: user || build(:user)) }
+      let(:clear_with_channel) { create(:clear) }
+      let(:verification_with_channel) { create(:verification, clear: clear_with_channel) }
       let(:verification) { build(:verification) }
       let(:self_verification) { build(:verification, verifier: user || build(:user)) }
       let(:other_user) { build(:user) }
@@ -80,7 +83,8 @@ describe User do
 
       let(:abilities) do
         %i[
-          read_clear read_channel create_clear update_rejected_submitted_clear like report create_verification change_self_verification
+          read_clear read_channel create_clear update_rejected_submitted_clear like report
+          create_verification_with_channel change_self_verification create_channel
         ]
       end
 
@@ -93,7 +97,7 @@ describe User do
       let(:abilities) do
         %i[
           read_clear read_channel create_clear update_submitted_clear update_rejected_submitted_clear like report
-          create_verification change_verification change_self_verification
+          create_verification_with_channel create_verification_with_no_channel change_verification change_self_verification
           all edit_user create_channel
         ]
       end

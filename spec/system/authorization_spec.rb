@@ -18,6 +18,7 @@ RSpec.describe 'Authorization' do
       new_clear_page: new_clear_path,
       edit_clear_page: edit_clear_path(clear),
       new_verification_page: new_clear_verification_path(clear),
+      new_verification_with_no_channel_page: new_clear_verification_path(clear_with_no_channel),
       edit_verification_page: edit_clear_verification_path(verified_clear),
       admin_page: admin_path,
       new_video_imports_page: new_admin_videos_import_path,
@@ -31,6 +32,7 @@ RSpec.describe 'Authorization' do
 
   shared_examples 'has access to pages' do
     let(:clear) { create(:clear) }
+    let(:clear_with_no_channel) { create(:clear, channel: nil) }
     let(:channel) { create(:channel) }
     let(:self_clear) { create(:clear, submitter: user) }
     let(:rejected_self_clear) { create(:clear, :rejected, submitter: user) }

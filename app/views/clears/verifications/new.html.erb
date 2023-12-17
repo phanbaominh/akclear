@@ -50,6 +50,18 @@
           <% end %>
           <%= link_to t('.go_to_clear'), clear_path(@clear), class: 'btn btn-outline btn-sm', data: { turbo_frame: '_top' } %>
         </div>
+        <% if (channel = @clear.channel).present? %>
+          <div class="mt-4">
+            <div class="flex flex-row items-center">
+              <%= link_to channel_path(channel), data: { turbo_frame: '_top' } do %>
+                <%= render Channels::AvatarComponent.new(thumbnail_url: channel.thumbnail_url, size_class: 'w-10 h-10 sm:w-12 sm:h-12') %>
+              <% end %>
+              <div>
+                <h3 class="text-base font-semibold"><%= channel.title %></h3>
+              </div>
+            </div>
+          </div>
+        <% end %>
         <div class='label'>
           <%= t(:stage) %>
         </div>

@@ -2,11 +2,13 @@ require 'rails_helper'
 
 describe Clear::Verifiable do
   describe 'need verification' do
+    let_it_be(:unverified_with_no_channel_clear_1) { create(:clear, channel: nil) }
     let_it_be(:reported_verified_clear) { create(:clear, :verified) }
     let_it_be(:reported_unverified_clear) { create(:clear) }
     let_it_be(:clear) { create(:clear) }
     let_it_be(:verified_clear) { create(:clear, :verified) }
     let_it_be(:unverified_clear) { create(:clear) }
+    let_it_be(:unverified_with_no_channel_clear_2) { create(:clear, channel: nil) }
 
     before_all do
       create(:report, clear: reported_verified_clear)

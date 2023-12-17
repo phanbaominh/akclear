@@ -7,7 +7,7 @@ class Ability
     can :read, Clear
     can :read, Channel
 
-    return if user.blank?
+    return if user.blank? # TODO: || !user.verified?
 
     # make sure user is verified too
 
@@ -20,11 +20,13 @@ class Ability
     return unless user.verifier? || user.admin?
 
     can %i[create], Verification
+    cannot %i[create], Verification, clear: { channel_id: nil }
     can %i[update destroy], Verification, verifier: user # TODO: allow other users to edit too? (if clear is flagged)
+    # will move it down to admin only depending on how it goes
+    can :create, Channel
 
     return unless user.admin?
 
-    can :create, Channel
     can :manage, :all
     cannot :edit, User, id: user.id
   end
