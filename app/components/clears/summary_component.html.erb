@@ -83,11 +83,11 @@
         <div class="card-actions text-base-content-subdued justify-between">
           <div class="flex text-sm text-base-content-subdued flex-col lg:flex-row">
             <% if @clear.channel %>
-              <span class="line-clamp-1">
+              <span class="line-clamp-1 lg:after:content-['\00B7\20'] lg:after:pr-1">
                 <%= @clear.player_name %>
               </span>
             <% end %>
-            <span class="lg:before:content-['\00B7\20'] lg:before:pl-1"><%= time_string @clear.created_at %>
+            <span class=""><%= time_string @clear.created_at %>
             </span>
           </div>
           <%= render Clears::LikeComponent.new(clear: @clear) %>
