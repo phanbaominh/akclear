@@ -8,6 +8,7 @@ class Ability
     can :read, Channel
 
     return if user.blank?
+
     # make sure user is verified too
 
     can :create, Clear
@@ -23,6 +24,7 @@ class Ability
 
     return unless user.admin?
 
+    can :create, Channel
     can :manage, :all
     cannot :edit, User, id: user.id
   end

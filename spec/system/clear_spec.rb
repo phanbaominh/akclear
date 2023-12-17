@@ -284,7 +284,7 @@ describe 'Clears' do
         expect_page_have_operator_details(edited_used_operator)
 
         expect(Clears::AssignChannelJob)
-          .to have_received(:perform_later)
+          .not_to have_received(:perform_later)
           .with(new_clear.id, 'https://youtube.com/watch?v=R9XnYuyQEVM')
       end
     end

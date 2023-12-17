@@ -69,6 +69,7 @@ RSpec.describe Clear do
     context 'when clear is new and already has a channel' do
       it 'does not assign the channel' do
         clear = build(:clear)
+        clear.trigger_assign_channel = true
         clear.channel = build(:channel)
 
         clear.update!(link:, updated_at: Time.current)
@@ -80,15 +81,28 @@ RSpec.describe Clear do
     context 'when the link has changed' do
       it 'runs assigns the channel job' do
         clear.link = link
+        clear.trigger_assign_channel = true
 
         clear.save!
 
         expect(Clears::AssignChannelJob).to have_received(:perform_later).with(clear.id, link)
       end
+
+      context 'when trigger_assign_channel is false' do
+        it 'does not run assign the channel job' do
+          clear.link = link
+          clear.trigger_assign_channel = false
+  
+          clear.save!
+  
+          expect(Clears::AssignChannelJob).not_to have_received(:perform_later).with(clear.id, link)
+        end
+      end
     end
 
     context 'when the link has not changed' do
       it 'does not assign the channel' do
+        clear.trigger_assign_channel = true
         clear.update!(updated_at: Time.current)
 
         expect(Clears::AssignChannelJob).not_to have_received(:perform_later)

@@ -32,6 +32,7 @@ describe User do
         change_verification: [verification, %i[update destroy]],
         change_self_verification: [self_verification, %i[update destroy]],
         all: %i[all manage],
+        create_channel: [Channel, :create],
         edit_user: [other_user, :edit],
         edit_self: [user, :edit]
       }
@@ -91,7 +92,9 @@ describe User do
 
       let(:abilities) do
         %i[
-          read_clear read_channel create_clear update_submitted_clear update_rejected_submitted_clear like report create_verification change_verification change_self_verification all edit_user
+          read_clear read_channel create_clear update_submitted_clear update_rejected_submitted_clear like report
+          create_verification change_verification change_self_verification
+          all edit_user create_channel
         ]
       end
 

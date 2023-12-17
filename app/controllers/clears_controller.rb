@@ -51,6 +51,8 @@ class ClearsController < ApplicationController
   def create
     @clear.submitter = Current.user
     @clear.job_id = nil unless can?(:create, ExtractClearDataFromVideoJob)
+    # only allow admin to prevent possible youtube API spam/redundant API calls
+    @clear.trigger_assign_channel = can?(:create, Channel)
     if @clear.save
       duplicated_clears = @clear.duplicate_for_stage_ids(@clear.stage_ids)
       delete_clear_spec_session
@@ -63,7 +65,7 @@ class ClearsController < ApplicationController
 
   def update
     # TODO: reset like count when updated|rejected? | not allowed liking when not verified yet?
-    if @clear.update(clear_params)
+    if @clear.update(clear_params.except(:link))
       delete_clear_spec_session
       redirect_to @clear, notice: t('.success')
     else

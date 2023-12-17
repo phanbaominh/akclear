@@ -22,10 +22,10 @@ class Clear < ApplicationRecord
 
   before_save :normalize_link
   after_create :mark_job_as_clear_created
-  after_commit :assign_channel
+  after_commit :assign_channel, if: :trigger_assign_channel
 
   # considering separate spec logic from model
-  attr_accessor :job_id, :self_only
+  attr_accessor :job_id, :self_only, :trigger_assign_channel
 
   def submitted_by?(user = Current.user)
     submitter == user
@@ -71,6 +71,7 @@ class Clear < ApplicationRecord
   end
 
   def assign_channel
+    # only run for admin?, run job at end of day/manually to insert channel info for all pending videos?
     return if previously_new_record? && channel.present?
     return unless saved_change_to_link?
 
