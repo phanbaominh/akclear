@@ -23,6 +23,8 @@ class Verification < ApplicationRecord
   end
 
   def rejectable?
-    used_operator_verifications.any?(&:rejected?)
+    # used_operator_verifications.any?(&:rejected?) || clear.used_operators.empty?
+    # always true to support case when all operators true but other info wrong for some reason
+    true
   end
 end
