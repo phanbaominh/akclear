@@ -5,6 +5,7 @@ class Channel < ApplicationRecord
 
   belongs_to :user, optional: true
   has_many :clears, dependent: :nullify
+  validates :external_id, presence: true, uniqueness: true
 
   def link
     "https://www.youtube.com/channel/#{external_id}"
