@@ -15,12 +15,11 @@ class Clear < ApplicationRecord
   scope :submitted_by, ->(user) { where(submitter_id: user.id) }
 
   delegate :event?, to: :stage, allow_nil: true
+  normalizes :link, with: ->(value) { Video.new(value).to_url(normalized: true) || value }
 
-  validates :link, presence: true, length: { maximum: 255 }
-  validates :name, length: { maximum: 255 }
   validate :valid_link
+  validates :name, length: { maximum: 255 }
 
-  before_save :normalize_link
   after_create :mark_job_as_clear_created
   after_commit :assign_channel, if: :trigger_assign_channel
 
@@ -50,13 +49,9 @@ class Clear < ApplicationRecord
   end
 
   def valid_link
-    errors.add(:link, :invalid) unless Video.new(link).valid?
-  end
+    return if (video = Video.new(link)).valid?
 
-  def normalize_link
-    return unless link && will_save_change_to_link?
-
-    self.link = Video.new(link).to_url(normalized: true)
+    errors.import(video.errors.where(:url).first, attribute: :link)
   end
 
   def mark_job_as_clear_created

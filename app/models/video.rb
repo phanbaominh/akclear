@@ -5,7 +5,7 @@ class Video
 
   include ActiveModel::Validations
 
-  validates :url, presence: true, format: { with: YOUTUBE_REGEX }
+  validates :url, presence: true, length: { maximum: 255 }, format: { with: YOUTUBE_REGEX }
   validate :params_contains_only_allowed_keys
 
   attr_writer :metadata
@@ -15,6 +15,8 @@ class Video
   end
 
   def self.normalized_url(video_id)
+    return nil if video_id.blank?
+
     "https://youtube.com/watch?v=#{video_id}"
   end
 
@@ -51,7 +53,15 @@ class Video
   end
 
   def video_id
-    params['v']&.first || uri.path.slice(1..-1)
+    id = params['v']&.first
+    return id if id.present?
+
+    # get id from short url like https://youtu.be/aAfeBGKoZeI?t=34
+    id = uri.path.slice(1..-1)
+
+    return if id.blank?
+
+    id.include?('watch') ? nil : id
   end
 
   private

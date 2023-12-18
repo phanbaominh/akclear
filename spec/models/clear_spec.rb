@@ -10,7 +10,26 @@ RSpec.describe Clear do
 
   describe 'validations' do
     it { is_expected.to validate_presence_of(:link) }
-    it { is_expected.to validate_length_of(:link).is_at_most(255) }
+
+    describe 'link' do
+      context 'when link is not a valid youtube url' do
+        it 'is invalid' do
+          clear = build(:clear, link: 'https://www.youtube.com/watch?p=0')
+
+          expect(clear).not_to be_valid
+          expect(clear.errors[:link]).to include('is invalid')
+        end
+      end
+
+      context 'when link is a valid youtube url' do
+        it 'is valid' do
+          clear = build(:clear, link: 'https://www.youtube.com/watch?v=aAfeBGKoZeI')
+
+          expect(clear).to be_valid
+        end
+      end
+    end
+
     it { is_expected.to validate_length_of(:name).is_at_most(255) }
   end
 
