@@ -8,7 +8,7 @@ class Clears::LikeComponent < ApplicationComponent
   def post_initialize(clear:, disabled: false, have_hover: true, turbo_id: nil)
     @clear = clear
     @disabled = disabled
-    @hover_class = have_hover ? "px-2 #{'hover:bg-primary/40' unless disabled}" : ''
+    @hover_class = have_hover ? 'px-2 rounded-full ' + ('hover:bg-primary/40' unless disabled).to_s : ''
     @turbo_id = turbo_id
   end
 
