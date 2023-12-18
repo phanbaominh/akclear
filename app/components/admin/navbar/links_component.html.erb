@@ -1,7 +1,7 @@
 <ul class="<%= @class %>">
-  <li><%= link_to t("admin.videos_imports.new.title"), new_admin_videos_import_path %></li>
-  <li><%= link_to t("admin.extract_clear_data_from_video_jobs.title"), admin_clear_jobs_path %></li>
-  <li><%= link_to t("admin.users.title"), admin_users_path %></li>
+  <%= render Navbar::LinkComponent.new(title: t("admin.videos_imports.new.title"), path: new_admin_videos_import_path) %>
+  <%= render Navbar::LinkComponent.new(title:t("admin.extract_clear_data_from_video_jobs.title"), path: admin_clear_jobs_path) %>
+  <%= render Navbar::LinkComponent.new(title: t("admin.users.title"), path: admin_users_path) %>
   <li aria-hidden="true" class="border-t border-gray-700 mx-0"></li>
   <%= render Navbar::LanguageDropdownComponent.new(flatten: true) %>
 </ul>

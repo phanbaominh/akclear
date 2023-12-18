@@ -183,3 +183,7 @@ Only when the view mode is `grid` and the screen size is at least md (meaning th
 .heroicon {
   @apply h-4 w-4;
 }
+
+.navbar-item > a {
+  @apply hover:text-inherit;
+}
