@@ -69,6 +69,7 @@ class ClearsController < ApplicationController
       delete_clear_spec_session
       redirect_to @clear, notice: t('.success')
     else
+      flash.now[:error] = @clear.errors.first.full_message
       render 'new', status: :unprocessable_entity
     end
   end
