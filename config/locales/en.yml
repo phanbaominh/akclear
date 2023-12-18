@@ -119,7 +119,7 @@ en:
       create:
         max_reached: "Maximum of 13 operators per clear."
     verifications:
-      rejected_hint: "Your clear has been rejected. It will not be visible to other people until it is updated."
+      rejected_hint: "This clear has been rejected. It will not be visible to other people until it is updated."
       new:
         comment_placeholder: "Add a comment..."
         reports_count:
@@ -167,7 +167,7 @@ en:
         choose_stage: "Choose a stage"
         choose_your_favorite_operators: "Choose your favorite operators"
         click_the_button: "Click the button"
-      title_2: "OR want to share your awesome clears to help other people out or just to show off?"
+      title_2: "Want to share awesome clears and help other people find them easier?"
       desc_2: "and click this button"
       latest_events: "Latest events"
       latest_episode: "Latest episode"
@@ -273,9 +273,10 @@ en:
   update_password: "Change password"
   username: 'Username'
 
+  like_hint: 'Remember to like on Youtube too!'
   import_videos: "Import videos"
   anonymous: "Anonymous"
-  your_clears: "Your clears"
+  your_clears: "Submissions"
   report: "Report"
   reported: "Reported"
   reject: "Reject"
