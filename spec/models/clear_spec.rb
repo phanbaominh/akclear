@@ -28,6 +28,27 @@ RSpec.describe Clear do
           expect(clear).to be_valid
         end
       end
+
+      describe 'link uniqueness' do
+        context 'when one of stage_id for the link is already taken' do
+          it 'is invalid' do
+            stage = create(:event_stage)
+            create(:clear, link: 'https://www.youtube.com/watch?v=aAfeBGKoZeI', stage:)
+            clear = build(:clear, link: 'https://www.youtube.com/watch?v=aAfeBGKoZeI',
+                                  stage_ids: [create(:stage).id, stage.id])
+
+            expect(clear).not_to be_valid
+            expect(clear.errors[:link]).to include('has already been taken for one of the selected stages')
+          end
+        end
+
+        context 'when none of stage_id for the link is already taken' do
+          it 'is valid' do
+            clear = build(:clear, link: 'https://www.youtube.com/watch?v=aAfeBGKoZeI')
+            expect(clear).to be_valid
+          end
+        end
+      end
     end
 
     it { is_expected.to validate_length_of(:name).is_at_most(255) }
@@ -111,9 +132,9 @@ RSpec.describe Clear do
         it 'does not run assign the channel job' do
           clear.link = link
           clear.trigger_assign_channel = false
-  
+
           clear.save!
-  
+
           expect(Clears::AssignChannelJob).not_to have_received(:perform_later).with(clear.id, link)
         end
       end

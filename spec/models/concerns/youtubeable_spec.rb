@@ -5,7 +5,7 @@ describe Youtubeable do
 
   describe '#embed_link' do
     it 'returns the embed link' do
-      expect(clear.embed_link).to eq('https://www.youtube.com/embed/B9zJ2T8mCWk')
+      expect(clear.embed_link).to eq('https://youtube.com/embed/B9zJ2T8mCWk')
     end
   end
 end

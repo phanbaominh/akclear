@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_12_16_083758) do
+ActiveRecord::Schema[7.1].define(version: 2023_12_18_094347) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -72,6 +72,7 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_16_083758) do
     t.datetime "updated_at", null: false
     t.bigint "channel_id"
     t.index ["channel_id"], name: "index_clears_on_channel_id"
+    t.index ["link", "stage_id"], name: "index_clears_on_link_and_stage_id", unique: true
     t.index ["stage_id"], name: "index_clears_on_stage_id"
     t.index ["submitter_id"], name: "index_clears_on_submitter_id"
   end

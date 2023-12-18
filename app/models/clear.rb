@@ -15,9 +15,11 @@ class Clear < ApplicationRecord
   scope :submitted_by, ->(user) { where(submitter_id: user.id) }
 
   delegate :event?, to: :stage, allow_nil: true
+
   normalizes :link, with: ->(value) { Video.new(value).to_url(normalized: true) || value }
 
   validate :valid_link
+  validates :link, uniqueness: { conditions: ->(clear) { where(stage_id: clear.stage_ids) } }
   validates :name, length: { maximum: 255 }
 
   after_create :mark_job_as_clear_created

@@ -37,6 +37,8 @@ en:
           attributes:
             stage:
               required: "must be selected"
+            link:
+              taken: "has already been taken for one of the selected stages"
     attributes:
       clear:
         used_operators: "Squad"
