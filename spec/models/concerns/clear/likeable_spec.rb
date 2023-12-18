@@ -6,7 +6,7 @@ describe Clear::Likeable do
   describe 'associations' do
     subject { clear }
 
-    it { is_expected.to have_many(:likes).dependent(:destroy) }
+    it { is_expected.to have_many(:likes).dependent(:delete_all) }
     it { is_expected.to have_many(:likers).class_name('User').through(:likes).source(:user) }
   end
 

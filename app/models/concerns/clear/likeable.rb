@@ -2,7 +2,8 @@ module Clear::Likeable
   extend ActiveSupport::Concern
 
   included do
-    has_many :likes, dependent: :destroy
+    # delete_all because likes does not have id
+    has_many :likes, dependent: :delete_all
     has_many :likers, class_name: 'User', through: :likes, source: :user
   end
 
