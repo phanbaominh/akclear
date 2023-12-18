@@ -9,6 +9,8 @@ module Clear::Duplicatable
       .compact.map do |stage_id|
       duplicate_clear = dup
       dup_used_operators = duplicate_squad
+      # to pass uniqueness validation, need to reassign stage_ids
+      duplicate_clear.stage_ids = [stage_id]
       duplicate_clear.stage_id = stage_id
       duplicate_clear.used_operators = dup_used_operators
       duplicate_clear.channel = channel
