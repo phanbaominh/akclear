@@ -9,10 +9,7 @@
       <%# end %>
       <div>
         <h2 class="card-title">
-          <%= @clear.persisted? ? t(:edit_clear) : t(:new_clear) %>
-          <% if @clear.persisted? %>
-            <%= render Clears::VerificationDetailsComponent.new(clear: @clear) %>
-          <% end %>
+          <%= title(@clear.persisted? ? t('meta.clears.edit.title') : t('meta.clears.new.title')) %>
         </h2>
         <% unless Current.user[:username] %>
           <div class="text-warning flex items-center gap-1">

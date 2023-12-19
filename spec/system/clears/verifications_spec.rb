@@ -18,6 +18,10 @@ describe 'Verifications', :js do
     expect(operator_card).to have_css("img[alt='Elite #{used_operator.elite}']") if used_operator.elite
   end
 
+  def expect_page_title
+    expect(find('h2', text: 'Verification')).to be_present
+  end
+
   context 'when normal user' do
     it 'cannot verify a clear' do
       clear = create(:clear)
@@ -45,7 +49,7 @@ describe 'Verifications', :js do
         click_link 'Verify'
       end
 
-      expect(page).to have_content('Clear verification')
+      expect_page_title
       click_link "View details of #{accepted_used_op.name}"
       expect_page_have_operator_details(accepted_used_op)
       click_button 'Verify operator'
@@ -76,7 +80,7 @@ describe 'Verifications', :js do
       find('details', text: "Rejected by #{verifier.username}").click
       expect(page).to have_content('Boohoo')
       click_link 'Edit verification'
-      expect(page).to have_content('Clear verification')
+      expect_page_title
       expect(page).to have_content('Rejected')
       expect_operator_verification(accepted_used_op, 'Verified')
       expect_operator_verification(rejected_used_op, 'Rejected')
@@ -102,12 +106,12 @@ describe 'Verifications', :js do
 
       click_link 'Verify'
 
-      expect(page).to have_content('Clear verification')
+      expect_page_title
       expect(page).to have_content(clear.stage.code)
 
       click_link 'Next'
 
-      expect(page).to have_content('Clear verification')
+      expect_page_title
       expect(page).to have_content(reported_verified_clear.stage.code)
       expect(page).to have_css("svg[alt='Flagged for review']")
       expect(page).to have_content('Verified')

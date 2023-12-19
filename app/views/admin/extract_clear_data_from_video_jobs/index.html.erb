@@ -1,5 +1,5 @@
 <section>
-  <h1 class="text-xl"><%= t("admin.extract_clear_data_from_video_jobs.index.jobs") %></h1>
+  <h2 class="text-xl"><%= title t("meta.admin.clear_jobs.index.title") %></h2>
   <%= simple_form_for @job_spec, url: admin_clear_jobs_path, method: :get,
     data: { turbo_frame: 'jobs_frame' }, html: { id: 'jobs_filters', class: 'card shadow-xl bg-base-200' } do |f| %>
     <div class="card-body">

@@ -1,7 +1,8 @@
+<% noindex %>
 <div class="card shadow-xl bg-base-200 sm:w-1/2 m-auto">
   <div class="card-body">
     <header>
-      <h1 class="card-title"><%= t(:sign_in) %></h1>
+      <h2 class="card-title"><%= title t('meta.sessions.new.title') %></h2>
     </header>
     <div class="h-4"></div>
     <%= form_with(url: sign_in_path) do |form| %>

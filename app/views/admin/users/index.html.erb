@@ -1,6 +1,6 @@
 <section >
-  <h2 class="text-xl"><%= t(:users) %></h2>
-  <span class="divider"></span>
+  <h2 class="main-heading"><%= title t("meta.admin.users.index.title") %></h2>
+  <span class="divider m-0 mb-2"></span>
   <div class="card space-y-2">
     <%= simple_form_for @user_spec, method: :get, url: admin_users_path, html: { class: 'card-body shadow-xl bg-base-200' } do |f| %>
       <h3 class="card-title"><%= t(:filters) %></h3>

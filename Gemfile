@@ -61,6 +61,7 @@ gem 'faker', require: false
 gem 'globalid'
 gem 'good_job'
 gem 'heroicon'
+gem 'meta-tags'
 gem 'mobility'
 gem 'nokogiri'
 gem 'pagy'

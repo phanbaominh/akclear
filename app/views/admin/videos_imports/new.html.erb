@@ -1,6 +1,6 @@
 <div class="card shadow-xl bg-base-200">
   <%= simple_form_for @spec, as: :videos_import, method: :post, url: admin_videos_imports_url, html: { class: 'card-body' } do |f| %>
-    <h2 class="card-title"><%= t(:import_videos) %></h2>
+    <h2 class="card-title"><%= title t('meta.admin.videos_imports.new.title') %></h2>
     <%= turbo_frame_tag 'videos_import__channels' do %>
       <%= content_tag :div, data: { **stimulus(:click_other) } do %>
         <%= f.input :all_channels,  as: :boolean, input_html: {

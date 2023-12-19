@@ -57,6 +57,60 @@ en:
       clear:
         name: "Title"
         operator_id: "Operators"
+  meta:
+    home:
+      title: "Arknights clear videos aggregator"
+      description: "Akclear is a clear videos aggregator for Arknights. You can find clears that match your needs in just a few clicks or share awesome clears with everyone."
+    clears:
+      index:
+        self:
+          description: "Your submitted Arknights clears"
+        title: "Clears"
+        description: "Find clears that match your needs in just a few clicks."
+      new:
+        title: "Submit new clear"
+      edit:
+        title: "Edit clear"
+    channels:
+      index:
+        title: 'Channels'
+    verifications:
+      new:
+        title: 'Verification'
+    usernames:
+      edit:
+        title: 'Change username'
+    identity:
+      emails:
+        edit:
+          title: 'Change your email'
+      email_verifications:
+        new:
+          title: 'Verify your email'
+      password_resets:
+        new:
+          title: 'Forgot password'
+        edit:
+          title: 'Reset password'
+    passwords:
+      edit:
+        title: 'Change password'
+    sessions:
+      new:
+        title: 'Sign in'
+    registrations:
+      new:
+        title: 'Sign up'
+    admin:
+      videos_imports:
+        new:
+          title: 'Import videos'
+      clear_jobs:
+        index:
+          title: 'Jobs'
+      users:
+        index:
+          title: 'Users'
   admin:
     show:
       import_game_data: "Import game data"

@@ -15,7 +15,7 @@
     <div class="flex flex-row items-center">
       <%= render Channels::AvatarComponent.new(thumbnail_url: @channel.thumbnail_url) %>
       <div>
-        <h1 class="text-base font-bold"><%= @channel.title %></h1>
+        <h2 class="text-base font-bold"><%= title @channel.title %></h2>
         <%# <p class="text-xs text-white opacity-70 mb-2">
               <a href="https://www.youtube.com/channel/UCg02KL1G0nmH0QzFuLsVoRQ">
                 @vtengoku

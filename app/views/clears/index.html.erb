@@ -1,18 +1,25 @@
 <section>
   <% if @clear_spec.self_only %>
+    <% description t('meta.clears.index.self.description') %>
     <div class="flex items-center gap-2 mb-2 sm:mb-0">
-      <h2 class="text-xl"><%= t(:your_clears) %></h2>
+      <h2 class="main-heading"><%= title t(:your_clears) %></h2>
       <% unless (count = Current.user.rejected_clears.count).zero? %>
-        <div class="flex items-center space-x-2">
-          <div class="badge badge-error badge-lg">
-            <div><%= count %> <%= t('rejected') %>
-            </div>
-          </div>
-          <%= link_to t(:update), edit_clear_path(Current.user.rejected_clears.first, fix_rejected: true), class: 'btn btn-primary btn-xs' %>
-        </div>
       <% end %>
     </div>
+    <div class="flex items-center space-x-2">
+      <div class="badge badge-error badge-md">
+        <div><%= count %> <%= t('rejected') %>
+        </div>
+      </div>
+      <%= link_to t(:update), edit_clear_path(Current.user.rejected_clears.first, fix_rejected: true),
+            class: 'btn btn-secondary  btn-xs' %>
+    </div>
+  <% else %>
+    <% description t('meta.clears.index.description') %>
+    <h2 class="main-heading"><%= title t('meta.clears.index.title') %></h2>
   <% end %>
+  <div class="span divider m-0 md:hidden"></div>
+  <div class="p-2"></div>
   <%= turbo_frame_tag 'clears_with_filters' do %>
     <div class="js-only">
       <%= render Clears::FiltersComponent.new(clear_spec: @clear_spec) %>

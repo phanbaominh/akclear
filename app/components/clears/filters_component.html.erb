@@ -1,8 +1,8 @@
 <%= simple_form_for clear_spec, url: clears_path, method: :get, html: { data: { turbo_frame: 'clears_with_filters' }, id: 'reset', class: 'hidden' } do |f| %>
   <%= f.input :self_only, as: :hidden %>
 <% end %>
-<div class="card mb-8 md:mb-4 md:shadow-xl static">
-  <div class="md:card-body md:bg-base-300">
+<section class="card mb-8 md:mb-4 md:shadow-xl static">
+  <div class="md:card-body md:bg-base-200">
     <%= render Primer::TabsComponent.new(tab_names: ['basic', 'detailed'], hidden_class: 'hidden sm:hidden') do |tabs_comp| %>
       <%= tabs_comp.with_content_with_tabs do %>
         <%= simple_form_for clear_spec, method: :get, html: {
@@ -14,10 +14,10 @@
         } do |f| %>
           <header>
             <div  class="flex justify-between">
-              <h2 class="card-title">
-                <%= t(:filter) %>
-              </h2>
-              <button form="reset" class="btn btn-xs gap-2 " class="js-only">
+              <h3 class="card-title">
+                <%= t(:filters) %>
+              </h3>
+              <button form="reset" class="btn btn-sm gap-2 btn-neutral" class="js-only">
                 <%= heroicon "arrow-path", options: { class: "h-4" } %>
                 <span><%= t(:reset) %></span>
               </button>
@@ -96,4 +96,4 @@
       </button>
     </footer>
   </div>
-</div>
+</section>

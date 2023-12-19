@@ -1,13 +1,17 @@
+<% set_meta_tags(title: t('meta.home.title'), reverse: false) %>
+<% description t('meta.home.description') %>
 <div class="md:flex flex-row gap-12">
   <!-- Consider using defer loading turbo frames for each component -->
   <div class="grid grid-cols-1 sm:grid-cols-2 grow gap-6 sm:gap-12 basis-0">
-    <section class=" sm:col-span-2">
-      <h2 class="text-2xl">
-        <%= t('.title_1') %>
-      </h2>
-      <div class="p-2"></div>
-      <p>
-        <%= t('.desc_1.first_line') %>
+    <div  class=" sm:col-span-2">
+      <section>
+        <h2 class="text-2xl">
+          <%= t('.title_1') %>
+        </h2>
+        <div class="p-2"></div>
+        <p>
+          <%= t('.desc_1.first_line') %>
+        </p>
         <section class="space-y-2">
           <%= simple_form_for @clear_spec, method: :get, html: {
           id: "clears__form",
@@ -36,6 +40,8 @@
             </button>
           </div>
         </section>
+      </section>
+      <section>
         <div class="divider"></div>
         <h2 class="text-2xl">
           <%= t('.title_2') %>
@@ -47,10 +53,10 @@
           </span>
           <%= render Clears::NewBtnComponent.new %>
         </div>
-      </p>
-    </section>
+      </section>
+    </div>
     <div class="sm:col-span-2">
-      <div class="divider"></div>
+      <div class="divider w-full"></div>
       <%= render Home::HeroComponent.new(
         stageables: Event.latest,
         title: t('.latest_events')

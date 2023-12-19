@@ -187,3 +187,7 @@ Only when the view mode is `grid` and the screen size is at least md (meaning th
 .navbar-item > a {
   @apply hover:text-inherit;
 }
+
+.main-heading {
+  @apply text-2xl;
+}
