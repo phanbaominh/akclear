@@ -1,0 +1,4 @@
+<%= turbo_stream.replace([@clear, :report]) do %>
+  <%= render Clears::ReportComponent.new(clear: @clear) %>
+<% end %>
+<%= render partial: 'shared/turbo_flash' %>

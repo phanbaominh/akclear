@@ -70,6 +70,6 @@ class Channel::VideosImportSpecification
   alias has_any_stage_code_in_title? has_specified_stages_code_in_title?
 
   def stages_codes
-    @stages_codes ||= (stageable&.stages || Stage.all).pluck(:code)
+    @stages_codes ||= specified_stages.pluck(:code)
   end
 end

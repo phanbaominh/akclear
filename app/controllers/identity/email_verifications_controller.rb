@@ -1,24 +1,27 @@
 class Identity::EmailVerificationsController < ApplicationController
-  skip_before_action :authenticate!, only: :edit
+  skip_before_action :authenticate!, only: :show
 
-  before_action :set_user, only: :edit
+  before_action :set_user, only: :show
 
-  def edit
+  def show
     @user.update! verified: true
-    redirect_to root_path, notice: 'Thank you for verifying your email address'
+    redirect_to root_path, notice: t('.success')
   end
 
   def create
-    UserMailer.with(user: Current.user).email_verification.deliver_later
-    redirect_to root_path, notice: 'We sent a verification email to your email address'
+    send_email_verification
+    redirect_to root_path, notice: t('.success')
   end
 
   private
 
   def set_user
-    @token = EmailVerificationToken.find_signed!(params[:sid])
-    @user = @token.user
+    @user = User.find_by_token_for!(:email_verification, params[:sid])
   rescue StandardError
-    redirect_to edit_identity_email_path, alert: 'That email verification link is invalid'
+    redirect_to edit_identity_email_path, alert: t('.invalid_link')
+  end
+
+  def send_email_verification
+    UserMailer.with(user: Current.user).email_verification.deliver_later
   end
 end

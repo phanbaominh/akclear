@@ -1,25 +1,99 @@
-<%= simple_form_for 'reset', url: clears_path, method: :get, html: { data: { turbo_frame: '_top' }, id: 'reset', class: 'hidden' } do %>
+<%= simple_form_for clear_spec, url: clears_path, method: :get, html: { data: { turbo_frame: 'clears_with_filters' }, id: 'reset', class: 'hidden' } do |f| %>
+  <%= f.input :self_only, as: :hidden %>
 <% end %>
-<%= render Clears::FormComponent.new(clear_spec: clear_spec) do |component| %>
-  <%= component.with_header do %>
-    <div  class="flex justify-between">
-      <h2 class="card-title">
-        <%= t(:filter) %>
-      </h2>
-      <button form="reset" class="btn btn-xs gap-2 " class="js-only">
-        <%= heroicon "arrow-path", options: { class: "h-4" } %>
-        <span><%= t(:reset) %></span>
+<section class="card mb-8 md:mb-4 md:shadow-xl static">
+  <div class="md:card-body md:bg-base-200">
+    <%= render Primer::TabsComponent.new(tab_names: ['basic', 'detailed'], hidden_class: 'hidden sm:hidden') do |tabs_comp| %>
+      <%= tabs_comp.with_content_with_tabs do %>
+        <%= simple_form_for clear_spec, method: :get, html: {
+          id: "clears__form",
+          data: {
+            turbo_stream: "true", turbo_frame: 'clears'
+          },
+          class: 'flex flex-col'
+        } do |f| %>
+          <header>
+            <div  class="flex justify-between">
+              <h3 class="card-title">
+                <%= t(:filters) %>
+              </h3>
+              <button form="reset" class="btn btn-sm gap-2 btn-neutral" class="js-only">
+                <%= heroicon "arrow-path", options: { class: "h-4" } %>
+                <span><%= t(:reset) %></span>
+              </button>
+              <noscript><input type="reset" value="Reset" class="btn btn-warning"/></noscript>
+            </div>
+          </header>
+          <%= f.input :self_only, as: :hidden %>
+          <%= f.input :channel_id, as: :hidden %>
+          <div class="js-only">
+            <%= content_tag :div, class: 'sm:block',
+              data: { **stimulus_attrs(:tabber, target: 'tab'), tab_name: 'basic' } do %>
+              <%= render Clears::StageSelectComponent.new(form: f, simple: true) %>
+            <% end %>
+            <%= content_tag :div, class: 'hidden sm:block sm:hidden',
+              data: { **stimulus_attrs(:tabber, target: 'tab'), tab_name: 'detailed' } do %>
+              <%= render Clears::StageSelectComponent.new(form: f) %>
+            <% end %>
+            <%= f.label :operator_id, t(:operators), class: 'label' %>
+            <div id="clears__form__operators_fields" class="hidden">
+              <%= f.simple_fields_for :used_operators, include_id: false do |used_operator_form| %>
+                <div id="<%= dom_id(used_operator_form.object.operator, :fields) %>">
+                  <%= render Clears::UsedOperatorFieldsComponent.new(form: used_operator_form) %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+        <%= content_tag :div,
+          data: { **stimulus_attrs(:clears__form_component,
+            actions: {
+              'dispatch:clickEditOperator': 'highlight',
+            }
+          )}, id: 'clears_operators' do %>
+          <%= content_tag :div, id: "detailed_operators", class: "grid grid-cols-1 hidden sm:flex sm:items-start sm:justify-between sm:hidden",
+            data: { **stimulus_attrs(:tabber, target: 'tab'), tab_name: 'detailed' } do %>
+            <div
+              id="detailed_operators__list"
+              class="grid grid-cols-1 sm:flex sm:flex-wrap gap-2 js-only"
+            >
+              <% clear_spec.used_operators.each do |used_operator| %>
+                <%= render Clears::UsedOperatorResponsiveComponent.new(used_operator: used_operator) %>
+              <% end %>
+              <%= render Clears::Form::NewOperatorButtonComponent.new(squad: clear_spec.squad) %>
+            </div>
+            <div id="detailed_operators__form_container" class="self-center mt-2 sm:mt-0 sm:w-1/2">
+            </div>
+          <% end %>
+          <%= content_tag :div, id: 'basic_operators', class: 'sm:block',
+            data: { **stimulus_attrs(:tabber, target: 'tab'), tab_name: 'basic' } do %>
+            <div class="flex flex-col w-full  ">
+              <div class="flex">
+                <div id="basic_operators__list" class="grid grid-cols-4 sm:flex flex-wrap self-center items-center justify-items-end">
+                  <% clear_spec.used_operators.each do |used_operator| %>
+                    <%= render Clears::UsedOperatorEditMiniComponent.new(used_operator: used_operator) %>
+                  <% end %>
+                  <%= render Clears::Form::NewOperatorButtonComponent.new(squad: clear_spec.squad, create: true, class: 'col-span-4') %>
+                </div>
+              </div>
+            </div>
+            <div class="flex justify-center" >
+              <div id="basic_operators__form_container" class="w-full md:w-fit lg:w-1/2">
+              </div>
+            </div>
+          <% end %>
+        <% end %>
+      <% end %>
+    <% end %>
+    <footer class="flex justify-end mt-4 space-x-2">
+      <button
+        form="clears__form"
+        class="btn btn-primary"
+        type="submit"
+        data-turbo-frame="clears"
+      >
+        <%= t(:apply_filters) %>
       </button>
-      <noscript><input type="reset" value="Reset" class="btn btn-warning"/></noscript>
-    </div>
-  <% end %>
-  <%= component.with_footer do %>
-    <button
-      form="clears__form"
-      class="btn btn-primary"
-      type="submit"
-      data-turbo-frame="clears"
-    >
-      <%= t(:apply_filters) %></button>
-  <% end %>
-<% end %>
+    </footer>
+  </div>
+</section>

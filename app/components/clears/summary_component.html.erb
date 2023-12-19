@@ -1,7 +1,8 @@
 <%= link_to clear_path(@clear), data: { turbo_frame: '_top' } do %>
-  <div class="">
+  <article class="">
     <div
       class="
+        clears_card
         card
         bg-base-200
         shadow-xl
@@ -14,15 +15,7 @@
       "
     >
       <div class="flex space-y-1 xs:space-y-0 xs:space-x-1 flex-col xs:flex-row ">
-        <% if @clear.verified? %>
-          <div class="badge xs:badge-lg rounded-sm badge-success text-success-content">
-            <%= t(:verified) %>
-          </div>
-        <% else %>
-          <div class="badge xs:badge-lg rounded-sm badge-error text-error-content">
-            <%= t(:unverified) %>
-          </div>
-        <% end %>
+        <%= render Clears::VerificationDetailsComponent.new(clear: @clear) %>
         <div class="badge-error hidden"></div>
         <div
           class="
@@ -52,14 +45,17 @@
         >
           <div class="flex md:space-x-0 flex-col w-full md:w-48">
             <div>
-              <h2 class="card-title">
+              <h3 class="card-title">
                 <%= render Stages::CodeComponent.new(stage: @clear.stage, class: "h-5") %>
-              </h2>
+              </h3>
+              <div class="line-clamp-2 text-sm"><%= @clear.name %></div>
             </div>
-            <div class="flex space-x-2 w-full">
+            <!--Hide player name to incentivize looking at clear not based on name-recognition-->
+            <!--            <div class="flex space-x-2 w-full">
               <div class="text-base-content-subdued">
-                <%= by_string(@clear.player_name) %></div>
-            </div>
+                <%#= by_string(@clear.player_name) %>-->
+            <!--              </div>
+            </div>-->
           </div>
           <div class="clear-summary__operator-list grid grid-cols-5 xs:grid-cols-7">
             <div class="operator-cell--container">
@@ -85,11 +81,18 @@
           </div>
         </div>
         <div class="card-actions text-base-content-subdued justify-between">
-          <div class="text-base-content-subdued"><%= time_string @clear.created_at %>
+          <div class="flex text-sm text-base-content-subdued flex-col lg:flex-row">
+            <% if @clear.channel %>
+              <span class="line-clamp-1 lg:after:content-['\00B7\20'] lg:after:pr-1">
+                <%= @clear.player_name %>
+              </span>
+            <% end %>
+            <span class=""><%= time_string @clear.created_at %>
+            </span>
           </div>
           <%= render Clears::LikeComponent.new(clear: @clear) %>
         </div>
       </div>
     </div>
-  </div>
+  </article>
 <% end %>

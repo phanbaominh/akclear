@@ -1,39 +1,47 @@
 <aside class="pt-8 md:pt-0 pb-4 md:pb-12">
   <div class="relative flex">
     <div class="absolute w-full top-1/2 left-0 h-px bg-gray-700"></div>
-    <h1 class="text-md uppercase bg-base-300 pr-2 relative"><%= title %></h1>
+    <h2 class="text-md uppercase bg-base-300 pr-2 relative"><%= title %></h2>
   </div>
   <ul>
     <% clears.each do |clear| %>
       <li class="first:border-none border-t border-gray-700 py-4">
-        <div class="flex flex-row justify-between">
+        <div class="flex flex-row justify-between gap-2">
           <div class="flex gap-2 items-center">
             <%= render Stages::CodeComponent.new(stage: clear.stage, class: "h-5") do |c| %>
               <%= c.with_code do %>
                 <%= link_to clear.stage.code,
-              clear_path(clear),
-              class: "text-white hover:text-primary" %>
+                  clear_path(clear),
+                  class: "font-bold hover:text-primary" %>
               <% end %>
             <% end %>
           </div>
           <a href="<%= clear.link %>" target="_blank" rel="noopener noreferrer">
-            <i class="fa-brands fa-youtube"></i>
+            <%= vite_image_tag 'images/youtube.svg', class: 'w-5 h-5 mt-1' %>
           </a>
         </div>
-        <div class="flex flex-row">
-          <%= link_to by_string(clear.player_name), "#", class: "text-xs block" %>
+        <div class="flex flex-row justify-between gap-2 text-base-content-subdued">
+          <% if clear.channel %>
+            <%= link_to by_string(clear.player_name), channel_path(clear.channel), class: "text-xs block" %>
+          <% else %>
+            <span></span>
+          <% end %>
           <span class="text-xs block new-clear__time"><%= time_string(clear.created_at) %></span>
         </div>
         <div class="flex flex-row items-center justify-between pt-2">
-          <div class="grid grid-cols-7">
-            <% clear.used_operators.first(7).each do |used_operator| %>
-              <%= image_tag used_operator.avatar,
-              class: "w-6 h-6 rounded-full",
-              alt: used_operator.name %>
-            <% end %>
-          </div>
+          <% if clear.used_operators.empty? %>
+            <span><%= t('home.index.no_operators') %></span>
+          <% else %>
+            <div class="grid grid-cols-7">
+              <% clear.used_operators.first(7).each do |used_operator| %>
+                <%= image_tag used_operator.avatar,
+                  class: "w-6 h-6 rounded-full",
+                  alt: used_operator.name %>
+              <% end %>
+            </div>
+          <% end %>
           <div class="pl-6">
-            <%= render Clears::LikeComponent.new(clear: clear) %>
+            <%= render Clears::LikeComponent.new(clear: clear, disabled: true) %>
           </div>
         </div>
       </li>

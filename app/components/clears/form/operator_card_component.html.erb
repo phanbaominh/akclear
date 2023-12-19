@@ -8,7 +8,6 @@
     </figure>
     <div class="card-body p-0 justify-center pl-2">
       <h2 class=" card-title text-md ml-2 hidden"><%= name %></h2>
-
       <div class="flex space-x-2">
         <% if elite %>
           <%= vite_image_tag elite_image_url, class: "w-8" %>
@@ -18,17 +17,15 @@
         <% end %>
       </div>
     </div>
-
     <div class="card-actions rounded-l-0 flex-col gap-0">
       <%= link_to edit_clears_used_operator_path(used_operator: used_operator_params), class: 'btn btn-sm btn-secondary w-8', data: { turbo_stream: 'true'} do %>
         <%= hidden_field_tag :operator_id, used_operator.operator_id %>
-        <i class="fa-solid fa-pen-to-square text-white"></i>
+        <%= heroicon 'pencil' %>
       <% end %>
       <%= button_to clears_used_operator_path, method: :delete, class: 'btn btn-sm hover:bg-error w-8' do %>
         <%= hidden_field_tag :operator_id, used_operator.operator_id %>
-        <i class="fa-solid fa-close text-white"></i>
+        <%= heroicon 'x-mark' %>
       <% end %>
-
     </div>
   </div>
 </div>

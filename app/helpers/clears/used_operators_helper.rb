@@ -1,2 +1,0 @@
-module Clears::UsedOperatorsHelper
-end

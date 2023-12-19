@@ -4,6 +4,12 @@ class Channel < ApplicationRecord
   include VideosImportable
 
   belongs_to :user, optional: true
+  has_many :clears, dependent: :nullify
+  validates :external_id, presence: true, uniqueness: true
+
+  def link
+    "https://www.youtube.com/channel/#{external_id}"
+  end
 
   def self.from(link)
     video_data = Yt::Video.new(url: link)
@@ -11,15 +17,19 @@ class Channel < ApplicationRecord
     Channel.find_or_initialize_by(external_id:).tap do |c|
       next if c.persisted?
 
-      c.title = video_data.channel_title
       c.external_id = external_id
       channel_data = Yt::Models::ChannelMeta.new(id: external_id)
-      c.thumbnail_url = channel_data.thumbnail_url
-      c.banner_url = channel_data.banner_url
-      c.uploads_playlist_id = channel_data.uploads_playlist_id
+      c.channel_meta = channel_data
     end
   rescue Yt::Errors::RequestError
     Rails.logger.warn("Could not find channel using link: #{link}")
     nil
+  end
+
+  def channel_meta=(channel_meta)
+    self.title = channel_meta.title
+    self.thumbnail_url = channel_meta.thumbnail_url
+    self.banner_url = channel_meta.banner_url
+    self.uploads_playlist_id = channel_meta.uploads_playlist_id
   end
 end

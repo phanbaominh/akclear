@@ -19,16 +19,28 @@ describe Operator::Rarifiable do
   end
 
   describe '#max_skill' do
-    it 'returns the number of skills for the operator\'s rarity' do
-      [0, 0, 1, 2, 2, 3].each_with_index do |max_skill, rarity|
-        expect(build_stubbed(:operator, rarity:).max_skill).to eq(max_skill)
+    context 'when elite is 1' do
+      it 'returns the min number of skills for the operator\'s rarity' do
+        [0, 0, 1, 2, 2, 2].each_with_index do |max_skill, rarity|
+          expect(build_stubbed(:operator, rarity:, skill_game_ids: nil).max_skill(elite: 1)).to eq(max_skill)
+        end
+      end
+
+      context 'when the operator has a unique skill_game_ids' do
+        it 'returns the number of skills based on the skill_game_ids' do
+          operator_sharp = build_stubbed(:operator, rarity: 'five_stars', skill_game_ids: ['skchr_aguard_1'])
+          expect(operator_sharp.max_skill(elite: 1)).to eq(1)
+        end
       end
     end
 
-    context 'when the operator has a unique skill_game_ids' do
-      it 'returns the number of skills based on the skill_game_ids' do
-        operator_sharp = build_stubbed(:operator, rarity: 'five_stars', skill_game_ids: ['skchr_aguard_1'])
-        expect(operator_sharp.max_skill).to eq(1)
+    context 'when elite is 2' do
+      it 'returns the number of skill game ids of operator' do
+        [1, 2, 3].each do |number_of_skill_game_ids|
+          expect(build_stubbed(:operator, skill_game_ids: Array.new(number_of_skill_game_ids))
+            .max_skill(elite: 2))
+            .to eq(number_of_skill_game_ids)
+        end
       end
     end
   end

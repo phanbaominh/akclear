@@ -3,6 +3,11 @@ class Video
   YOUTUBE_REGEX = %r{(?:https?://)?(?:www\.)?(?:youtube\.com|youtu\.be)/(?:watch\?v=)?(.+)}
   ALLOWED_YOUTUBE_PARAM_KEYS = %w[v t].freeze
 
+  include ActiveModel::Validations
+
+  validates :url, presence: true, length: { maximum: 255 }, format: { with: YOUTUBE_REGEX }
+  validate :params_contains_only_allowed_keys
+
   attr_writer :metadata
 
   def self.from_id(video_id)
@@ -10,6 +15,8 @@ class Video
   end
 
   def self.normalized_url(video_id)
+    return nil if video_id.blank?
+
     "https://youtube.com/watch?v=#{video_id}"
   end
 
@@ -29,16 +36,12 @@ class Video
     metadata&.title
   end
 
-  def stage_id
-    @stage_id ||= stages_ids_and_codes.find { |(_id, code)| title&.include?(code) }&.first
+  def channel_external_id
+    metadata&.channel_id
   end
 
-  def valid?
-    return @valid if defined?(@valid)
-
-    @valid = YOUTUBE_REGEX.match?(@url)
-    # make sure that @valid has value first or it will lead to infinite recursion when querying url
-    @valid &&= params_contains_only_allowed_keys?
+  def stage_id
+    @stage_id ||= stages_ids_and_codes.find { |(_id, code)| title&.include?(code) }&.first
   end
 
   def ==(other)
@@ -49,18 +52,33 @@ class Video
     self.class.normalized_url(video_id).gsub('watch?v=', 'embed/')
   end
 
+  def video_id
+    id = params['v']&.first
+    return id if id.present?
+
+    # get id from short url like https://youtu.be/aAfeBGKoZeI?t=34
+    id = uri.path.slice(1..-1)
+
+    return if id.blank?
+
+    id.include?('watch') ? nil : id
+  end
+
   private
 
+  attr_reader :url
+
   def stages_ids_and_codes
-    @stages_ids_and_codes ||= Stage.all.non_challenge_mode.pluck(:id, :code)
+    # sort by last so that CW-10 will be checked before CW-1
+    @stages_ids_and_codes ||= Stage.all.non_challenge_mode.pluck(:id, :code).sort_by(&:last).reverse
   end
 
-  def params_contains_only_allowed_keys?
-    params.blank? || params.keys.all? { |key| ALLOWED_YOUTUBE_PARAM_KEYS.include?(key) }
-  end
+  def params_contains_only_allowed_keys
+    return if errors[:url].present?
 
-  def video_id
-    params['v']&.first || uri.path.slice(1..-1)
+    return if params.blank? || (params.keys - ALLOWED_YOUTUBE_PARAM_KEYS).empty?
+
+    errors.add(:url, :invalid)
   end
 
   def uri
@@ -73,11 +91,5 @@ class Video
 
   def metadata
     @metadata ||= Yt::Video.new(url:)
-  end
-
-  def url
-    raise InvalidUrl unless valid?
-
-    @url
   end
 end

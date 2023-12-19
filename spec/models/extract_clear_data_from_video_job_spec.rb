@@ -14,6 +14,7 @@ RSpec.describe ExtractClearDataFromVideoJob, type: :model do
 
   describe 'associations' do
     it { is_expected.to belong_to(:stage) }
+    it { is_expected.to belong_to(:channel).optional }
   end
 
   describe 'aasm' do
@@ -28,25 +29,44 @@ RSpec.describe ExtractClearDataFromVideoJob, type: :model do
   end
 
   describe '#video_url=' do
+    let_it_be(:channel) { create(:channel, external_id: 'abc') }
     let(:video_url) { 'https://www.youtube.com/watch?v=aAfeBGKoZeI&t=34' }
-    let(:job) { described_class.new(video_url:) }
-    let(:video) { instance_double(Video, stage_id: 1, valid?: valid) }
+    let(:video) do
+      instance_double(Video, stage_id: 1, to_url: video_url, channel_external_id: 'abc', title: 'new title',
+                             valid?: true)
+    end
 
     before { allow(Video).to receive(:new).with(video_url).and_return(video) }
 
-    context 'when video is valid' do
-      let(:valid) { true }
+    context 'when video is url' do
+      let(:job) { described_class.new(video_url:) }
 
       it 'sets the stage_id' do
         expect(job.stage_id).to eq(1)
       end
+
+      it 'sets the channel' do
+        expect(job.channel).to eq(channel)
+      end
+
+      it 'sets the title' do
+        expect(job.data['title']).to eq('new title')
+      end
     end
 
-    context 'when video is invalid' do
-      let(:valid) { false }
+    context 'when video is Video' do
+      let(:job) { described_class.new(video_url: video) }
 
-      it 'does not set the stage_id' do
-        expect(job.stage_id).to be_nil
+      it 'sets the stage_id' do
+        expect(job.stage_id).to eq(1)
+      end
+
+      it 'sets the channel' do
+        expect(job.channel).to eq(channel)
+      end
+
+      it 'sets the title' do
+        expect(job.data['title']).to eq('new title')
       end
     end
   end

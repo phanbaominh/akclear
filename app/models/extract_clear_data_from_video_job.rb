@@ -3,6 +3,7 @@
 class ExtractClearDataFromVideoJob < ApplicationRecord
   include Specifiable
   belongs_to :stage
+  belongs_to :channel, optional: true
 
   STATUSES = [
     PENDING = 'pending',
@@ -46,7 +47,7 @@ class ExtractClearDataFromVideoJob < ApplicationRecord
     end
   end
 
-  validates :video_url, presence: true
+  validates :video_url, presence: true, uniqueness: true
   validate :valid_video
 
   def video
@@ -62,7 +63,12 @@ class ExtractClearDataFromVideoJob < ApplicationRecord
       end
     super video.to_url
 
-    self.stage_id = video.stage_id unless stage_id
+    # this is for making sure it is only set when creating the job from scratch as querying stage_id from video costs a api call
+    return if stage_id || !video.valid?
+
+    self.stage_id = video.stage_id
+    self.channel = Channel.find_by(external_id: video.channel_external_id) unless channel
+    self.data = { title: video.title }
   end
 
   def valid_video
@@ -78,6 +84,7 @@ class ExtractClearDataFromVideoJob < ApplicationRecord
     # preload data
     operators = Operator.where(id: @clear.used_operators.map(&:operator_id))
     @clear.used_operators.each { |uo| uo.operator = operators.find { |o| o.id == uo.operator_id } }
+    @clear.job_id = id
     @clear
   end
 

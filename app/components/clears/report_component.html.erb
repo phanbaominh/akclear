@@ -1,0 +1,18 @@
+<%= content_tag :div, id: dom_id(@clear, :report) do %>
+  <% if Current.user && clear.reported? %>
+    <!--Move tooltip left to avoid tooltip:before extrude outside the screen on small screen-->
+    <div class="tooltip tooltip-top" data-tip="<%= t('clears.show.flagged_tooltip') %>">
+      <%= button_to clear_report_path(clear), class: 'btn btn-neutral btn-sm', aria: { label: t('clears.show.unflag' )}, method: :delete  do%>
+        <%= heroicon 'flag', options: { class: 'text-warning' } %>
+        <span class="text-sm"> <%= t('reported') %> </span>
+      <% end %>
+    </div>
+  <% elsif !clear.submitted_by? %>
+    <div class="tooltip tooltip-top flex items-center gap-1" data-tip="<%= t('clears.show.flag_tooltip') %>">
+      <%= button_to clear_report_path(clear), class: 'btn btn-neutral btn-sm', aria: { label: t('clears.show.flag' )}  do%>
+        <%= heroicon 'flag', variant: :outline %>
+        <span class="text-sm"> <%= t('report') %> </span>
+      <% end %>
+    </div>
+  <% end %>
+<% end %>

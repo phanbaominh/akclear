@@ -7,5 +7,6 @@ class Clears::StageSelectsController < ApplicationController
   def show
     clear_spec_session.merge!(clear_params)
     set_clear_spec
+    reset_stage_spec_if_needed
   end
 end

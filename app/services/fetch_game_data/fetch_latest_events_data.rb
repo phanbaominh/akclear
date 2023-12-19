@@ -2,7 +2,7 @@
 
 module FetchGameData
   class FetchLatestEventsData < ApplicationService
-    SOURCE = 'https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/en_US/gamedata/excel/activity_table.json'
+    SOURCE = 'https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData_YoStar/main/en_US/gamedata/excel/activity_table.json'
     EVENT_TYPES = %w[MINISTORY SIDESTORY].freeze
     EVENT_ID_TYPES = %w[side mini].freeze
 

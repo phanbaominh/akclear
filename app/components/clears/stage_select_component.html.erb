@@ -1,14 +1,17 @@
-<%= turbo_frame_tag 'filters__stage' do %>
-  <% if simple %>
-    <% if multiple %>
-      <%= form.input :stage_ids, collection: all_stages, label_method: :code_with_mods, 
-          wrapper_html: { data: { **stimulus(:choices, values: { choices_options: { removeItemButton: true }}) } },
-          input_html: { multiple: true } %>
-    <% else %>
-      <%= form.input :stage_id, collection: all_stages, label_method: :code_with_mods, 
-          wrapper_html: { data: { **stimulus(:choices) } } %>
-    <% end %>
+<% if simple %>
+  <% if multiple %>
+    <%= form.input :stage_ids, label: t('clear_form.stage_ids_field.label'), collection: all_stages, label_method: :code_with_mods, 
+            wrapper_html: { data: { **stimulus(
+              :choices,
+              values: { choices_options: { removeItemButton: true, maxItemCount: Clear::DUPLICATION_LIMIT, maxItemText: t(:select_max_items, count: Clear::DUPLICATION_LIMIT) }}) 
+            } },
+            input_html: { multiple: true }, hint: t('clear_form.stage_ids_field.hint'), required: required %>
   <% else %>
+    <%= form.input :stage_id, collection: all_stages, label_method: :code_with_mods, 
+          wrapper_html: { data: { **stimulus(:choices) } }, prompt: t('clears.stage_prompt'), label: stage_label, required: required %>
+  <% end %>
+<% else %>
+  <%= turbo_frame_tag 'filters__stage' do %>
     <fieldset data-controller="clears--stage-select">
       <button
       class="hidden"

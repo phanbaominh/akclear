@@ -1,0 +1,3 @@
+<% flash.each do |name, msg| %>
+  <%= turbo_stream.append('flash', partial: 'shared/flash_message', locals: { name: , msg:  }) %>
+<% end %>

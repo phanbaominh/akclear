@@ -1,10 +1,11 @@
-<%= turbo_stream.remove_all ".operators__new_operator_btn" %>
+<%= turbo_stream.remove_all ".operators__new_operator_form" %>
 <%= turbo_stream.update "basic_operators__form_container" do %>
-  <div class="hidden sm:block">
+  <div>
     <%= render Clears::UsedOperatorFormComponent.new(
       used_operator: @used_operator,
       submit_text: t(:update_operator),
-      method: :patch
+      method: :patch,
+      prefix_namespace: "basic"
     ) %>
   </div>
 <% end %>
@@ -28,6 +29,6 @@
     used_operator: @used_operator,
     submit_text: t(:update_operator),
     method: :patch,
-    prefix_namespace: "mobile"
+    prefix_namespace: "detailed"
   ) %>
 <% end %>

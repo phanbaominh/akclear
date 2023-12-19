@@ -2,11 +2,13 @@ module Clear::Likeable
   extend ActiveSupport::Concern
 
   included do
-    has_and_belongs_to_many :likers, class_name: 'User', join_table: :likes # rubocop:disable Rails/HasAndBelongsToMany
+    # delete_all because likes does not have id
+    has_many :likes, dependent: :delete_all
+    has_many :likers, class_name: 'User', through: :likes, source: :user
   end
 
   def likes_count
-    likers.count
+    likes.size
   end
 
   def liked?

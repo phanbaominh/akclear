@@ -1,10 +1,11 @@
 class ApplicationRecord < ActiveRecord::Base
   primary_abstract_class
 
-  def method_missing(method, *args, &block)
-    super unless presenter.respond_to?(method)
+  def method_missing(method, ...)
+    # use & to prevent nil as nil is being able to respond_to? methods
+    super unless presenter&.respond_to?(method) # rubocop:disable Lint/RedundantSafeNavigation
 
-    presenter.send(method, *args, &block)
+    presenter.send(method, ...)
   end
 
   def presenter
@@ -16,6 +17,7 @@ class ApplicationRecord < ActiveRecord::Base
   end
 
   def respond_to_missing?(method, include_private = false)
-    presenter.respond_to?(method) || super
+    # use & to prevent nil as nil is being able to respond_to? methods
+    presenter&.respond_to?(method) || super # rubocop:disable Lint/RedundantSafeNavigation
   end
 end

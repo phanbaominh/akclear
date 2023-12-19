@@ -1,34 +1,68 @@
-<%= render Clears::FormComponent.new(clear_spec: @clear, new_form: true, job_id: @job&.id) do |component| %>
-  <%= component.with_header do %>
-    <% if @clear.errors.present? %>
-      <ul class="alert alert-error">
-        <% @clear.errors.each do |error| %>
-          <li><%= error.full_message %></li>
-        <% end %>
-      </ul>
+<% if @clear.persisted? && (verification = @clear.verification) %>
+  <section class="mt-2">
+    <% if verification.rejected? && @clear.submitted_by? %>
+      <div class="flex flex-row  items-center">
+        <p class="simple_form__hint !text-error"><%= t('clears.verifications.rejected_hint') %></p>
+      </div>
     <% end %>
-    <div>
-      <h2 class="card-title">
-        <%= t(:new_clear) %>
-      </h2>
-    </div>
-  <% end %>
-  <%= component.with_footer do %>
-    <button form="clears__form" class="btn btn-primary js-only">
-      <%= t(:create_clear) %>
-    </button>
-    <noscript>
-      <%# In no js case, will submit a GET request with authenticity_token param in the URL => 
-        undesired but should not cause any issue as Rails generate a new token per request 
-        and also check for origin of request %>
-      <button
-        form="clears__form"
-        formmethod="GET"
-        formaction="<%= clears_stage_select_path %>"
-        class="btn btn-primary"
-      >
-        <%= t(:select_stage) %>
-      </button>
-    </noscript>
-  <% end %>
+    <details class="collapse bg-base-200 lg:!w-1/2">
+      <summary class="collapse-title !list-item !pr-4 pb-0"  tabindex="0">
+        <h3 class="inline">
+          <%= t(verification.accepted? ? :verified_by : :rejected_by, verification: verification, username: verification.verifier.username) %>
+        </h3>
+        <span class="before:content-['\00B7\20'] before:pl-1"><%= time_string(verification.created_at) %></span>
+      </summary>
+      <div class="collapse-content ">
+        <div class="flex items-center justify-between gap-2">
+          <p class="whitespace-pre-wrap"><%= verification.comment.presence || t(:no_comment) %> </p>
+        </div>
+      </div>
+    </details>
+  </section>
+  <div class="p-2"></div>
 <% end %>
+<%= render Clears::FormComponent.new(clear_spec: @clear) do |component| %>
+  <%= component.with_header do %>
+    <%# if @clear.errors.present? %>
+    <!--      <ul class="alert alert-error list-item">-->
+    <%# @clear.errors.each do |error| %>
+      <!--          <li><%#= error.full_message %></li>-->
+      <%# end %>
+      <!--      </ul>-->
+      <%# end %>
+      <div>
+        <h2 class="card-title">
+          <%= title(@clear.persisted? ? t('meta.clears.edit.title') : t('meta.clears.new.title')) %>
+        </h2>
+        <% unless Current.user[:username] %>
+          <div class="text-warning flex items-center gap-1">
+            <%= heroicon 'exclamation-triangle' %>
+            <%= t('clears.new.no_username_warning') %>
+            <%= link_to  t('set'), edit_username_path, class: 'btn btn-outline btn-xs ml-2' %>
+          </div>
+        <% end %>
+      </div>
+      <div class="p-2"></div>
+    <% end %>
+    <%= component.with_footer do %>
+      <div class="flex flex-col">
+        <div class="simple_form__hint md:whitespace-pre-wrap mb-4"> <%= t('.correct_information_warning') %></div>
+        <button id="clears__form_submit_btn" form="clears__form" class="btn btn-primary js-only self-end" <%= "disabled" if @clear.rejected_used_operators.reject(&:need_to_be_verified?).present? %> >
+          <%= @clear.persisted? ? t(:update_clear) : t(:create_clear) %>
+        </button>
+        <noscript>
+          <%# In no js case, will submit a GET request with authenticity_token param in the URL => 
+      undesired but should not cause any issue as Rails generate a new token per request 
+      and also check for origin of request %>
+          <button
+            form="clears__form"
+            formmethod="GET"
+            formaction="<%= clears_stage_select_path %>"
+            class="btn btn-primary"
+          >
+            <%= t(:select_stage) %>
+          </button>
+        </noscript>
+      </div>
+    <% end %>
+  <% end %>

@@ -1,11 +1,12 @@
 require 'rails_helper'
 
-RSpec.describe ExtractClearDataFromVideoJobRunner, type: :job do
+RSpec.describe ExtractClearDataFromVideoJobRunner do
   let_it_be(:job, reload: true) do
     create(
       :extract_clear_data_from_video_job,
       video_url: 'https://www.youtube.com/watch?v=9bZkp7q19f0',
-      status: :started
+      status: :started,
+      channel: create(:channel)
     )
   end
 
@@ -42,8 +43,10 @@ RSpec.describe ExtractClearDataFromVideoJobRunner, type: :job do
       it 'extracts clear data from video' do
         described_class.perform_later(job.id)
         expect(Clears::BuildClearFromVideo).to have_received(:call).with(job.video)
-        expect(job.reload.data).to eq(result.value!.attributes.slice('link',
-                                                                     'stage_id').merge('used_operators_attributes' => []))
+        expect(job.reload.data).to eq(
+          result.value!.attributes.slice('link', 'stage_id')
+            .merge('used_operators_attributes' => [], 'channel_id' => job.channel_id)
+        )
         expect(job.reload).to be_completed
       end
     end

@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Clear, type: :model do
+RSpec.describe Clear do
   describe 'associations' do
     it { is_expected.to belong_to(:submitter) }
     it { is_expected.to belong_to(:stage) }
@@ -10,6 +10,48 @@ RSpec.describe Clear, type: :model do
 
   describe 'validations' do
     it { is_expected.to validate_presence_of(:link) }
+
+    describe 'link' do
+      context 'when link is not a valid youtube url' do
+        it 'is invalid' do
+          clear = build(:clear, link: 'https://www.youtube.com/watch?p=0')
+
+          expect(clear).not_to be_valid
+          expect(clear.errors[:link]).to include('is invalid')
+        end
+      end
+
+      context 'when link is a valid youtube url' do
+        it 'is valid' do
+          clear = build(:clear, link: 'https://www.youtube.com/watch?v=aAfeBGKoZeI')
+
+          expect(clear).to be_valid
+        end
+      end
+
+      describe 'link uniqueness' do
+        context 'when one of stage_id for the link is already taken' do
+          it 'is invalid' do
+            stage = create(:event_stage)
+            create(:clear, link: 'https://www.youtube.com/watch?v=aAfeBGKoZeI', stage:)
+            clear = build(:clear, link: 'https://www.youtube.com/watch?v=aAfeBGKoZeI',
+                                  stage_ids: [create(:stage).id, stage.id])
+
+            expect(clear).not_to be_valid
+            expect(clear.errors[:link]).to include('has already been taken for one of the selected stages')
+          end
+        end
+
+        context 'when none of stage_id for the link is already taken' do
+          it 'is valid' do
+            clear = build(:clear, link: 'https://www.youtube.com/watch?v=aAfeBGKoZeI')
+            expect(clear).to be_valid
+          end
+        end
+      end
+    end
+
+    it { is_expected.to validate_length_of(:name).is_at_most(255) }
   end
 
   describe '#mark_job_as_clear_created' do
@@ -59,45 +101,77 @@ RSpec.describe Clear, type: :model do
   end
 
   describe '#assign_channel' do
+    let_it_be(:clear, reload: true) { create(:clear) }
+    let(:link) { 'https://youtube.com/watch?v=123' }
+
+    before { allow(Clears::AssignChannelJob).to receive(:perform_later) }
+
+    context 'when clear is new and already has a channel' do
+      it 'does not assign the channel' do
+        clear = build(:clear)
+        clear.trigger_assign_channel = true
+        clear.channel = build(:channel)
+
+        clear.update!(link:, updated_at: Time.current)
+
+        expect(Clears::AssignChannelJob).not_to have_received(:perform_later)
+      end
+    end
+
     context 'when the link has changed' do
-      let(:link) { 'https://youtube.com/watch?v=123' }
+      it 'runs assigns the channel job' do
+        clear.link = link
+        clear.trigger_assign_channel = true
 
-      before { allow(Channel).to receive(:from).with(link).and_return(channel) }
+        clear.save!
 
-      context 'when new channel' do
-        let_it_be(:channel) { build(:channel) }
-
-        it 'assigns the channel' do
-          clear = build(:clear, link:, channel: nil)
-
-          clear.save!
-
-          expect(channel).to be_persisted
-          expect(clear.channel).to eq(channel)
-        end
+        expect(Clears::AssignChannelJob).to have_received(:perform_later).with(clear.id, link)
       end
 
-      context 'when existing channel' do
-        let_it_be(:channel) { create(:channel) }
-
-        it 'assigns the channel' do
-          clear = build(:clear, link:, channel: nil)
+      context 'when trigger_assign_channel is false' do
+        it 'does not run assign the channel job' do
+          clear.link = link
+          clear.trigger_assign_channel = false
 
           clear.save!
 
-          expect(clear.channel).to eq(channel)
+          expect(Clears::AssignChannelJob).not_to have_received(:perform_later).with(clear.id, link)
         end
       end
     end
 
     context 'when the link has not changed' do
       it 'does not assign the channel' do
-        allow(Channel).to receive(:from)
-        clear = create(:clear)
-
+        clear.trigger_assign_channel = true
         clear.update!(updated_at: Time.current)
 
-        expect(Channel).not_to have_received(:from)
+        expect(Clears::AssignChannelJob).not_to have_received(:perform_later)
+      end
+    end
+  end
+
+  describe '#created_by_trusted_users?' do
+    context 'when the submitter is a verifier' do
+      it 'returns true' do
+        clear = build(:clear, submitter: build(:user, :verifier))
+
+        expect(clear.created_by_trusted_users?).to eq(true)
+      end
+    end
+
+    context 'when the submitter is an admin' do
+      it 'returns true' do
+        clear = build(:clear, submitter: build(:user, :admin))
+
+        expect(clear.created_by_trusted_users?).to eq(true)
+      end
+    end
+
+    context 'when the submitter is a regular user' do
+      it 'returns false' do
+        clear = build(:clear, submitter: build(:user))
+
+        expect(clear.created_by_trusted_users?).to eq(false)
       end
     end
   end

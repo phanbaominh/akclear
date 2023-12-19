@@ -2,7 +2,7 @@
 
 module FetchGameData
   class FetchLatestEpisodesData < ApplicationService
-    SOURCE = 'https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/en_US/gamedata/excel/zone_table.json'
+    SOURCE = 'https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData_YoStar/main/en_US/gamedata/excel/zone_table.json'
 
     def call
       episodes_data = yield FetchJson.call(SOURCE)

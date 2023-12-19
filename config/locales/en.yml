@@ -30,8 +30,100 @@
 # available at https://guides.rubyonrails.org/i18n.html.
 
 en:
+  activerecord:
+    errors:
+      models:
+        clear:
+          attributes:
+            stage:
+              required: "must be selected"
+            link:
+              taken: "has already been taken for one of the selected stages"
+    attributes:
+      clear:
+        used_operators: "Squad"
+        name: "Title"
+  activemodel:
+    errors:
+      models:
+        squad:
+          attributes:
+            used_operators:
+              duplicated: "is already in squad"
+              too_long: "cannot have more than 13 operators"
+
+  simple_form:
+    labels:
+      clear:
+        name: "Title"
+        operator_id: "Operators"
+  meta:
+    home:
+      title: "Arknights clear videos aggregator"
+      description: "Akclear is a clear videos aggregator for Arknights. You can find clears that match your needs in just a few clicks or share awesome clears with everyone."
+    clears:
+      index:
+        self:
+          description: "Your submitted Arknights clears"
+        title: "Clears"
+        description: "Find clears that match your needs in just a few clicks."
+      new:
+        title: "Submit new clear"
+      edit:
+        title: "Edit clear"
+    channels:
+      index:
+        title: 'Channels'
+    verifications:
+      new:
+        title: 'Verification'
+    usernames:
+      edit:
+        title: 'Change username'
+    identity:
+      emails:
+        edit:
+          title: 'Change your email'
+      email_verifications:
+        new:
+          title: 'Verify your email'
+      password_resets:
+        new:
+          title: 'Forgot password'
+        edit:
+          title: 'Reset password'
+    passwords:
+      edit:
+        title: 'Change password'
+    sessions:
+      new:
+        title: 'Sign in'
+    registrations:
+      new:
+        title: 'Sign up'
+    admin:
+      videos_imports:
+        new:
+          title: 'Import videos'
+      clear_jobs:
+        index:
+          title: 'Jobs'
+      users:
+        index:
+          title: 'Users'
   admin:
+    show:
+      import_game_data: "Import game data"
+      import_channels: "Import channels"
     title: "Admin"
+    game_data_imports:
+      create:
+        success: "Import game data job was successfully started."
+        failed: "Import game data job already started."
+    channels_imports:
+      create:
+        success: "Import channels job was successfully started."
+        failed: "Import channels job already started."
     videos_imports:
       new:
         title: "Import videos"
@@ -41,19 +133,215 @@ en:
     extract_clear_data_from_video_jobs:
       title: "Import clear jobs"
       job_started: "Job already started"
+      new_btn: "New"
       index:
         jobs: "Jobs"
       update:
         start_job: "Start job"
         success: "Job was successfully updated."
+        title: 'Start import clear job'
+      new:
+        submit: 'Start job'
+        title: 'New job'
       create:
         success: "Job was successfully created."
       destroy:
         success: "Job was successfully deleted."
+    users:
+      title: "Users"
+      update:
+        success: "User was successfully updated."
+        failed: "Failed to update user."
+  clears:
+    no_channel_info: "Channel info will be available soon..."
+    list:
+      empty:
+        title: "No clears"
+        desc: "No clears match this description. Be the first to submit a clear!"
+    stage_prompt: "Select a stage"
+    auto_verified_by_trusted_users: "Clear was submitted by trusted users and was automatically verified."
+    use_squad: "Use squad"
+    item: "Clears"
+    title: "Clears"
+    select_operator_prompt: "Select operator"
+    edit_operator: "Edit operator %{operator}"
+    rejected_count:
+      zero: "No rejected clears"
+      one: "1 rejected clear"
+      other: "%{count} rejected clears"
+    used_operators:
+      create:
+        max_reached: "Maximum of 13 operators per clear."
+    verifications:
+      rejected_hint: "This clear has been rejected. It will not be visible to other people until it is updated."
+      new:
+        comment_placeholder: "Add a comment..."
+        reports_count:
+          one: "A user flagged this clear for review"
+          other: "%{count} users flagged this clear for review"
+        go_to_clear: "Go to clear"
+        title: "Clear verification"
+        flag: "Flagged for review"
+      create:
+        failed: "Failed to verify clear."
+        finished: "All done! No more clears to verify!"
+        success: "Clear was successfully verified!"
+      update:
+        success: "Verification was successfully updated!"
+      used_operators:
+        view_details: "View details of %{operator}"
+        edit:
+          reject: "Reject operator"
+          verify: "Verify operator"
+    create:
+      success:
+        one: "Clear was successfully created!"
+        other: "%{count} clears were successfully created!"
+    new:
+      correct_information_warning: "Please make sure you fill in correct information before submitting.\n It will be viewable by other people after submitted. Our verifiers can reject your submission when it contains wrong info, which will hide it."
+      no_username_warning: "You have not set a username yet. Any clears submitted will be anonymous until you have set it"
+    update:
+      success: "Clear was successfully updated!"
+    show:
+      flag_tooltip: "Flag this clear for review"
+      flagged_tooltip: "You have flagged this clear for review"
+      flag: "Flag for review"
+      unflag: "Unflag"
+      edit_verification: "Edit verification"
+    reports:
+      create:
+        success: "Thank you for flagging this clear. We will review it shortly."
+      destroy:
+        success: "You have unflagged this clear."
+  home:
+    index:
+      title_1: "Find a clear that match your needs in just a few clicks"
+      desc_1:
+        first_line: "Tired of searching Youtube for a CLEAR that can work with your squad, that does not include shiny OP operators? Just follow these steps:"
+        choose_stage: "Choose a stage"
+        choose_your_favorite_operators: "Choose your favorite operators"
+        click_the_button: "Click the button"
+      title_2: "Want to share awesome clears and help other people find them easier?"
+      desc_2: "and click this button"
+      latest_events: "Latest events"
+      latest_episode: "Latest episode"
+      latest_annihilation: "Latest annihilation"
+      trending_clears: "Trending clears"
+      latest_clears: "Latest clears"
+      empty_aside: "No clears yet"
+      no_operators: "No operators"
+  identity:
+    emails:
+      update:
+        success: "Your email has been changed"
+    email_verifications:
+      show:
+        success: "Thank you for verifying your email address"
+        invalid_link: "That email verification link is invalid"
+      create:
+        success: "We sent a verification email to your email address"
+    password_resets:
+      create:
+        success: "Check your email for reset instructions"
+        failed: "You can't reset your password until you verify your email"
+      update:
+        success: "Your password was reset successfully. Please sign in"
+      invalid_link: "That password reset link is invalid"
+  sessions:
+    create:
+      success: "Signed in successfully"
+      failed: "That email or password is incorrect"
+    destroy:
+      success: "That session has been logged out"
+  usernames:
+    update:
+      success: "Your username has been changed!"
+  registrations:
+    new:
+      email_hint: 'Email will not be visible to other users'
+    create:
+      success: "Welcome! You have signed up successfully"
+  passwords:
+    update:
+      success: "Your password has been changed"
+  channels:
+    list: "Channels"
+    show:
+      no_banner_yet: "NO IMAGE"
+      no_avatar_yet: "NO IMAGE"
+    index:
+      title: "Channels"
+      credit: "Special thanks to all the content creators featured here"
+  footer:
+    about:
+      blurb: "A clear videos aggregator for Arknights"
+      self: "Developed by pbminh"
+    credit:
+      thanks: "Thanks"
+      ak_ccs: "Featured Arknights content creators"
+      kengxiao: "Keng Xiao for game data"
+      prts: "PRTS wiki for event banner images"
+      ak_wiki: "Arknights EN wiki for episode banner images"
+      aceship: "Aceship for game images"
+  start_video_job: 'Start video job'
+  filters: 'Filters'
+  cancel: 'Cancel'
+  error: 'Error'
+  clear: 'Clear'
+  start: 'Start'
+  delete: 'Delete'
+  prev: "Prev"
+  next: "Next"
+  operators: "Operators"
+  no_events: "No event currently..."
+  sign_in_redirect: "You need to sign in or sign up before continuing"
+  failed: "Some"
+  select_max_items: "Cannot select more than %{count}"
+  create_clear: "Create clear"
+  edit_clear: "Edit clear"
+  update_clear: "Update clear"
+  elite_number: "Elite %{elite}"
+  edit_operator: "Edit operator"
+  delete_operator: "Delete operator"
+  current_password: "Current password"
+  email: "Email"
+  new_email: "New email"
+  password: "Password"
+  password_confirmation: "Password confirmation"
+  has_account: "Already have an account?"
+  sign_in: "Sign in"
+  sign_up: "Sign up"
+  change_email: "Change email address"
+  change_password: "Change password"
+  logout: "Log out"
+  forgot_password: "Forgot your password?"
+  send_password_reset_email: "Send password reset email"
+  reset_password: "Reset your password"
+  save_changes: "Save changes"
+  sent_verification_email: We sent a verification email to the address below. Check that email and follow those instructions to confirm it's your email address.
+  change_email_title: "Change your email"
+  verify_email_title: "Verify your email"
+  resend_verification_email: "Re-send verification email"
+  email_has_changed: "Your email has been changed"
+  change_username: "Change username"
+  update_username: "Change username"
+  update_password: "Change password"
+  username: 'Username'
+
+  like_hint: 'Remember to like on Youtube too!'
+  import_videos: "Import videos"
+  anonymous: "Anonymous"
+  your_clears: "Submissions"
+  report: "Report"
+  reported: "Reported"
+  reject: "Reject"
+  accept: "Accept"
   hello: "Hello world"
+  edit: "Edit"
+  update: "Update"
   add_operators: "Add operators"
   add_operator: "Add operator"
-  apply_filters: "Apply filters"
+  apply_filters: "Search"
   update_operator: "Update operator"
   ago: "ago"
   by: "by"
@@ -61,15 +349,25 @@ en:
   anonymous: "Anonymous"
   end_in: "End in"
   reset: "Reset"
+  no_comment: "No comment."
   verified: "Verified"
-  verified_by: "Verified by %{username} %{at}"
+  rejected: "Rejected"
+  verified_by: "Verified by %{username}"
+  rejected_by: "Rejected by %{username}"
   verify: "Verify"
   unverify: "Unverify"
   choose: "Choose"
-  challenge_mode: "Challenge Mode"
+  challenge_mode: "Challenge mode"
   episode: "Episode"
   annihilation: "Annihilation"
   clear_form:
+    operator_field:
+      fix_rejection_hint: "Please update all rejected operators before submitting again."
+    link_field:
+      hint: "Only Youtube link work for now."
+    stage_ids_field:
+      label: "Stages"
+      hint: "A clear will be created for each stage chosen."
     stageable_field:
       prompt: "Select a %{stage_type}"
       label: "%{stage_type}"
@@ -81,19 +379,14 @@ en:
   used_operator_form:
     skill_level: "Level %{skill_level}"
     skill_mastery: "Mastery %{skill_mastery}"
-  channels:
-    list: "Channels"
   stages:
     environments:
-      story: "Story"
-      standard: "Standard"
-      adverse: "Adverse"
+      story: "Story Environment"
+      standard: "Standard Environment"
+      adverse: "Adverse Environment"
   trending_clears: "Trending clears"
   new_clears: "New clears"
-  clears: "Clears"
   guide: "Guide"
   profile: "Profile"
-  change_email: "Change email address"
-  change_password: "Change password"
-  logout: "Log out"
+
   new_clear: "Submit new clear"

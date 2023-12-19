@@ -50,6 +50,8 @@ module FetchGameData
 
         img = links.last.css('img').first
 
+        p img
+
         next if img.nil?
 
         event_game_id_to_banner_url[game_id] = "#{IMAGE_HOST}#{img['data-src'].gsub('650', '1300')}"

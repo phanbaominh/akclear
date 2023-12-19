@@ -1,6 +1,8 @@
 FactoryBot.define do
   factory :verification do
-    verifier { nil }
-    clear { nil }
+    verifier
+    clear
+
+    status { Verification::ACCEPTED }
   end
 end

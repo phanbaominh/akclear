@@ -1,8 +1,15 @@
 require 'rails_helper'
 
-RSpec.describe Channel, type: :model do
+RSpec.describe Channel do
   describe 'associations' do
     it { is_expected.to belong_to(:user).optional }
+    it { is_expected.to have_many(:clears).dependent(:nullify) }
+  end
+
+  it 'stub requests' do
+    channel_id = 'UCK2punOBsp-ogaGUcSKPgBg&key=AIzaSyBqf-dQKzlfjUF052V9vUg_vYkkzKHG5dg'
+    channel_data = Yt::Models::ChannelMeta.new(id: channel_id)
+    expect { channel_data.thumbnail_url }.to raise_error(WebMock::NetConnectNotAllowedError)
   end
 
   describe '.from' do
@@ -22,10 +29,10 @@ RSpec.describe Channel, type: :model do
     end
 
     context 'when the channel does not exist' do
-      let(:video_data) { double(channel_id: 'abc', channel_title: 'title') }
+      let(:video_data) { double(channel_id: 'abc') }
       let(:channel_data) do
         instance_double(Yt::Models::ChannelMeta, thumbnail_url: 'thumbnail', banner_url: 'banner',
-                                                 uploads_playlist_id: 'UUWwuijyo4x78iXup5hOvkbw')
+                                                 uploads_playlist_id: 'UUWwuijyo4x78iXup5hOvkbw', title: 'title')
       end
 
       before do

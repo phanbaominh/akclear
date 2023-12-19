@@ -2,14 +2,25 @@
 <%= turbo_stream.remove @used_operator.operator %>
 <%= turbo_stream.remove dom_id(@used_operator.operator, :basic) %>
 <% if @is_destroy_editing_used_operator %>
-  <%= turbo_stream.append "detailed_operators__list" do %>
-    <% render Clears::Form::NewOperatorButtonComponent.new %>
-  <% end %>
-  <%= turbo_stream.append "basic_operators__list" do %>
-    <%= render Clears::Form::NewOperatorButtonComponent.new %>
-  <% end %>
+  <%= turbo_stream.update "basic_operators__form_container" %>
+  <%= turbo_stream.update "detailed_operators__form_container" %>
 <% end %>
-<%= turbo_stream.remove dom_id(@used_operator.operator, :fields) %>
+<% unless @is_operator_form_active %>
+  <%= turbo_stream.remove_all ".operators__new_operator_form" %>
+  <%= render partial: 'new_btn', locals: { squad: @squad } %>
+<% end %>
+<% if @used_operator.id %>
+  <%= turbo_stream.update dom_id(@used_operator.operator, :fields) do %>
+    <%= simple_fields_for @clear_spec do |f| %>
+      <%= f.simple_fields_for :used_operators, @used_operator, child_index: Time.now.to_i do |used_operator_form| %>
+        <%= used_operator_form.input_field :id %>
+        <%= used_operator_form.input_field :_destroy, value: true %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% else %>
+  <%= turbo_stream.remove dom_id(@used_operator.operator, :fields) %>
+<% end %>
 <%= turbo_stream.remove dom_id(
   UsedOperator.new,
                       "#{@used_operator.operator_id}_new"

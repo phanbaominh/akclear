@@ -3,7 +3,7 @@ class ImportVideosJob < ApplicationJob
 
   def perform(spec_params)
     spec = Channel::VideosImportSpecification.new(spec_params.transform_keys(&:to_sym))
-    Channel.import_videos(spec)
+    Channel.import_videos_from_channels(spec)
     # Do something later
   end
 end

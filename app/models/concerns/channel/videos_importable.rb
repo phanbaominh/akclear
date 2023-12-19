@@ -2,7 +2,7 @@ module Channel::VideosImportable
   extend ActiveSupport::Concern
 
   class_methods do
-    def import_videos(spec)
+    def import_videos_from_channels(spec)
       spec.channels.find_each do |channel|
         channel.import_videos(spec)
         spec.reset
@@ -18,9 +18,12 @@ module Channel::VideosImportable
       end
     selected_playlist_items.map do |playlist_item|
       video = Video.from_id(playlist_item.video_id)
+
+      # reuse to avoid calling API to get video
       video.metadata = playlist_item
 
-      ExtractClearDataFromVideoJob.new(video_url: video)
+      # need to assign channel first so that it is available in video_url=
+      ExtractClearDataFromVideoJob.new(channel: self, video_url: video)
     end.map(&:save)
   end
 end

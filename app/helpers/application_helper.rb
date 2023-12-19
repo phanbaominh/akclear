@@ -3,7 +3,17 @@ module ApplicationHelper
     {
       notice: 'alert-info',
       alert: 'alert-warning',
-      success: 'alert-success'
+      success: 'alert-success',
+      error: 'alert-error'
+    }[key.to_sym]
+  end
+
+  def flash_key_to_icon_class(key)
+    {
+      notice: 'information-circle',
+      alert: 'exclamation-triangle',
+      success: 'check-circle',
+      error: 'x-circle'
     }[key.to_sym]
   end
 
@@ -21,5 +31,9 @@ module ApplicationHelper
 
   def authenticated?
     Current.user.present?
+  end
+
+  def latest_unverified_clear
+    @latest_unverified_clear ||= Clear.need_verification.first
   end
 end

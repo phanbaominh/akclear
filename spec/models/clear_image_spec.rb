@@ -1,7 +1,11 @@
 require 'rails_helper'
 
-describe ClearImage do
+describe ClearImage, :slow do
   let(:clear_image) { described_class.new(image_path) }
+
+  # problem: ignore frequents words? case in point La Pluma turned into La Plum
+  # reduce confidence threshold for group line? at least for english
+  # choose name lines by most operator names?
 
   describe '#used_operators_data' do
     let(:received_result) { clear_image.used_operators_data }

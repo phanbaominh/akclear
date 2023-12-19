@@ -1,5 +1,5 @@
 <%= link_to clears_stage_select_path, class: 'btn btn-ghost w-fit' do %>
-  <i class="fa-solid fa-arrow-left mr-2"></i><%= t :back %>
+  <%= heroicon 'arrow-left', options: { class: 'ml-2' } %><%= t :back %>
 <% end %>
 <div class="card-body shadow-xl bg-base-300">
   <header>
@@ -17,8 +17,7 @@
   <footer class="flex justify-end space-x-2">
     <% if @modifying_clear %>
       <div class="hidden">
-
-        <%= render Clears::FormComponent.new(clear_spec: @clear_spec, new_form: true) %>
+        <%= render Clears::FormComponent.new(clear_spec: @clear_spec) %>
       </div>
       <button class="btn btn-primary" form='clears__form'><%= t(:create_clear) %></button>
     <% else %>

@@ -1,24 +1,23 @@
 <ul class="<%= @class %>">
-  <li><%= link_to t("clears"), clears_path %></li>
-  <li><%= link_to t("channels.list"), channels_path %></li>
-  <li><%= link_to t("guide"), "#" %></li>
+  <!--Have to use request.fullpath instead of using current_page because of some issue with mobility gem locale param-->
+  <%= render Navbar::LinkComponent.new(title: t("clears.title"), path: clears_path, highlighted: current_page?(clears_path) && request.fullpath.exclude?('self_only')) %>
+  <%= render Navbar::LinkComponent.new(title: t("channels.list"), path: channels_path) %>
+  <!--<li><%#= link_to t("guide"), "#" %></li>-->
+  <% if can?(:create, Verification) && latest_unverified_clear  %>
+    <%= render Navbar::LinkComponent.new(
+      title: t(:verify), path: new_clear_verification_path(latest_unverified_clear),
+      highlighted: request.path.include?('verification')) 
+    %>
+  <% end %>
   <% if can?(:read, :admin)  %>
-    <li><%= link_to t('admin.title'), admin_path  %></li>
+    <%= render Navbar::LinkComponent.new(title: t('admin.title'), path: admin_path) %>
   <% end %>
   <li aria-hidden="true" class="border-t border-gray-700 mx-0"></li>
   <%= render Navbar::LanguageDropdownComponent.new(flatten: true) %>
   <li aria-hidden="true" class="border-t border-gray-700 mx-0"></li>
   <% if authenticated? %>
-    <div class="lg:hidden contents">
-      <li>
-        <%= link_to t("change_email"), edit_identity_email_path %>
-      </li>
-      <li>
-        <%= link_to t("change_password"), edit_password_path %>
-      </li>
-      <li>
-        <%= button_to t("logout"), Current.session, method: :delete %>
-      </li>
+    <div class='lg:hidden contents'>
+      <%= render Navbar::ProfileLinksComponent.new %>
     </div>
   <% end %>
 </ul>

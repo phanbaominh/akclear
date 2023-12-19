@@ -1,37 +1,59 @@
 class Clear < ApplicationRecord
   include Dry::Monads[:result]
   include Clear::HardTaggable
-  include Clear::Squadable
   include Clear::Likeable
+  include Reportable
+  include Squadable
   include StageSpecifiable
   include Youtubeable
+  include Duplicatable
+  include Verifiable
   belongs_to :submitter, class_name: 'User'
   belongs_to :stage
-  belongs_to :channel, optional: true # TODO: make this non-optional in the future
-  has_many :used_operators, dependent: :destroy
-  has_one :verification, dependent: :destroy
+  belongs_to :channel, optional: true
 
-  accepts_nested_attributes_for :used_operators, allow_destroy: true
+  scope :submitted_by, ->(user) { where(submitter_id: user.id) }
 
   delegate :event?, to: :stage, allow_nil: true
 
-  validates :link, presence: true
-  validates :channel_id, presence: true
+  normalizes :link, with: ->(value) { Video.new(value).to_url(normalized: true) || value }
 
-  before_validation :assign_channel
-  before_save :normalize_link
-  after_save :mark_job_as_clear_created
+  validate :valid_link
+  validates :link, uniqueness: { conditions: ->(clear) { where(stage_id: clear.stage_ids) } }
+  validates :name, length: { maximum: 255 }
 
-  attr_accessor :job_id
+  after_create :mark_job_as_clear_created
+  after_commit :assign_channel, if: :trigger_assign_channel
 
-  def verified?
-    verification.present?
+  # considering separate spec logic from model
+  attr_accessor :job_id, :self_only, :trigger_assign_channel
+
+  def submitted_by?(user = Current.user)
+    submitter == user
   end
 
-  def normalize_link
-    return unless link && will_save_change_to_link?
+  def preload_operators(with_verification: false)
+    return unless persisted?
 
-    self.link = Video.new(link).to_url(normalized: true)
+    nested_associations =
+      if with_verification
+        %i[operator verification]
+      else
+        [:operator]
+      end
+
+    ActiveRecord::Associations::Preloader.new(
+      records: [self],
+      associations: [used_operators: nested_associations]
+    ).call
+    Operator.build_translations_cache(Operator.from_clear_ids([id]))
+    self
+  end
+
+  def valid_link
+    return if (video = Video.new(link)).valid?
+
+    errors.import(video.errors.where(:url).first, attribute: :link)
   end
 
   def mark_job_as_clear_created
@@ -41,32 +63,15 @@ class Clear < ApplicationRecord
     job&.mark_clear_created! if job&.completed?
   end
 
-  def assign_channel
-    return if new_record? && channel.present?
-    return unless will_save_change_to_link?
-
-    self.channel = Channel.from(link)
-
-    return unless channel.present? && (channel.new_record? || will_save_change_to_channel_id?)
-
-    channel.save! if channel.new_record?
-    self.channel_id = channel.id
+  def created_by_trusted_users?
+    submitter.verifier? || submitter.admin?
   end
 
-  def duplicate_for_stage_ids(stage_ids)
-    loaded_used_operators = used_operators.includes(:operator)
-    stage_ids.reject { |si| si == stage_id }.compact.map do |stage_id|
-      duplicate_clear = dup
-      dup_used_operators = loaded_used_operators.map do |used_operator|
-        dup_used_operator = used_operator.dup
-        dup_used_operator.operator = used_operator.operator
-        dup_used_operator
-      end
-      duplicate_clear.stage_id = stage_id
-      duplicate_clear.used_operators = dup_used_operators
-      duplicate_clear.channel = channel
-      duplicate_clear.job_id = nil
-      duplicate_clear
-    end.each(&:save)
+  def assign_channel
+    # only run for admin?, run job at end of day/manually to insert channel info for all pending videos?
+    return if previously_new_record? && channel.present?
+    return unless saved_change_to_link?
+
+    Clears::AssignChannelJob.perform_later(id, link)
   end
 end

@@ -31,15 +31,21 @@ describe Channel::VideosImportSpecification do
     context 'when no stageable is specified' do
       let(:params) { {} }
 
+      context 'when no Arknights in title' do
+        it 'returns false' do
+          expect(spec.satisfy?(double(title: 'E-2 | COOL'))).to be_falsy
+        end
+      end
+
       context 'when video title contains stage code' do
         it 'returns true' do
-          expect(spec.satisfy?(double(title: 'E-2 | COOL'))).to be_truthy
+          expect(spec.satisfy?(double(title: '[Arknights] E-2 | COOL'))).to be_truthy
         end
       end
 
       context 'when video title does not contain stage code' do
         it 'returns false' do
-          expect(spec.satisfy?(double(title: 'E-1 | COOL'))).to be_falsy
+          expect(spec.satisfy?(double(title: '[Arknights] E-1 | COOL'))).to be_falsy
         end
       end
     end
@@ -49,15 +55,21 @@ describe Channel::VideosImportSpecification do
       let_it_be(:stage) { create(:stage, stageable:, code: 'E-1') }
       let(:params) { { stageable_id: stageable.to_global_id } }
 
+      context 'when no Arknights in title' do
+        it 'returns false' do
+          expect(spec.satisfy?(double(title: 'E-1 | COOL'))).to be_falsy
+        end
+      end
+
       context 'when video title contains stage code' do
         it 'returns true' do
-          expect(spec).to be_satisfy(double(title: 'E-1 | COOL'))
+          expect(spec).to be_satisfy(double(title: '[Arknights] E-1 | COOL'))
         end
       end
 
       context 'when video title does not contain specified stage code' do
         it 'returns false' do
-          expect(spec).not_to be_satisfy(double(title: 'E-2 | COOL'))
+          expect(spec).not_to be_satisfy(double(title: '[Arknights] E-2 | COOL'))
         end
       end
     end

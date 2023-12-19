@@ -38,6 +38,7 @@ Metrics/BlockLength:
   Exclude:
     - "spec/**/*"
     - "lib/tasks/**/*"
+    - "config/intializers/**/*"
 RSpec/NestedGroups:
   Enabled: false
 RSpec/ImplicitSubject:
@@ -47,4 +48,6 @@ Naming/PredicateName:
 Style/MultilineBlockChain:
   Enabled: false
 Metrics/CyclomaticComplexity:
+  Enabled: false
+BlockGivenWithExplicitBlock:
   Enabled: false

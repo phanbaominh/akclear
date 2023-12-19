@@ -58,7 +58,7 @@ module Operator::Rarifiable
     if elite == 2
       skill_game_ids&.length
     else
-      [2, RARITIES_TO_NUMBER_OF_SKILLS[rarity]].min
+      [2, RARITIES_TO_NUMBER_OF_SKILLS[rarity], skill_game_ids&.length].compact.min
     end
   end
 

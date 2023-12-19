@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html class="dark bg-base-300">
+  <% admin_controller = controller.class.to_s.downcase.include?('admin') %>
   <head>
-    <title>Akclear</title>
+    <%= display_meta_tags site: "Akclear", reverse: true, noindex: admin_controller, prefix: (' - Admin ' if admin_controller) %>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -11,7 +12,6 @@
     <%= vite_client_tag %>
     <%# TODO: need to add "data-turbo-track": "reload" here %>
     <%= vite_javascript_tag "application" %>
-    <script src="https://kit.fontawesome.com/3bcd340270.js" crossorigin="anonymous"></script>
     <%= vite_stylesheet_tag "tailwind.css" %>
     <!-- If using a TypeScript entrypoint file: vite_typescript_tag
     'application' If using a .jsx or .tsx entrypoint, add the extension:
@@ -26,29 +26,29 @@
     </noscript>
   </head>
   <body>
-    <% if flash.present? %>
-      <div class="toast toast-top toast-center z-50 w-full p-0">
-        <% flash.each do |name, msg| %>
-          <%= content_tag :div, class: "alert #{flash_key_to_alert_class(name)} w-full flex rounded-none", data: { controller: 'dismissable'} do %>
-            <span class="text-center w-full whitespace-normal"><%= msg %></span>
-            <%= content_tag :div,
-            class: "cursor-pointer ml-auto hover:text-error ",
-            data: {
-              **stimulus_attrs(:dismissable, actions: { click: "dismiss" })
-            } do %>
-              <%= heroicon "x-mark", options: { class: "w-5 h-5 " } %>
-            <% end %>
-          <% end %>
-        <% end %>
-      </div>
-    <% end %>
-    <% if controller.class.to_s.downcase.include? 'admin' %>
+    <%= render 'shared/flash' %>
+    <% if admin_controller %>
       <%= render Admin::NavbarComponent.new %>
     <% else  %>
       <%= render NavbarComponent.new %>
     <% end %>
-    <main class=" container mx-auto mt-16 md:mt-28 px-5 flex flex-col pb-8 ">
+    <main class=" container flex flex-col pb-[15%] min-h-[90vh] xs:mx-auto mt-16 px-5  ">
       <%= yield %>
     </main>
+    <footer class="footer p-10 bg-base-200 text-base-content">
+      <aside>
+        <p><span class="text-xl">Akclear</span><br/>
+          <%= t('footer.about.blurb') %> <br/>
+          <%= t('footer.about.self') %></p>
+      </aside>
+      <section>
+        <header class="footer-title"><%= t('footer.credit.thanks') %></header>
+        <div><%= t('footer.credit.ak_ccs') %></div>
+        <a href="https://github.com/Kengxxiao/ArknightsGameData"><%= t('footer.credit.kengxiao') %></a>
+        <a href="https://github.com/Aceship/Arknight-Images"><%= t('footer.credit.aceship') %></a>
+        <a href="https://prts.wiki/"> <%= t('footer.credit.prts') %></a>
+        <a href="https://arknights.wiki.gg/"><%= t('footer.credit.ak_wiki') %></a>
+      </section>
+    </footer>
   </body>
 </html>

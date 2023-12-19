@@ -3,7 +3,8 @@
 module FetchGameData
   class FetchEpisodesBanners < ApplicationService
     include ImageStorable
-    BANNERS_PAGE_URL = 'https://arknights.fandom.com/wiki/Story/Main_Theme'
+    BANNERS_PAGE_URL = 'https://arknights.wiki.gg/wiki/Operation/Main_Theme'
+    IMAGE_HOST = 'https://arknights.wiki.gg'
 
     def self.images_path
       Rails.root.join('app/javascript/images/banners')
@@ -31,18 +32,19 @@ module FetchGameData
       log_info('Fetching banners page...')
       doc = Nokogiri::HTML(URI.parse(BANNERS_PAGE_URL).open)
       doc.css('th > a > img').each do |img|
-        img_episode_name = extract_episode_name(img[:alt])
+        img_episode_number = extract_episode_number(img[:alt])
 
-        game_id = episodes.find { |episode| episode.name.casecmp(img_episode_name).zero? }&.game_id
+        game_id = episodes.find { |episode| episode.number == img_episode_number }&.game_id
         next if game_id.nil?
 
-        episode_game_id_to_banner_url[game_id] = img[:src].start_with?('http') ? img[:src] : img['data-src']
+        episode_game_id_to_banner_url[game_id] = "#{IMAGE_HOST}#{img[:src]}"
       end
       episode_game_id_to_banner_url
     end
 
-    def extract_episode_name(img_alt)
-      img_alt.split(':').last.strip
+    def extract_episode_number(img_alt)
+      # e.g Episode 12.png
+      img_alt.split('.').first.split(' ').last.to_i
     end
 
     def image_storable

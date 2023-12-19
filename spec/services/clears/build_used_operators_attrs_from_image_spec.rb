@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe Clears::BuildUsedOperatorsAttrsFromImage do
+describe Clears::BuildUsedOperatorsAttrsFromImage, :slow do
   let(:service) { described_class.new(image_path) }
   let(:received_result) { service.call.value! }
   let(:get_expected_result) do

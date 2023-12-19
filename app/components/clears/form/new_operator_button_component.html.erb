@@ -1,10 +1,27 @@
-<%= content_tag(
-          :button,
-          nil,
-          class: "operators__new_operator_btn btn btn-circle btn-primary",
-          formmethod: "GET",
-          formaction: new_clears_used_operator_path,
-          form: 'clears__form'
-        ) do %>
-  <%= heroicon "plus", options: { class: "h-4" } %>
+  <%= simple_form_for UsedOperator.new, url: create ? clears_used_operator_path : new_clears_used_operator_path, method: create ? :post : :get,
+  html: { class: "operators__new_operator_form w-full #{@class} mt-2", data: { turbo_stream: true, **stimulus(:update_attribute) } } do |f| %>
+  <div class="flex w-full">
+    <%= f.input :operator_id,
+              as: :select,
+              collection: selectable_operators,
+              wrapper_html: {
+                data: { 
+                  **stimuluses(
+                    choices: { include_controller: true },
+                    update_attribute: {
+                      actions: { change: 'setAttrOnSelect'}, params: { name: 'disabled', value: disabled, blank_value: true }
+                    }
+                  ) 
+                },
+                class: "w-96",
+                 aria: { label: t("clears.select_operator_prompt") },
+              },
+              input_html: {  include_blank: false },
+              prompt: t("clears.select_operator_prompt"),
+              include_hidden: false, label: false %>
+    <div class="p-1"></div>
+    <%= content_tag :button, type: :submit, class: 'btn btn-circle btn-primary operators__new_operator_btn', disabled: true, data: { **stimulus_attrs(:update_attribute, target: 'update') } do %>
+      <%= heroicon "plus", options: { class: "h-4" } %>
+    <% end %>
+  </div>
 <% end %>

@@ -1,1 +1,4 @@
-Admin page
+<div class="flex justify-between">
+  <%= button_to t('.import_game_data'), admin_game_data_import_path, class: 'btn btn-error text-error-content' %>
+  <%= button_to t('.import_channels'), admin_channels_import_path, class: 'btn btn-warning text-warning-content' %>
+</div>

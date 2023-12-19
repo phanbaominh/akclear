@@ -1,6 +1,6 @@
 <section class="card">
   <%= link_to @modifying_clear ? new_clear_path : clears_path, class: 'btn btn-ghost w-fit' do %>
-    <i class="fa-solid fa-arrow-left mr-2"></i><%= t :back %>
+    <%= heroicon 'arrow-left mr-2' %><%= t :back %>
   <% end %>
   <div class="card-body shadow-xl bg-base-300">
     <header>
@@ -11,16 +11,13 @@
       <%= render Clears::StageSelectComponent.new(form: form) %>
       <% unless @modifying_clear %>
         <footer class="flex justify-end space-x-2">
-
           <button formaction="<%= clears_path %>" class="btn btn-outline">
             <%= t(:apply_filters) %>
           </button>
-
           <%= form.button :submit, t(:add_operator) %>
         </footer>
       <% end %>
     <% end %>
-
     <% if @modifying_clear %>
       <footer class="flex justify-end space-x-2">
         <button form="stage_form" class="btn btn-primary">
@@ -28,6 +25,5 @@
         </button>
       </footer>
     <% end %>
-
   </div>
 </section>

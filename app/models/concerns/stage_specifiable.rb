@@ -11,6 +11,20 @@ module StageSpecifiable
     end
   end
 
+  def specified_stages
+    if stage_id.present?
+      Stage.where(id: stage_id)
+    elsif stage_ids.present?
+      Stage.where(id: stage_ids)
+    elsif stageable_id.present?
+      stageable.stages
+    elsif stage_type.present?
+      Stage.where(stageable_type: stage_type)
+    else
+      Stage.all
+    end
+  end
+
   def set_stage_attrs_from_params(params) # rubocop:disable Naming/AccessorMethodName
     STAGE_ATTRIBUTES.each { |attr| send("#{attr}=", params[attr]) }
   end
@@ -32,7 +46,12 @@ module StageSpecifiable
   end
 
   def stageable
-    @stageable_id ? GlobalID::Locator.locate(stageable_id) : stage&.stageable
+    if @stageable_id
+      # causing CACHE HIT in stage_select_component
+      GlobalID::Locator.locate(stageable_id)
+    else
+      stage&.stageable
+    end
   end
 
   # autofill value when only stage_id is present
@@ -62,7 +81,7 @@ module StageSpecifiable
   end
 
   def stage_ids
-    @stage_ids ||= [stage_id]
+    @stage_ids ||= [stage_id].compact_blank
   end
 
   def challenge_mode=(value)

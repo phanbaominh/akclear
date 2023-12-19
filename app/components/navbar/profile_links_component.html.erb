@@ -1,0 +1,22 @@
+<%= render Navbar::LinkComponent.new(highlighted: current_page?(clears_path) && request.fullpath.include?('self_only')) do |comp| %>
+  <%= comp.with_link do %>
+    <%= link_to clears_path(clear: { self_only: true }) do %>
+      <span class="relative">
+        <span>
+          <%= t(:your_clears) %>
+        </span>
+        <% unless (count = Current.user.rejected_clears.count).zero? %>
+          <span class="rounded-full bg-error text-error-content text-sm px-[6px]">
+            <%= count %>
+          </span>
+        <% end %>
+      </span>
+    <% end %>
+  <% end %>
+<% end %>
+<%= render Navbar::LinkComponent.new(title: t("change_username"), path: edit_username_path) %>
+<%= render Navbar::LinkComponent.new(title:t("change_email"), path: edit_identity_email_path) %>
+<%= render Navbar::LinkComponent.new(title: t("change_password"), path: edit_password_path) %>
+<li>
+  <%= button_to t("logout"), Current.session, method: :delete, class: 'w-full text-left', form_class: 'flex' %>
+</li>

@@ -2,6 +2,7 @@
 
 # rubocop:disable Metrics/BlockLength
 Rails.application.routes.draw do
+  mount GoodJob::Engine => 'good_job'
   get 'operators/show'
   localized do
     get  'sign_in', to: 'sessions#new'
@@ -10,15 +11,19 @@ Rails.application.routes.draw do
     post 'sign_up', to: 'registrations#create'
     get 'admin', to: 'admin#show'
     namespace :admin do
+      resource :game_data_import, only: %i[create]
+      resource :channels_import, only: %i[create]
       resources :clear_jobs, controller: 'extract_clear_data_from_video_jobs'
       resources :videos_imports, only: %i[new create]
       resource :clear_from_job, only: %i[new]
+      resources :users, only: %i[index update edit show]
     end
     resources :sessions, only: %i[index show destroy]
     resource  :password, only: %i[edit update]
+    resource  :username, only: %i[edit update]
     namespace :identity do
       resource :email,              only: %i[edit update]
-      resource :email_verification, only: %i[edit create]
+      resource :email_verification, only: %i[show create]
       resource :password_reset,     only: %i[new edit create update]
     end
     # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
@@ -37,7 +42,11 @@ Rails.application.routes.draw do
     resources :clears do
       resources :used_operators
       resource :like, only: %i[create destroy], controller: 'clears/likes'
-      resource :verification, only: %i[create destroy], controller: 'clears/verifications'
+      resource :report, only: %i[create destroy], controller: 'clears/reports'
+      resource :verification, only: %i[edit update create destroy new], controller: 'clears/verifications'
+      namespace :verification do
+        resources :used_operators, only: %i[edit update], controller: '/clears/verifications/used_operators'
+      end
     end
     resources :operators
   end

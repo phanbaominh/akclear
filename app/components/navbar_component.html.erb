@@ -23,41 +23,35 @@
           ) %>
         </nav>
       </div>
-      <%= link_to "Akclear", root_path, class: "normal-case text-xl pl-0" %>
+      <h1>
+        <%= link_to "Akclear", root_path, class: "normal-case text-xl pl-0" %>
+      </h1>
     </div>
     <div class="navbar-center hidden lg:flex">
       <nav><%= render Navbar::LinksComponent.new(class: "menu menu-horizontal px-1") %></nav>
     </div>
     <div class="navbar-end">
-      <%= link_to new_clear_path, class: 'mr-2' do %>
-        <%= render Primer::Button::IconComponent.new(
-          icon: "plus",
-          sr_description: t("new_clear"),
-          class: "shadow"
-        ) %>
-      <% end %>
+
+        <%= link_to new_clear_path, class: 'mr-2 flex items-center btn btn-primary btn-sm shadow-xl' do %>
+              <%= heroicon 'plus', options: { class: '!w-4 !h-4' } %>
+          <%= t(:clear) %>
+        <% end %>
       <% if authenticated? %>
+
         <ul class="menu menu-horizontal px-1 hidden lg:flex">
           <li tabindex="0">
-            <details>
+            <details data-controller="auto-close-detail">
               <summary>
                 <%= t("profile") %>
               </summary>
-              <ul class="p-2 bg-base-200 shadow rounded-box z-[1] left-auto right-0">
-                <li>
-                  <%= link_to t("change_email"), edit_identity_email_path %>
-                </li>
-                <li>
-                  <%= link_to t("change_password"), edit_password_path %>
-                </li>
-                <li>
-                  <%= button_to t("logout"), Current.session, method: :delete %>
-                </li>
+              <ul class='p-2 bg-base-200 shadow rounded-box z-[1] left-auto right-0'>
+                <%= render Navbar::ProfileLinksComponent.new %>
               </ul>
             </details>
-
           </li>
         </ul>
+      <% else %>
+        <%= link_to t(:sign_in), sign_in_path, class: "btn btn-neutral mr-2 btn-sm" %>
       <% end %>
       <%= render Navbar::LanguageDropdownComponent.new %>
     </div>

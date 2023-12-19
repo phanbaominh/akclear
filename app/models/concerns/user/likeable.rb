@@ -2,7 +2,8 @@ module User::Likeable
   extend ActiveSupport::Concern
 
   included do
-    has_and_belongs_to_many :liked_clears, class_name: 'Clear', join_table: :likes # rubocop:disable Rails/HasAndBelongsToMany
+    has_many :likes, dependent: :destroy
+    has_many :liked_clears, class_name: 'Clear', through: :likes, source: :clear
   end
 
   def like(clear)
@@ -14,6 +15,6 @@ module User::Likeable
   end
 
   def liked?(clear)
-    liked_clears.include?(clear)
+    liked_clears.to_a.include?(clear)
   end
 end

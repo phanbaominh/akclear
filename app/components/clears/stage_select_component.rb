@@ -2,15 +2,17 @@
 
 class Clears::StageSelectComponent < ApplicationComponent
   include Turbo::FramesHelper
-  attr_reader :form, :multiple, :simple
+  attr_reader :form, :multiple, :simple, :stage_label, :required
 
   delegate :stageable, to: :clear_spec
 
-  def post_initialize(form:, multiple: false, simple: false, stage_select_path: nil)
+  def post_initialize(form:, multiple: false, simple: false, stage_select_path: nil, stage_label: nil, required: false)
     @form = form
     @multiple = multiple
     @simple = simple
     @stage_select_path = stage_select_path
+    @stage_label = stage_label
+    @required = required
   end
 
   def stage_select_path
@@ -22,7 +24,7 @@ class Clears::StageSelectComponent < ApplicationComponent
   end
 
   def stage_type
-    clear_spec.stage_type&.constantize
+    clear_spec.stage_type.constantize if clear_spec.stage_type.present?
   end
 
   def stageables

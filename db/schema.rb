@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_11_140603) do
+ActiveRecord::Schema[7.1].define(version: 2023_12_19_014608) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -72,6 +72,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_11_140603) do
     t.datetime "updated_at", null: false
     t.bigint "channel_id"
     t.index ["channel_id"], name: "index_clears_on_channel_id"
+    t.index ["link", "stage_id"], name: "index_clears_on_link_and_stage_id", unique: true
     t.index ["stage_id"], name: "index_clears_on_stage_id"
     t.index ["submitter_id"], name: "index_clears_on_submitter_id"
   end
@@ -106,7 +107,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_11_140603) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "stage_id", null: false
+    t.bigint "channel_id"
+    t.index ["channel_id"], name: "index_extract_clear_data_from_video_jobs_on_channel_id"
     t.index ["stage_id"], name: "index_extract_clear_data_from_video_jobs_on_stage_id"
+    t.index ["video_url"], name: "index_extract_clear_data_from_video_jobs_on_video_url", unique: true
   end
 
   create_table "good_job_batches", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -189,7 +193,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_11_140603) do
   create_table "likes", id: false, force: :cascade do |t|
     t.bigint "clear_id", null: false
     t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
     t.index ["clear_id"], name: "index_likes_on_clear_id"
+    t.index ["created_at"], name: "index_likes_on_created_at"
     t.index ["user_id"], name: "index_likes_on_user_id"
   end
 
@@ -232,10 +238,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_11_140603) do
     t.index ["user_id"], name: "index_password_reset_tokens_on_user_id"
   end
 
+  create_table "reports", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "clear_id"
+    t.datetime "created_at", null: false
+    t.index ["clear_id"], name: "index_reports_on_clear_id"
+    t.index ["created_at"], name: "index_reports_on_created_at"
+    t.index ["user_id"], name: "index_reports_on_user_id"
+  end
+
   create_table "sessions", force: :cascade do |t|
     t.bigint "user_id", null: false
-    t.string "user_agent"
-    t.string "ip_address"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_sessions_on_user_id"
@@ -281,6 +294,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_11_140603) do
     t.index ["name"], name: "index_tags_on_name", unique: true
   end
 
+  create_table "used_operator_verifications", force: :cascade do |t|
+    t.bigint "verification_id", null: false
+    t.bigint "used_operator_id", null: false
+    t.integer "status"
+    t.index ["used_operator_id"], name: "index_used_operator_verifications_on_used_operator_id"
+    t.index ["verification_id"], name: "index_used_operator_verifications_on_verification_id"
+  end
+
   create_table "used_operators", force: :cascade do |t|
     t.bigint "operator_id", null: false
     t.bigint "clear_id", null: false
@@ -306,6 +327,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_11_140603) do
     t.string "username"
     t.integer "role", default: 0, null: false
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["username"], name: "index_users_on_username", unique: true
   end
 
   create_table "verifications", force: :cascade do |t|
@@ -313,6 +335,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_11_140603) do
     t.bigint "clear_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "status"
+    t.text "comment"
     t.index ["clear_id"], name: "index_verifications_on_clear_id"
     t.index ["verifier_id"], name: "index_verifications_on_verifier_id"
   end
@@ -325,12 +349,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_11_140603) do
   add_foreign_key "clears", "users", column: "submitter_id"
   add_foreign_key "email_verification_tokens", "users"
   add_foreign_key "events", "events", column: "original_event_id"
+  add_foreign_key "extract_clear_data_from_video_jobs", "channels"
   add_foreign_key "extract_clear_data_from_video_jobs", "stages"
   add_foreign_key "likes", "clears"
   add_foreign_key "likes", "users"
   add_foreign_key "password_reset_tokens", "users"
+  add_foreign_key "reports", "clears"
+  add_foreign_key "reports", "users"
   add_foreign_key "sessions", "users"
   add_foreign_key "taggings", "tags"
+  add_foreign_key "used_operator_verifications", "used_operators"
+  add_foreign_key "used_operator_verifications", "verifications"
   add_foreign_key "used_operators", "clears"
   add_foreign_key "used_operators", "operators"
   add_foreign_key "verifications", "clears"

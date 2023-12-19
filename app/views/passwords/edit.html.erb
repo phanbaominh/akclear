@@ -1,48 +1,51 @@
-<main class="card shadow-xl bg-base-200 sm:w-1/2 m-auto">
+<% noindex %>
+<div class="card shadow-xl bg-base-200 sm:w-1/2 m-auto">
   <div class="card-body">
     <header>
-      <h1 class="card-title">Change your password</h1>
+      <h2 class="card-title"><%= title t('meta.passwords.edit.title') %></h2>
     </header>
-
     <div class="h-4"></div>
-    <%= form_with(url: password_path, method: :patch) do |form| %>
+    <%= simple_form_for(@user, url: password_path, method: :patch) do |form| %>
       <div>
-        <%= form.email_field :email,
-                         autofocus: true,
-                         autocomplete: "email",
-                         placeholder: :email,
-                         class: "simple_form__input w-full",
-                         required: true %>
+        <%= form.input :password_challenge,
+          label: false,
+          required: true,
+          autofocus: true,
+          placeholder: t(:current_password), 
+          autocomplete: "current-password", 
+          class: "simple_form__input w-full",
+          input_html: {
+            class: "w-full"
+          } %>
       </div>
       <div class="h-8"></div>
       <div>
-        <%= form.password_field :current_password,
-                            required: true,
-                            placeholder: :current_password,
-                            autocomplete: "current-password",
-                            class: "simple_form__input w-full" %>
-      </div>
-
-      <div class="h-8"></div>
-      <div>
-        <%= form.password_field :password,
+        <%= form.input :password,
+                            label: false,
                             required: true,
                             autocomplete: "new-password",
-                            placeholder: :password,
+                            placeholder: t(:password),
                             class: "simple_form__input w-full",
+                            input_html: {
+                              class: "w-full"
+                            },
                             required: true %>
       </div>
       <div class="h-8"></div>
       <div>
-        <%= form.password_field :password_confirmation,
+        <%= form.input :password_confirmation,
+                            label: false,
                             required: true,
                             autocomplete: "new-password",
-                            placeholder: :password_confirmation,
+                            placeholder: t(:password_confirmation),
                             class: "simple_form__input w-full",
+                            input_html: {
+                              class: "w-full"
+                            },
                             required: true %>
       </div>
       <div class="h-10"></div>
-      <%= form.submit "Change password", class: "simple_form__btn w-full" %>
+      <%= form.submit t(:update_password), class: "simple_form__btn w-full" %>
     <% end %>
   </div>
-</main>
+</div>

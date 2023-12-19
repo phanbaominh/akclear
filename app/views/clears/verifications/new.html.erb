@@ -1,0 +1,90 @@
+<% noindex %>
+<%= turbo_frame_tag 'clear_verification' do %>
+  <section class="card">
+    <h2 class="card-title"><%= title t('meta.verifications.new.title') %></h2>
+    <div class="card-body space-y-4 !p-2 xs:!p-8">
+      <!--flex flex-col lg:flex-row lg:space-x-8 space-y-8 lg:space-y-0-->
+      <div class="2xl:flex lg:space-y-0">
+        <div class="relative flex-grow">
+          <% if (prev_unverified_clear = @clear.prev_unverified) %>
+            <%= link_to new_clear_verification_path(prev_unverified_clear), data: { turbo_action: 'advance' },
+            class: 'btn btn-sm sm:btn-md  btn-outline btn-circle absolute z-10 -left-[8%] 2xl:-left-12 xl:-left-16 bottom-0 2xl:top-[50%]',
+            aria: { label: t(:prev) } do %>
+              <%= heroicon 'arrow-left' %>
+            <% end %>
+          <% end %>
+          <% if (next_unverified_clear = @clear.next_unverified) %>
+            <%= link_to new_clear_verification_path(next_unverified_clear), data: { turbo_action: 'advance' },
+            class: 'btn btn-sm sm:btn-md  btn-outline btn-circle absolute z-10 -right-[8%] 2xl:-right-[40%] xl:-right-[30%] bottom-0 2xl:top-[50%]',
+            aria: { label: t(:next) } do %>
+              <%= heroicon 'arrow-right' %>
+            <% end %>
+          <% end %>
+          <div class="iframe-responsive-container !w-auto ">
+            <iframe src="<%= @clear.embed_link %>" class="iframe-responsive" ></iframe>
+          </div>
+        </div>
+        <section class="card bg-base-200 mt-2 2xl:mt-0 2xl:w-1/5">
+          <div class="card-body">
+            <h3 class="card-title"><%= t(:squad) %></h3>
+            <div class=" grid gap-x-2 gap-y-4 grid-cols-3 sm:grid-cols-7 lg:gap-2 xl:flex xl:gap-2 2xl:grid 2xl:grid-cols-2 2xl:gap-2">
+              <%= render partial: 'used_operator', collection: @used_operators %>
+            </div>
+          </div>
+        </section>
+      </div>
+      <%= simple_form_for @verification, url: clear_verification_path(@clear), html: { id: 'verification_form', class: '!mt-0' } do |f| %>
+        <%= f.input :status, as: :hidden, input_html: { value: Verification::ACCEPTED }  %>
+        <div class="flex justify-between">
+          <% if @clear.verification.persisted? || !(reports_count = @clear.reports_count).zero? %>
+            <div class="flex space-x-1 items-center">
+              <%= render Clears::VerificationDetailsComponent.new(clear: @clear) %>
+              <% unless (reports_count = @clear.reports_count).zero? %>
+                <div class="flex w-fit py-1 px-2 rounded text-warning tooltip"
+                  data-tip="<%= t('.reports_count', count: reports_count) %>"
+                  aria-description="<%= t('.reports_count', count: reports_count) %>"
+                >
+                  <%= heroicon 'flag', options: { alt: t('.flag') } %>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+          <%= link_to t('.go_to_clear'), clear_path(@clear), class: 'btn btn-outline btn-sm', data: { turbo_frame: '_top' } %>
+        </div>
+        <% if (channel = @clear.channel).present? %>
+          <div class="mt-4">
+            <div class="flex flex-row items-center">
+              <%= link_to channel_path(channel), data: { turbo_frame: '_top' } do %>
+                <%= render Channels::AvatarComponent.new(thumbnail_url: channel.thumbnail_url, size_class: 'w-10 h-10 sm:w-12 sm:h-12') %>
+              <% end %>
+              <div>
+                <h3 class="text-base font-semibold"><%= channel.title %></h3>
+              </div>
+            </div>
+          </div>
+        <% end %>
+        <div class='label'>
+          <%= t(:stage) %>
+        </div>
+        <div class="flex font-bold items-center gap-2 pl-1 text-xl">
+          <%= render Stages::CodeComponent.new(stage: @clear.stage, class: "h-6")  %>
+        </div>
+        <%= f.label :comment, class: 'label' %>
+        <div id="verification_from__used_operator_fields">
+          <%= f.simple_fields_for :used_operator_verifications do |uovf| %>
+            <%= uovf.input_field :status, as: :hidden %>
+            <%= uovf.input_field :used_operator_id, as: :hidden %>
+          <% end %>
+        </div>
+        <%= f.input_field :comment, as: :text, placeholder: t(".comment_placeholder"), class: 'w-full placeholder:opacity-50 textarea', maxlength: 1000 %>
+      <% end %>
+      <footer class="flex justify-between">
+        <%= render 'reject_btn', locals: { verification: @verification } %>
+        <div class="grid grid-cols-2 gap-2">
+          <div></div>
+          <%= render 'accept_btn', locals: { verification: @verification } %>
+        </div>
+      </footer>
+    </div>
+  </section>
+<% end %>

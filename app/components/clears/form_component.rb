@@ -7,13 +7,15 @@ class Clears::FormComponent < ApplicationComponent
   renders_one :header
   renders_one :footer
 
-  attr_reader :clear_spec, :new_form, :job_id
+  attr_reader :clear_spec
 
   delegate :operator_ids, to: :clear_spec
 
-  def post_initialize(clear_spec:, new_form: false, job_id: false)
+  def post_initialize(clear_spec:)
     @clear_spec = clear_spec
-    @new_form = new_form
-    @job_id = job_id
+  end
+
+  def edit_form
+    clear_spec.persisted?
   end
 end

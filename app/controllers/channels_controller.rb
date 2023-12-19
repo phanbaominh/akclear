@@ -1,11 +1,13 @@
 class ChannelsController < ApplicationController
+  load_and_authorize_resource
+
+  skip_before_action :authenticate!, only: %i[index show]
   include ClearFilterable
   include Pagy::Backend
 
   def index
+    @pagy, @channels = pagy(Channel.joins(:clears).group(:id).select('channels.*', 'COUNT(clears.id) as clear_count'))
   end
 
-  def show
-    @pagy, @clears = pagy(Clear.all)
-  end
+  def show; end
 end

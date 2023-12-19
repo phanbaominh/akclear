@@ -1,28 +1,86 @@
+<% set_meta_tags(title: t('meta.home.title'), reverse: false) %>
+<% description t('meta.home.description') %>
 <div class="md:flex flex-row gap-12">
   <!-- Consider using defer loading turbo frames for each component -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 grow gap-12 basis-0">
+  <div class="grid grid-cols-1 sm:grid-cols-2 grow gap-6 sm:gap-12 basis-0">
+    <div  class=" sm:col-span-2">
+      <section>
+        <h2 class="text-2xl">
+          <%= t('.title_1') %>
+        </h2>
+        <div class="p-2"></div>
+        <p>
+          <%= t('.desc_1.first_line') %>
+        </p>
+        <section class="space-y-2">
+          <%= simple_form_for @clear_spec, method: :get, html: {
+          id: "clears__form",
+          data: {
+            turbo_stream: "true",
+          },
+          class: 'flex flex-col'
+        } do |f| %>
+            <%= content_tag :div, class: 'block' do %>
+              <%= render Clears::StageSelectComponent.new(form: f, simple: true, stage_label: t('.desc_1.choose_stage')) %>
+            <% end %>
+            <div id="clears__form__operators_fields" class="hidden">
+            </div>
+          <% end %>
+          <div id="home_operators__list" class="flex flex-wrap self-center items-center justify-items-end">
+            <span class="label w-full sm:w-fit"><%= t('.desc_1.choose_your_favorite_operators') %></span>
+            <% @clear_spec.used_operators.each do |used_operator| %>
+              <%= render Clears::UsedOperatorMiniComponent.new(used_operator: used_operator) %>
+            <% end %>
+            <%= render Clears::Form::NewOperatorButtonComponent.new(squad: @clear_spec.squad, create: true) %>
+          </div>
+          <span class="label"><%= t('.desc_1.click_the_button') %> </span>
+          <div>
+            <button form="clears__form" class="btn btn-primary btn-sm" type="submit">
+              <%= t(:search) %>
+            </button>
+          </div>
+        </section>
+      </section>
+      <section>
+        <div class="divider"></div>
+        <h2 class="text-2xl">
+          <%= t('.title_2') %>
+        </h2>
+        <div class="p-2"></div>
+        <div class="flex flex-col sm:flex-row">
+          <span>
+            Just <%= link_to t(:sign_in), sign_in_path, class: 'btn btn-outline btn-sm sm:mx-1' %> <%= t('.desc_2') %>:
+          </span>
+          <%= render Clears::NewBtnComponent.new %>
+        </div>
+      </section>
+    </div>
     <div class="sm:col-span-2">
+      <div class="divider w-full"></div>
       <%= render Home::HeroComponent.new(
         stageables: Event.latest,
-        title: t(:latest_events)
+        title: t('.latest_events')
       ) %>
     </div>
     <%= render Home::HeroComponent.new(
       stageables: Episode.latest,
-      title: t(:latest_events)
+      title: t('.latest_episode')
     ) %>
     <%= render Home::HeroComponent.new(
       stageables: Annihilation.latest,
-      title: t(:latest_events),
+      title: t('.latest_annihilation'),
       remote_image: true
     ) %>
   </div>
-  <div>
-    <% [t(:trending_clears), t(:new_clears)].each do |title| %>
-      <%= render Clears::AsideComponent.new(
-        clears: Clear.includes(:stage, used_operators: :operator).first(6),
+  <div class="md:max-w-[25%]">
+    <% [
+        [t('.trending_clears'), @trending_clears],
+        [t('.latest_clears'), @newest_clears]
+      ].each do |(title, clears)| %>
+      <%= (render Clears::AsideComponent.new(
+        clears: clears,
         title: title
-      ) %>
+      ) if clears.size > 0) %>
     <% end %>
   </div>
 </div>

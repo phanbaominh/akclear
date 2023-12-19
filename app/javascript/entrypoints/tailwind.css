@@ -11,7 +11,11 @@
 }
 
 .simple_form__label {
-  @apply label w-fit;
+  @apply label w-fit pb-0 only:py-2;
+}
+
+.simple_form__hint {
+  @apply text-base-content-subdued px-1 text-sm pb-1;
 }
 
 .field_with_errors label {
@@ -99,11 +103,6 @@ select.simple_form__input {
   @apply hidden !important;
 } */
 
-.new-clear__time::before {
-  content: "\00B7\20";
-  padding-left: 4px;
-}
-
 .clear-summary__operator-list {
   @apply border-l border-t border-neutral-content/20;
 }
@@ -149,7 +148,7 @@ select.simple_form__input {
 }
 
 .channel-list__item-img {
-  @apply mr-4 rounded-full w-12 h-12;
+  @apply mr-4 rounded-full w-12 h-12 text-xs md:text-base text-center;
 }
 
 .channel-list__item-body {
@@ -166,4 +165,29 @@ Only when the view mode is `grid` and the screen size is at least md (meaning th
 }
 .channel-list-grid .channel-list__item-body {
   @apply md:block;
+}
+
+.iframe-responsive-container {
+  @apply relative w-full h-0 pb-[56.25%] col-span-2;
+}
+
+.iframe-responsive {
+  @apply top-0 left-0 w-full h-full absolute;
+}
+
+.tooltip:before {
+  text-wrap: balance;
+  @apply max-w-[12rem];
+}
+
+.heroicon {
+  @apply h-4 w-4;
+}
+
+.navbar-item > a {
+  @apply hover:text-inherit;
+}
+
+.main-heading {
+  @apply text-2xl;
 }

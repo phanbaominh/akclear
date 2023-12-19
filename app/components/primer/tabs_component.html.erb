@@ -1,0 +1,13 @@
+<%= content_tag :div, data: { **stimulus(:tabber, values: { hidden_class: hidden_class }) } do %>
+  <div class="join  mb-2 <%= tab_header_class %> shadow-xl">
+    <% tab_names.each do |tab_name| %>
+      <%=  content_tag :input, nil, class: "join-item btn", type: "radio", name: "options",
+        "aria-label" => tab_name.titleize,
+        value: tab_name,
+        data: { **stimulus_attrs(:tabber, actions: { click: "switchTab" }, target: 'tabHeader') },
+        checked: tab_name == default_tab_name ? true : nil
+      %>
+    <% end %>
+  </div>
+  <%= content_with_tabs %>
+<% end %>

@@ -1,0 +1,13 @@
+<% if thumbnail_url %>
+  <img
+    src="<%= thumbnail_url %>"
+    alt=""
+    class="mr-4 rounded-full <%= size_class %>"
+  >
+  <% else %>
+    <div class="<%= size_class %> border border-base-content rounded-full flex items-center justify-center mr-4">
+      <span>
+        <%= t('channels.show.no_avatar_yet') %>
+      </span>
+    </div>
+  <% end %>

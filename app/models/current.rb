@@ -1,8 +1,6 @@
 class Current < ActiveSupport::CurrentAttributes
-  attribute :session, :user
-  attribute :user_agent, :ip_address
+  attribute :session
+  attribute :ability
 
-  def session=(session)
-    super; self.user = session.user
-  end
+  delegate :user, to: :session, allow_nil: true
 end

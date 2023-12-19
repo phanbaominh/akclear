@@ -94,7 +94,7 @@ describe FetchGameData::FetchLatestEventsData do
   before do
     allow(FetchGameData::FetchJson)
       .to receive(:call)
-      .with('https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/en_US/gamedata/excel/activity_table.json')
+      .with('https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData_YoStar/main/en_US/gamedata/excel/activity_table.json')
       .and_return(Dry::Monads::Success(events_data))
   end
 

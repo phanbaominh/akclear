@@ -54,9 +54,11 @@ SimpleForm.setup do |config|
 
     ## Inputs
     # b.use :label, class: 'simple_form__label'
-    b.use :label, class: 'simple_form__label'
-    b.use :error, wrap_with: { tag: :span, class: :error }
-    b.use :hint,  wrap_with: { tag: :span, class: :hint }
+    b.wrapper tag: :div, class: 'simple_form__label_wrapper' do |comp|
+      comp.use :label, class: 'simple_form__label'
+      comp.use :hint,  wrap_with: { tag: :div, class: 'simple_form__hint' }
+      comp.use :error, wrap_with: { tag: :div, class: :error }
+    end
     b.use :input, class: 'simple_form__input', error_class: 'is-invalid', valid_class: 'is-valid'
 
     ## full_messages_for
@@ -122,7 +124,7 @@ SimpleForm.setup do |config|
   config.generate_additional_classes_for = [] # [:wrapper, :label, :input]
 
   # Whether attributes are required by default (or not). Default is true.
-  # config.required_by_default = true
+  config.required_by_default = false
 
   # Tell browsers whether to use the native HTML5 validations (novalidate form option).
   # These validations are enabled in SimpleForm's internal config but disabled by default

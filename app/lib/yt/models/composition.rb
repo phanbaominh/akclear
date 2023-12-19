@@ -7,11 +7,12 @@ module Yt
       has_attribute :thumbnails, default: {}
       has_attribute :related_playlists, default: {}
 
-      attr_reader :data
+      attr_reader :data, :id
 
       def initialize(options = {})
         @data = options[:data]
         @auth = options[:auth]
+        @id = options[:id]
       end
 
       def banner_url(size = nil)
@@ -24,6 +25,10 @@ module Yt
 
       def uploads_playlist_id
         related_playlists['uploads']
+      end
+
+      def title 
+        channel['title']
       end
 
       def kind

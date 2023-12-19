@@ -2,8 +2,8 @@
 
 module FetchGameData
   class FetchAnnihilationsData < ApplicationService
-    STAGES_SOURCE = 'https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/en_US/gamedata/excel/stage_table.json'
-    ANNIHILATIONS_SOURCE = 'https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/en_US/gamedata/excel/campaign_table.json'
+    STAGES_SOURCE = 'https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData_YoStar/main/en_US/gamedata/excel/stage_table.json'
+    ANNIHILATIONS_SOURCE = 'https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData_YoStar/main/en_US/gamedata/excel/campaign_table.json'
 
     def call
       stages_data = yield FetchJson.call(STAGES_SOURCE)

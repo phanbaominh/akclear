@@ -3,7 +3,6 @@
 //
 //    <%= vite_client_tag %>
 //    <%= vite_javascript_tag 'application' %>
-console.log("Vite ⚡️ Rails wow");
 
 // If using a TypeScript entrypoint file:
 //     <%= vite_typescript_tag 'application' %>
@@ -11,10 +10,6 @@ console.log("Vite ⚡️ Rails wow");
 // If you want to use .jsx or .tsx, add the extension:
 //     <%= vite_javascript_tag 'application.jsx' %>
 
-console.log(
-  "Visit the guide for more information: ",
-  "https://vite-ruby.netlify.app/guide/rails"
-);
 import "@hotwired/turbo-rails";
 import "~/controllers";
 // Example: Load Rails libraries in Vite.
@@ -30,3 +25,5 @@ import "~/controllers";
 
 // Example: Import a stylesheet in app/frontend/index.css
 // import '~/index.css'
+
+// TODO: listen to turbo:before-cache and cleanup form data
