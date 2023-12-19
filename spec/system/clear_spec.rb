@@ -565,7 +565,7 @@ describe 'Clears' do
     end
 
     def apply_filters
-      click_button 'Apply filters'
+      click_button 'Search'
       wait_for_turbo
     end
 

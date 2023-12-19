@@ -215,7 +215,7 @@ en:
         success: "You have unflagged this clear."
   home:
     index:
-      title_1: "Find a clear that match your squad in just a few clicks"
+      title_1: "Find a clear that match your needs in just a few clicks"
       desc_1:
         first_line: "Tired of searching Youtube for a CLEAR that can work with your squad, that does not include shiny OP operators? Just follow these steps:"
         choose_stage: "Choose a stage"
@@ -284,6 +284,7 @@ en:
       ak_wiki: "Arknights EN wiki for episode banner images"
       aceship: "Aceship for game images"
   start_video_job: 'Start video job'
+  filters: 'Filters'
   cancel: 'Cancel'
   error: 'Error'
   clear: 'Clear'
@@ -340,7 +341,7 @@ en:
   update: "Update"
   add_operators: "Add operators"
   add_operator: "Add operator"
-  apply_filters: "Apply filters"
+  apply_filters: "Search"
   update_operator: "Update operator"
   ago: "ago"
   by: "by"
