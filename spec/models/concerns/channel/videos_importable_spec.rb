@@ -51,7 +51,7 @@ describe Channel::VideosImportable do
       expect(new_job.channel).to eq(channel)
       expect(new_job.stage).to eq(stage)
       expect(new_job.video_url).to eq('https://youtube.com/watch?v=ygEmeAtWYvA')
-      expect(new_job.data['title']).to eq('new title')
+      expect(new_job.data['name']).to eq('new title')
     end
   end
 end

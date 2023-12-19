@@ -6,7 +6,8 @@ RSpec.describe ExtractClearDataFromVideoJobRunner do
       :extract_clear_data_from_video_job,
       video_url: 'https://www.youtube.com/watch?v=9bZkp7q19f0',
       status: :started,
-      channel: create(:channel)
+      channel: create(:channel),
+      data: { 'name' => 'title' }
     )
   end
 
@@ -44,8 +45,8 @@ RSpec.describe ExtractClearDataFromVideoJobRunner do
         described_class.perform_later(job.id)
         expect(Clears::BuildClearFromVideo).to have_received(:call).with(job.video)
         expect(job.reload.data).to eq(
-          result.value!.attributes.slice('link', 'stage_id')
-            .merge('used_operators_attributes' => [], 'channel_id' => job.channel_id)
+          result.value!.attributes.slice('link')
+            .merge('used_operators_attributes' => [], 'channel_id' => job.channel_id, 'name' => 'title', 'stage_id' => job.stage.id)
         )
         expect(job.reload).to be_completed
       end
@@ -57,7 +58,7 @@ RSpec.describe ExtractClearDataFromVideoJobRunner do
       it 'stores error' do
         described_class.perform_later(job.id)
         expect(Clears::BuildClearFromVideo).to have_received(:call).with(job.video)
-        expect(job.reload.data).to eq({ 'error' => 'invalid_video' })
+        expect(job.reload.data).to eq({ 'error' => 'invalid_video', 'name' => 'title' })
         expect(job).to be_failed
       end
     end
@@ -72,7 +73,7 @@ RSpec.describe ExtractClearDataFromVideoJobRunner do
       it 'stores error' do
         described_class.perform_later(job.id)
         expect(Clears::BuildClearFromVideo).to have_received(:call).with(job.video)
-        expect(job.reload.data).to eq({ 'error' => 'error' })
+        expect(job.reload.data).to eq({ 'error' => 'error', 'name' => 'title' })
         expect(job).to be_failed
       end
     end
