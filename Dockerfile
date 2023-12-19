@@ -16,7 +16,7 @@ ENV RAILS_ENV="production" \
 # Install packages needed for deployment
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y curl libvips postgresql-client \
-    tesseract tesseract-jpn ffmpeg youtube-dl libmagickwand-dev && \
+    tesseract-ocr tesseract-ocr-jpn ffmpeg youtube-dl libmagickwand-dev && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Throw-away build stage to reduce size of final image
