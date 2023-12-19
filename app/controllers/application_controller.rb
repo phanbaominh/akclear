@@ -48,8 +48,8 @@ class ApplicationController < ActionController::Base
   end
 
   def set_current_request_details
-    Current.user_agent = request.user_agent
-    Current.ip_address = request.ip
+    # Current.user_agent = request.user_agent
+    # Current.ip_address = request.ip
   end
 
   # TODO: move to concern session key logic
