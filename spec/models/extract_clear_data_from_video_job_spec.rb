@@ -50,7 +50,7 @@ RSpec.describe ExtractClearDataFromVideoJob, type: :model do
       end
 
       it 'sets the title' do
-        expect(job.data['title']).to eq('new title')
+        expect(job.data['name']).to eq('new title')
       end
     end
 
@@ -66,7 +66,7 @@ RSpec.describe ExtractClearDataFromVideoJob, type: :model do
       end
 
       it 'sets the title' do
-        expect(job.data['title']).to eq('new title')
+        expect(job.data['name']).to eq('new title')
       end
     end
   end

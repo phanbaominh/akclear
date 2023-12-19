@@ -167,3 +167,4 @@ if Rails.env.development?
   FetchGameData::FetchOperatorsSkillsIcons.call
   100.times { create_clear(user) }
 end
+User.create!(email: ENV['ADMIN_EMAIL'], password: ENV['ADMIN_PASSWORD'], role: :admin, username: 'admin')

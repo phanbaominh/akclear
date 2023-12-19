@@ -21,19 +21,6 @@ namespace :fetch_latest_game_data do
   end
 
   task all: :environment do
-    I18n.available_locales.each do |locale|
-      I18n.with_locale(locale) do
-        FetchGameData::FetchLatestOperatorsData.call
-      end
-    end
-    [
-      FetchGameData::FetchLatestEventsData,
-      FetchGameData::FetchLatestEpisodesData,
-      FetchGameData::FetchAnnihilationsData,
-      FetchGameData::FetchLatestStagesData,
-      FetchGameData::FetchEpisodesBanners,
-      FetchGameData::FetchEventBanners,
-      FetchGameData::FetchOperatorsSkillsIcons
-    ].map(&:call)
+    ImportGameDataJob.new.perform
   end
 end
