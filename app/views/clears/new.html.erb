@@ -1,3 +1,26 @@
+<% if @clear.persisted? && (verification = @clear.verification) %>
+  <section class="mt-2">
+    <% if verification.rejected? && @clear.submitted_by? %>
+      <div class="flex flex-row  items-center">
+        <p class="simple_form__hint !text-error"><%= t('clears.verifications.rejected_hint') %></p>
+      </div>
+    <% end %>
+    <details class="collapse bg-base-200 lg:!w-1/2">
+      <summary class="collapse-title !list-item !pr-4 pb-0"  tabindex="0">
+        <h3 class="inline">
+          <%= t(verification.accepted? ? :verified_by : :rejected_by, verification: verification, username: verification.verifier.username) %>
+        </h3>
+        <span class="before:content-['\00B7\20'] before:pl-1"><%= time_string(verification.created_at) %></span>
+      </summary>
+      <div class="collapse-content ">
+        <div class="flex items-center justify-between gap-2">
+          <p class="whitespace-pre-wrap"><%= verification.comment.presence || t(:no_comment) %> </p>
+        </div>
+      </div>
+    </details>
+  </section>
+  <div class="p-2"></div>
+<% end %>
 <%= render Clears::FormComponent.new(clear_spec: @clear) do |component| %>
   <%= component.with_header do %>
     <%# if @clear.errors.present? %>
@@ -32,11 +55,11 @@
       undesired but should not cause any issue as Rails generate a new token per request 
       and also check for origin of request %>
           <button
-        form="clears__form"
-        formmethod="GET"
-        formaction="<%= clears_stage_select_path %>"
-        class="btn btn-primary"
-      >
+            form="clears__form"
+            formmethod="GET"
+            formaction="<%= clears_stage_select_path %>"
+            class="btn btn-primary"
+          >
             <%= t(:select_stage) %>
           </button>
         </noscript>
