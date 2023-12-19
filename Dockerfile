@@ -24,13 +24,17 @@ FROM base as build
 
 # Install packages needed to build gems
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y build-essential git libpq-dev libvips pkg-config nodejs
+    apt list -a nodejs &&\
+    apt-get install --no-install-recommends -y build-essential git libpq-dev libvips pkg-config nodejs npm
+
+RUN npm install -g n && n 16.20.1
 
 # Install application gems
 COPY Gemfile Gemfile.lock ./
 RUN bundle install && \
     rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git && \
     bundle exec bootsnap precompile --gemfile
+RUN node -v && npm -v
 
 COPY package.json package-lock.json ./
 RUN npm install
