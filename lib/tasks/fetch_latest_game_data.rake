@@ -23,4 +23,15 @@ namespace :fetch_latest_game_data do
   task all: :environment do
     ImportGameDataJob.new.perform
   end
+
+  task banners: :environment do
+    [
+      FetchGameData::FetchEpisodesBanners,
+      FetchGameData::FetchEventBanners
+    ].map do |service|
+      service.call
+    rescue StandardError => e
+      Rails.logger.error("Failed to #{service.to_s.demodulize.titleize.downcase}: #{e.message}")
+    end
+  end
 end

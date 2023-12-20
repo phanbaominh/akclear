@@ -14,10 +14,7 @@ class ImportGameDataJob < ApplicationJob
       FetchGameData::FetchLatestEventsData,
       FetchGameData::FetchLatestEpisodesData,
       FetchGameData::FetchAnnihilationsData,
-      FetchGameData::FetchLatestStagesData,
-      FetchGameData::FetchEpisodesBanners,
-      FetchGameData::FetchEventBanners,
-      FetchGameData::FetchOperatorsSkillsIcons
+      FetchGameData::FetchLatestStagesData
     ].map do |service|
       if service.try(:i18n?)
         I18n.available_locales.each do |locale|
