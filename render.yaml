@@ -5,6 +5,17 @@ databases:
     plan: free
 
 services:
+  - type: worker
+    name: goodjob-worker
+    runtime: docker
+    dockerCommand: bundle exec good_job start
+    envVars:
+      - key: DATABASE_URL
+        fromService:
+          name: akclear
+          property: connectionString
+      - key: RAILS_MASTER_KEY
+        sync: false
   - type: web
     plan: free
     name: akclear
