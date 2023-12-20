@@ -24,7 +24,7 @@ module FetchGameData
     attr_reader :overwrite
 
     def episodes
-      @episodes ||= Episode.all
+      @episodes ||= FetchLatestEpisodesData.call(json: true).value!
     end
 
     def build_episode_game_id_to_banner_url
@@ -34,7 +34,7 @@ module FetchGameData
       doc.css('th > a > img').each do |img|
         img_episode_number = extract_episode_number(img[:alt])
 
-        game_id = episodes.find { |episode| episode.number == img_episode_number }&.game_id
+        game_id = episodes.find { |episode| episode[:number].to_i == img_episode_number.to_i }&.dig(:game_id)
         next if game_id.nil?
 
         episode_game_id_to_banner_url[game_id] = "#{IMAGE_HOST}#{img[:src]}"
@@ -44,7 +44,7 @@ module FetchGameData
 
     def extract_episode_number(img_alt)
       # e.g Episode 12.png
-      img_alt.split('.').first.split(' ').last.to_i
+      img_alt.split('.').first.split(' ').last
     end
 
     def image_storable

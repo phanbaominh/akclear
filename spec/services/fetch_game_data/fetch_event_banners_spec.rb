@@ -1,5 +1,5 @@
 require 'rails_helper'
-require_relative './image_storable'
+require_relative 'image_storable'
 
 describe FetchGameData::FetchEventBanners do
   let_it_be(:ideal_city_summer_event) do
@@ -41,6 +41,10 @@ describe FetchGameData::FetchEventBanners do
   let(:service) { described_class.new }
 
   before do
+    events = [
+      { game_id: 'test_act20side' }
+    ]
+    allow(FetchGameData::FetchLatestEventsData).to receive(:call).and_return(Dry::Monads::Success(events))
     allow(FetchGameData::FetchJson)
       .to receive(:call)
       .with('https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/zh_CN/gamedata/excel/activity_table.json')

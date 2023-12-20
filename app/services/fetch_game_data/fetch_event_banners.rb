@@ -24,13 +24,13 @@ module FetchGameData
     attr_reader :overwrite
 
     def events
-      @events ||= Event.all
+      @events ||= FetchLatestEventsData.call(json: true).value!
     end
 
     def build_cn_event_name_to_game_id(cn_events_data)
       events.each_with_object({}) do |event, mapping|
-        event_name = cn_events_data['basicInfo'][event.game_id]['name']
-        mapping[event_name] = event.game_id
+        event_name = cn_events_data['basicInfo'][event[:game_id]]['name']
+        mapping[event_name] = event[:game_id]
       end
     end
 
@@ -49,8 +49,6 @@ module FetchGameData
         next if game_id.nil?
 
         img = links.last.css('img').first
-
-        p img
 
         next if img.nil?
 
