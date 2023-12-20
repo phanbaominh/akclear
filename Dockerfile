@@ -16,7 +16,7 @@ ENV RAILS_ENV="production" \
 # Install packages needed for deployment
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y curl libvips postgresql-client \
-    tesseract-ocr tesseract-ocr-jpn ffmpeg youtube-dl libmagickwand-dev && \
+    tesseract-ocr tesseract-ocr-jpn ffmpeg libmagickwand-dev python && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Throw-away build stage to reduce size of final image
@@ -56,6 +56,10 @@ RUN rm -rf node_modules
 
 # Final stage for app image
 FROM base
+
+# Need to update frequently due to youtube changing
+RUN curl -L https://github.com/ytdl-org/ytdl-nightly/releases/download/2023.12.07/youtube-dl -o /usr/local/bin/youtube-dl && \
+    chmod a+rx /usr/local/bin/youtube-dl
 
 # Copy built artifacts: gems, application
 COPY --from=build /usr/local/bundle /usr/local/bundle
