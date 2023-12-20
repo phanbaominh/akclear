@@ -30,6 +30,7 @@ module Clears
                           else
                             process_image(image)
                           end
+        puts 'Writing processed image...'
         processed_image.write('tmp/processed.png')
         # processed_image = ImageList.new('tmp/processed.png')
         puts 'Extracting image...'
@@ -81,6 +82,7 @@ module Clears
     end
 
     def replace_pixels(image, x, y, columns, rows, pixel)
+      puts "Replacing pixels... #{[x, y, columns, rows].inspect}"
       # TODO: find a more efficent way to do this (Imagemagick native using --region --fill white --opaque black)
       pixels =
         [pixel] * (columns * rows)
