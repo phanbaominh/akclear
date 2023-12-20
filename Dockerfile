@@ -45,9 +45,9 @@ COPY . .
 # Precompile bootsnap code for faster boot times
 RUN bundle exec bootsnap precompile app/ lib/
 
-RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails db:prepare
+# RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails db:prepare
 
-RUN bundle exec rake fetch_latest_game_data:all
+# RUN bundle exec rake fetch_latest_game_data:all
 
 # Precompiling assets for production without requiring secret RAILS_MASTER_KEY
 RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
@@ -67,7 +67,7 @@ RUN useradd rails --create-home --shell /bin/bash && \
 USER rails:rails
 
 # Entrypoint prepares the database.
-# ENTRYPOINT ["/rails/bin/docker-entrypoint"]
+ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 
 # Start the server by default, this can be overwritten at runtime
 EXPOSE 3000
