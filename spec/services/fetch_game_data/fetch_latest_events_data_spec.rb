@@ -145,4 +145,24 @@ describe FetchGameData::FetchLatestEventsData do
 
     expect(Event.find_by(game_id: 'act9sre', original_event: original_event_record)).to be_present
   end
+
+  context 'when json param is true' do
+    let(:service) { described_class.new(json: true) }
+
+    it 'returns correct json' do
+      result = service.call.value!
+
+      expect(result).to match(
+        [
+          { game_id: 'act16d5', name: 'Who Is Real' },
+          { game_id: 'act21side', name: 'IL Siracusano' },
+          { game_id: 'act20side', name: 'Ideal City: Carnival in the Endless Summer' },
+          { game_id: 'act18side', name: 'Lingering Echoes' },
+          { game_id: 'act10mini', name: 'A Light Spark in Darkness' },
+          { game_id: 'act9sre', name: 'Who Is Real - Rerun' },
+          { game_id: 'existing', name: 'Existing Event' }
+        ]
+      )
+    end
+  end
 end

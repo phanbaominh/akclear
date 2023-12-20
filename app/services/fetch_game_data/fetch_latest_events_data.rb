@@ -6,31 +6,55 @@ module FetchGameData
     EVENT_TYPES = %w[MINISTORY SIDESTORY].freeze
     EVENT_ID_TYPES = %w[side mini].freeze
 
+    def initialize(json: false)
+      @json = json
+    end
+
     def call
       events_data = yield FetchJson.call(SOURCE)
       events_data = events_data['basicInfo']
-      fetch_logger = FetchLogger.new(Event.name)
-      events_data.each do |event_id, event_data|
+      events = events_data.filter_map do |event_id, event_data|
         next unless valid_event?(event_data)
 
-        name = event_data['name']
-
-        event = Event.find_or_initialize_by(game_id: event_id)
-
-        original_name = name.split('-').first.strip
-        original_event = (Event.find_by(name: original_name) if rerun_event?(event_data))
-        event.update!(name:, end_time: Time.zone.at(event_data['endTime']), original_event:)
-        fetch_logger.log_write(event, event_id)
-
+        store_event(event_id, event_data)
       rescue StandardError => e
-        log_info("Failed to create/update event #{name}: #{e.message}")
+        log_info("Failed to create/update event #{event_id}: #{e.message}")
       end
       fetch_logger.log_summary
 
-      Success()
+      Success(events)
     end
 
     private
+
+    def fetch_logger
+      @fetch_logger ||= FetchLogger.new(Event.name)
+    end
+
+    def json?
+      @json
+    end
+
+    def store_event(event_id, event_data)
+      name = event_data['name']
+
+      if json?
+        {
+          name:,
+          game_id: event_id
+        }
+      else
+
+        event = Event.find_or_initialize_by(game_id: event_id)
+        end_time = Time.zone.at(event_data['endTime'])
+        original_name = name.split('-').first.strip
+
+        original_event = (Event.find_by(name: original_name) if rerun_event?(event_data))
+        event.update!(name:, end_time:, original_event:)
+        fetch_logger.log_write(event, event_id)
+        event
+      end
+    end
 
     def valid_event?(event_data)
       return false unless sidestory_or_ministory_event?(event_data)

@@ -49,4 +49,16 @@ describe FetchGameData::FetchLatestEpisodesData do
     expect(Episode.count).to be(1)
     expect(Episode.find_by(game_id: 'weekly_1')).not_to be_present
   end
+
+  context 'when json param is true' do
+    let(:service) { described_class.new(json: true) }
+
+    it 'returns correct json' do
+      result = service.call.value!
+
+      expect(result).to match(
+        [{ game_id: 'main_0', name: 'Evil Time Part 1', number: '0' }]
+      )
+    end
+  end
 end

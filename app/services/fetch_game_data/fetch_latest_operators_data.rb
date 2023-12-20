@@ -8,6 +8,7 @@ module FetchGameData
       en: 'https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData_YoStar/main/en_US/gamedata/excel/character_table.json',
       jp: 'https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData_YoStar/main/ja_JP/gamedata/excel/character_table.json'
     }
+    SKILL_DATA_URL = 'https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData_YoStar/main/en_US/gamedata/excel/skill_table.json'
 
     def self.i18n?
       true
@@ -20,6 +21,7 @@ module FetchGameData
 
     def call
       operator_table = yield FetchJson.call(source)
+      skill_data = yield FetchJson.call(SKILL_DATA_URL)
       fetch_logger = FetchLogger.new(Operator.name)
 
       operator_table.each do |game_id, operator|
@@ -33,7 +35,7 @@ module FetchGameData
         rarity = operator['rarity'].split('_').last.to_i - 1
         skill_game_ids = skill_game_ids(operator)
         operator = Operator.find_or_initialize_by(game_id:)
-        operator.update!(name:, rarity:, skill_game_ids:)
+        operator.update!(name:, rarity:, skill_game_ids:, skill_icon_ids: skill_icon_ids(skill_game_ids, skill_data))
         fetch_logger.log_write(operator, game_id)
       rescue ActiveRecord::RecordInvalid
         log_info("Failed to write operator #{name}")
@@ -45,6 +47,10 @@ module FetchGameData
     private
 
     attr_reader :source, :destroy_invalid
+
+    def skill_icon_ids(skill_game_ids, skill_data)
+      skill_game_ids.map { |skill_id| skill_data[skill_id]['iconId'] || skill_id }
+    end
 
     def delete_invalid_operators(game_id)
       operator = Operator.find_by(game_id:)

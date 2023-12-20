@@ -1,5 +1,5 @@
 require 'rails_helper'
-require_relative './image_storable'
+require_relative 'image_storable'
 
 describe FetchGameData::FetchEpisodesBanners do
   let_it_be(:prologue) do
@@ -39,6 +39,10 @@ describe FetchGameData::FetchEpisodesBanners do
   let(:service) { described_class.new }
 
   before do
+    episodes = [
+      prologue, episode_1, episode_12
+    ].map(&:attributes).map { |attrs| attrs.transform_keys(&:to_sym).slice(:game_id, :number) }
+    allow(FetchGameData::FetchLatestEpisodesData).to receive(:call).and_return(Dry::Monads::Success(episodes))
     allow(URI).to receive(:parse).and_return(double(open: 'image file'))
     allow(URI).to receive(:parse).with('https://arknights.wiki.gg/wiki/Operation/Main_Theme').and_return(double(open: banners_page))
     allow(IO).to receive(:copy_stream)
