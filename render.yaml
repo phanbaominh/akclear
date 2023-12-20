@@ -9,6 +9,7 @@ services:
     plan: free
     name: akclear
     runtime: docker
+    healthCheckPath: /healthz
     envVars:
       - key: DATABASE_URL
         fromDatabase:
