@@ -6,5 +6,6 @@ FactoryBot.define do
       skill_number { 0 }
     end
     skill_game_ids { Array.new(skill_number) { |i| "skchr_aglina_#{i + 1}" } }
+    skill_icon_ids { Array.new(skill_number) { |i| "skchr_aglina_#{i + 1}" } }
   end
 end

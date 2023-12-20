@@ -9,11 +9,11 @@ class UsedOperatorPresenter < ApplicationPresenter
   end
 
   def self.skill_image_url(skill_id)
-    "images/skills/#{skill_id}.jpg"
+    "https://raw.githubusercontent.com/Aceship/Arknight-Images/main/skills/skill_icon_#{skill_id}.png"
   end
 
   def skill_image_url
-    self.class.skill_image_url(operator.skill_game_ids[object.skill.to_i - 1])
+    self.class.skill_image_url(operator.skill_icon_ids[object.skill.to_i - 1])
   end
 
   def elite_image_url

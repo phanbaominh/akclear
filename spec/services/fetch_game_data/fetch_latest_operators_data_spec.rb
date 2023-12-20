@@ -12,12 +12,27 @@ describe FetchGameData::FetchLatestOperatorsData do
       char_513_apionr: { 'name' => 'Tulip', 'isNotObtainable' => true }
     }
   end
+  let(:skill_data) do
+    {
+      'skchr_texas_1' => {
+        'iconId' => 'skchr_texas_1_icon'
+      },
+      'skchr_texas_2' => {
+        'iconId' => nil
+      }
+    }
+  end
   let(:service) { described_class.new }
 
   before do
     allow(FetchGameData::FetchJson)
       .to receive(:call)
+      .with('https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData_YoStar/main/en_US/gamedata/excel/character_table.json')
       .and_return(Dry::Monads::Success(file_content))
+    allow(FetchGameData::FetchJson)
+      .to receive(:call)
+      .with('https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData_YoStar/main/en_US/gamedata/excel/skill_table.json')
+      .and_return(Dry::Monads::Success(skill_data))
   end
 
   context 'deleting_invalid param' do
@@ -51,8 +66,13 @@ describe FetchGameData::FetchLatestOperatorsData do
 
   it 'creates operator correctly' do
     expect { service.call }.to change(Operator, :count).from(0).to(1)
-    expect(Operator.i18n.find_by(name: 'Texas', game_id: 'char_102_texas', rarity: 4,
-                                 skill_game_ids: %w[skchr_texas_1 skchr_texas_2])).to be_present
+    expect(
+      Operator.i18n.find_by(
+        name: 'Texas', game_id: 'char_102_texas', rarity: 4,
+        skill_game_ids: %w[skchr_texas_1 skchr_texas_2],
+        skill_icon_ids: %w[skchr_texas_1_icon skchr_texas_2]
+      )
+    ).to be_present
   end
 
   it 'fetches from correct link' do
@@ -69,6 +89,13 @@ describe FetchGameData::FetchLatestOperatorsData do
   end
 
   context 'when locale is jp' do
+    before do
+      allow(FetchGameData::FetchJson)
+        .to receive(:call)
+        .with('https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData_YoStar/main/ja_JP/gamedata/excel/character_table.json')
+        .and_return(Dry::Monads::Success(file_content))
+    end
+
     it 'fetches from correct link' do
       I18n.with_locale(:jp) { service.call }
       expect(FetchGameData::FetchJson)
@@ -79,8 +106,12 @@ describe FetchGameData::FetchLatestOperatorsData do
     it 'creates operator correctly' do
       I18n.with_locale(:jp) do
         service.call
-        expect(operator = Operator.i18n.find_by(name: 'Texas', game_id: 'char_102_texas', rarity: 4,
-                                                skill_game_ids: %w[skchr_texas_1 skchr_texas_2])).to be_present
+        expect(operator =
+                 Operator.i18n.find_by(
+                   name: 'Texas', game_id: 'char_102_texas', rarity: 4,
+                   skill_game_ids: %w[skchr_texas_1 skchr_texas_2],
+                   skill_icon_ids: %w[skchr_texas_1_icon skchr_texas_2]
+                 )).to be_present
         expect(operator.name).to eq('Texas')
         expect(operator.name(locale: :en)).to eq(nil)
       end
