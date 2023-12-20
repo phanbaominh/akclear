@@ -11,7 +11,7 @@ services:
     dockerCommand: bundle exec good_job start
     envVars:
       - key: DATABASE_URL
-        fromService:
+        fromDatabase:
           name: akclear
           property: connectionString
       - key: RAILS_MASTER_KEY
