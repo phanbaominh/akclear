@@ -58,8 +58,8 @@ RUN rm -rf node_modules
 FROM base
 
 # Need to update frequently due to youtube changing
-RUN curl -L https://github.com/ytdl-org/ytdl-nightly/releases/download/2023.12.07/youtube-dl -o /usr/local/bin/youtube-dl && \
-    chmod a+rx /usr/local/bin/youtube-dl
+RUN curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o /usr/local/bin/yt-dlp && \
+    chmod a+rx /usr/local/bin/yt-dlp
 
 # Copy built artifacts: gems, application
 COPY --from=build /usr/local/bundle /usr/local/bundle

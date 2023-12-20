@@ -8,7 +8,7 @@ module Clears
       return Failure(:invalid_video) unless video.valid?
       return Failure(:missing_timestamp) unless video.timestamp
 
-      download_url, status = Open3.capture2('youtube-dl', '-f', '22', '-g', video.to_url)
+      download_url, status = Open3.capture2('yt-dlp', '-f', '22', '-g', video.to_url)
 
       return Failure(:failed_to_get_download_url) unless status.success?
 
