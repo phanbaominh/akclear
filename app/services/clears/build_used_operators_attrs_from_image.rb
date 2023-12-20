@@ -81,7 +81,10 @@ module Clears
     end
 
     def replace_pixels(image, x, y, columns, rows, pixel)
-      pixels = image.get_pixels(x, y, columns, rows).map { pixel }
+      # TODO: find a more efficent way to do this (Imagemagick native using --region --fill white --opaque black)
+      pixels =
+        [pixel] * (columns * rows)
+      # pixels = image.get_pixels(x, y, columns, rows).map { pixel }
       image.store_pixels(x, y, columns, rows, pixels)
     end
 
