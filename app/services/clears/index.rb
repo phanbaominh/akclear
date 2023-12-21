@@ -25,7 +25,7 @@ module Clears
     def hide_rejected_clears
       return if spec.self_only
 
-      @clears = @clears.left_outer_joins(:verification).where(verifications: { status: [nil, Verification::ACCEPTED] })
+      @clears = @clears.not_rejected
     end
 
     def filter_by_verification_status
