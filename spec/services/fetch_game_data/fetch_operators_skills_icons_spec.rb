@@ -48,13 +48,13 @@ describe FetchGameData::FetchOperatorsSkillsIcons do
 
     expect(IO)
       .to have_received(:copy_stream)
-      .with('image file', Regexp.new('app/javascript/images/skills/test_skchr_chyue_1.jpg'))
+      .with('image file', Regexp.new('app/javascript/images/skills/test_skchr_chyue_1.png'))
     expect(IO)
       .to have_received(:copy_stream)
-      .with('image file', Regexp.new('app/javascript/images/skills/test_skchr_chyue_2.jpg'))
+      .with('image file', Regexp.new('app/javascript/images/skills/test_skchr_chyue_2.png'))
     expect(IO)
       .to have_received(:copy_stream)
-      .with('image file', Regexp.new('app/javascript/images/skills/test_skcom_heal_up\[3\].jpg'))
+      .with('image file', Regexp.new('app/javascript/images/skills/test_skcom_heal_up\[3\].png'))
     expect(IO).to have_received(:copy_stream).exactly(3).times
   end
 

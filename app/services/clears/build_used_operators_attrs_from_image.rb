@@ -322,13 +322,12 @@ module Clears
 
       @first_line_y_start = first_line_y[0]
       @second_line_y_start = second_line_y[0]
-      white_pixel = Pixel.from_color('white')
 
       i = replace_pixels(black_and_white_img, 0, 0, img_width, first_line_y[0] - 1)
       i = replace_pixels(i, 0, first_line_y[1] + 1, img_width, second_line_y[0] - first_line_y[1] - 1)
-      replace_pixels(i, 0, second_line_y[1] + 1, img_width, img_height - second_line_y[1] - 1).reduce_noise(0).unsharp_mask(
-        6.8, 1, 2.69, 0
-      )
+      replace_pixels(i, 0, second_line_y[1] + 1, img_width, img_height - second_line_y[1] - 1) # .reduce_noise(0).unsharp_mask(
+      # 6.8, 1, 2.69, 0
+      # )
     end
 
     def process_boxes(boxes)
@@ -547,7 +546,7 @@ module Clears
 
     def get_skill_from_image(image, operator)
       operator.skill_game_ids.map.with_index do |game_id, index|
-        reference_skill_image = SKILL_IMAGE_PATH.join("#{game_id}.jpg")
+        reference_skill_image = SKILL_IMAGE_PATH.join("#{game_id}.png")
         [compare_image(image, reference_skill_image)[0], index + 1]
       end.min_by { |a| a[0] }[1]
     end

@@ -40,7 +40,7 @@ node_modules
 # https://vitejs.dev/guide/env-and-mode.html#env-files
 *.local
 !/app/javascript/images/banners/.gitkeep
-/app/javascript/images/skills/*
+# /app/javascript/images/skills/*
 !/app/javascript/images/skills/.gitkeep
 
 .env

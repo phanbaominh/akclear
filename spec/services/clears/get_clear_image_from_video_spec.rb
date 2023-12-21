@@ -18,7 +18,7 @@ describe Clears::GetClearImageFromVideo do
     before do
       allow(Open3)
         .to receive(:capture2)
-        .with('youtube-dl', '-f', '22', '-g', video_url)
+        .with('yt-dlp', '-f', '22', '-g', video_url)
         .and_return(get_download_url_result)
     end
 

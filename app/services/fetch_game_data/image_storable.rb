@@ -21,7 +21,7 @@ module FetchGameData
       log_info("Found #{file_name_to_banner_url.keys.size} #{image_storable} images, storing...")
       folder_path = self.class.images_path
       file_name_to_banner_url.each do |file_name, banner_url|
-        path = folder_path.join("#{file_name}.jpg")
+        path = folder_path.join("#{file_name}#{file_ext}")
         if path.exist? && !overwrite
           log_debug("Skipping image for #{image_storable} #{file_name}, already exist at #{path}")
           next
@@ -35,6 +35,10 @@ module FetchGameData
       end
       log_info("Finished storing #{count} new images!")
       Success()
+    end
+
+    def file_ext
+      '.jpg'
     end
   end
 end
