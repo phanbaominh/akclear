@@ -46,7 +46,7 @@
           </div>
         <% end %>
         <%= content_tag :div,
-          data: { **stimulus_attrs(:clears__form_component,
+          data: { **stimulus(:clears__form_component,
             actions: {
               'dispatch:clickEditOperator': 'highlight',
             }
