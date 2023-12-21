@@ -16,8 +16,15 @@ ENV RAILS_ENV="production" \
 # Install packages needed for deployment
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y curl libvips postgresql-client \
-    tesseract-ocr tesseract-ocr-jpn ffmpeg libmagickwand-dev python && \
+    # libjpeg-dev, lib-png-dev, libxml2-dev is for image magick delegate, pkg-config for linking the delegates to imagemagick
+    tesseract-ocr tesseract-ocr-jpn ffmpeg build-essential python3 zlib1g-dev libjpeg-dev libpng-dev libxml2-dev pkg-config && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
+
+RUN curl -L https://github.com/ImageMagick/ImageMagick/archive/refs/tags/7.1.1-23.tar.gz -o 7.1.1-23.tar.gz && \
+    tar xzf 7.1.1-23.tar.gz && \
+    rm 7.1.1-23.tar.gz && \
+    sh ./ImageMagick-7.1.1-23/configure --prefix=/usr/local --with-bzlib=yes --with-fontconfig=yes --with-freetype=yes --with-gslib=yes --with-gvc=yes --with-jpeg=yes --with-jp2=yes --with-png=yes --with-tiff=yes --with-xml=yes --with-gs-font-dir=yes && \
+    make -j && make install && ldconfig /usr/local/lib/
 
 # Throw-away build stage to reduce size of final image
 FROM base as build

@@ -38,5 +38,9 @@ module FetchGameData
     def image_storable
       :skill
     end
+
+    def file_ext
+      '.png'
+    end
   end
 end
