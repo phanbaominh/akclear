@@ -81,13 +81,14 @@ module Clears
       [[box[:"#{dir}_start"], current[0]].send(lang == 'jpn' ? :max : :min), [box[:"#{dir}_end"], current[1]].max]
     end
 
-    def replace_pixels(image, x, y, columns, rows, pixel)
+    def replace_pixels(image, x, y, columns, rows)
       puts "Replacing pixels... #{[x, y, columns, rows].inspect}"
+      f = Image.new(columns, rows) { |options| options.background_color = 'white' }
       # TODO: find a more efficent way to do this (Imagemagick native using --region --fill white --opaque black)
-      pixels =
-        [pixel] * (columns * rows)
+      # pixels =
+      #   [pixel] * (columns * rows)
       # pixels = image.get_pixels(x, y, columns, rows).map { pixel }
-      image.store_pixels(x, y, columns, rows, pixels)
+      image.composite(f, x, y, Magick::UndefinedCompositeOp) # , columns, rows, pixels)
     end
 
     def reduce_box(comb)
@@ -323,25 +324,11 @@ module Clears
       @second_line_y_start = second_line_y[0]
       white_pixel = Pixel.from_color('white')
 
-      black_and_white_img
-        .tap { |i| replace_pixels(i, 0, 0, img_width, first_line_y[0] - 1, white_pixel) }
-        .tap do |i|
-        replace_pixels(i, 0, first_line_y[1] + 1, img_width, second_line_y[0] - first_line_y[1] - 1,
-                       white_pixel)
-      end
-        .tap do |i|
-        replace_pixels(i, 0, second_line_y[1] + 1, img_width, img_height - second_line_y[1] - 1,
-                       white_pixel)
-      end
-        #   .tap do |i|
-        #   replace_pixels(i, 0, first_line_y[0], x_bound[0] - 1, second_line_y[1] - first_line_y[0],
-        #                  white_pixel)
-        # end
-        #   .tap do |i|
-        #   replace_pixels(i, x_bound[1] + 1, first_line_y[0], img_width - x_bound[1] - 1,
-        #                  second_line_y[1] - first_line_y[0], white_pixel)
-        # end
-        .reduce_noise(0).unsharp_mask(6.8, 1, 2.69, 0)
+      i = replace_pixels(black_and_white_img, 0, 0, img_width, first_line_y[0] - 1)
+      i = replace_pixels(i, 0, first_line_y[1] + 1, img_width, second_line_y[0] - first_line_y[1] - 1)
+      replace_pixels(i, 0, second_line_y[1] + 1, img_width, img_height - second_line_y[1] - 1).reduce_noise(0).unsharp_mask(
+        6.8, 1, 2.69, 0
+      )
     end
 
     def process_boxes(boxes)
@@ -472,15 +459,17 @@ module Clears
 
       white_pixel = Pixel.from_color('white')
       i = -1
+
+      gray_image = image.quantize(2, GRAYColorspace).negate_channel(false, RedChannel, GreenChannel, BlueChannel)
+
       boxes.filter_map do |box|
         card_x = box[:x_end] - left_border_to_end_of_name
         card_y = box[:y_start] - top_border_to_end_of_name
 
         if box[:word].nil? || find_most_matched_name(box[:word]).nil?
           dif = approx_height * 1.0 / 7
-          image.crop(card_x, box[:y_start] - dif, card_width * 1.2, approx_height + dif)
-               .quantize(2, GRAYColorspace).negate_channel(false, RedChannel, GreenChannel, BlueChannel)
-               .color_floodfill(card_width * 1.2 / 2, 0, white_pixel).write(TMP_FILE_PATH)
+          gray_image.crop(card_x, box[:y_start] - dif, card_width * 1.2, approx_height + dif)
+                    .color_floodfill(card_width * 1.2 / 2, 0, white_pixel).write(TMP_FILE_PATH)
           ocr_result = RTesseract.new(TMP_FILE_PATH.to_s, psm: '11', lang:)
 
           comb = ocr_result.to_box.each_with_object({}) do |b, memo|
@@ -504,13 +493,13 @@ module Clears
 
         i += 1
 
-        image.crop(card_x, card_y, card_width, card_height).write("tmp/#{i}.png")
-        crop_image = proc do |(x, y, w, h, type)|
+        # image.crop(card_x, card_y, card_width, card_height).write("tmp/#{i}.png")
+        crop_image = proc do |(x, y, w, h, _type)|
           x = x / orig * dist
           y = y / orig * dist
           w = w / orig * dist
           h = h / orig * dist
-          image.crop(card_x + x, card_y + y, w, h).write("tmp/#{i}_#{type}.png")
+          image.crop(card_x + x, card_y + y, w, h) # .write("tmp/#{i}_#{type}.png")
         end
         {
           operator_id: operator.id,
