@@ -155,8 +155,9 @@ def create_clear(user)
   Clear.create!(params)
 end
 
+user = User.create!(email: ENV.fetch('ADMIN_EMAIL', nil), password: ENV.fetch('ADMIN_PASSWORD', nil), role: :admin,
+                    username: 'admin')
 if Rails.env.development?
-  user = User.first || User.create!(email: 'test@mail.com', password: 'Password1@', role: :admin, username: 'admin')
   FetchGameData::FetchLatestOperatorsData.call
   FetchGameData::FetchLatestEventsData.call
   FetchGameData::FetchLatestEpisodesData.call
@@ -167,4 +168,3 @@ if Rails.env.development?
   FetchGameData::FetchOperatorsSkillsIcons.call
   100.times { create_clear(user) }
 end
-User.create!(email: ENV['ADMIN_EMAIL'], password: ENV['ADMIN_PASSWORD'], role: :admin, username: 'admin')
