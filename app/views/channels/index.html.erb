@@ -1,8 +1,8 @@
 <%= content_tag :section, data: { **stimulus(:channels__view_mode)} do %>
-  <header class="mb-8">
+  <header class="mb-2">
     <!--<input type="text" placeholder="Search" class="simple_form__input w-full"/>-->
     <h2 class="main-heading"><%= title t('meta.channels.index.title') %></h2>
-    <div class="flex justify-between mt-2">
+    <div class="flex justify-between mt-2 items-center">
       <!--      <select class="select text-base font-normal">
         <option value="" disabled selected hidden>Sort by</option>
         <option>Name</option>
@@ -31,40 +31,21 @@
       <% end %>
     </div>
   </header>
-  <%= turbo_frame_tag 'channels', data: { turbo_action: 'advance' } do %>
+  <% if can?(:create, Channel) %>
+    <%= turbo_frame_tag Channel.new do %>
+      <%= render 'new_btn'  %>
+    <% end %>
+    <div class="p-2"></div>
+  <% end %>
+  <%= turbo_frame_tag 'channels_frame', data: { turbo_action: 'advance' } do %>
     <section>
       <%= content_tag :ul,
+            id: 'channels',
             class: "grid channel-list-grid",
             data: {
                 **stimulus_attrs("channels__view_mode", target: 'list')
             } do %>
-        <% @channels.map do |channel| %>
-          <li class="flex">
-            <%= link_to channel_path(channel), class: "flex flex-grow", data: { turbo_frame: '_top' } do %>
-              <div class="
-              flex-row flex text-left p-4 bg-base-200 shadow-xl flex-grow
-              hover:outline
-              hover:outline-primary
-              hover:bg-base-content
-              hover:bg-opacity-10
-            ">
-                <% if channel.thumbnail_url %>
-                  <img src=<%= channel.thumbnail_url %> alt="" class="channel-list__item-img" >
-                <% else %>
-                  <div class="channel-list__item-img flex items-center justify-center border border-base-content">
-                    <span> <%= t("channels.show.no_avatar_yet") %></span>
-                  </div>
-                <% end %>
-                <div class="channel-list__item-body">
-                  <div>
-                    <p class="font-bold text-base p-0"><%= channel.title %></p>
-                    <p class="text-base-content-subdued text-sm p-0"><%= channel.clear_count_text %> </p>
-                  </div>
-                </div>
-              </div>
-            <% end %>
-          </li>
-        <% end %>
+        <%= render @channels %>
       <% end %>
     </section>
     <div class="mt-4 w-full flex justify-end"><%== render Primer::PagyComponent.new(pagy: @pagy) %></div>

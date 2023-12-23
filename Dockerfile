@@ -21,10 +21,13 @@ RUN apt-get update -qq && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 RUN curl -L https://github.com/ImageMagick/ImageMagick/archive/refs/tags/7.1.1-23.tar.gz -o 7.1.1-23.tar.gz && \
-    tar xzf 7.1.1-23.tar.gz && \
+    mkdir imagemagick && \
+    tar xzf 7.1.1-23.tar.gz -C imagemagick && \
     rm 7.1.1-23.tar.gz && \
+    cd imagemagick/ && \
     sh ./ImageMagick-7.1.1-23/configure --prefix=/usr/local --with-bzlib=yes --with-fontconfig=yes --with-freetype=yes --with-gslib=yes --with-gvc=yes --with-jpeg=yes --with-jp2=yes --with-png=yes --with-tiff=yes --with-xml=yes --with-gs-font-dir=yes && \
-    make -j && make install && ldconfig /usr/local/lib/
+    make -j && make install && ldconfig /usr/local/lib/ && \
+    cd .. && rm -rf imagemagick
 
 # Throw-away build stage to reduce size of final image
 FROM base as build

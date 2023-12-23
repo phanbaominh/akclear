@@ -4,6 +4,8 @@ class Clears::Verifications::UsedOperatorsController < ApplicationController
   before_action :authorize_verification!
 
   def edit
+    return unless stale?(@used_operator.operator)
+
     respond_to do |format|
       format.html
       format.turbo_stream do

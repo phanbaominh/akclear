@@ -57,10 +57,12 @@ en:
       clear:
         name: "Title"
         operator_id: "Operators"
+      channel:
+        external_id: "Youtube ID"
   meta:
     home:
       title: "Arknights clear videos aggregator"
-      description: "Akclear is a clear videos aggregator for Arknights. You can find clears that match your needs in just a few clicks or share awesome clears with everyone."
+      description: "Battle Records is a clear videos aggregator for Arknights. You can find clears that match your needs in just a few clicks or share awesome clears with everyone."
     clears:
       index:
         self:
@@ -265,17 +267,26 @@ en:
     update:
       success: "Your password has been changed"
   channels:
+    new:
+      title: 'New channel'
+    create:
+      success: "Channel was successfully created!"
     list: "Channels"
     show:
       no_banner_yet: "NO IMAGE"
       no_avatar_yet: "NO IMAGE"
+      delete_dialog: "Are you sure you want to delete this channel %{title}? This channel has %{count}."
     index:
       title: "Channels"
       credit: "Special thanks to all the content creators featured here"
+      new: "New channel"
+    destroy:
+      success: "Channel was successfully deleted!"
+      failed: "Failed to delete channel."
   footer:
     about:
       blurb: "A clear videos aggregator for Arknights"
-      self: "Developed by pbminh"
+      self: "Developed by minh"
     credit:
       thanks: "Thanks"
       ak_ccs: "Featured Arknights content creators"
@@ -283,6 +294,7 @@ en:
       prts: "PRTS wiki for event banner images"
       ak_wiki: "Arknights EN wiki for episode banner images"
       aceship: "Aceship for game images"
+  website_name: 'Battle Records'
   start_video_job: 'Start video job'
   filters: 'Filters'
   cancel: 'Cancel'
@@ -328,6 +340,9 @@ en:
   update_password: "Change password"
   username: 'Username'
 
+  favorites: "Favorites"
+  favorite: 'Favorite'
+  unfavorite: 'Unfavorite'
   like_hint: 'Remember to like on Youtube too!'
   import_videos: "Import videos"
   anonymous: "Anonymous"

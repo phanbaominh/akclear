@@ -14,6 +14,12 @@
       <%= link_to t(:update), edit_clear_path(Current.user.rejected_clears.first, fix_rejected: true),
             class: 'btn btn-secondary  btn-xs' %>
     </div>
+  <% elsif @clear_spec.favorited %>
+    <div class="flex items-center gap-2 mb-2 sm:mb-0">
+      <h2 class="main-heading"><%= title t(:favorites) %></h2>
+      <% unless (count = Current.user.rejected_clears.count).zero? %>
+      <% end %>
+    </div>
   <% else %>
     <% description t('meta.clears.index.description') %>
     <h2 class="main-heading"><%= title t('meta.clears.index.title') %></h2>

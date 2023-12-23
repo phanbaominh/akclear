@@ -7,9 +7,10 @@ class HomeController < ApplicationController
   def index
     delete_clear_spec_session
     @clear_spec = Clear.new
-    @newest_clears = Clear.includes(:channel, :likes, stage: :stageable,
-                                                      used_operators: :operator).order(created_at: :desc).limit(6)
+    @newest_clears = Clear.not_rejected.includes(:channel, :likes, stage: :stageable,
+                                                                   used_operators: :operator).order(created_at: :desc).limit(6)
     @trending_clears = Clear.preload(:channel, :likes, stage: :stageable)
+                            .not_rejected
                             .joins(:likes)
                             .where(likes: { created_at: 1.day.ago... })
                             .group(:id)

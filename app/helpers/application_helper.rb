@@ -36,4 +36,8 @@ module ApplicationHelper
   def latest_unverified_clear
     @latest_unverified_clear ||= Clear.need_verification.first
   end
+
+  def admin_pages?
+    controller.class.to_s.downcase.include?('admin')
+  end
 end

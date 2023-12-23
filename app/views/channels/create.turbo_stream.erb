@@ -1,0 +1,6 @@
+<%= turbo_stream.update Channel.new do %>
+  <%= render 'new_btn' %>
+<% end %>
+<%= turbo_stream.prepend 'channels' do %>
+  <%= render @channel %>
+<% end %>

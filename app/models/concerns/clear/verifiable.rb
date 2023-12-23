@@ -10,6 +10,9 @@ module Clear::Verifiable
 
     scope :unverified, -> { where.missing(:verification) }
     scope :verified, -> { joins(:verification) }
+    scope :not_rejected, lambda {
+                           left_outer_joins(:verification).where(verifications: { status: [nil, Verification::ACCEPTED] })
+                         }
     scope :need_verification, lambda {
                                 reported_verified_clears = Clear.verified.reported
                                 if Current.ability

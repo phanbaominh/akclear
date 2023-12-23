@@ -1,5 +1,6 @@
 <%= simple_form_for clear_spec, url: clears_path, method: :get, html: { data: { turbo_frame: 'clears_with_filters' }, id: 'reset', class: 'hidden' } do |f| %>
-  <%= f.input :self_only, as: :hidden %>
+  <%= (f.input :self_only, as: :hidden) if clear_spec.self_only %>
+  <%= (f.input :favorited, as: :hidden) if clear_spec.favorited %>
 <% end %>
 <section class="card mb-8 md:mb-4 md:shadow-xl static">
   <div class="md:card-body md:bg-base-200">
@@ -24,7 +25,8 @@
               <noscript><input type="reset" value="Reset" class="btn btn-warning"/></noscript>
             </div>
           </header>
-          <%= f.input :self_only, as: :hidden %>
+          <%= (f.input :self_only, as: :hidden) if clear_spec.self_only %>
+          <%= (f.input :favorited, as: :hidden) if clear_spec.favorited %>
           <%= f.input :channel_id, as: :hidden %>
           <div class="js-only">
             <%= content_tag :div, class: 'sm:block',
@@ -46,7 +48,7 @@
           </div>
         <% end %>
         <%= content_tag :div,
-          data: { **stimulus_attrs(:clears__form_component,
+          data: { **stimulus(:clears__form_component,
             actions: {
               'dispatch:clickEditOperator': 'highlight',
             }

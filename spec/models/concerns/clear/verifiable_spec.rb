@@ -30,4 +30,14 @@ describe Clear::Verifiable do
       end
     end
   end
+
+  describe '.not_rejected' do
+    let_it_be(:rejected_clear) { create(:clear, :rejected) }
+    let_it_be(:verified_clear) { create(:clear, :verified) }
+    let_it_be(:unverified_clear) { create(:clear) }
+
+    it 'returns not rejected clears' do
+      expect(Clear.not_rejected).to contain_exactly(verified_clear, unverified_clear)
+    end
+  end
 end

@@ -97,4 +97,12 @@ Rails.application.configure do
   # ]
   # Skip DNS rebinding protection for the default health check endpoint.
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
+  ActionMailer::Base.smtp_settings = {
+    address: 'email-smtp.ap-southeast-2.amazonaws.com', # use the endpoint from your AWS console
+    port: '587',
+    authentication: :plain,
+    user_name: ENV.fetch('SMTP_USERNAME', nil),
+    enable_starttls: true,
+    password: ENV.fetch('SMTP_PASSWORD', nil)
+  }
 end

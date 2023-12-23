@@ -6,6 +6,9 @@ class Clears::UsedOperatorsController < ApplicationController
     load_squad
     @used_operator = get_used_operator(session['used_operator'])
     session['used_operator'] = nil
+
+    return unless stale?(@used_operator.operator)
+
     respond_to do |format|
       format.html
       format.turbo_stream # currently only used for exiting from new & edit mode

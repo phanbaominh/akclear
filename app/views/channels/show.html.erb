@@ -22,6 +22,13 @@
               </a>
             </p> %>
         <p class="text-sm text-base-content-subdued"><%= @channel.clear_count_text %></p>
+        <% if can?(:destroy, @channel) %>
+          <%= button_to channel_path(@channel), method: :delete, class: 'btn btn-outline btn-sm btn-error mt-2',
+            data: { turbo_confirm: t('.delete_dialog', title: @channel.title, count: @channel.clear_count_text), turbo_stream: false } do %>
+            <%= heroicon 'trash', variant: :outline %>
+            <%= t(:delete) %>
+          <% end %>
+        <% end %>
       </div>
     </div>
     <div>

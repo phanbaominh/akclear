@@ -100,8 +100,8 @@ module ClearFilterable
 
     @clear_params ||= params.require(:clear).permit(
       :stageable_id, :stage_id, :challenge_mode, :stage_type, :environment, :job_id,
-      :operator_id, :link, :name, :channel_id, :self_only, stage_ids: [],
-                                                           used_operators_attributes: UsedOperatorsSession::PERSISTED_OPERATORS_ATTRIBUTES + [:_destroy]
+      :operator_id, :link, :name, :channel_id, :self_only, :favorited, stage_ids: [],
+                                                                       used_operators_attributes: UsedOperatorsSession::PERSISTED_OPERATORS_ATTRIBUTES + [:_destroy]
     ).compact_blank
   end
 
