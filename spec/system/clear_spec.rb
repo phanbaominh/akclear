@@ -781,4 +781,52 @@ describe 'Clears' do
       end
     end
   end
+
+  describe 'Favorite a clear', :js do
+    let_it_be(:clear) { create(:clear, name: 'test clear') }
+
+    context 'when not signed in' do
+      it 'redirects to sign in page' do
+        visit clear_path(clear)
+
+        click_button 'Favorite'
+
+        expect(page).to have_current_path(sign_in_path)
+      end
+    end
+
+    it 'favorites a clear' do
+      create_list(:used_operator, 3, clear:)
+
+      sign_in
+
+      visit clears_path
+
+      click_link 'test clear'
+
+      expect(page).to have_current_path(clear_path(clear))
+
+      click_button 'Favorite'
+
+      expect(page.find_button('Unfavorite')).to have_content('1')
+
+      find('details', text: 'Profile').click
+
+      click_link('Favorites')
+
+      expect(page).to have_content('test clear')
+
+      click_link 'test clear'
+
+      click_button 'Unfavorite'
+
+      expect(page.find_button('Favorite')).to have_content('0')
+
+      find('details', text: 'Profile').click
+
+      click_link('Favorites')
+
+      expect(page).not_to have_content('test clear')
+    end
+  end
 end

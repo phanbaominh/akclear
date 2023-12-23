@@ -38,7 +38,7 @@ module Clears
     def filter_by_favorited
       return unless spec.favorited
 
-      @clears = @clears.joins(:likes).where(likes: { user_id: Current.user.id })
+      @clears = @clears.where(id: @clears.joins(:likes).where(likes: { user_id: Current.user.id }))
     end
 
     def filter_by_self
