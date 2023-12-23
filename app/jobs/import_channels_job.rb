@@ -44,6 +44,7 @@ class ImportChannelsJob < ApplicationJob
       end
     end
     new_channel_external_ids = channel_id_to_channel_meta.keys
+    # TODO: update existing channels too
     (new_channel_external_ids.filter_map do |external_id|
       c = Channel.new(external_id:)
       c.channel_meta = channel_id_to_channel_meta[external_id]

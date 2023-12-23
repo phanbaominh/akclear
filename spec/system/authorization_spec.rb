@@ -20,6 +20,7 @@ RSpec.describe 'Authorization' do
       new_verification_page: new_clear_verification_path(clear),
       new_verification_with_no_channel_page: new_clear_verification_path(clear_with_no_channel),
       edit_verification_page: edit_clear_verification_path(verified_clear),
+      new_channel_page: new_channel_path,
       admin_page: admin_path,
       new_video_imports_page: new_admin_videos_import_path,
       clear_jobs_path: admin_clear_jobs_path,
@@ -93,7 +94,7 @@ RSpec.describe 'Authorization' do
     let(:accessible_paths) do
       %i[clears_page clear_page channels_page channel_page
          new_clear_page edit_rejected_self_clear_page
-         new_verification_page edit_self_verification_page]
+         new_verification_page edit_self_verification_page new_channel_page]
     end
 
     it_behaves_like 'has access to pages'
