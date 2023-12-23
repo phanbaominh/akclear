@@ -105,5 +105,5 @@ Rails.application.configure do
     enable_starttls: true,
     password: ENV.fetch('SMTP_PASSWORD', nil)
   }
-  config.action_mailer.default_url_options = { host: 'battlerecords.cc' }
+  config.action_mailer.default_url_options = { host: ENV.fetch('EMAIL_URL_HOST', nil) }
 end
