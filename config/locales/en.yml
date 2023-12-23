@@ -329,6 +329,8 @@ en:
   update_password: "Change password"
   username: 'Username'
 
+  favorite: 'Favorite'
+  unfavorite: 'Unfavorite'
   like_hint: 'Remember to like on Youtube too!'
   import_videos: "Import videos"
   anonymous: "Anonymous"
