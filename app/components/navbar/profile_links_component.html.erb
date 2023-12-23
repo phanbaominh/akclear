@@ -1,4 +1,4 @@
-<%= render Navbar::LinkComponent.new(highlighted: current_page?(clears_path) && request.fullpath.include?('self_only')) do |comp| %>
+<%= render Navbar::LinkComponent.new(highlighted: current_page?(clears_path) && request.fullpath.include?('self_only'), border_left: true) do |comp| %>
   <%= comp.with_link do %>
     <%= link_to clears_path(clear: { self_only: true }) do %>
       <span class="relative">
@@ -15,6 +15,10 @@
   <% end %>
 <% end %>
 <%= render Navbar::LinkComponent.new(title: t("favorites"), path: clears_path(clear: { favorited: true }), border_left: true) %>
+<li aria-hidden="true" class="border-t border-gray-700 mx-0"></li>
+<%= render Navbar::LinkComponent.new(title: t("change_username"), path: edit_username_path, border_left: true) %>
+<%= render Navbar::LinkComponent.new(title:t("change_email"), path: edit_identity_email_path, border_left: true) %>
+<%= render Navbar::LinkComponent.new(title: t("change_password"), path: edit_password_path, border_left: true) %>
 <li>
   <%= button_to t("logout"), Current.session, method: :delete, class: 'w-full text-left', form_class: 'flex' %>
 </li>
