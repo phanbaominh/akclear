@@ -329,6 +329,7 @@ en:
   update_password: "Change password"
   username: 'Username'
 
+  favorites: "Favorites"
   favorite: 'Favorite'
   unfavorite: 'Unfavorite'
   like_hint: 'Remember to like on Youtube too!'

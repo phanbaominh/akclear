@@ -1,6 +1,6 @@
 <ul class="<%= @class %>">
   <!--Have to use request.fullpath instead of using current_page because of some issue with mobility gem locale param-->
-  <%= render Navbar::LinkComponent.new(title: t("clears.title"), path: clears_path, highlighted: current_page?(clears_path) && request.fullpath.exclude?('self_only')) %>
+  <%= render Navbar::LinkComponent.new(title: t("clears.title"), path: clears_path, highlighted: current_page?(clears_path) && request.fullpath.exclude?('self_only') && request.fullpath.exclude?('favorited')) %>
   <%= render Navbar::LinkComponent.new(title: t("channels.list"), path: channels_path) %>
   <!--<li><%#= link_to t("guide"), "#" %></li>-->
   <% if can?(:create, Verification) && latest_unverified_clear  %>
@@ -12,8 +12,8 @@
   <% if can?(:read, :admin)  %>
     <%= render Navbar::LinkComponent.new(title: t('admin.title'), path: admin_path) %>
   <% end %>
-  <li aria-hidden="true" class="border-t border-gray-700 mx-0"></li>
-  <%= render Navbar::LanguageDropdownComponent.new(flatten: true) %>
+  <!--<li aria-hidden="true" class="border-t border-gray-700 mx-0"></li>-->
+  <%#= render Navbar::LanguageDropdownComponent.new(flatten: true) %>
   <li aria-hidden="true" class="border-t border-gray-700 mx-0"></li>
   <% if authenticated? %>
     <div class='lg:hidden contents'>

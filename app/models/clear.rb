@@ -26,7 +26,7 @@ class Clear < ApplicationRecord
   after_commit :assign_channel, if: :trigger_assign_channel
 
   # considering separate spec logic from model
-  attr_accessor :job_id, :self_only, :trigger_assign_channel
+  attr_accessor :job_id, :self_only, :favorited, :trigger_assign_channel
 
   def submitted_by?(user = Current.user)
     submitter == user

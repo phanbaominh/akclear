@@ -8,6 +8,7 @@ module Clears
       @clears = base_scope
       hide_rejected_clears
       filter_by_self
+      filter_by_favorited
       filter_by_verification_status
       filter_by_stageable
       filter_by_stage
@@ -32,6 +33,12 @@ module Clears
       return unless spec.verification_status
 
       @clears = @clears.joins(:verification).where(verifications: { status: spec.verification_status })
+    end
+
+    def filter_by_favorited
+      return unless spec.favorited
+
+      @clears = @clears.joins(:likes).where(likes: { user_id: Current.user.id })
     end
 
     def filter_by_self
