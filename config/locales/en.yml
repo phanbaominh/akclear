@@ -60,7 +60,7 @@ en:
   meta:
     home:
       title: "Arknights clear videos aggregator"
-      description: "Akclear is a clear videos aggregator for Arknights. You can find clears that match your needs in just a few clicks or share awesome clears with everyone."
+      description: "Battle Records is a clear videos aggregator for Arknights. You can find clears that match your needs in just a few clicks or share awesome clears with everyone."
     clears:
       index:
         self:
@@ -275,7 +275,7 @@ en:
   footer:
     about:
       blurb: "A clear videos aggregator for Arknights"
-      self: "Developed by pbminh"
+      self: "Developed by minh"
     credit:
       thanks: "Thanks"
       ak_ccs: "Featured Arknights content creators"
@@ -283,6 +283,7 @@ en:
       prts: "PRTS wiki for event banner images"
       ak_wiki: "Arknights EN wiki for episode banner images"
       aceship: "Aceship for game images"
+  website_name: 'Battle Records'
   start_video_job: 'Start video job'
   filters: 'Filters'
   cancel: 'Cancel'
