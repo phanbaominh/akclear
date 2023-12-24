@@ -2,7 +2,7 @@
   <%= (f.input :self_only, as: :hidden) if clear_spec.self_only %>
   <%= (f.input :favorited, as: :hidden) if clear_spec.favorited %>
 <% end %>
-<section class="card mb-8 md:mb-4 md:shadow-xl static">
+<section class="card mb-8 md:mb-4 md:shadow-xl static" data-controller="clears--filters-component">
   <div class="md:card-body md:bg-base-200">
     <%= render Primer::TabsComponent.new(tab_names: ['basic', 'detailed'], hidden_class: 'hidden sm:hidden', default_tab_name: default_tab_name) do |tabs_comp| %>
       <%= tabs_comp.with_content_with_tabs do %>

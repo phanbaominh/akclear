@@ -61,12 +61,14 @@ describe 'Clears' do
     click_add_operator_button
   end
 
-  def add_an_operator(operator)
+  def add_an_operator(operator, filter: false)
     used_operator = UsedOperator.new(operator)
 
     select_operator_to_add(used_operator)
+    return used_operator if filter
 
     if mode == :basic
+
       edit_an_operator(operator)
     else
       fill_in_operator_details(used_operator)
@@ -599,7 +601,9 @@ describe 'Clears' do
         expect_page_to_have_clear(episode_clear)
         expect_page_to_have_clear(event_clear)
 
-        add_an_operator({ operator: filtered_op })
+        add_an_operator({ operator: filtered_op }, filter: true)
+
+        wait_for_turbo
 
         apply_filters
 
@@ -628,7 +632,9 @@ describe 'Clears' do
         expect_page_to_have_clear(episode_clear)
         expect_page_to_have_clear(event_clear)
 
-        add_an_operator({ operator: filtered_op })
+        add_an_operator({ operator: filtered_op }, filter: true)
+
+        wait_for_turbo
 
         apply_filters
 
@@ -637,7 +643,7 @@ describe 'Clears' do
         expect_page_not_to_have_clear(event_clear)
 
         choicesjs_select 'Annihilation', from: 'Stage type'
-        choicesjs_select 'Annihilation 01 - Chernobog', from: 'Annihilation'
+        choicesjs_select 'Annihilation 01 - Chernobog', from: 'Stage'
 
         apply_filters
 

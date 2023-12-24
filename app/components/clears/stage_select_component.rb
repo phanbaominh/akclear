@@ -23,12 +23,16 @@ class Clears::StageSelectComponent < ApplicationComponent
     form.object
   end
 
+  def annihilation?
+    stage_type == Annihilation
+  end
+
   def stage_type
     clear_spec.stage_type.constantize if clear_spec.stage_type.present?
   end
 
   def stageables
-    stage_type.all
+    stage_type.selectable
   end
 
   def challengable?
@@ -47,7 +51,10 @@ class Clears::StageSelectComponent < ApplicationComponent
   end
 
   def selectable_stages
+    return Stage.where(stageable_type: Annihilation.to_s).includes(:stageable) if annihilation?
+
     base = stageable.stages.includes(:stageable)
+
     if clear_spec.challenge_mode
       base.challenge_mode
     elsif clear_spec.environment
