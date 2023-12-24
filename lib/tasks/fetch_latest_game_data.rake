@@ -24,10 +24,11 @@ namespace :fetch_latest_game_data do
     ImportGameDataJob.new.perform
   end
 
-  task banners: :environment do
+  task images: :environment do
     [
       FetchGameData::FetchEpisodesBanners,
-      FetchGameData::FetchEventBanners
+      FetchGameData::FetchEventBanners,
+      FetchGameData::FetchOperatorsSkillsIcons
     ].map do |service|
       service.call
     rescue StandardError => e
