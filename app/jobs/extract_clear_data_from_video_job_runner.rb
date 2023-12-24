@@ -11,6 +11,7 @@ class ExtractClearDataFromVideoJobRunner < ApplicationJob
   def perform(job_id)
     job = ExtractClearDataFromVideoJob.find_by(id: job_id)
 
+    # TODO: handle possible race condition if more than 1 job performed at the same time
     return unless job&.started?
 
     job.process!

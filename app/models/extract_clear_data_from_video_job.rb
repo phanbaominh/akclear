@@ -27,7 +27,7 @@ class ExtractClearDataFromVideoJob < ApplicationRecord
 
     # make sure to use bang version to trigger after_commit
     event :start, after_commit: :run do
-      transitions from: %i[pending failed], to: :started
+      transitions from: %i[pending failed processing started], to: :started
     end
 
     event :process do
