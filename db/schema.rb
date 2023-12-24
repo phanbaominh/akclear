@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_12_24_033612) do
+ActiveRecord::Schema[7.1].define(version: 2023_12_24_094336) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -109,6 +109,7 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_24_033612) do
     t.datetime "updated_at", null: false
     t.bigint "stage_id", null: false
     t.bigint "channel_id"
+    t.boolean "operator_name_only", default: true, null: false
     t.index ["channel_id"], name: "index_extract_clear_data_from_video_jobs_on_channel_id"
     t.index ["stage_id"], name: "index_extract_clear_data_from_video_jobs_on_stage_id"
     t.index ["video_url"], name: "index_extract_clear_data_from_video_jobs_on_video_url", unique: true

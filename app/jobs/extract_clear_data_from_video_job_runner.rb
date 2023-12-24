@@ -16,7 +16,7 @@ class ExtractClearDataFromVideoJobRunner < ApplicationJob
 
     job.process!
 
-    case Clears::BuildClearFromVideo.call(job.video)
+    case Clears::BuildClearFromVideo.call(job.video, operator_name_only: job.operator_name_only)
     in Success(clear)
       job.data = {
         stage_id: job.stage_id,
