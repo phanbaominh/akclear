@@ -11,6 +11,7 @@ class Event < ApplicationRecord
 
   scope :original, -> { where(original_event_id: nil) }
   scope :selectable, -> { original }
+  scope :latest, -> { where(start_time: ..Time.current).where(end_time: Time.current..).order(end_time: :asc) }
 
   def self.challengable?
     true

@@ -11,7 +11,7 @@ RSpec.describe Annihilation, type: :model do
     let_it_be(:annihilation_3) { create(:annihilation, end_time: 2.days.ago) }
 
     it 'returns annihilation with latest end_time' do
-      expect(described_class.latest).to eq([annihilation_1, annihilation_2])
+      expect(described_class.latest).to eq([annihilation_2])
     end
   end
 

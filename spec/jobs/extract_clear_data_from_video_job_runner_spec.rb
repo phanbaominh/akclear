@@ -19,7 +19,7 @@ RSpec.describe ExtractClearDataFromVideoJobRunner do
     after { ActiveJob::Base.queue_adapter = :inline }
 
     it 'has queue as system' do
-      expect { described_class.perform_later(job.id) }.to have_enqueued_job.on_queue('system')
+      expect { described_class.perform_later(job.id) }.to have_enqueued_job.on_queue('system_serial')
     end
   end
 

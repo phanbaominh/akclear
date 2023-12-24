@@ -47,10 +47,12 @@ module FetchGameData
 
         event = Event.find_or_initialize_by(game_id: event_id)
         end_time = Time.zone.at(event_data['endTime'])
+        start_time = Time.zone.at(event_data['startTime'])
+
         original_name = name.split('-').first.strip
 
         original_event = (Event.find_by(name: original_name) if rerun_event?(event_data))
-        event.update!(name:, end_time:, original_event:)
+        event.update!(name:, end_time:, original_event:, start_time:)
         fetch_logger.log_write(event, event_id)
         event
       end
