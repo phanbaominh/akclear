@@ -27,6 +27,8 @@ RSpec.describe ExtractClearDataFromVideoJob, type: :model do
     it { is_expected.to transition_from(:started).to(:processing).on_event(:process) }
     it { is_expected.to transition_from(:processing).to(:completed).on_event(:complete) }
     it { is_expected.to transition_from(:completed).to(:clear_created).on_event(:mark_clear_created) }
+    it { is_expected.to transition_from(:failed).to(:clear_created).on_event(:mark_clear_created) }
+    it { is_expected.to transition_from(:pending).to(:clear_created).on_event(:mark_clear_created) }
     it { is_expected.to transition_from(:processing).to(:failed).on_event(:fail) }
   end
 

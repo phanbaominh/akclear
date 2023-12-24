@@ -32,23 +32,24 @@
         <% end %>
       <% end %>
       <div class="flex justify-between mt-4">
-        <% if job.may_start? %>
-          <%= link_to edit_admin_clear_job_path(job),
+        <div class="space-x-2">
+          <% if job.may_start? %>
+            <%= link_to edit_admin_clear_job_path(job),
             class: 'btn btn-outline btn-sm',
             aria: { label: t(:edit) } do %>
-            <%= heroicon "chevron-double-right", variant: :outline %>
-            <%= t(:start) %>
+              <%= heroicon "chevron-double-right", variant: :outline %>
+              <%= t(:start) %>
+            <% end %>
           <% end %>
-        <% elsif job.completed? %>
-          <%= link_to new_admin_clear_from_job_path(job_id: job.id),
+          <% if job.may_mark_clear_created? %>
+            <%= link_to new_admin_clear_from_job_path(job_id: job.id),
             class: 'btn btn-primary btn-sm', data: { turbo_frame: "_top" },
             aria: { label: t(:create_clear) } do %>
-            <%= heroicon "plus", variant: :outline, options: { class: 'w-3 h-3' } %>
-            <%= t('clear') %>
+              <%= heroicon "plus", variant: :outline, options: { class: 'w-3 h-3' } %>
+              <%= t('clear') %>
+            <% end %>
           <% end %>
-        <% else %>
-          <div></div>
-        <% end %>
+        </div>
         <%= button_to admin_clear_job_path(job),
           method: :delete, aria: { label: t(:delete) },
           class: 'btn btn-error btn-outline btn-sm' do %>

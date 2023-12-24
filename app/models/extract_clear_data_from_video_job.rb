@@ -43,7 +43,7 @@ class ExtractClearDataFromVideoJob < ApplicationRecord
     end
 
     event :mark_clear_created do
-      transitions from: :completed, to: :clear_created
+      transitions from: %i[completed pending failed], to: :clear_created
     end
   end
 
@@ -78,7 +78,17 @@ class ExtractClearDataFromVideoJob < ApplicationRecord
   def clear
     return @clear if defined?(@clear)
 
-    return unless completed?
+    return unless may_mark_clear_created?
+
+    if data['used_operators_attributes'].blank?
+      name = data['name']
+      self.data = {
+        stage_id:,
+        link: Video.new(video_url).to_url(normalized: true),
+        channel_id:,
+        name:
+      }
+    end
 
     @clear ||= Clear.new(data)
     # preload data

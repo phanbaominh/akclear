@@ -3,7 +3,7 @@ module Admin
     include ClearFilterable
     def new
       @job = ExtractClearDataFromVideoJob.find_by(id: params[:job_id])
-      return redirect_to(new_clear_path) unless @job.completed?
+      return redirect_to(new_clear_path) unless @job.may_mark_clear_created?
 
       set_modifying_clear
       @clear = @job.clear
