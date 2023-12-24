@@ -80,8 +80,8 @@ class ExtractClearDataFromVideoJob < ApplicationRecord
 
     return unless may_mark_clear_created?
 
-    if data['used_operators_attributes'].blank?
-      name = data['name']
+    if data&.dig('used_operators_attributes').blank?
+      name = data['name'] if data
       self.data = {
         stage_id:,
         link: Video.new(video_url).to_url(normalized: true),
