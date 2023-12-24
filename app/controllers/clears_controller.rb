@@ -13,8 +13,8 @@ class ClearsController < ApplicationController
     set_clear_spec
     set_clear_spec_session_from_params
     @pagy, @clears = pagy(
-      Clears::Index.(@clear_spec).value!.preload(stage: :stageable).includes(:channel, :verification, :likes, :stage,
-                                                                             used_operators: :operator).order(created_at: :desc)
+      Clears::Index.(@clear_spec).value!
+      .includes(:channel, :verification, :likes, stage: :stageable, used_operators: :operator).order(created_at: :desc)
     )
     Operator.build_translations_cache(Operator.from_clear_ids(@clears.map(&:id)))
   end

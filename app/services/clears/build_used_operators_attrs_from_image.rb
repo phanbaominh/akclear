@@ -16,8 +16,9 @@ module Clears
 
     attr_reader :data
 
-    def initialize(image_path)
+    def initialize(image_path, operator_name_only: true)
       @image_path = image_path
+      @operator_name_only = operator_name_only
     end
 
     def call
@@ -43,7 +44,7 @@ module Clears
 
     private
 
-    attr_reader :image_path, :tmp_images
+    attr_reader :image_path, :tmp_images, :operator_name_only
 
     def image
       @image ||= ImageList.new(image_path)
@@ -490,6 +491,8 @@ module Clears
         operator = find_operator(box[:word])
         next unless operator
 
+        next { operator_id: operator.id } if operator_name_only
+
         i += 1
 
         # image.crop(card_x, card_y, card_width, card_height).write("tmp/#{i}.png")
@@ -506,7 +509,7 @@ module Clears
           elite: get_elite_from_image(crop_image.call(elite), operator),
           level: get_level_from_image(crop_image.call(level), operator)
           # word: box[:word]
-        }
+        }.compact
       end.sort_by { |o| o[:name] }
     end
 

@@ -31,9 +31,10 @@ RSpec.describe Event, type: :model do
   end
 
   describe '.latest' do
-    let_it_be(:event_1) { create(:event, end_time: 2.days.from_now) }
-    let_it_be(:event_2) { create(:event, end_time: 1.day.from_now) }
-    let_it_be(:event_3) { create(:event, end_time: 2.days.ago) }
+    let_it_be(:event_1) { create(:event, end_time: 1.day.from_now, start_time: 1.day.ago) }
+    let_it_be(:event_2) { create(:event, end_time: 2.day.from_now, start_time: 1.day.ago) }
+    let_it_be(:event_3) { create(:event, end_time: 2.days.from_now, start_time: 1.day.from_now) }
+    let_it_be(:event_4) { create(:event, end_time: 2.days.ago, start_time: 3.days.ago) }
 
     it 'returns event with latest end_time' do
       expect(described_class.latest).to eq([event_1, event_2])

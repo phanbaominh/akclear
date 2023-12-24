@@ -19,7 +19,7 @@ RSpec.describe ExtractClearDataFromVideoJobRunner do
     after { ActiveJob::Base.queue_adapter = :inline }
 
     it 'has queue as system' do
-      expect { described_class.perform_later(job.id) }.to have_enqueued_job.on_queue('system')
+      expect { described_class.perform_later(job.id) }.to have_enqueued_job.on_queue('system_serial')
     end
   end
 
@@ -34,7 +34,7 @@ RSpec.describe ExtractClearDataFromVideoJobRunner do
       it 'does nothing' do
         job.update!(status: :pending)
         described_class.perform_later(job.id)
-        expect(Clears::BuildClearFromVideo).not_to have_received(:call).with(job.video)
+        expect(Clears::BuildClearFromVideo).not_to have_received(:call)
       end
     end
 
@@ -43,7 +43,8 @@ RSpec.describe ExtractClearDataFromVideoJobRunner do
 
       it 'extracts clear data from video' do
         described_class.perform_later(job.id)
-        expect(Clears::BuildClearFromVideo).to have_received(:call).with(job.video)
+        expect(Clears::BuildClearFromVideo).to have_received(:call).with(job.video,
+                                                                         operator_name_only: job.operator_name_only)
         expect(job.reload.data).to eq(
           result.value!.attributes.slice('link')
             .merge('used_operators_attributes' => [], 'channel_id' => job.channel_id, 'name' => 'title', 'stage_id' => job.stage.id)
@@ -57,7 +58,8 @@ RSpec.describe ExtractClearDataFromVideoJobRunner do
 
       it 'stores error' do
         described_class.perform_later(job.id)
-        expect(Clears::BuildClearFromVideo).to have_received(:call).with(job.video)
+        expect(Clears::BuildClearFromVideo).to have_received(:call).with(job.video,
+                                                                         operator_name_only: job.operator_name_only)
         expect(job.reload.data).to eq({ 'error' => 'invalid_video', 'name' => 'title' })
         expect(job).to be_failed
       end
@@ -72,7 +74,8 @@ RSpec.describe ExtractClearDataFromVideoJobRunner do
 
       it 'stores error' do
         described_class.perform_later(job.id)
-        expect(Clears::BuildClearFromVideo).to have_received(:call).with(job.video)
+        expect(Clears::BuildClearFromVideo).to have_received(:call).with(job.video,
+                                                                         operator_name_only: job.operator_name_only)
         expect(job.reload.data).to eq({ 'error' => 'error', 'name' => 'title' })
         expect(job).to be_failed
       end

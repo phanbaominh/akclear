@@ -49,7 +49,8 @@ describe FetchGameData::FetchLatestEventsData do
       'displayType' => 'SIDESTORY',
       'name' => 'Who Is Real - Rerun',
       'isReplicate' => true,
-      'endTime' => 1_628_852_399
+      'endTime' => 1_628_852_399,
+      'startTime' => 1_660_824_000,
     }
   end
 
@@ -58,7 +59,8 @@ describe FetchGameData::FetchLatestEventsData do
       'id' => 'act16d5',
       'displayType' => 'SIDESTORY',
       'name' => 'Who Is Real',
-      'endTime' => 1_628_852_399
+      'endTime' => 1_628_852_399,
+      'startTime' => 1_628_852_399
     }
   end
 
@@ -66,7 +68,8 @@ describe FetchGameData::FetchLatestEventsData do
     {
       'id' => 'act21side',
       'name' => 'IL Siracusano',
-      'endTime' => 1_675_421_999
+      'endTime' => 1_675_421_999,
+      'startTime' => 1_675_421_999
     }
   end
 
@@ -83,7 +86,8 @@ describe FetchGameData::FetchLatestEventsData do
         'existing' => {
           'name' => 'Existing Event',
           'displayType' => 'MINISTORY',
-          'endTime' => 1_675_421_999
+          'endTime' => 1_675_421_999,
+          'startTime' => 1_675_421_999
         }
       }
     }
@@ -103,7 +107,8 @@ describe FetchGameData::FetchLatestEventsData do
 
     expect(Event.find_by(game_id: 'act20side')).to have_attributes(
       name: 'Ideal City: Carnival in the Endless Summer',
-      end_time: a_value_within(1.second).of(Time.zone.at(1_675_421_999))
+      end_time: a_value_within(1.second).of(Time.zone.at(1_675_421_999)),
+      start_time: a_value_within(1.second).of(Time.zone.at(1_673_611_200))
     )
   end
 

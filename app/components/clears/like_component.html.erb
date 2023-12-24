@@ -1,6 +1,7 @@
 <%= button_to clear_like_path(clear), method: liked? ? :delete : :post, disabled: disabled,
   class: (@class.presence || 'flex items-center gap-1') + ' tooltip !normal-case',
   form: { class: hover_class, id: turbo_id },
+  aria: { label: liked? ? t(:unfavorite) : t(:favorite) },
   data: { **stimuluses(
     clears__like: { actions: { click: 'changeLikeCount' }, values: { liked: liked? }, include_controller: true },
     toggle: { actions: { click: 'toggle:stop'}, classes: { off: 'hidden' }, include_controller: true }),
@@ -8,11 +9,11 @@
   }, disabled: disabled do %>
   <%= content_tag :span, class: "#{'hidden' unless liked?}", data: { toggled: liked?, **stimulus_attrs(:toggle, target: 'toggle') } do %>
     <%= heroicon 'heart', options: { class: "text-primary h-4 w-4 ",
-          disable_default_class: true, aria_label: t(:unfavorite) } %>
+          disable_default_class: true } %>
   <% end %>
   <%= content_tag :span, class: "#{'hidden' if liked?}", data: { toggled: !liked?, **stimulus_attrs(:toggle, target: 'toggle') } do %>
     <%= heroicon 'heart', variant: :outline, options: { class: "h-4 w-4",
-          disable_default_class: true, aria_label: t(:favorite) } %>
+          disable_default_class: true } %>
   <% end %>
   <noscript><%= liked? ? t(:unlike) : t(:like) %></noscript>
   <%= content_tag :span, data: { **stimulus_attrs(:clears__like, target: 'likeCounter') } do %>

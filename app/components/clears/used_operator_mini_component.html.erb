@@ -1,5 +1,6 @@
   <article
   class="operators__card flex flex-col relative justify-center items-center "
+  id="<%= (dom_id(used_operator.operator, :basic) if deletable?)%>"
   
 >
   <div class="p-2" >
@@ -14,7 +15,11 @@
     <% else %>
       <span></span>
     <% end %>
-    <span class="-mt-1"><%= level %></span>
+    <% if level %>
+      <span class="-mt-1"><%= level %></span>
+    <% elsif deletable? %>
+      <%= render Clears::UsedOperatorDeleteBtnComponent.new(used_operator: used_operator, class: 'bg-transparent border-none', icon: 'x-mark') %>
+    <% end %>
     <% if skill %>
       <span class="-mb-6 sm:-mb-8">S<%= skill %></span>
     <% else %>

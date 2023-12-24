@@ -7,7 +7,7 @@ describe Clears::BuildClearFromVideo do
   let(:used_operators_attributes) do
     [{ operator_id: operator.id, level: 50, elite: 2, skill: 1 }]
   end
-  let(:result) { described_class.call(video) }
+  let(:result) { described_class.call(video, operator_name_only: true) }
 
   before do
     allow(Clears::GetClearImageFromVideo).to receive(:call).and_return(Dry::Monads::Success('image_path'))
@@ -24,7 +24,8 @@ describe Clears::BuildClearFromVideo do
     it 'builds clear' do
       clear = result.value!
       expect(Clears::GetClearImageFromVideo).to have_received(:call).with(video)
-      expect(Clears::BuildUsedOperatorsAttrsFromImage).to have_received(:call).with('image_path')
+      expect(Clears::BuildUsedOperatorsAttrsFromImage).to have_received(:call).with('image_path',
+                                                                                    operator_name_only: true)
       expect(clear).to have_attributes(
         {
           link: 'https://youtube.com/watch?v=aAfeBGKoZeI',

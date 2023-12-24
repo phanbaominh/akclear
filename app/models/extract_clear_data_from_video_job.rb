@@ -27,7 +27,7 @@ class ExtractClearDataFromVideoJob < ApplicationRecord
 
     # make sure to use bang version to trigger after_commit
     event :start, after_commit: :run do
-      transitions from: %i[pending failed], to: :started
+      transitions from: %i[pending failed processing started], to: :started
     end
 
     event :process do
@@ -43,7 +43,7 @@ class ExtractClearDataFromVideoJob < ApplicationRecord
     end
 
     event :mark_clear_created do
-      transitions from: :completed, to: :clear_created
+      transitions from: %i[completed pending failed], to: :clear_created
     end
   end
 
@@ -78,7 +78,17 @@ class ExtractClearDataFromVideoJob < ApplicationRecord
   def clear
     return @clear if defined?(@clear)
 
-    return unless completed?
+    return unless may_mark_clear_created?
+
+    if data&.dig('used_operators_attributes').blank?
+      name = data['name'] if data
+      self.data = {
+        stage_id:,
+        link: Video.new(video_url).to_url(normalized: true),
+        channel_id:,
+        name:
+      }
+    end
 
     @clear ||= Clear.new(data)
     # preload data

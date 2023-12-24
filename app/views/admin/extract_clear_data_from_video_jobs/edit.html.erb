@@ -7,6 +7,10 @@
         html: { class: 'flex flex-col' } do |f| %>
         <%= f.input :video_url, input_html: { class: 'w-full' } %>
         <%= render Clears::StageSelectComponent.new(form: f, simple: true) %>
+        <div>
+          <%= f.label :operator_name_only, class: "simple_form__label" %>
+        </div>
+        <%= f.check_box :operator_name_only, class: "toggle block focus:outline-base-content/20" %>
         <div class="self-end mt-4">
           <%= link_to t(:cancel), admin_clear_job_url(@extract_clear_data_from_video_job), class: 'btn' %>
           <%= f.button :submit, t('start'), class: 'self-end' %>

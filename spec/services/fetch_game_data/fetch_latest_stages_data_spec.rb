@@ -53,7 +53,9 @@ describe FetchGameData::FetchLatestStagesData do
   let(:episode_tutorial_stage) do
     {
       'code' => 'TR-20',
-      'stageId' => 'tr_20'
+      'stageId' => 'tr_20',
+      'stageType' => 'MAIN',
+      'zoneId' => 'main_10',
     }
   end
   let(:stages_data) do
@@ -106,11 +108,10 @@ describe FetchGameData::FetchLatestStagesData do
     )
   end
 
-  it 'does not create tutorial stages' do
+  it 'create tutorial stages' do
     service.call
 
-    expect(Stage.find_by(game_id: 'act17side_tr01')).not_to be_present
-    expect(Stage.find_by(game_id: 'tr_20')).not_to be_present
+    expect(Stage.find_by(game_id: 'tr_20')).to be_present
   end
 
   it 'does not create story stages' do
@@ -122,7 +123,7 @@ describe FetchGameData::FetchLatestStagesData do
   it 'does not create stages for non-existing stageable' do
     service.call
 
-    expect(Stage.count).to eq(3)
+    expect(Stage.count).to eq(4)
     expect(Stage.find_by(game_id: '')).not_to be_present
   end
 end

@@ -65,9 +65,7 @@ module StageSpecifiable
   end
 
   def stage_id
-    if stageable.is_a?(Annihilation)
-      stageable.stages.first.id
-    elsif defined?(super)
+    if defined?(super)
       super
     else
       @stage_id

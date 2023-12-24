@@ -48,7 +48,8 @@
         </button>
       </noscript>
       <% if stage_type %>
-        <%= form.input :stageable_id,
+        <% unless annihilation? %>
+          <%= form.input :stageable_id,
                  label: t("clear_form.stageable_field.label", stage_type: stage_type),
                  as: :select,
                  collection: stageables,
@@ -67,6 +68,7 @@
                      action: "clears--stage-select#updateStages"
                    }
                  } %>
+        <% end %>
         <% if stageable %>
           <% if stageable.has_environments? %>
             <fieldset class="join block">
@@ -104,10 +106,10 @@
             <%= t("get_stages") %>
           </button>
         </noscript>
-        <% if stageable %>
+        <% if annihilation? || stageable %>
           <fieldset>
             <%= form.input :stage_id,
-                     as: stageable.is_a?(Annihilation) ? :hidden : :select,
+                     as: :select,
                      collection: selectable_stages,
                      prompt: "Select stage",
                      required: false,

@@ -61,12 +61,16 @@ describe 'Clears' do
     click_add_operator_button
   end
 
-  def add_an_operator(operator)
+  def add_an_operator(options)
+    filter = options[:filter] || false
+    operator = options.except(:filter)
     used_operator = UsedOperator.new(operator)
 
     select_operator_to_add(used_operator)
+    return used_operator if filter
 
     if mode == :basic
+
       edit_an_operator(operator)
     else
       fill_in_operator_details(used_operator)
@@ -512,6 +516,7 @@ describe 'Clears' do
     let_it_be(:event_stage) { create(:stage, code: 'EV-1', stageable: event, game_id: 'ev_01') }
 
     let_it_be(:annihilation_clear) { create(:clear, stage: annihilation_stage) }
+    let_it_be(:annihilation_clear_with_no_operatoar) { create(:clear, name: 'no op clear', stage: annihilation_stage) }
     let_it_be(:episode_clear) { create(:clear, stage: episode_stage) }
     let_it_be(:event_clear) { create(:clear, stage: event_stage) }
 
@@ -529,7 +534,7 @@ describe 'Clears' do
     end
 
     def expect_page_to_have_clear(clear)
-      all(clear_card_css, text: clear.stage.code).each do |card|
+      all(clear_card_css, text: clear.name || clear.stage.code).each do |card|
         valid = true
         within card do
           valid &&= if clear.stage.challenge_mode?
@@ -554,7 +559,7 @@ describe 'Clears' do
     end
 
     def expect_page_not_to_have_clear(clear)
-      expect(page).not_to have_css(clear_card_css, text: clear.stage.code)
+      expect(page).not_to have_css(clear_card_css, text: clear.name || clear.stage.code)
     end
 
     def expect_page_to_only_have_clears(clears)
@@ -584,7 +589,7 @@ describe 'Clears' do
       expect(page).to have_link('2')
 
       click_link '2'
-      expect(page).to have_css(clear_card_css, count: 3)
+      expect(page).to have_css(clear_card_css, count: 4)
       expect(page).to have_css('.page.current', text: '2')
       expect(page).to have_link('1')
     end
@@ -599,7 +604,9 @@ describe 'Clears' do
         expect_page_to_have_clear(episode_clear)
         expect_page_to_have_clear(event_clear)
 
-        add_an_operator({ operator: filtered_op })
+        add_an_operator(operator: filtered_op, filter: true)
+
+        wait_for_turbo
 
         apply_filters
 
@@ -612,6 +619,18 @@ describe 'Clears' do
         apply_filters
 
         expect_page_to_have_clear(annihilation_clear)
+        expect_page_not_to_have_clear(annihilation_clear_with_no_operatoar)
+        expect_page_not_to_have_clear(episode_clear)
+        expect_page_not_to_have_clear(event_clear)
+
+        click_button 'Delete operator'
+
+        wait_for_turbo
+
+        apply_filters
+
+        expect_page_to_have_clear(annihilation_clear)
+        expect_page_to_have_clear(annihilation_clear_with_no_operatoar)
         expect_page_not_to_have_clear(episode_clear)
         expect_page_not_to_have_clear(event_clear)
       end
@@ -628,7 +647,9 @@ describe 'Clears' do
         expect_page_to_have_clear(episode_clear)
         expect_page_to_have_clear(event_clear)
 
-        add_an_operator({ operator: filtered_op })
+        add_an_operator(operator: filtered_op, filter: true)
+
+        wait_for_turbo
 
         apply_filters
 
@@ -637,11 +658,23 @@ describe 'Clears' do
         expect_page_not_to_have_clear(event_clear)
 
         choicesjs_select 'Annihilation', from: 'Stage type'
-        choicesjs_select 'Annihilation 01 - Chernobog', from: 'Annihilation'
+        choicesjs_select 'Annihilation 01 - Chernobog', from: 'Stage'
 
         apply_filters
 
         expect_page_to_have_clear(annihilation_clear)
+        expect_page_not_to_have_clear(annihilation_clear_with_no_operatoar)
+        expect_page_not_to_have_clear(episode_clear)
+        expect_page_not_to_have_clear(event_clear)
+
+        click_button 'Delete operator'
+
+        wait_for_turbo
+
+        apply_filters
+
+        expect_page_to_have_clear(annihilation_clear)
+        expect_page_to_have_clear(annihilation_clear_with_no_operatoar)
         expect_page_not_to_have_clear(episode_clear)
         expect_page_not_to_have_clear(event_clear)
       end
@@ -779,6 +812,54 @@ describe 'Clears' do
           )
         end
       end
+    end
+  end
+
+  describe 'Favorite a clear', :js do
+    let_it_be(:clear) { create(:clear, name: 'test clear') }
+
+    context 'when not signed in' do
+      it 'redirects to sign in page' do
+        visit clear_path(clear)
+
+        click_button 'Favorite'
+
+        expect(page).to have_current_path(sign_in_path)
+      end
+    end
+
+    it 'favorites a clear' do
+      create_list(:used_operator, 3, clear:)
+
+      sign_in
+
+      visit clears_path
+
+      click_link 'test clear'
+
+      expect(page).to have_current_path(clear_path(clear))
+
+      click_button 'Favorite'
+
+      expect(page.find_button('Unfavorite')).to have_content('1')
+
+      find('details', text: 'Profile').click
+
+      click_link('Favorites')
+
+      expect(page).to have_content('test clear')
+
+      click_link 'test clear'
+
+      click_button 'Unfavorite'
+
+      expect(page.find_button('Favorite')).to have_content('0')
+
+      find('details', text: 'Profile').click
+
+      click_link('Favorites')
+
+      expect(page).not_to have_content('test clear')
     end
   end
 end

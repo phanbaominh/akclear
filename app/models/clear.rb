@@ -60,7 +60,7 @@ class Clear < ApplicationRecord
     return if job_id.blank?
 
     job = ExtractClearDataFromVideoJob.find_by(id: job_id)
-    job&.mark_clear_created! if job&.completed?
+    job&.mark_clear_created! if job&.may_mark_clear_created?
   end
 
   def created_by_trusted_users?

@@ -5,5 +5,5 @@
   <%= render Clears::Form::NewOperatorButtonComponent.new(squad: squad, create: true, class: 'col-span-4') %>
 <% end %>
 <%= turbo_stream.append "home_operators__list" do %>
-  <%= render Clears::Form::NewOperatorButtonComponent.new(squad: squad, create: true) %>
+  <%= render Clears::Form::NewOperatorButtonComponent.new(squad: squad, create: true, class: 'col-span-4') %>
 <% end %>
