@@ -25,7 +25,7 @@ export default class extends Controller {
       });
   }
   embedLink(event, target = null) {
-    target = target || this.videoFrameTarget;
+    target = target || (this.hasVideoFrameTarget && this.videoFrameTarget);
     if (!target) return;
 
     if (!this.linkTarget.value.match(/http.*youtube.*watch\?v=/)) {
