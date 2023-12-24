@@ -19,7 +19,7 @@ default: &default
   encoding: unicode
   # For details on connection pooling, see Rails configuration guide
   # https://guides.rubyonrails.org/configuring.html#database-pooling
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  pool: <%= ENV["GOOD_JOB_MAX_THREADS"] ? ENV["GOOD_JOB_MAX_THREADS"].to_i + 1 + 2 : ENV.fetch("RAILS_MAX_THREADS", 5) %>
 
 development:
   <<: *default
@@ -81,7 +81,7 @@ test:
 #
 production:
   <<: *default
-  database: akclear_production
-  username: akclear
-  url: <%= ENV['DATABASE_URL'] %>
-  password: <%= ENV["AKCLEAR_DATABASE_PASSWORD"] %>
+  database: akclear_development
+  # username: akclear
+  # url: <%= ENV['DATABASE_URL'] %>
+  # password: <%= ENV["AKCLEAR_DATABASE_PASSWORD"] %>

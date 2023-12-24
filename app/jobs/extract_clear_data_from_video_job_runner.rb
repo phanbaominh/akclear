@@ -1,6 +1,12 @@
 class ExtractClearDataFromVideoJobRunner < ApplicationJob
+  include GoodJob::ActiveJobExtensions::Concurrency
   include Dry::Monads[:result]
-  queue_as :system
+  queue_as :system_serial
+  good_job_control_concurrency_with(
+    # need to limit to 1 due to OOM, need to optimize before increasing
+    perform_limit: 1,
+    key: -> { 'extract_clear_data_from_video_job' }
+  )
 
   def perform(job_id)
     job = ExtractClearDataFromVideoJob.find_by(id: job_id)
