@@ -4,7 +4,7 @@
 <% end %>
 <section class="card mb-8 md:mb-4 md:shadow-xl static">
   <div class="md:card-body md:bg-base-200">
-    <%= render Primer::TabsComponent.new(tab_names: ['basic', 'detailed'], hidden_class: 'hidden sm:hidden') do |tabs_comp| %>
+    <%= render Primer::TabsComponent.new(tab_names: ['basic', 'detailed'], hidden_class: 'hidden sm:hidden', default_tab_name: default_tab_name) do |tabs_comp| %>
       <%= tabs_comp.with_content_with_tabs do %>
         <%= simple_form_for clear_spec, method: :get, html: {
           id: "clears__form",
@@ -29,11 +29,11 @@
           <%= (f.input :favorited, as: :hidden) if clear_spec.favorited %>
           <%= f.input :channel_id, as: :hidden %>
           <div class="js-only">
-            <%= content_tag :div, class: 'sm:block',
+            <%= content_tag :div, class: "sm:block #{'sm:hidden' if stageable_selected? }",
               data: { **stimulus_attrs(:tabber, target: 'tab'), tab_name: 'basic' } do %>
               <%= render Clears::StageSelectComponent.new(form: f, simple: true) %>
             <% end %>
-            <%= content_tag :div, class: 'hidden sm:block sm:hidden',
+            <%= content_tag :div, class: "hidden sm:block #{'sm:hidden' unless stageable_selected? }",
               data: { **stimulus_attrs(:tabber, target: 'tab'), tab_name: 'detailed' } do %>
               <%= render Clears::StageSelectComponent.new(form: f) %>
             <% end %>
