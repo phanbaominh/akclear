@@ -14,7 +14,8 @@
 <% end %>
 <%= turbo_stream.append "home_operators__list" do %>
   <%= render Clears::UsedOperatorMiniComponent.new(
-    used_operator: @used_operator
+    used_operator: @used_operator,
+    deletable: true
   ) %>
 <% end %>
 <%= turbo_stream.append "detailed_operators__list" do %>

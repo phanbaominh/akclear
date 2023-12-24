@@ -2,7 +2,7 @@ FactoryBot.define do
   factory :clear do
     submitter factory: :user
     channel
-    link { 'https://www.youtube.com/watch?v=0' }
+    sequence(:link) { |i| "https://www.youtube.com/watch?v=#{i}" }
     transient do
       sequence(:code) { |i| "0-#{i}" }
     end
