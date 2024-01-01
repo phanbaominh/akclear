@@ -32,7 +32,7 @@ module.exports = {
     require("daisyui"),
   ],
   daisyui: {
-    themes: ["light", "dark"],
+    themes: ["dark"], // TODO: add back light theme
   },
   darkMode: "class",
 };
