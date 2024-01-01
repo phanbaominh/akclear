@@ -1,7 +1,6 @@
 # README
-
 ## Introduction
-Stage clear videos aggerator for Arknights
+Stage clear videos aggerator for Arknights - https://battlerecords.cc/
 ## Dependencies
 - Ruby 3.1.3
 - Rails 7.0.4.3
@@ -9,6 +8,7 @@ Stage clear videos aggerator for Arknights
 ## Setup
 - Run `bundle`
 - Run `bin/rails db:setup`
+- Run `npm install`
 ## Development
 - Start up vite server `bin/vite dev`
 - Start up rails service `bin/rails s`
