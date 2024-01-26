@@ -13,7 +13,7 @@ class ClearImage
         NAME = :name
       ].freeze
       COMPONENTS_TO_BASE_BOUNDING_BOXES = {
-        # x, y, width, height
+        # x, y, width, height counting from top left of card
         SKILL => BoundingBox.new(125.0, 315.0, 53.0, 53.0),
         LEVEL => BoundingBox.new(7.0, 319.0, 58.0, 42.0), # [11.0, 328.0, 50.0, 34.0]]
         ELITE => BoundingBox.new(0, 239.0, 75.0, 62.0),
@@ -26,13 +26,20 @@ class ClearImage
 
       attr_reader :word
 
-      def self.guess_dist(first_name_line, second_name_line)
+      def self.guess_dist(first_name_line, second_name_line, image)
         all_name_boxes = first_name_line + second_name_line
         lower_bound_of_dist = all_name_boxes.max_by(&:width).width
+        all_name_boxes.each_with_index do |box, i|
+          Logger.copy_image(image.crop(*box.to_arr), "box#{i}.png")
+        end
         # figure out a way to deal with word missing
         # [first_name_line, second_name_line]
         #   .map { |line| line.minimum_dist_between_word(lower_bound_of_dist) }.min
+
+        Logger.log('lower_bound_of_dist', lower_bound_of_dist)
+
         dists_between_words = (first_name_line + second_name_line).dists_between_words(lower_bound_of_dist)
+        Logger.log('dist between words', dists_between_words)
         lower_bound_of_dist = dists_between_words.min
         Utils.average(dists_between_words.select do |dist|
                         dist < lower_bound_of_dist * Constants::UPPER_BOUND_CARD_DIST_RATIO
@@ -124,6 +131,13 @@ class ClearImage
         @components_to_real_bounding_boxes ||=
           COMPONENTS_TO_BASE_BOUNDING_BOXES.transform_values do |base_bounding_box|
             real_bounding_box(base_bounding_box).translate(x:, y:)
+
+            # Translate A to the correct real position of  T
+            #  ----------
+            # |A|
+            # |  |T|
+            # |
+            #  ----------
           end
       end
 

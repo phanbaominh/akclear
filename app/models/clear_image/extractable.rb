@@ -1,26 +1,45 @@
 class ClearImage
   module Extractable
+    ELITE_0_REFERENCE_IMAGE_PATH = Rails.root.join('app/javascript/images/elite0_reference.png')
+    ELITE_1_REFERENCE_IMAGE_PATH = Rails.root.join('app/javascript/images/elite1_reference.png')
     def extract
       p 'Processing image for extraction...'
 
       processed_image = Extracting::Processor.make_names_white_on_black(image).write(tmp_file_path)
 
+      logger.copy_image(processed_image, 'make_names_white_on_black.png')
+
       extract_name_lines
+
+      logger.log('First name lines', name_lines)
       # binding.pry
-      processed_image = Extracting::Processor
-                        .paint_white_in_between_names(processed_image, *name_lines)
+      # processed_image = Extracting::Processor
+      #                   .paint_white_in_between_names(processed_image, *name_lines)
+      # logger.copy_image(processed_image, 'paint_white_in_between_names.png')
 
       processed_image = Extracting::Processor
-                        .paint_white_over_non_names(processed_image, *name_lines_bounding_boxes).write(tmp_file_path)
+                        .paint_white_over_non_names(processed_image, *name_lines).write(tmp_file_path)
+      logger.copy_image(processed_image, 'paint_white_over_non_names.png')
 
       @lined = true
       p 'Extracting image...'
 
       extract_name_lines
+      logger.log('Second name lines', name_lines)
 
-      # binding.pry
+      boundary_lines = Extracting::Processor.get_name_boundary_lines(image, *name_lines)
+      processed_image = Extracting::Processor
+                        .paint_white_over_non_names(processed_image, *name_lines).write(tmp_file_path)
+      logger.copy_image(processed_image, 'paint_white_over_non_names_2.png')
 
-      extract_operators_data_based_on_name_lines
+      extract_name_lines(boundary_lines)
+      logger.log('Third name lines', name_lines)
+
+      result = extract_operators_data_based_on_name_lines
+
+      logger.finish
+
+      result
 
       # extract_operators_data_from_all_possible_operator_cards_bounding_boxes
 
@@ -31,23 +50,48 @@ class ClearImage
 
     attr_reader :name_lines, :operators_data_from_all_possible_operator_cards_bounding_boxes
 
+    def logger
+      @logger ||= Logger
+    end
+
     def extract_operators_data_based_on_name_lines
+      distance_between_operator_card = get_distance_between_operator_card
+      first = true
       name_lines.map do |line|
-        # line = line.filter_out_noises(distance_between_operator_card, image.columns)
+        # line = line.filter_out_noises(get_distance_between_operator_card, image.columns)
         line.map do |name_box|
           box = Extracting::OperatorCardBoundingBox.new(distance_between_operator_card,
                                                         name_bounding_box: name_box)
-          Extracting::OperatorExtractor.new(box, image, reader).extract
+
+          if first
+            elite_bb = box.elite_bounding_box
+            first = false
+            @elite_0_image = elite_0_image.scale(elite_bb.width, elite_bb.height)
+            @elite_1_image = elite_1_image.scale(elite_bb.width, elite_bb.height)
+          end
+          Extracting::OperatorExtractor.new(box, image, reader, operators, elite_0_image, elite_1_image).extract
         end
-      end.flatten
+      end.flatten.compact
+    end
+
+    def operators
+      @operators ||= Operator.i18n.pluck(:id, :name).map { |id, name| [id, name.gsub(/\s+/, '')] }
+    end
+
+    def elite_1_image
+      @elite_1_image ||= Magick::ImageList.new(ELITE_1_REFERENCE_IMAGE_PATH).first
+    end
+
+    def elite_0_image
+      @elite_0_image ||= Magick::ImageList.new(ELITE_0_REFERENCE_IMAGE_PATH).first
     end
 
     def extract_operators_data_from_all_possible_operator_cards_bounding_boxes
       @operators_data_from_all_possible_operator_cards_bounding_boxes =
         name_lines.each_with_object([]) do |line, result|
-          # line = line.filter_out_noises(distance_between_operator_card, image.columns)
+          # line = line.filter_out_noises(get_distance_between_operator_card, image.columns)
           line.each do |name_box|
-            ref_card_box = Extracting::OperatorCardBoundingBox.new(distance_between_operator_card,
+            ref_card_box = Extracting::OperatorCardBoundingBox.new(get_distance_between_operator_card,
                                                                    name_bounding_box: name_box)
             operators_data_based_on_ref_box =
               Extracting::OperatorCardBoundingBox.guess_all_boxes(ref_card_box, image).map do |box|
@@ -81,8 +125,8 @@ class ClearImage
       @reader ||= Extracting::Reader.new(image)
     end
 
-    def distance_between_operator_card
-      Extracting::OperatorCardBoundingBox.guess_dist(*name_lines)
+    def get_distance_between_operator_card
+      Extracting::OperatorCardBoundingBox.guess_dist(*name_lines, image)
     end
 
     def name_lines_bounding_boxes
@@ -98,15 +142,29 @@ class ClearImage
       # end
     end
 
-    def extract_name_lines
+    def extract_name_lines(boundary_lines = nil)
+      @extract_name_line_count ||= 0
+      @extract_name_line_count += 1
       @name_lines = extract_word_lines
                     .sort_by { |line| line.merge.word.length }
                     .last(2)
                     .sort_by { |line| line.merge.y }
+      return unless boundary_lines
+
+      @name_lines.each_with_index do |line, i|
+        line.y = boundary_lines[i].first
+      end
     end
 
     def extract_word_lines
-      Extracting::WordProcessor.group_words_into_lines(extract_words)
+      words = extract_words
+      logger.log('words:', words)
+      Extracting::WordProcessor
+        .group_words_into_lines(words, allowed_box_conf:)
+    end
+
+    def allowed_box_conf
+      @extract_name_line_count == 1 ? 70 : 30
     end
 
     def extract_words

@@ -13,7 +13,7 @@ class Operator < ApplicationRecord
   end
 
   def inspect
-    "OP-#{game_id} #{skill_game_ids}"
+    "OP-#{name} #{skill_game_ids}"
   end
 
   # put here instead of Translatable because of to override reader of Mobility

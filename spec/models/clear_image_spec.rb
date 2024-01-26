@@ -1,6 +1,11 @@
 require 'rails_helper'
 
-describe ClearImage, :slow do
+def generate_test_from_name(name, locale:)
+  operator = Operator.find_by("name ILIKE '%#{name}%'")
+  [operator.name(locale:), operator.skill_game_ids, operator.rarity]
+end
+
+describe ClearImage do
   let(:clear_image) { described_class.new(image_path) }
 
   # problem: ignore frequents words? case in point La Pluma turned into La Plum
@@ -31,7 +36,7 @@ describe ClearImage, :slow do
           ['Chongyue', 80, 1, 1, %w[skchr_chyue_1 skchr_chyue_2 skchr_chyue_3], Operator::Rarifiable::SIX_STARS],
           ['Noir Corne', 30, 0, nil, [], Operator::Rarifiable::TWO_STARS],
           ['Arene', 60, 1, 1, %w[skchr_spikes_1 skchr_spikes_2], Operator::Rarifiable::FOUR_STARS],
-          ['Zima', 45, 1, 1, ['skcom_charge_cost[3]', 'skchr_headbr_2'], Operator::Rarifiable::FIVE_STARS],
+          ['Zima', 45, 2, 1, ['skcom_charge_cost[3]', 'skchr_headbr_2'], Operator::Rarifiable::FIVE_STARS], # real elite is 1
           ['Bagpipe', 60, 2, 3, ['skcom_quickattack[3]', 'skchr_bpipe_2', 'skchr_bpipe_3'],
            Operator::Rarifiable::SIX_STARS],
           ['THRM-EX', 30, 0, nil, [], Operator::Rarifiable::ONE_STAR]
@@ -50,23 +55,26 @@ describe ClearImage, :slow do
       let(:operators) do
         [
           # name, level, elite, skill, skill_game_ids
-          ['クルース', 55, 1, 1, ['skchr_kroos_1'], Operator::Rarifiable::THREE_STARS],
-          ['ポプカル', 55, 1, 1, ['skcom_atk_up[1]'], Operator::Rarifiable::THREE_STARS],
-          ['アンセル', 55, 1, 1, ['skcom_range_extend'], Operator::Rarifiable::THREE_STARS],
-          ['カーディ', 55, 1, 1, ['skcom_heal_self[1]'], Operator::Rarifiable::THREE_STARS],
-          ['テンニンカ', 3, 0, 1, ['skcom_assist_cost[2]', 'skchr_myrtle_2'], Operator::Rarifiable::FOUR_STARS], # correct level: 30, elite: 2
+          ['ムリナール', 90, 2, 3, %w[skchr_mlynar_1 skchr_mlynar_2 skchr_mlynar_3], Operator::Rarifiable::SIX_STARS],
+          ['カタパルト', 55, 1, 1, ['skchr_catap_1'], Operator::Rarifiable::THREE_STARS],
+          ['ラヴァ', 55, 1, 1, ['skcom_magic_rage[1]'], Operator::Rarifiable::THREE_STARS],
+          ['ミッドナイト', 55, 1, 1, ['skchr_midn_1'], Operator::Rarifiable::THREE_STARS],
           ['プリュム', 55, 1, 1, ['skcom_quickattack[1]'], Operator::Rarifiable::THREE_STARS],
-          ['ハイビスカス', 5, 0, 1, ['skcom_heal_up[1]'], Operator::Rarifiable::THREE_STARS], #  correct elite: 1, level: 55
-          ['ジェシカ', 60, 1, 1, %w[skchr_jesica_1 skchr_jesica_2], Operator::Rarifiable::FOUR_STARS],
-          ['グラベル', 30, 2, 2, %w[skchr_gravel_1 skchr_gravel_2], Operator::Rarifiable::FOUR_STARS],
-          ['ケルシー', 90, 2, 3, %w[skchr_kalts_1 skchr_kalts_2 skchr_kalts_3], Operator::Rarifiable::SIX_STARS]
+          ['カシャ', 60, 2, 2, ['skcom_atk_up[2]', 'skchr_cammou_2'], Operator::Rarifiable::FOUR_STARS], # correct elite: 1
+          ['ハイビスカス', 55, 1, 1, ['skcom_heal_up[1]'], Operator::Rarifiable::THREE_STARS],
+          ['クルース', 55, 1, 1, ['skchr_kroos_1'], Operator::Rarifiable::THREE_STARS],
+          ['カーディ', 55, 1, 1, ['skcom_heal_self[1]'], Operator::Rarifiable::THREE_STARS],
+          ['メランサ', 55, 1, 1, %w[skcom_atk_up[1]], Operator::Rarifiable::THREE_STARS],
+          ['フェン', 55, 1, 1, ['skcom_charge_cost[1]'], Operator::Rarifiable::THREE_STARS]
         ]
       end
-      let(:image_path) { 'spec/fixtures/images/jp_clear.png' }
+      let(:image_path) { 'spec/fixtures/images/jp_clear.jpg' }
 
       it 'returns correct attributes' do
-        I18n.with_locale(:jp) { get_expected_result }
-        expect(received_result).to match_array(get_expected_result)
+        I18n.with_locale(:jp) do
+          get_expected_result
+          expect(received_result).to match_array(get_expected_result)
+        end
       end
     end
   end

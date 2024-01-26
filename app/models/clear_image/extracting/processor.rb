@@ -14,11 +14,16 @@ class ClearImage
             .tap { |i| i.alpha(OffAlphaChannel) } # remove alpha
         end
 
-        def paint_white_over_non_names(image, first_name_line_bounding_box, second_name_line_bounding_box)
-          first_line, second_line = [first_name_line_bounding_box, second_name_line_bounding_box].map do |line|
+        def get_name_boundary_lines(image, first_name_line, second_name_line)
+          [first_name_line, second_name_line].map do |line|
             [get_line(image, line), get_line(image, line, reverse: true)]
           end
+        end
 
+        def paint_white_over_non_names(image, first_name_line, second_name_line)
+          first_line, second_line = get_name_boundary_lines(image, first_name_line, second_name_line)
+
+          topline_1 = BoundingBox.new(0, first_line[0] - 2, image.columns, 1)
           first_non_name_bounding_box =
             (if first_line[0] > 0
                BoundingBox.new(0, 0, image.columns,
@@ -28,6 +33,7 @@ class ClearImage
             0, first_line[1] + 3, image.columns, y_end: second_line[0] - 1
           )
           underline_1 = BoundingBox.new(0, first_line[1] + 1, image.columns, 1)
+          topline_2 = BoundingBox.new(0, second_line[0] - 2, image.columns, 1)
           last_non_name_bounding_box = (if second_line[0] < image.rows
                                           BoundingBox.new(
                                             0, second_line[1] + 1, image.columns, y_end: image.rows - 1
@@ -37,17 +43,17 @@ class ClearImage
           tmp = [first_non_name_bounding_box, second_non_name_bounding_box,
                  last_non_name_bounding_box]
                 .compact.reduce(image) do |result_image, bounding_box|
-            fill_bounding_box_with_target_color(result_image, bounding_box, white_pixel)
+            fill_bounding_box_with_target_color(result_image, bounding_box, 'white')
           end
-          [underline_1, underline_2].reduce(tmp) do |result_image, underline|
-            fill_bounding_box_with_target_color(result_image, underline, Pixel.from_color('black'))
+          [topline_1, topline_2, underline_1, underline_2].reduce(tmp) do |result_image, underline|
+            fill_bounding_box_with_target_color(result_image, underline, 'black')
           end
         end
 
         def paint_white_in_between_names(image, first_name_line_bounding_box, second_name_line_bounding_box)
           [*get_inbetween_boxes(first_name_line_bounding_box),
            *get_inbetween_boxes(second_name_line_bounding_box)].reduce(image) do |result_image, bounding_box|
-            fill_bounding_box_with_target_color(result_image, bounding_box, white_pixel)
+            fill_bounding_box_with_target_color(result_image, bounding_box, 'white')
           end
         end
 
@@ -63,13 +69,20 @@ class ClearImage
           end
         end
 
-        def get_line(image, line_bounding_box, reverse: false)
-          line_bounding_box.parts.map do |part|
-            get_last_white_line(image, part, reverse:)
-          end.send(reverse ? :max : :min)
+        def get_line(_image, line_bounding_box, reverse: false)
+          part = if reverse
+                   line_bounding_box.max_by { |part| part.y + part.height }
+                 else
+                   line_bounding_box.max_by(&:y)
+                 end
+          ap part
+          # image.crop(*part.to_arr).write("tmp/clear_image/#{reverse}_#{part.y}.png")
+          # get_last_white_line(image, part, reverse:)
+          reverse ? part.y_end : part.y
         end
 
         def get_last_white_line(image, box, reverse: false)
+          ap box
           width = box.width
           c = 0
           has_black = false
@@ -92,10 +105,12 @@ class ClearImage
           box.y + l
         end
 
-        def fill_bounding_box_with_target_color(image, bounding_box, pixel)
+        def fill_bounding_box_with_target_color(image, bounding_box, color)
           x, y, columns, rows = bounding_box.to_arr
-          pixels = image.get_pixels(x, y, columns, rows).map { pixel }
-          image.store_pixels(x, y, columns, rows, pixels)
+          f = Image.new(columns, rows) { |options| options.background_color = color }
+          image.composite(f, x, y, Magick::UndefinedCompositeOp)
+          # pixels = image.get_pixels(x, y, columns, rows).map { pixel }
+          # image.store_pixels(x, y, columns, rows, pixels)
         end
 
         def white_pixel
