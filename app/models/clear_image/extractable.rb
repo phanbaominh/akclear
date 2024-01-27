@@ -3,6 +3,7 @@ class ClearImage
     ELITE_0_REFERENCE_IMAGE_PATH = Rails.root.join('app/javascript/images/elite0_reference.png')
     ELITE_1_REFERENCE_IMAGE_PATH = Rails.root.join('app/javascript/images/elite1_reference.png')
     def extract
+      logger.start(image_filename)
       p 'Processing image for extraction...'
 
       processed_image = Extracting::Processor.make_names_white_on_black(image).write(tmp_file_path)
@@ -39,6 +40,7 @@ class ClearImage
 
       logger.finish
 
+      logger.log('result:', result)
       result
 
       # extract_operators_data_from_all_possible_operator_cards_bounding_boxes
@@ -56,6 +58,7 @@ class ClearImage
 
     def extract_operators_data_based_on_name_lines
       distance_between_operator_card = get_distance_between_operator_card
+      logger.log('final distance_between_operator_card:', distance_between_operator_card)
       first = true
       name_lines.map do |line|
         # line = line.filter_out_noises(get_distance_between_operator_card, image.columns)
@@ -75,7 +78,10 @@ class ClearImage
     end
 
     def operators
-      @operators ||= Operator.i18n.pluck(:id, :name).map { |id, name| [id, name.gsub(/\s+/, '')] }
+      @operators ||= 
+        I18n.with_locale(reader.language) do
+          Operator.i18n.pluck(:id, :name).map { |id, name| [id, name.gsub(/\s+/, '')] }
+        end
     end
 
     def elite_1_image
@@ -157,14 +163,15 @@ class ClearImage
     end
 
     def extract_word_lines
-      words = extract_words
+      words = extract_words.reject { |box| box.word =~ /Unit/ }
       logger.log('words:', words)
       Extracting::WordProcessor
         .group_words_into_lines(words, allowed_box_conf:)
     end
 
     def allowed_box_conf
-      @extract_name_line_count == 1 ? 70 : 30
+      return 70 if @extract_name_line_count == 1
+      reader.language == :jp ? 70 : 30
     end
 
     def extract_words
@@ -174,7 +181,11 @@ class ClearImage
     end
 
     def tmp_file_path
-      @tmp_file_path = 'extract_result.png' # Utils.generate_tmp_path(prefix: 'clear_image_extracting', suffix: '.png')
+      @tmp_file_path = "#{image_filename}-extract_result.png" # Utils.generate_tmp_path(prefix: 'clear_image_extracting', suffix: '.png')
+    end
+
+    def image_filename
+      image.filename.split('/').last.split('.').first
     end
   end
 end

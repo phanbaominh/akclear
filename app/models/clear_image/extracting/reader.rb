@@ -35,7 +35,7 @@ class ClearImage
                     .gsub(/^ー*/, '')
                     .gsub(/^[^\p{Latin}\p{Hiragana}\p{Katakana}\p{Han}]*/, '')
         else
-          RTesseract.new(path, psm: '13', lang: tess_language_code).to_s
+          RTesseract.new(path, psm: '11', lang: tess_language_code).to_s.gsub(/\W/, '')
         end
       end
 

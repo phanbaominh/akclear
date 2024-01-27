@@ -38,4 +38,8 @@ class ClearImage::BoundingBox
   def inside?(image)
     x >= 0 && y >= 0 && x_end < image.columns && y_end < image.rows
   end
+
+  def invalid?
+    x < 0 || y < 0
+  end
 end

@@ -4,11 +4,10 @@ class ClearImage
       include Magick
       include TmpFileStorable
 
-
       SKILL_IMAGE_PATH = Rails.root.join('app/javascript/images/skills/')
       NAME_SIMILARITY_THRESHOLD = 0.7
 
-      def initialize(operator_card_bounding_box, image, reader, operators, elite_0_image,  elite_1_image)
+      def initialize(operator_card_bounding_box, image, reader, operators, elite_0_image, elite_1_image)
         @operator_card_bounding_box = operator_card_bounding_box
         @image = image
         @reader = reader
@@ -19,10 +18,13 @@ class ClearImage
 
       def extract
         I18n.with_locale(language) do
-          operator = find_operator(operator_card_bounding_box.word) ||
+          operator = match_operator_with_long_enough_name(operator_card_bounding_box.word) || find_operator(
+            operator_card_bounding_box.word, 0.8
+          ) ||
                      find_operator(get_word_from_box(operator_card_bounding_box.name_bounding_box,
                                                      word: operator_card_bounding_box.word))
 
+          log_box(operator)
           next unless operator
 
           result = { operator: }
@@ -39,6 +41,13 @@ class ClearImage
 
       attr_reader :operator_card_bounding_box, :image, :reader, :operators, :elite_0_image, :elite_1_image
 
+      def log_box(operator)
+        name_box = operator_card_bounding_box.name_bounding_box
+        Logger.log("[#{operator.present?.inspect}] name_box #{operator_card_bounding_box.word}",
+                   name_box.to_arr)
+        Logger.copy_image(image.crop(*name_box.to_arr), "word_#{operator_card_bounding_box.word}.png")
+      end
+
       def tmp_file_path
         @tmp_file_path ||= Rails.root.join('tmp/tmp.png').to_s
       end
@@ -47,18 +56,30 @@ class ClearImage
         reader.language
       end
 
-      def find_most_matched_name(detected_name)
+      def match_operator_with_long_enough_name(detected_name)
+        return unless detected_name.length >= 4
+
+        id = operators.find { |_id, name| name.include?(detected_name) }&.first
+
+        return unless id
+
+        Operator.find(id)
+      end
+
+      def find_most_matched_name(detected_name, similarity_threshold)
         most_matched_name = operator_names.min_by do |name|
           Amatch::Levenshtein.new(name).match(detected_name)
         end
+        similarity = most_matched_name.levenshtein_similar(detected_name)
+        Logger.log(detected_name, ['simlarity', detected_name, most_matched_name, similarity])
 
-        most_matched_name if most_matched_name.levenshtein_similar(detected_name) > NAME_SIMILARITY_THRESHOLD
+        most_matched_name if similarity >= similarity_threshold
       end
 
-      def find_operator(detected_name)
+      def find_operator(detected_name, similarity_threshold = NAME_SIMILARITY_THRESHOLD)
         return unless detected_name
 
-        most_matched_name = find_most_matched_name(detected_name)
+        most_matched_name = find_most_matched_name(detected_name, similarity_threshold)
 
         return unless most_matched_name
 
@@ -74,7 +95,10 @@ class ClearImage
       end
 
       def get_word_from_box(name_box, word: nil)
-        tmp_file_path = "tmp/clear_image/tmp_#{word}_#{name_box.y}_#{name_box.x}.png" # TODO: use correct path
+        return if name_box.invalid?
+
+        tmp_file_path = "tmp/clear_image/#{image.filename.split('/').last.split('.').first}_bw_#{word.gsub(/[\W]/,
+                                                                                                           '')}_box.png"
         Extracting::Processor
           .make_names_white_on_black(
             image.crop(*name_box.to_arr), floodfill_x: name_box.width * 1.2 / 2, floodfill_y: 0
@@ -99,7 +123,8 @@ class ClearImage
       def get_elite_from_image(image, operator)
         greyscaled_image = image.quantize(2, GRAYColorspace)
         detected_elite = if compare_image(greyscaled_image,
-                                          elite_0_image, scaled: true)[0] < compare_image(greyscaled_image, elite_1_image, scaled: true)[0]
+                                          elite_0_image, scaled: true)[0] < compare_image(greyscaled_image,
+                                                                                          elite_1_image, scaled: true)[0]
                            0
                          else
                            color_histogram = greyscaled_image.color_histogram.transform_keys(&:to_color)

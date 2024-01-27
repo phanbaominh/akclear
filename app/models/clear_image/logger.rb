@@ -4,6 +4,14 @@ class ClearImage
     LOG_FILE = "#{LOG_DIR}/log.txt"
 
     class << self
+      def start(filename)
+        return unless should_log?
+
+        File.open(LOG_FILE, 'a') do |f|
+          f.puts("=================Start extracting #{filename}===============")
+        end
+      end
+
       def log(message, object)
         return unless should_log?
 
@@ -16,7 +24,9 @@ class ClearImage
       def copy_image(image, name)
         return unless should_log?
 
-        image.write("#{LOG_DIR}/#{name}")
+        original_filename = image.filename.split('/').last.split('.').first
+
+        image.write("#{LOG_DIR}/#{original_filename}-#{name}")
       end
 
       def finish

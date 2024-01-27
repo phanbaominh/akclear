@@ -26,12 +26,9 @@ class ClearImage
 
       attr_reader :word
 
-      def self.guess_dist(first_name_line, second_name_line, image)
+      def self.guess_dist(first_name_line, second_name_line, _image)
         all_name_boxes = first_name_line + second_name_line
         lower_bound_of_dist = all_name_boxes.max_by(&:width).width
-        all_name_boxes.each_with_index do |box, i|
-          Logger.copy_image(image.crop(*box.to_arr), "box#{i}.png")
-        end
         # figure out a way to deal with word missing
         # [first_name_line, second_name_line]
         #   .map { |line| line.minimum_dist_between_word(lower_bound_of_dist) }.min
@@ -40,10 +37,21 @@ class ClearImage
 
         dists_between_words = (first_name_line + second_name_line).dists_between_words(lower_bound_of_dist)
         Logger.log('dist between words', dists_between_words)
-        lower_bound_of_dist = dists_between_words.min
-        Utils.average(dists_between_words.select do |dist|
-                        dist < lower_bound_of_dist * Constants::UPPER_BOUND_CARD_DIST_RATIO
-                      end)
+
+        max_size = 0
+        result = lower_bound_of_dist
+        dists_between_words.sort.each do |dist|
+          lower_bound_of_dist = dist
+          within_current_min = dists_between_words.select do |d|
+            d < lower_bound_of_dist * Constants::UPPER_BOUND_CARD_DIST_RATIO &&
+              d >= lower_bound_of_dist
+          end
+          if within_current_min.size >= max_size
+            max_size = within_current_min.size
+            result = Utils.average(within_current_min)
+          end
+        end
+        result
       end
 
       def self.guest_most_accurate_name_bounding_box(name_bounding_boxes)
