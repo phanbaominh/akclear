@@ -1,0 +1,118 @@
+<img id="image_frame" class="hidden fixed z-50 m-auto top-[50%] left-[50%]">
+<%= link_to t('.view_other_results'), admin_clear_test_run_clear_test_results_path(@clear_test_run), class: 'btn btn-neutral w-fit' %>
+<section class="test-result">
+  <div class="flex justify-between">
+    <% if @clear_test_result.prev_result_test_case_id %>
+      <%= link_to admin_clear_test_run_clear_test_result_path(@clear_test_run, @clear_test_result.prev_result_test_case_id), class: 'btn' do %>
+        <%= heroicon 'arrow-left' %>
+      <% end %>
+    <% else %>
+      <div></div>
+    <% end %>
+    <% if @clear_test_result.next_result_test_case_id %>
+      <%= link_to admin_clear_test_run_clear_test_result_path(@clear_test_run, @clear_test_result.next_result_test_case_id), class: 'btn' do %>
+        <%= heroicon 'arrow-right' %>
+      <% end %>
+    <% else %>
+      <div></div>
+    <% end %>
+  </div>
+  <section>
+    <h3 class="text-xl"><%= t('.summary') %></h3>
+    <div>
+      <%= @clear_test_result.test_case_id %> -
+      <%= @clear_test_result.status %> - 
+      <%= @clear_test_result.language %>
+    </div>
+    <div>
+      <%= "#{t('.correct_ratio')}: #{@clear_test_result.correct_ratio}%" %>
+    </div>
+    <%= render Admin::ImageComponent.new(path: @clear_test_result.clear_image_src, width: '500px') %>
+  </section>
+  <div class="divider"></div>
+  <section class="mt-2">
+    <h3 class="text-xl"> <%= t('.artifact_images') %></h3>
+    <div class="flex space-x-2">
+      <% @clear_test_result.artifact_image_srcs.each do |src| %>
+        <%= render Admin::ImageComponent.new(path: src, width: '200px') %>
+      <% end %>
+    </div>
+  </section>
+  <section class="mt-2">
+    <h3 class="text-xl"> <%= t('.name_box_images') %></h3>
+    <div class="flex flex-wrap gap-1">
+      <% @clear_test_result.name_box_image_srcs.each do |src| %>
+        <div class="p-2 border border-neutral">
+          <%= render Admin::ImageComponent.new(path: src, width: '100px') %>
+        </div>
+      <% end %>
+    </div>
+  </section>
+  <div class="mt-2">
+    <section class="card bg-base-200">
+      <div class="card-body">
+        <h3 class="card-title text-warning"> <%= "#{t(".failed_operators")}: #{@clear_test_result.failed_operators.size}" %></h3>
+        <div class="flex flex-wrap gap-2">
+          <% @clear_test_result.failed_operators.each do |(expected_used_operator, received_used_operator)| %>
+            <div class="flex space-x-2">
+              <article
+                class="operators__card  card w-full sm:w-fit "
+                data-operator-id="<%= received_used_operator.operator_id %>"
+              >
+                <div class="card-body shadow-xl bg-base-100 rounded p-3 sm:w-fit">
+                  <% I18n.with_locale(@clear_test_result.language) do %>
+                    <h3 class="text-base card-title absolute -bottom-1"> <%= received_used_operator.name %> </h3>
+                  <% end %>
+                  <div class="flex gap-2">
+                    <div class="flex flex-col items-center space-y-1">
+                      <%= image_tag received_used_operator.avatar, class: "w-24", alt: received_used_operator.name %>
+                    </div>
+                    <div class="grid grid-cols-2 grid-rows-2 gap-x-2 text-base sm:text-xl">
+                      <%= vite_image_tag received_used_operator.elite_image_url, class: "w-8 " %>
+                      <% if expected_used_operator.elite != received_used_operator.elite %>
+                        <%= vite_image_tag expected_used_operator.elite_image_url, class: "w-8 " %>
+                      <% else %>
+                        <span></span>
+                      <% end %>
+                      <span class="mt-1 "><%= received_used_operator.level %></span>
+                      <span class="mt-1 "><%= (expected_used_operator.level if received_used_operator.level != expected_used_operator.level)  %></span>
+                      <%= image_tag received_used_operator.skill_image_url, class: "w-7" %>
+                      <% if received_used_operator.skill != expected_used_operator.skill %>
+                        <%= image_tag (expected_used_operator.skill_image_url ), class: "w-7" %>
+                      <% end %>
+                    </div>
+                  </div>
+                </div>
+              </article>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div>
+    <% {
+      missing_operators: [@clear_test_result.missing_operators, 'error'],
+      passed_operators: [@clear_test_result.passed_operators, 'success'],
+    }.each do |key, (operators, color_key)| %>
+      <section class="card bg-base-200 mt-2">
+        <div class="card-body">
+          <h3 class="card-title text-<%= color_key %>"> <%= "#{t(".#{key}")}: #{operators.size}" %></h3>
+          <div class="flex flex-wrap gap-2">
+            <% operators.each do |used_operator| %>
+              <% I18n.with_locale(@clear_test_result.language) do %>
+                <%= render Clears::UsedOperatorComponent.new(used_operator: used_operator, editable: false) %>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      </section>
+    <% end %>
+  </div>
+  <%= button_to admin_clear_test_case_path(@clear_test_result.test_case_id), method: :PATCH, class: 'btn btn-primary self-end' do |f|%>
+    <%= simple_fields_for Clear::TestCase.new  do |f| %>
+      <%= f.input :test_run_id, as: :hidden, input_html: { value: @clear_test_result.test_run_id }  %>
+      <%= t('.update_test_case') %>
+    <% end %>
+  <% end %>
+</section>

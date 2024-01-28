@@ -21,6 +21,7 @@ class ClearImage
         end
 
         def paint_white_over_non_names(image, first_name_line, second_name_line)
+          p [first_name_line, second_name_line]
           first_line, second_line = get_name_boundary_lines(image, first_name_line, second_name_line)
 
           topline_1 = BoundingBox.new(0, first_line[0] - 2, image.columns, 1)
@@ -107,6 +108,11 @@ class ClearImage
 
         def fill_bounding_box_with_target_color(image, bounding_box, color)
           x, y, columns, rows = bounding_box.to_arr
+
+          return image if columns.zero? || rows.zero?
+
+          x = x.clamp(0, image.columns - 1)
+          y = y.clamp(0, image.rows - 1)
           f = Image.new(columns, rows) { |options| options.background_color = color }
           image.composite(f, x, y, Magick::UndefinedCompositeOp)
           # pixels = image.get_pixels(x, y, columns, rows).map { pixel }

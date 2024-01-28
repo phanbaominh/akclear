@@ -1,9 +1,10 @@
 class ClearImage
   include Extractable
-  # include TmpFileStorable
+  include TmpFileStorable
 
   def initialize(path)
     @path = path
+    Logger.dir_path_for_current_thread = path.parent.to_s
   end
 
   def used_operators_data
@@ -15,6 +16,6 @@ class ClearImage
   attr_reader :path
 
   def image
-    @image ||= Magick::ImageList.new(path)
+    @image ||= Magick::ImageList.new(path.to_s)
   end
 end

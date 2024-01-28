@@ -17,6 +17,10 @@ Rails.application.routes.draw do
       resources :videos_imports, only: %i[new create]
       resource :clear_from_job, only: %i[new]
       resources :users, only: %i[index update edit show]
+      resources :clear_test_cases, only: %i[index show update]
+      resources :clear_test_runs, only: %i[new create show destroy] do
+        resources :clear_test_results, only: %i[index show]
+      end
     end
     resources :sessions, only: %i[index show destroy]
     resource  :password, only: %i[edit update]

@@ -2,7 +2,7 @@ module Clears
   class GetClearImageFromVideo < ApplicationService
     def initialize(video, clear_image_path: nil)
       @video = video
-      @clear_image_path = clear_image_path
+      @clear_image_path = clear_image_path.to_s.presence
     end
 
     def call

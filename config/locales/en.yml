@@ -149,6 +149,36 @@ en:
         success: "Job was successfully created."
       destroy:
         success: "Job was successfully deleted."
+    clear_test_runs:
+      title: 'Clear test runs'
+      new:
+        submit: 'Run'
+        test_case_count:
+          zero: "No test cases"
+          one: "1 test case"
+          other: "%{count} test cases"
+      show:
+        total:
+          zero: "No test cases"
+          one: "1 test case"
+          other: "%{count} test cases"
+        passed:
+          zero: "0 passed"
+          one: "1 passed"
+          other: "%{count} passed"
+        failed:
+          zero: "0 failed"
+          one: "1 failed"
+          other: "%{count} failed"
+    clear_test_cases:
+      index:
+        test_case: "Test case %{id}"
+    clear_test_results:
+      show:
+        correct_ratio: 'Correct ratio'
+        passed_operators: "Passed operators"
+        failed_operators: "Failed operators"
+        missing_operators: "Missing operators"
     users:
       title: "Users"
       update:
@@ -391,6 +421,7 @@ en:
       label: "Stage type"
     environment_field:
       label: "Environment"
+    use_for_test_case_field: 'Use for test case?'
   used_operator_form:
     skill_level: "Level %{skill_level}"
     skill_mastery: "Mastery %{skill_mastery}"

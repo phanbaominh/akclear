@@ -1,0 +1,6 @@
+<div data-tip="<%= @path.split('/').last %>" class="tooltip"  >
+  <%= image_tag @path, 
+  data: { **stimulus(:image, actions: { click: 'enlarge', 'keydown.esc': 'minimize', 'focusout': 'minimize'}) },
+  class: 'cursor-pointer', tabindex: 0, **@options 
+  %>
+</div>

@@ -51,3 +51,5 @@ Metrics/CyclomaticComplexity:
   Enabled: false
 BlockGivenWithExplicitBlock:
   Enabled: false
+Metrics/ClassLength:
+  Enabled: false

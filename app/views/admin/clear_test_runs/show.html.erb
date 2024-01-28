@@ -1,0 +1,20 @@
+<section class="">
+  <h2 ><%= t('.title', id: @test_run.id) %></h2>
+  <div class="card bg-base-200">
+    <section class="card-body">
+      <h3 class="card-title"><%= t('summary') %></h3>
+      <div> <%= t('.total', count: @test_run.test_results.size) %></div>
+      <div> <%= t('.passed', count: @test_run.data[:success_count].to_i) %></div>
+      <div> <%= t('.failed', count: @test_run.data[:failed_count].to_i) %></div>
+    </section>
+  </div>
+  <%= link_to t('.view_test_results'), admin_clear_test_run_clear_test_results_path(@test_run), class: 'btn btn-primary' %>
+  <%= button_to admin_clear_test_runs_path, class: 'btn btn-primary' do %>
+    <%= simple_fields_for @test_run do |f| %>
+      <% @test_run.test_case_ids.each do |test_case_id| %>
+        <%= f.input_field "test_case_ids", as: :hidden, name: 'clear_test_run[test_case_ids][]', value: test_case_id %>
+      <% end %>
+      <%= t('.rerun') %>
+    <% end %>
+  <% end %>
+</section>

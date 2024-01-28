@@ -18,16 +18,13 @@ class ClearImage
 
       def extract
         I18n.with_locale(language) do
-          operator = match_operator_with_long_enough_name(operator_card_bounding_box.word) || find_operator(
-            operator_card_bounding_box.word, 0.8
-          ) ||
-                     find_operator(get_word_from_box(operator_card_bounding_box.name_bounding_box,
-                                                     word: operator_card_bounding_box.word))
+          operator = match_operator_with_long_enough_name(box_word) || find_operator(box_word, 0.8) ||
+                     find_operator(get_word_from_box)
 
           log_box(operator)
           next unless operator
 
-          result = { operator: }
+          result = { operator_id: operator.id }
           %i[skill level elite].each do |component|
             result[component] =
               send(:"get_#{component}_from_image", image.crop(*operator_card_bounding_box.send("#{component}_bounding_box").to_arr),
@@ -41,15 +38,17 @@ class ClearImage
 
       attr_reader :operator_card_bounding_box, :image, :reader, :operators, :elite_0_image, :elite_1_image
 
-      def log_box(operator)
-        name_box = operator_card_bounding_box.name_bounding_box
-        Logger.log("[#{operator.present?.inspect}] name_box #{operator_card_bounding_box.word}",
-                   name_box.to_arr)
-        Logger.copy_image(image.crop(*name_box.to_arr), "word_#{operator_card_bounding_box.word}.png")
+      def box_word
+        operator_card_bounding_box.word
       end
 
-      def tmp_file_path
-        @tmp_file_path ||= Rails.root.join('tmp/tmp.png').to_s
+      def name_bounding_box
+        operator_card_bounding_box.name_bounding_box
+      end
+
+      def log_box(operator)
+        Logger.log("[#{operator.present?.inspect}] name_bounding_box #{box_word}", name_bounding_box.to_arr)
+        Logger.copy_image(nil, Logger.name_box_file_name(box_word)) { image.crop(*name_bounding_box.to_arr) }
       end
 
       def language
@@ -94,14 +93,12 @@ class ClearImage
         target_image.difference(source_image)
       end
 
-      def get_word_from_box(name_box, word: nil)
-        return if name_box.invalid?
+      def get_word_from_box
+        return if name_bounding_box.invalid?
 
-        tmp_file_path = "tmp/clear_image/#{image.filename.split('/').last.split('.').first}_bw_#{word.gsub(/[\W]/,
-                                                                                                           '')}_box.png"
         Extracting::Processor
           .make_names_white_on_black(
-            image.crop(*name_box.to_arr), floodfill_x: name_box.width * 1.2 / 2, floodfill_y: 0
+            image.crop(*name_bounding_box.to_arr), floodfill_x: name_bounding_box.width * 1.2 / 2, floodfill_y: 0
           ).write(tmp_file_path)
         reader.read_single_name(tmp_file_path)
       end

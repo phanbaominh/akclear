@@ -1,0 +1,19 @@
+<section>
+  <div><span>
+      <%= t('.test_case_count', count: Clear::TestCase.count) %>
+    </span>
+    <%= link_to t('view'), admin_clear_test_cases_path, class: 'btn btn-neutral' %>
+  </div>
+  <div><%= link_to t('.latest_test_run'), admin_clear_test_run_path(Clear::TestRun.order(:id).last) %></div>
+  <%= simple_form_for @test_run, url: admin_clear_test_runs_url do |f| %>
+    <%= content_tag :div, data: { **stimulus(:click_other) } do %>
+      <%= content_tag :button, nil, formmethod: "GET", formaction: new_admin_clear_test_run_path, data: { **stimulus_attrs(:click_other, target: 'clickable') } %>
+      <%= f.input :all, as: :boolean, input_html: { class: '!toggle', data: { **stimulus_attrs(:click_other, actions: { click: 'clickOther' }) } } %>
+      <% unless @test_run.all %>
+        <%= f.input :test_count, as: :integer %>
+      <% end %>
+      <!-- configuration here -->
+    <% end %>
+    <%= f.button :submit, t(".submit") %>
+  <% end %>
+</section>

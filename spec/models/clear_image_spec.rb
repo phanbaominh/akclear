@@ -6,7 +6,7 @@ def generate_test_from_name(name, locale:)
 end
 
 describe ClearImage do
-  let(:clear_image) { described_class.new(image_path) }
+  let(:clear_image) { described_class.new(Pathname.new(image_path)) }
 
   # problem: ignore frequents words? case in point La Pluma turned into La Plum
   # reduce confidence threshold for group line? at least for english
@@ -17,7 +17,7 @@ describe ClearImage do
     let(:get_expected_result) do
       operators.map do |(name, level, elite, skill, skill_game_ids, rarity)|
         {
-          operator: create(:operator, name:, skill_game_ids:, rarity:),
+          operator_id: create(:operator, name:, skill_game_ids:, rarity:).id,
           level:,
           elite:,
           skill:

@@ -2,36 +2,37 @@ class ClearImage
   module Extractable
     ELITE_0_REFERENCE_IMAGE_PATH = Rails.root.join('app/javascript/images/elite0_reference.png')
     ELITE_1_REFERENCE_IMAGE_PATH = Rails.root.join('app/javascript/images/elite1_reference.png')
+    delegate :language, to: :reader
+
     def extract
+      create_tmp_file
       logger.start(image_filename)
       p 'Processing image for extraction...'
 
       processed_image = Extracting::Processor.make_names_white_on_black(image).write(tmp_file_path)
-
-      logger.copy_image(processed_image, 'make_names_white_on_black.png')
+      reader.extract_language(processed_image:)
 
       extract_name_lines
 
+      logger.copy_image(processed_image, Logger::NAME_BLACK_ON_WHITE)
       logger.log('First name lines', name_lines)
-      # binding.pry
-      # processed_image = Extracting::Processor
-      #                   .paint_white_in_between_names(processed_image, *name_lines)
-      # logger.copy_image(processed_image, 'paint_white_in_between_names.png')
+      # processed_image = Extracting::Processor.paint_white_in_between_names(processed_image, *name_lines)
 
       processed_image = Extracting::Processor
                         .paint_white_over_non_names(processed_image, *name_lines).write(tmp_file_path)
-      logger.copy_image(processed_image, 'paint_white_over_non_names.png')
+      logger.copy_image(processed_image, Logger::WHITE_OVER_NON_NAMES_1)
 
       @lined = true
-      p 'Extracting image...'
 
       extract_name_lines
       logger.log('Second name lines', name_lines)
 
+      return [] if name_lines.size != 2
+
       boundary_lines = Extracting::Processor.get_name_boundary_lines(image, *name_lines)
       processed_image = Extracting::Processor
                         .paint_white_over_non_names(processed_image, *name_lines).write(tmp_file_path)
-      logger.copy_image(processed_image, 'paint_white_over_non_names_2.png')
+      logger.copy_image(processed_image, Logger::WHITE_OVER_NON_NAMES_2)
 
       extract_name_lines(boundary_lines)
       logger.log('Third name lines', name_lines)
@@ -46,6 +47,8 @@ class ClearImage
       # extract_operators_data_from_all_possible_operator_cards_bounding_boxes
 
       # combine_extracted_operators_data
+    ensure
+      delete_tmp_file
     end
 
     private
@@ -61,7 +64,6 @@ class ClearImage
       logger.log('final distance_between_operator_card:', distance_between_operator_card)
       first = true
       name_lines.map do |line|
-        # line = line.filter_out_noises(get_distance_between_operator_card, image.columns)
         line.map do |name_box|
           box = Extracting::OperatorCardBoundingBox.new(distance_between_operator_card,
                                                         name_bounding_box: name_box)
@@ -78,7 +80,7 @@ class ClearImage
     end
 
     def operators
-      @operators ||= 
+      @operators ||=
         I18n.with_locale(reader.language) do
           Operator.i18n.pluck(:id, :name).map { |id, name| [id, name.gsub(/\s+/, '')] }
         end
@@ -95,7 +97,6 @@ class ClearImage
     def extract_operators_data_from_all_possible_operator_cards_bounding_boxes
       @operators_data_from_all_possible_operator_cards_bounding_boxes =
         name_lines.each_with_object([]) do |line, result|
-          # line = line.filter_out_noises(get_distance_between_operator_card, image.columns)
           line.each do |name_box|
             ref_card_box = Extracting::OperatorCardBoundingBox.new(get_distance_between_operator_card,
                                                                    name_bounding_box: name_box)
@@ -137,21 +138,14 @@ class ClearImage
 
     def name_lines_bounding_boxes
       name_lines.map(&:merge)
-      # name_lines.map do |line|
-      #   merged = line.merge
-      #   BoundingBox.new(
-      #     merged.x,
-      #     merged.parts.sum(&:y) / merged.parts.size,
-      #     x_end: merged.x_end,
-      #     y_end: merged.parts.sum(&:y_end) / merged.parts.size
-      #   )
-      # end
     end
 
     def extract_name_lines(boundary_lines = nil)
       @extract_name_line_count ||= 0
       @extract_name_line_count += 1
-      @name_lines = extract_word_lines
+      all_word_lines = extract_word_lines
+      logger.log('all_word_lines:', all_word_lines)
+      @name_lines = all_word_lines
                     .sort_by { |line| line.merge.word.length }
                     .last(2)
                     .sort_by { |line| line.merge.y }
@@ -171,6 +165,7 @@ class ClearImage
 
     def allowed_box_conf
       return 70 if @extract_name_line_count == 1
+
       reader.language == :jp ? 70 : 30
     end
 
@@ -178,10 +173,6 @@ class ClearImage
       ocr_word_boxes = @lined ? reader.read_lined_names(tmp_file_path) : reader.read_sparse_names(tmp_file_path)
       word_bounding_boxes = ocr_word_boxes.map { |box| Extracting::WordBoundingBox.new(box) }
       Extracting::WordProcessor.group_near_words_in_same_line(word_bounding_boxes)
-    end
-
-    def tmp_file_path
-      @tmp_file_path = "#{image_filename}-extract_result.png" # Utils.generate_tmp_path(prefix: 'clear_image_extracting', suffix: '.png')
     end
 
     def image_filename
