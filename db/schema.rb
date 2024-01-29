@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_01_27_131840) do
+ActiveRecord::Schema[7.1].define(version: 2024_01_29_134436) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -59,6 +59,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_27_131840) do
     t.string "thumbnail_url"
     t.string "banner_url"
     t.string "uploads_playlist_id"
+    t.integer "clear_language"
     t.index ["external_id"], name: "index_channels_on_external_id", unique: true
     t.index ["user_id"], name: "index_channels_on_user_id"
   end

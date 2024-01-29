@@ -47,7 +47,7 @@ class Clear::TestResult
   end
 
   def used_operators_data
-    data[:used_operators_data]
+    data[:used_operators_data] || []
   end
 
   def test_case_operator_data
@@ -115,7 +115,6 @@ class Clear::TestResult
       File.write(data_path, { status: FAILED, error_message: result.failure }.to_json)
     end
   rescue StandardError => e
-    ap e.backtrace
     File.write(data_path, { status: FAILED, error_message: e.message }.to_json)
   end
 

@@ -3,6 +3,8 @@
 class Channel < ApplicationRecord
   include VideosImportable
 
+  enum :clear_language, en: 0, jp: 1
+
   belongs_to :user, optional: true
   has_many :clears, dependent: :nullify
   validates :external_id, presence: true, uniqueness: true

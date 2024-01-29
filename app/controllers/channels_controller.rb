@@ -22,8 +22,11 @@ class ChannelsController < ApplicationController
     @channel = Channel.new
   end
 
+  def edit; end
+
   def create
     @channel = Channel.from_external_id(@channel.external_id)
+    @channel.clear_language = channel_params[:clear_language]
     if !@channel.persisted? && @channel.save
       respond_to do |format|
         format.html { redirect_to @channel, notice: t('.success') }
@@ -32,6 +35,17 @@ class ChannelsController < ApplicationController
     else
       @channel.errors.add(:external_id, :taken) if @channel.persisted?
       render :new, status: :unprocessable_entity
+    end
+  end
+
+  def update
+    if @channel.update(channel_params.except(:external_id))
+      respond_to do |format|
+        format.html { redirect_to @channel, notice: t('.success') }
+        format.turbo_stream
+      end
+    else
+      render :edit, status: :unprocessable_entity
     end
   end
 
@@ -46,6 +60,8 @@ class ChannelsController < ApplicationController
   private
 
   def channel_params
-    params.require(:channel).permit(:external_id)
+    p = params.require(:channel).permit(:external_id, :clear_language)
+    p[:clear_language] = p[:clear_language].to_i if p[:clear_language].present?
+    p
   end
 end

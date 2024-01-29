@@ -36,7 +36,7 @@ Rails.application.routes.draw do
     root 'home#index'
     resources :healthz, only: %i[index]
 
-    resources :channels, only: %i[index show new create destroy]
+    resources :channels
     namespace :clears do
       resource :filters, only: %i[show]
       resource :stage_select, only: %i[show]
