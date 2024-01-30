@@ -57,11 +57,21 @@ class Clear::TestRun < ApplicationRecord
 
   def test_results
     @test_results ||= test_case_ids.map do |test_case_id|
-      Clear::TestResult.new(test_case_id:, test_run_id: id)
+      test_result = Clear::TestResult.new(test_case_id:, test_run: self)
+      test_result
     end
   end
 
-  def get_test_result(test_case_id)
-    Clear::TestResult.new(test_case_id:, test_run_id: id)
+  def get_test_result(test_case_or_id)
+    test_case_id = test_case_or_id.id if test_case_or_id.is_a?(Clear::TestCase)
+    result = test_results.find do |test_result|
+      test_result.test_case_id == test_case_id
+    end
+    result.test_case = test_case_or_id if result && test_case_or_id.is_a?(Clear::TestCase)
+    result
+  end
+
+  def latest_test_runs
+    @latest_test_runs ||= Clear::TestRun.where.not(id:).order(id: :desc).limit(5).to_a
   end
 end

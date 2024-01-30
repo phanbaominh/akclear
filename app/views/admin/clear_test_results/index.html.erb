@@ -1,19 +1,21 @@
 <%= link_to t('.view_test_run'), admin_clear_test_run_path(@clear_test_run) %>
 <section>
   <div>
+    <%= render Admin::Clear::TestRunCorrectRatioComponent.new(
+      correct_ratio: @clear_test_results.map(&:correct_ratio).sum.round(2),
+      max_latest_correct_ratio: @clear_test_results.map(&:max_latest_correct_ratio).sum.round(2)
+    ) %>
+    <%=  %>
+  </div>
+  <div class="grid grid-cols-5 gap-2">
     <% @clear_test_results.each do |test_result| %>
       <%= link_to admin_clear_test_run_clear_test_result_path(@clear_test_run, test_result.test_case_id) do %>
         <article class="card bg-base-200 mt-2">
           <div class="card-body">
-            <div>
-              <%= test_result.status %>
+            <div class="flex justify-start space-x-2 items-center">
+              <%= render Admin::Clear::TestResultSummaryComponent.new(test_result: test_result) %>
             </div>
-            <div>
-              <%= test_result.test_case_id %>
-            </div>
-            <div>
-              <%= test_result.language %>
-            </div>
+            <%= render Admin::Clear::TestRunCorrectRatioComponent.new(test_result: test_result) %>
           </div>
         </article>
       <% end %>

@@ -1,6 +1,7 @@
 class Clear::TestResult
   include ActiveModel::Model
   include ActiveModel::Attributes
+  include Presentable
 
   DATA_FILENAME = 'data.json'
   STATUSES = [
@@ -12,13 +13,15 @@ class Clear::TestResult
 
   attribute :test_case_id, :integer
   attribute :test_run_id, :integer
+  attribute :test_run
   attr_reader :data
+  attr_writer :latest_test_runs, :test_case
 
   def self.preload_test_case(test_results)
     test_run = test_results.first.test_run
     case_to_result = test_results.index_by(&:test_case_id)
     test_run.test_cases.each do |test_case|
-      case_to_result[test_case.id].instance_variable_set(:@test_case, test_case)
+      case_to_result[test_case.id].test_case = test_case
     end
   end
 
@@ -30,6 +33,7 @@ class Clear::TestResult
 
   def initialize(attributes = {})
     super
+    self.test_run_id = test_run.id if attributes[:test_run]
     @data = {}
     read_from_file
   end
@@ -96,7 +100,7 @@ class Clear::TestResult
   end
 
   def correct_ratio
-    passed_operators.count.to_f / test_case_operator_data.count * 100
+    (passed_operators.count.to_f / test_case_operator_data.count * 100).round(2)
   end
 
   def compute!
@@ -143,6 +147,7 @@ class Clear::TestResult
   end
 
   def test_run
+    return super if super
     return unless test_run_id
 
     @test_run ||= Clear::TestRun.find_by(id: test_run_id)
@@ -184,5 +189,19 @@ class Clear::TestResult
 
   def clear_image_src
     clear_image_path.to_s.gsub(Rails.public_path.to_s, '')
+  end
+
+  delegate :latest_test_runs, to: :test_run
+
+  def latest_test_results
+    @latest_test_results ||= latest_test_runs.filter_map { |test_run| test_run.get_test_result(test_case) }
+  end
+
+  def max_latest_correct_ratio
+    return @max_latest_correct_ratio if @max_latest_correct_ratio
+
+    latest_ratios = latest_test_results.map(&:correct_ratio)
+    ap({ "#{test_case_id}" => latest_ratios })
+    @max_latest_correct_ratio = latest_ratios.max
   end
 end
