@@ -116,7 +116,7 @@ group :test do
   gem 'selenium-webdriver'
   gem 'test-prof'
   gem 'timecop'
-  gem 'webdrivers'
+  # gem 'webdrivers' have to remove and upgrade selenium-webdriver to latest version to avoid the request to GET latest_patch_version which is blocked by netskope? (failed due to SSL error)
   gem 'webmock'
 end
 
