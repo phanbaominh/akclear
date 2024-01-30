@@ -3,13 +3,13 @@ require 'rails_helper'
 describe FetchGameData::FetchLatestOperatorsData do
   let(:file_content) do
     {
-      char_102_texas: {
+      'char_102_texas' => {
         'name' => 'Texas', 'rarity' => 'TIER_5',
         'skills' => [{ 'skillId' => 'skchr_texas_1' }, { 'skillId' => 'skchr_texas_2' }]
       },
-      token_10000_silent_healrb: { 'name' => 'Medic Drone', 'subProfessionId' => 'notchar1', 'skills' => [] },
-      token_10007_phatom_twin: { 'name' => 'Phantom in the Mirror', 'profession' => 'TOKEN' },
-      char_513_apionr: { 'name' => 'Tulip', 'isNotObtainable' => true }
+      'token_10000_silent_healrb' => { 'name' => 'Medic Drone', 'subProfessionId' => 'notchar1', 'skills' => [] },
+      'token_10007_phatom_twin' => { 'name' => 'Phantom in the Mirror', 'profession' => 'TOKEN' },
+      'char_513_apionr' => { 'name' => 'Tulip', 'isNotObtainable' => true }
     }
   end
   let(:skill_data) do
@@ -114,6 +114,50 @@ describe FetchGameData::FetchLatestOperatorsData do
                  )).to be_present
         expect(operator.name).to eq('Texas')
         expect(operator.name(locale: :en)).to eq(nil)
+      end
+    end
+  end
+
+  context 'when locale is zh-cn' do
+    before do
+      allow(FetchGameData::FetchJson)
+        .to receive(:call)
+        .with('https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/zh_CN/gamedata/excel/character_table.json')
+        .and_return(Dry::Monads::Success(file_content))
+    end
+
+    it 'fetches from correct link' do
+      I18n.with_locale(:'zh-CN') { service.call }
+      expect(FetchGameData::FetchJson)
+        .to have_received(:call)
+        .with('https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/zh_CN/gamedata/excel/character_table.json')
+    end
+
+    context 'when operator exist' do
+      let_it_be(:operator) do
+        create(:operator, game_id: 'char_102_texas')
+      end
+
+      it 'updates operator correctly' do
+        I18n.with_locale(:'zh-CN') do
+          service.call
+          expect(operator =
+                   Operator.i18n.find_by(
+                     name: 'Texas', game_id: 'char_102_texas', rarity: 4,
+                     skill_game_ids: %w[skchr_texas_1 skchr_texas_2],
+                     skill_icon_ids: %w[skchr_texas_1_icon skchr_texas_2]
+                   )).to be_present
+          expect(operator.name(locale: :'zh-CN')).to eq('Texas')
+        end
+      end
+    end
+
+    context 'when operator does not exist' do
+      it 'does not create operator' do
+        I18n.with_locale(:'zh-CN') do
+          service.call
+          expect(Operator.find_by(game_id: 'char_102_texas')).not_to be_present
+        end
       end
     end
   end

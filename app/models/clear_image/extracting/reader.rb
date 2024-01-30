@@ -5,7 +5,8 @@ class ClearImage
 
       LOCALE_TO_TESSERACT_LANG = {
         en: 'eng',
-        jp: 'jpn'
+        jp: 'jpn',
+        'zh-CN': 'chi_sim'
       }.freeze
 
       def initialize(image)

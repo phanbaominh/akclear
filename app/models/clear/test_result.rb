@@ -43,7 +43,7 @@ class Clear::TestResult
   end
 
   def language
-    data[:language]
+    data[:language]&.to_sym
   end
 
   def used_operators_data
