@@ -21,7 +21,6 @@ class ClearImage
         end
 
         def paint_white_over_non_names(image, first_name_line, second_name_line)
-          p [first_name_line, second_name_line]
           first_line, second_line = get_name_boundary_lines(image, first_name_line, second_name_line)
 
           topline_1 = BoundingBox.new(0, first_line[0] - 2, image.columns, 1)
@@ -83,7 +82,6 @@ class ClearImage
         end
 
         def get_last_white_line(image, box, reverse: false)
-          ap box
           width = box.width
           c = 0
           has_black = false
@@ -115,8 +113,6 @@ class ClearImage
           y = y.clamp(0, image.rows - 1)
           f = Image.new(columns, rows) { |options| options.background_color = color }
           image.composite(f, x, y, Magick::UndefinedCompositeOp)
-          # pixels = image.get_pixels(x, y, columns, rows).map { pixel }
-          # image.store_pixels(x, y, columns, rows, pixels)
         end
 
         def white_pixel
