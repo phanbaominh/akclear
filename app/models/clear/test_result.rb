@@ -100,7 +100,7 @@ class Clear::TestResult
   end
 
   def correct_ratio
-    (passed_operators.count.to_f / test_case_operator_data.count * 100).round(2)
+    ((passed_operators.count.to_f + (failed_operators.count * 0.5)) / test_case_operator_data.count * 100).round(2)
   end
 
   def compute!

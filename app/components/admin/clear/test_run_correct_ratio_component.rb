@@ -28,6 +28,6 @@ class Admin::Clear::TestRunCorrectRatioComponent < ApplicationComponent
   end
 
   def correct_ratio_diff
-    @correct_ratio_diff ||= correct_ratio - max_latest_correct_ratio
+    @correct_ratio_diff ||= (correct_ratio - max_latest_correct_ratio).round(2)
   end
 end
