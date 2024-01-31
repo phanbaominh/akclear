@@ -4,7 +4,7 @@ class Admin::ClearTestResultsController < ApplicationController
   load_resource :clear_test_run, class: 'ClearImage::TestRun'
 
   def index
-    # can choose to compare to how many latest test results deaulft: 5
+    @clear_test_run.latest_size = params.dig(:clear_test_run, :latest_size) || 5
     @clear_test_results = @clear_test_run.test_results
     ClearImage::TestResult.preload_test_case(@clear_test_results)
   end

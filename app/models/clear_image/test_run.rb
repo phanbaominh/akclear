@@ -11,6 +11,7 @@ class ClearImage::TestRun < ApplicationRecord
   attr_reader :test_count
 
   attribute :all, :boolean, default: true
+  attribute :latest_size, :integer, default: 5
 
   def test_cases
     @test_cases ||= ClearImage::TestCase.where(id: test_case_ids)
@@ -72,6 +73,6 @@ class ClearImage::TestRun < ApplicationRecord
   end
 
   def latest_test_runs
-    @latest_test_runs ||= ClearImage::TestRun.where.not(id:).order(id: :desc).limit(5).to_a
+    @latest_test_runs ||= ClearImage::TestRun.where.not(id:).order(id: :desc).limit(latest_size).to_a
   end
 end
