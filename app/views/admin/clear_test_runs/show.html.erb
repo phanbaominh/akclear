@@ -1,5 +1,5 @@
 <section class="">
-  <h2 ><%= t('.title', id: @test_run.id) %></h2>
+  <h2 class="text-2xl mb-2"> TR: <%= @test_run.name || @test_run.id %></h2>
   <div class="card bg-base-200">
     <section class="card-body">
       <h3 class="card-title"><%= t('summary') %></h3>
@@ -8,7 +8,7 @@
       <div> <%= t('.failed', count: @test_run.data[:failed_count].to_i) %></div>
     </section>
   </div>
-  <%= link_to t('.view_test_results'), admin_clear_test_run_clear_test_results_path(@test_run), class: 'btn btn-primary' %>
+  <%= link_to t('.view_test_results'), admin_clear_test_run_clear_test_results_path(@test_run), class: 'btn btn-primary mb-2' %>
   <%= button_to admin_clear_test_runs_path, class: 'btn btn-warning' do %>
     <%= simple_fields_for :clear_test_run, @test_run do |f| %>
       <% @test_run.test_case_ids.each do |test_case_id| %>

@@ -5,17 +5,26 @@
       <%= render Admin::ClearImage::TestRunConfigurationComponent.new(test_run: @clear_test_run) %>
     </div>
   </div>
-  <div>
-    <%= simple_form_for @clear_test_run, as: :clear_test_run, data: { **stimulus(:click_other) }, method: :get, url: admin_clear_test_run_clear_test_results_url(@clear_test_run) do |f| %>
-      <%= f.input :latest_size, input_html: { data: { **stimulus_attrs(:click_other, actions: { 'focusout': 'clickOther' }) } } %>
-      <%= content_tag :button, class: 'hidden', data: { **stimulus_attrs(:click_other, target: 'clickable') } do %>
+  <div class="card bg-base-200 mt-4">
+    <div class="card-body">
+      <%= turbo_frame_tag @clear_test_run do  %>
+        <%= simple_form_for @clear_test_run, as: :clear_test_run, url: admin_clear_test_run_path(@clear_test_run), data: { **stimulus(:click_other) } do |f| %>
+          <%= f.input :latest_size, input_html: { data: { **stimulus_attrs(:click_other, actions: { 'focusout': 'clickOther' }) } } %>
+          <%= f.label :correct_ratio, class: 'simple_form__label' %>
+          <div class="outline w-fit outline-neutral rounded p-2">
+            <%= render Admin::ClearImage::TestRunCorrectRatioComponent.new(
+            correct_ratio: @clear_test_results.map(&:correct_ratio).sum.round(2),
+            max_latest_correct_ratio: @clear_test_results.map(&:max_latest_correct_ratio).sum.round(2)
+          ) %>
+          </div>
+          <%= content_tag :button, class: 'hidden', data: { **stimulus_attrs(:click_other, target: 'clickable'), turbo_frame: '_top' },
+        formmethod: :get, formaction: admin_clear_test_run_clear_test_results_url(@clear_test_run) do %>
+          <% end %>
+          <%= f.input :note, input_html: { class: 'w-full' } %>
+          <%= f.button :submit, class: 'self-end mt-2' %>
+        <% end %>
       <% end %>
-    <% end %>
-    <%= render Admin::ClearImage::TestRunCorrectRatioComponent.new(
-      correct_ratio: @clear_test_results.map(&:correct_ratio).sum.round(2),
-      max_latest_correct_ratio: @clear_test_results.map(&:max_latest_correct_ratio).sum.round(2)
-    ) %>
-    <%=  %>
+    </div>
   </div>
   <div class="grid grid-cols-5 gap-2">
     <% @clear_test_results.each do |test_result| %>

@@ -16,12 +16,21 @@ class Admin::ClearTestRunsController < ApplicationController
     redirect_to admin_clear_test_run_path(@test_run)
   end
 
+  def update
+    @test_run = ClearImage::TestRun.find(params[:id])
+    if @test_run.update(clear_test_run_params)
+      redirect_to admin_clear_test_run_clear_test_results_url(@clear_test_run)
+    else
+      render :show
+    end
+  end
+
   private
 
   def clear_test_run_params
     return {} if params[:clear_test_run].blank? && action_name == 'new'
 
-    params.require(:clear_test_run).permit(:test_count, :all, test_case_ids: [],
+    params.require(:clear_test_run).permit(:name, :note, :test_count, :all, test_case_ids: [],
                                                               configuration: [{ en: {} }, { 'zh-CN': {} }, { jp: {} }])
   end
 end
