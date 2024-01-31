@@ -6,7 +6,7 @@
     <thead>
       <tr>
         <th> Option</th>
-        <% test_run.configuration.each_key do |language| %>
+        <% configuration.each_key do |language| %>
           <th><%= language %></th>
         <% end %>
       </tr>
@@ -15,7 +15,7 @@
       <% ClearImage::Configuration.attribute_names.each do |option| %>
         <tr>
           <td><%= option %></td>
-          <% test_run.configuration.each do |language, config| %>
+          <% configuration.each do |language, config| %>
             <td><%= config[option] %></td>
           <% end %>
         </tr>

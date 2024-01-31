@@ -39,8 +39,6 @@ class ClearImage
 
       result = extract_operators_data_based_on_name_lines
 
-      logger.finish
-
       logger.log('result:', result)
       result
 
@@ -48,6 +46,7 @@ class ClearImage
 
       # combine_extracted_operators_data
     ensure
+      logger.finish
       delete_tmp_file
     end
 

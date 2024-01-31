@@ -17,7 +17,9 @@
       <div></div>
     <% end %>
   </div>
-  <%= render Admin::ClearImage::TestRunConfigurationComponent.new(test_run: @clear_test_run) %>
+  <%= render Admin::ClearImage::TestRunConfigurationComponent.new(
+    configuration: { @clear_test_result.language => (@clear_test_result.configuration || @clear_test_run.configuration[@clear_test_result.language.to_s])}
+  ) %>
   <section class="space-y-1">
     <h3 class="text-xl"><%= t('.summary') %></h3>
     <div class="flex items-center space-x-2">

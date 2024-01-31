@@ -8,26 +8,14 @@
   <%= simple_form_for @test_run, as: :clear_test_run, url: admin_clear_test_runs_url do |f| %>
     <%= content_tag :div, data: { **stimulus(:click_other) } do %>
       <%= content_tag :button, nil, formmethod: "GET", formaction: new_admin_clear_test_run_path, data: { **stimulus_attrs(:click_other, target: 'clickable') } %>
+      <%= f.input :name %>
       <%= f.input :all, as: :boolean, input_html: { class: '!toggle', data: { **stimulus_attrs(:click_other, actions: { click: 'clickOther' }) } } %>
       <% unless @test_run.all %>
         <%= f.input :test_count, as: :integer %>
       <% end %>
       <%= f.label :configuration, class: 'simple_form__label' %>
       <div class="grid grid-cols-3 gap-2">
-        <%= f.simple_fields_for :configuration do |sf| %>
-          <% ClearImage::Extracting::Reader::LOCALE_TO_TESSERACT_LANG.each_key do |language| %>
-            <div class="card bg-base-200  ">
-              <div class="card-body">
-                <h3 class="card-title"><%= language %></h3>
-                <%= sf.simple_fields_for language, ClearImage::Configuration.new do |conf_f|  %>
-                  <% conf_f.object.attributes.each_key do |attr| %>
-                    <%= conf_f.input attr %>
-                  <% end %>
-                <% end %>
-              </div>
-            </div>
-          <% end %>
-        <% end %>
+        <%= render partial: 'configuration_form', locals: { f: f } %>
       </div>
     <% end %>
     <%= f.button :submit, t(".submit") %>

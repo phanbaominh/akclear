@@ -22,6 +22,10 @@ class ClearImage::Configuration
       Thread.current[:clear_image_configuration]
     end
 
+    def used_instance
+      instance[ClearImage::Extracting::Reader.language]
+    end
+
     def method_missing(method, *args)
       super unless instance.present? && instance.values.first.respond_to?(method)
 

@@ -9,11 +9,14 @@
     </section>
   </div>
   <%= link_to t('.view_test_results'), admin_clear_test_run_clear_test_results_path(@test_run), class: 'btn btn-primary' %>
-  <%= button_to admin_clear_test_runs_path, class: 'btn btn-primary' do %>
-    <%= simple_fields_for @test_run do |f| %>
+  <%= button_to admin_clear_test_runs_path, class: 'btn btn-warning' do %>
+    <%= simple_fields_for :clear_test_run, @test_run do |f| %>
       <% @test_run.test_case_ids.each do |test_case_id| %>
         <%= f.input_field "test_case_ids", as: :hidden, name: 'clear_test_run[test_case_ids][]', value: test_case_id %>
       <% end %>
+      <div class="hidden">
+        <%= render partial: 'configuration_form', locals: { f: f } %>
+      </div>
       <%= t('.rerun') %>
     <% end %>
   <% end %>

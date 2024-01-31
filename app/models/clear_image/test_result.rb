@@ -191,6 +191,16 @@ class ClearImage::TestResult
     clear_image_path.to_s.gsub(Rails.public_path.to_s, '')
   end
 
+  def configuration_path
+    data_folder_path.join(ClearImage::Logger::CONFIG_FILE)
+  end
+
+  def configuration
+    return @configuration if defined?(@configuration)
+
+    @configuration = (configuration_path.exist? && JSON.parse(File.read(configuration_path)).with_indifferent_access).presence
+  end
+
   delegate :latest_test_runs, to: :test_run
 
   def latest_test_results

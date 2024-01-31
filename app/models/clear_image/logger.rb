@@ -5,6 +5,7 @@ class ClearImage
     LOG_DIR = 'tmp/clear_image'
     LOG_FILE = "#{LOG_DIR}/log.txt"
     LOG_DIR_THREAD_KEY = :clear_image_extracting_log_dir_path
+    CONFIG_FILE = 'config.json'
     IMAGE_NAMES = [
       NAME_BLACK_ON_WHITE = 'name_black_on_white.png',
       WHITE_OVER_NON_NAMES_1 = 'white_over_non_names_1.png',
@@ -43,9 +44,7 @@ class ClearImage
       def finish
         return unless should_log?
 
-        File.open(log_file_path, 'a') do |f|
-          f.puts('=============================')
-        end
+        File.write("#{dir_path}/#{CONFIG_FILE}", Configuration.used_instance.attributes.to_json)
       end
 
       def dir_path_for_current_thread=(dir_path)
