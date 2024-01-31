@@ -3,7 +3,7 @@
 class ClearImage
   class Logger
     LOG_DIR = 'tmp/clear_image'
-    LOG_FILE = "#{LOG_DIR}/log.txt"
+    LOG_FILE = 'log.txt'
     LOG_DIR_THREAD_KEY = :clear_image_extracting_log_dir_path
     CONFIG_FILE = 'config.json'
     IMAGE_NAMES = [
@@ -54,7 +54,7 @@ class ClearImage
       private
 
       def log_file_path
-        "#{dir_path}/log.txt"
+        "#{dir_path}/#{LOG_FILE}"
       end
 
       def dir_path

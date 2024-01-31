@@ -50,6 +50,18 @@
       <% end %>
     </div>
   </section>
+  <section>
+    <%= content_tag :details,  class: 'collapse overflow-auto' do%>
+      <%= content_tag :summary, class: 'collapse-title !list-item ' do %>
+        View logs
+      <% end %>
+      <div class="whitespace-pre h-96 overflow-auto">
+        <p>
+          <%= @clear_test_result.log_text %>
+        </p>
+      </div>
+    <% end %>
+  </section>
   <div class="mt-2">
     <section class="card bg-base-200">
       <div class="card-body">

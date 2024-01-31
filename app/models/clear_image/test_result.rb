@@ -201,6 +201,14 @@ class ClearImage::TestResult
     @configuration = (configuration_path.exist? && JSON.parse(File.read(configuration_path)).with_indifferent_access).presence
   end
 
+  def log_path
+    data_folder_path.join(ClearImage::Logger::LOG_FILE)
+  end
+
+  def log_text
+    @log_text ||= File.read(log_path)
+  end
+
   delegate :latest_test_runs, to: :test_run
 
   def latest_test_results
