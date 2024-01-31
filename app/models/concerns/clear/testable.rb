@@ -8,7 +8,7 @@ module Clear::Testable
   end
 
   def create_test_case_using_job_id
-    return unless Clear::TestCase.enabled?
+    return unless ClearImage::TestCase.enabled?
     return if job_id.blank? || test_case.present?
 
     job = ExtractClearDataFromVideoJob.find_by(id: job_id)

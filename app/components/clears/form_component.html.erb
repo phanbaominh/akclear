@@ -40,7 +40,7 @@
       <%= f.input :name, input_html: { class: 'w-full' } %>
       <div class="js-only">
         <%= render Clears::StageSelectComponent.new(form: f, simple: true, multiple: !edit_form, required: true) %>
-        <% if clear_spec.job_id && Clear::TestCase.enabled? %>
+        <% if clear_spec.job_id && ClearImage::TestCase.enabled? %>
           <%= f.label :use_for_test_case, t("clear_form.use_for_test_case_field") %>
           <%= f.check_box :use_for_test_case, class: "toggle toggle-warning block focus:outline-base-content/20", checked: clear_spec.test_case.present? || true  %>
         <% end %>

@@ -20,10 +20,10 @@
   <section class="space-y-1">
     <h3 class="text-xl"><%= t('.summary') %></h3>
     <div class="flex items-center space-x-2">
-      <%= render Admin::Clear::TestResultSummaryComponent.new(test_result: @clear_test_result) %>
+      <%= render Admin::ClearImage::TestResultSummaryComponent.new(test_result: @clear_test_result) %>
     </div>
     <div>
-      <%= render Admin::Clear::TestRunCorrectRatioComponent.new(test_result: @clear_test_result) %>
+      <%= render Admin::ClearImage::TestRunCorrectRatioComponent.new(test_result: @clear_test_result) %>
     </div>
     <div class="divider"></div>
     <%= render Admin::ImageComponent.new(path: @clear_test_result.clear_image_src, width: '500px') %>
@@ -109,7 +109,7 @@
     <% end %>
   </div>
   <%= button_to admin_clear_test_case_path(@clear_test_result.test_case_id), method: :PATCH, class: 'btn btn-primary self-end' do |f|%>
-    <%= simple_fields_for Clear::TestCase.new  do |f| %>
+    <%= simple_fields_for ClearImage::TestCase.new  do |f| %>
       <%= f.input :test_run_id, as: :hidden, input_html: { value: @clear_test_result.test_run_id }  %>
       <%= t('.update_test_case') %>
     <% end %>

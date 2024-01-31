@@ -5,7 +5,7 @@ module Clears
     queue_as :system
 
     def perform(batch, _params)
-      test_run = Clear::TestRun.find_by(id: batch.properties[:test_run])
+      test_run = ClearImage::TestRun.find_by(id: batch.properties[:test_run])
 
       return if test_run.blank? || test_run.finished?
 

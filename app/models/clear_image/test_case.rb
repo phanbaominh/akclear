@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Clear::TestCase < ApplicationRecord
+class ClearImage::TestCase < ApplicationRecord
   self.table_name = 'clear_test_cases'
 
   def self.enabled?

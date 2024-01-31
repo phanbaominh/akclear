@@ -2,14 +2,14 @@
 
 class Admin::ClearTestCasesController < ApplicationController
   include Pagy::Backend
-  load_resource :clear_test_case, class: 'Clear::TestCase'
+  load_resource :clear_test_case, class: 'ClearImage::TestCase'
 
   def index
     @pagy, @clear_test_cases = pagy(@clear_test_cases)
   end
 
   def update
-    test_run = Clear::TestRun.find_by(id: clear_test_case_params[:test_run_id])
+    test_run = ClearImage::TestRun.find_by(id: clear_test_case_params[:test_run_id])
     test_result = test_run.get_test_result(clear_test_case.id)
     unless @clear_test_case.update(used_operators_data: test_result.used_operators_data)
       flash.now[:alert] = @clear_test_case.errors.full_messages.join(', ')

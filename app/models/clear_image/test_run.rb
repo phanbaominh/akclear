@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Clear::TestRun < ApplicationRecord
+class ClearImage::TestRun < ApplicationRecord
   self.table_name = 'clear_test_runs'
 
   STATUSES = [
@@ -13,14 +13,14 @@ class Clear::TestRun < ApplicationRecord
   attribute :all, :boolean, default: true
 
   def test_cases
-    @test_cases ||= Clear::TestCase.where(id: test_case_ids)
+    @test_cases ||= ClearImage::TestCase.where(id: test_case_ids)
   end
 
   def test_count=(value)
     @test_count = value.to_i
     return unless value
 
-    self.test_case_ids = Clear::TestCase.take(@test_count).pluck(:id)
+    self.test_case_ids = ClearImage::TestCase.take(@test_count).pluck(:id)
   end
 
   def data_folder_path
@@ -52,26 +52,26 @@ class Clear::TestRun < ApplicationRecord
   end
 
   def test_case_ids
-    super || (@all_test_case_ids ||= Clear::TestCase.pluck(:id))
+    super || (@all_test_case_ids ||= ClearImage::TestCase.pluck(:id))
   end
 
   def test_results
     @test_results ||= test_case_ids.map do |test_case_id|
-      test_result = Clear::TestResult.new(test_case_id:, test_run: self)
+      test_result = ClearImage::TestResult.new(test_case_id:, test_run: self)
       test_result
     end
   end
 
   def get_test_result(test_case_or_id)
-    test_case_id = test_case_or_id.id if test_case_or_id.is_a?(Clear::TestCase)
+    test_case_id = test_case_or_id.id if test_case_or_id.is_a?(ClearImage::TestCase)
     result = test_results.find do |test_result|
       test_result.test_case_id == test_case_id
     end
-    result.test_case = test_case_or_id if result && test_case_or_id.is_a?(Clear::TestCase)
+    result.test_case = test_case_or_id if result && test_case_or_id.is_a?(ClearImage::TestCase)
     result
   end
 
   def latest_test_runs
-    @latest_test_runs ||= Clear::TestRun.where.not(id:).order(id: :desc).limit(5).to_a
+    @latest_test_runs ||= ClearImage::TestRun.where.not(id:).order(id: :desc).limit(5).to_a
   end
 end

@@ -1,4 +1,4 @@
-class Admin::Clear::TestRunCorrectRatioComponent < ApplicationComponent
+class Admin::ClearImage::TestRunCorrectRatioComponent < ApplicationComponent
   attr_reader :test_result
 
   def post_initialize(test_result: nil, correct_ratio: nil, max_latest_correct_ratio: nil)

@@ -1,4 +1,4 @@
-class Clear::TestResult
+class ClearImage::TestResult
   include ActiveModel::Model
   include ActiveModel::Attributes
   include Presentable
@@ -104,7 +104,7 @@ class Clear::TestResult
   end
 
   def compute!
-    return unless Clear::TestCase.enabled?
+    return unless ClearImage::TestCase.enabled?
     return if has_started?
 
     FileUtils.mkdir_p(data_folder_path)
@@ -143,14 +143,14 @@ class Clear::TestResult
   def test_case
     return nil unless test_case_id
 
-    @test_case ||= Clear::TestCase.find_by(id: test_case_id)
+    @test_case ||= ClearImage::TestCase.find_by(id: test_case_id)
   end
 
   def test_run
     return super if super
     return unless test_run_id
 
-    @test_run ||= Clear::TestRun.find_by(id: test_run_id)
+    @test_run ||= ClearImage::TestRun.find_by(id: test_run_id)
   end
 
   def destroy_data_folder

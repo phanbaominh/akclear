@@ -1,10 +1,10 @@
 <section>
   <div><span>
-      <%= t('.test_case_count', count: Clear::TestCase.count) %>
+      <%= t('.test_case_count', count: ClearImage::TestCase.count) %>
     </span>
     <%= link_to t('view'), admin_clear_test_cases_path, class: 'btn btn-neutral' %>
   </div>
-  <div><%= link_to t('.latest_test_run'), admin_clear_test_run_path(Clear::TestRun.order(:id).last) %></div>
+  <div><%= link_to t('.latest_test_run'), admin_clear_test_run_path(ClearImage::TestRun.order(:id).last) %></div>
   <%= simple_form_for @test_run, url: admin_clear_test_runs_url do |f| %>
     <%= content_tag :div, data: { **stimulus(:click_other) } do %>
       <%= content_tag :button, nil, formmethod: "GET", formaction: new_admin_clear_test_run_path, data: { **stimulus_attrs(:click_other, target: 'clickable') } %>

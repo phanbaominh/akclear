@@ -1,4 +1,4 @@
-class Admin::Clear::TestResultSummaryComponent < ApplicationComponent
+class Admin::ClearImage::TestResultSummaryComponent < ApplicationComponent
   attr_reader :test_result
 
   def post_initialize(test_result:)
