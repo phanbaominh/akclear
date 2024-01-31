@@ -1,6 +1,16 @@
-<%= link_to t('.view_test_run'), admin_clear_test_run_path(@clear_test_run) %>
+<%= link_to t('.view_test_run'), admin_clear_test_run_path(@clear_test_run), class: 'btn btn-neutral w-fit mb-2' %>
 <section>
+  <div class="card bg-base-200 ">
+    <div class="card-body p-2">
+      <%= render Admin::ClearImage::TestRunConfigurationComponent.new(test_run: @clear_test_run) %>
+    </div>
+  </div>
   <div>
+    <%= simple_form_for @clear_test_run, as: :clear_test_run, data: { **stimulus(:click_other) }, method: :get, url: admin_clear_test_run_clear_test_results_url(@clear_test_run) do |f| %>
+      <%= f.input :latest_size, input_html: { data: { **stimulus_attrs(:click_other, actions: { 'focusout': 'clickOther' }) } } %>
+      <%= content_tag :button, class: 'hidden', data: { **stimulus_attrs(:click_other, target: 'clickable') } do %>
+      <% end %>
+    <% end %>
     <%= render Admin::ClearImage::TestRunCorrectRatioComponent.new(
       correct_ratio: @clear_test_results.map(&:correct_ratio).sum.round(2),
       max_latest_correct_ratio: @clear_test_results.map(&:max_latest_correct_ratio).sum.round(2)

@@ -21,6 +21,7 @@ class Admin::ClearTestRunsController < ApplicationController
   def clear_test_run_params
     return {} if params[:clear_test_run].blank? && action_name == 'new'
 
-    params.require(:clear_test_run).permit(:test_count, :all, test_case_ids: [])
+    params.require(:clear_test_run).permit(:test_count, :all, test_case_ids: [],
+                                                              configuration: [{ en: {} }, { 'zh-CN': {} }, { jp: {} }])
   end
 end

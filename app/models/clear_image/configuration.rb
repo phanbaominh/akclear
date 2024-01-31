@@ -10,6 +10,7 @@ class ClearImage::Configuration
   class << self
     def for_current_thread=(options)
       options ||= { en: { word_in_line_second_pass_confidence_threshold: 30 } }
+      options = options.with_indifferent_access
       global_options = options[:global] || {}
       Thread.current[:clear_image_configuration] =
         ClearImage::Extracting::Reader::LOCALE_TO_TESSERACT_LANG.keys.map.with_object({}) do |language, lang_to_config|

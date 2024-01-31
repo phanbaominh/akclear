@@ -111,7 +111,7 @@ class ClearImage::TestResult
     File.write(data_path, { status: COMPUTING }.to_json)
     result = Clears::GetClearImageFromVideo.call(test_case.video, clear_image_path:)
     if result.success?
-      clear_image = ClearImage.new(clear_image_path)
+      clear_image = ClearImage.new(clear_image_path, test_run.configuration)
       used_operators_data = clear_image.used_operators_data
       language = clear_image.language
       File.write(data_path, { status: PASSED, used_operators_data:, language: }.to_json)
