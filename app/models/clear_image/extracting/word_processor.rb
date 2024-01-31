@@ -22,7 +22,7 @@ class ClearImage
           processed_boxes
         end
 
-        def group_words_into_lines(words_bounding_boxes, allowed_box_conf: 70)
+        def group_words_into_lines(words_bounding_boxes, allowed_box_conf)
           lines_of_words = []
           visited = Array.new(words_bounding_boxes.size, false)
           0.upto(words_bounding_boxes.size - 1) do |i|

@@ -32,7 +32,7 @@ class ClearImage
 
       def near?(other_box)
         largest_possible_distance_between_character =
-          [average_character_width, other_box.average_character_width].min * Constants::NEAR_WORD_RATIO
+          [average_character_width, other_box.average_character_width].min * Configuration.max_character_distance_to_width_ratio_to_be_near
         dist(other_box) <= largest_possible_distance_between_character
       end
 

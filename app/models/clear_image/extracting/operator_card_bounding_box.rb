@@ -43,7 +43,7 @@ class ClearImage
         dists_between_words.sort.each do |dist|
           lower_bound_of_dist = dist
           within_current_min = dists_between_words.select do |d|
-            d < lower_bound_of_dist * Constants::UPPER_BOUND_CARD_DIST_RATIO &&
+            d < lower_bound_of_dist * Configuration.max_largest_card_dist_to_smallest_dist_ratio_to_guess_dist_between_card &&
               d >= lower_bound_of_dist
           end
           if within_current_min.size >= max_size

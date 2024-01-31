@@ -129,7 +129,7 @@ class ClearImage
     end
 
     def reader
-      @reader ||= Extracting::Reader.new(image)
+      Extracting::Reader
     end
 
     def get_distance_between_operator_card
@@ -160,13 +160,13 @@ class ClearImage
       words = extract_words.reject { |box| box.word =~ /Unit/ }
       logger.log('words:', words)
       Extracting::WordProcessor
-        .group_words_into_lines(words, allowed_box_conf:)
+        .group_words_into_lines(words, allowed_box_conf)
     end
 
     def allowed_box_conf
-      return 70 if @extract_name_line_count == 1
+      return Configuration.word_in_line_first_pass_confidence_threshold if @extract_name_line_count == 1
 
-      reader.language == :jp ? 70 : 30
+      Configuration.word_in_line_second_pass_confidence_threshold
     end
 
     def extract_words
