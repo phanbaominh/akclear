@@ -18,7 +18,7 @@ Rails.application.routes.draw do
       resource :clear_from_job, only: %i[new]
       resources :users, only: %i[index update edit show]
       resources :clear_test_cases, only: %i[index show update destroy]
-      resources :clear_test_runs, only: %i[new create show destroy] do
+      resources :clear_test_runs, only: %i[new create show destroy update] do
         resources :clear_test_results, only: %i[index show]
       end
     end
