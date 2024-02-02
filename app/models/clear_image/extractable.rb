@@ -156,7 +156,7 @@ class ClearImage
     end
 
     def extract_word_lines
-      words = extract_words.reject { |box| box.word =~ /Unit/ }
+      words = extract_words.reject { |box| box.word =~ /Unit/i }
       logger.log('words:', words)
       Extracting::WordProcessor
         .group_words_into_lines(words, allowed_box_conf)
@@ -170,7 +170,9 @@ class ClearImage
 
     def extract_words
       ocr_word_boxes = @lined ? reader.read_lined_names(tmp_file_path) : reader.read_sparse_names(tmp_file_path)
-      word_bounding_boxes = ocr_word_boxes.map { |box| Extracting::WordBoundingBox.new(box) }
+      word_bounding_boxes = ocr_word_boxes
+                            .map { |box| Extracting::WordBoundingBox.new(box) }
+                            .reject { |box| box.near_end?(image) }
       Extracting::WordProcessor.group_near_words_in_same_line(word_bounding_boxes)
     end
 

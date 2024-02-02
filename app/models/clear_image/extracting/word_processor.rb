@@ -32,6 +32,8 @@ class ClearImage
             current_line = WordBoundingBoxList.new
 
             i.upto(words_bounding_boxes.size - 1) do |j|
+              next if visited[j]
+
               box = words_bounding_boxes[j]
               next if box.average_confidence < allowed_box_conf
 
@@ -40,8 +42,9 @@ class ClearImage
                 current_line << box
               end
             end
-            lines_of_words << WordBoundingBoxList.new(group_near_words_in_same_line(current_line.sort_by!(&:x),
-                                                                                    all_same_line: true))
+            current_line = WordBoundingBoxList.new(group_near_words_in_same_line(current_line.sort_by!(&:x),
+                                                                                 all_same_line: true))
+            lines_of_words << current_line
           end
           lines_of_words
         end

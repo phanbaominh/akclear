@@ -32,12 +32,17 @@ class ClearImage
 
       def near?(other_box)
         largest_possible_distance_between_character =
-          [average_character_width, other_box.average_character_width].min * Configuration.max_character_distance_to_width_ratio_to_be_near
+          [average_character_width,
+           other_box.average_character_width].min * Configuration.max_character_distance_to_width_ratio_to_be_near
         dist(other_box) <= largest_possible_distance_between_character
       end
 
       def overlapping?(other_box)
         x_end >= other_box.x
+      end
+
+      def near_end?(image)
+        y_end + (1 * height) >= image.rows
       end
 
       def average_character_width
