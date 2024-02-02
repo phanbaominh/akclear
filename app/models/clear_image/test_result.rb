@@ -90,6 +90,15 @@ class ClearImage::TestResult
     end
   end
 
+  def extra_operators
+    return @extra_operators if defined?(@extra_operators)
+
+    used_operator_ids = test_case_operator_data.map { |used_operator_data| used_operator_data['operator_id'] }
+    @extra_operators = used_operators_data.select do |used_operator_data|
+      used_operator_ids.exclude?(used_operator_data[:operator_id])
+    end.map { |used_operator_data| UsedOperator.new(used_operator_data) }
+  end
+
   def missing_operators
     return @missing_operators if defined?(@missing_operators)
 
@@ -105,6 +114,18 @@ class ClearImage::TestResult
 
   def correct_ratio
     ((passed_operators.count.to_f + (failed_operators.count * 0.5)) / test_case_operator_data.count * 100).round(2)
+  end
+
+  def total_op_count
+    test_case_operator_ids.count
+  end
+
+  def correct_name_op_count
+    (used_operators_data.pluck(:operator_id) & test_case_operator_ids).count
+  end
+
+  def correct_name_ratio
+    (correct_name_op_count.to_f / total_op_count * 100).round(2)
   end
 
   def compute!
@@ -162,7 +183,12 @@ class ClearImage::TestResult
     @test_run ||= ClearImage::TestRun.find_by(id: test_run_id)
   end
 
+  def original_correct_ratio
+    data[:original_correct_ratio] || @original_correct_ratio || correct_ratio
+  end
+
   def rerun!
+    @original_correct_ratio = original_correct_ratio
     destroy_data_folder
     compute!
     read_from_file

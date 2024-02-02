@@ -16,7 +16,7 @@
         <tr>
           <td><%= option %></td>
           <% configuration.each do |language, config| %>
-            <td><%= config[option] %></td>
+            <td><%= config[option] if config %></td>
           <% end %>
         </tr>
       <% end %>
