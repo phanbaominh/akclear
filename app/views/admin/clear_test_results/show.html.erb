@@ -113,6 +113,7 @@
     <% {
       missing_operators: [@clear_test_result.missing_operators, 'error'],
       passed_operators: [@clear_test_result.passed_operators, 'success'],
+      extra_operators: [@clear_test_result.extra_operators, 'extra'],
     }.each do |key, (operators, color_key)| %>
       <section class="card bg-base-200 mt-2">
         <div class="card-body">
@@ -129,8 +130,16 @@
     <% end %>
   </div>
   <div class="flex justify-between mt-2">
-    <%= button_to t('.rerun'), admin_clear_test_run_clear_test_result_path(@clear_test_run, @clear_test_result.test_case_id),
-    method: :patch, class: 'btn btn-primary  mb-2' %>
+    <%= simple_form_for :clear_test_result, method: :patch,
+      url: admin_clear_test_run_clear_test_result_path(@clear_test_run, @clear_test_result.test_case_id) do |f| %>
+      <%= f.input :test_run_id, as: :hidden, input_html: { value: @clear_test_result.test_run_id }  %>
+      <%= f.simple_fields_for :configuration, ClearImage::Configuration.new(@clear_test_result.configuration || {}) do |conf_f|  %>
+        <% conf_f.object.attributes.each_key do |attr| %>
+          <%= conf_f.input attr %>
+        <% end %>
+      <% end %>
+      <%= f.button :submit, t('.rerun') %>
+    <% end %>
     <%= button_to admin_clear_test_case_path(@clear_test_result.test_case_id), method: :PATCH, class: 'btn btn-warning' do |f|%>
       <%= simple_fields_for ClearImage::TestCase.new  do |f| %>
         <%= f.input :test_run_id, as: :hidden, input_html: { value: @clear_test_result.test_run_id }  %>
