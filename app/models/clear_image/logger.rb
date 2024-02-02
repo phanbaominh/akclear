@@ -21,7 +21,7 @@ class ClearImage
       def start(filename)
         return unless should_log?
 
-        File.open(log_file_path, 'a') do |f|
+        File.open(log_file_path, 'w') do |f|
           f.puts("=================Start extracting #{filename}===============")
         end
       end
@@ -38,7 +38,10 @@ class ClearImage
       def copy_image(image, name)
         return unless should_log?
 
-        (block_given? ? yield : image).write("#{dir_path}/#{name}")
+        prefix, ext = name.split('.')
+        new_name = [prefix, Time.now.to_i, ext].join('.')
+
+        (block_given? ? yield : image).write("#{dir_path}/#{new_name}")
       end
 
       def finish
@@ -62,7 +65,7 @@ class ClearImage
       end
 
       def should_log?
-        ENV['LOG_CLEAR_IMAGE_EXTRACTION'] == 'true'
+        Rails.env.development?
       end
     end
   end

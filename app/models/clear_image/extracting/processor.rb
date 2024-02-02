@@ -22,6 +22,7 @@ class ClearImage
 
         def paint_white_over_non_names(image, first_name_line, second_name_line)
           first_line, second_line = get_name_boundary_lines(image, first_name_line, second_name_line)
+          p ['first_line', first_line, 'second_line', second_line]
 
           topline_1 = BoundingBox.new(0, first_line[0] - 2, image.columns, 1)
           first_non_name_bounding_box =
@@ -75,9 +76,6 @@ class ClearImage
                  else
                    line_bounding_box.max_by(&:y)
                  end
-          ap part
-          # image.crop(*part.to_arr).write("tmp/clear_image/#{reverse}_#{part.y}.png")
-          # get_last_white_line(image, part, reverse:)
           reverse ? part.y_end : part.y
         end
 

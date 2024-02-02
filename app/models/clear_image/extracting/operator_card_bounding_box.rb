@@ -1,4 +1,3 @@
-# rubocop:disable Metrics/ClassLength
 class ClearImage
   module Extracting
     class OperatorCardBoundingBox
