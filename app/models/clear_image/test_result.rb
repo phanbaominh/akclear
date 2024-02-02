@@ -2,6 +2,7 @@ class ClearImage::TestResult
   include ActiveModel::Model
   include ActiveModel::Attributes
   include Presentable
+  include Dry::Monads[:result]
 
   DATA_FILENAME = 'data.json'
   STATUSES = [
@@ -15,7 +16,7 @@ class ClearImage::TestResult
   attribute :test_run_id, :integer
   attribute :test_run
   attr_reader :data
-  attr_writer :latest_test_runs, :test_case
+  attr_writer :latest_test_runs, :test_case, :configuration
 
   def self.preload_test_case(test_results)
     test_run = test_results.first.test_run
@@ -47,7 +48,7 @@ class ClearImage::TestResult
   end
 
   def language
-    data[:language]&.to_sym
+    (@language || data[:language])&.to_sym
   end
 
   def used_operators_data
@@ -83,7 +84,7 @@ class ClearImage::TestResult
     end
 
     @failed_operators = id_to_used_operator_data.select do |id, used_operator_data|
-      used_operator_data != id_to_test_case_operator_data[id]
+      used_operator_data != id_to_test_case_operator_data[id] && id_to_test_case_operator_data[id]
     end.map do |id, used_operator_data|
       [UsedOperator.new(id_to_test_case_operator_data[id]),
        UsedOperator.new(used_operator_data)]
@@ -136,19 +137,27 @@ class ClearImage::TestResult
     File.write(data_path, { status: COMPUTING }.to_json)
     result =
       if clear_image_path.exist?
-        Dry::Monads::Success()
+        Success()
       else
         Clears::GetClearImageFromVideo.call(test_case.video, clear_image_path:)
       end
     if result.success?
-      clear_image = ClearImage.new(clear_image_path, data_folder_path, test_run.configuration)
+      used_configuration = if language && configuration
+                             new_config = test_run.configuration.dup
+                             new_config[language.to_s] = configuration
+                             new_config
+                           else
+                             test_run.configuration
+                           end
+      clear_image = ClearImage.new(clear_image_path, data_folder_path, used_configuration)
       used_operators_data = clear_image.used_operators_data
       language = clear_image.language
-      File.write(data_path, { status: PASSED, used_operators_data:, language: }.to_json)
+      File.write(data_path, { status: PASSED, used_operators_data:, language:, original_correct_ratio: }.to_json)
     else
       File.write(data_path, { status: FAILED, error_message: result.failure }.to_json)
     end
   rescue StandardError => e
+    puts e.backtrace
     File.write(data_path, { status: FAILED, error_message: e.message }.to_json)
   end
 
@@ -189,6 +198,7 @@ class ClearImage::TestResult
 
   def rerun!
     @original_correct_ratio = original_correct_ratio
+    @language = data[:language]
     destroy_data_folder
     compute!
     read_from_file

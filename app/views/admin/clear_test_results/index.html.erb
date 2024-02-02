@@ -20,6 +20,7 @@
 </div>
 <section>
   <div class="card bg-base-200 ">
+    <h2 class="text-2xl mb-2"> TR: <%= @clear_test_run.name || @clear_test_run.id %></h2>
     <div class="card-body p-2">
       <%= render Admin::ClearImage::TestRunConfigurationComponent.new(test_run: @clear_test_run) %>
     </div>
@@ -33,7 +34,9 @@
           <div class="outline w-fit outline-neutral rounded p-2">
             <%= render Admin::ClearImage::TestRunCorrectRatioComponent.new(
             correct_ratio: @clear_test_results.map(&:correct_ratio).sum.round(2),
-            max_latest_correct_ratio: @clear_test_results.map(&:max_latest_correct_ratio).sum.round(2)
+            max_latest_correct_ratio: @clear_test_results.map(&:max_latest_correct_ratio).sum.round(2),
+            correct_name_ratio: 
+              (@clear_test_results.map(&:correct_name_op_count).sum.to_f / @clear_test_results.map(&:total_op_count).sum).round(2) * 100
           ) %>
           </div>
           <%= content_tag :button, class: 'hidden', data: { **stimulus_attrs(:click_other, target: 'clickable'), turbo_frame: '_top' },
