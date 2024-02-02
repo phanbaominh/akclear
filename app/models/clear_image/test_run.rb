@@ -75,4 +75,12 @@ class ClearImage::TestRun < ApplicationRecord
   def latest_test_runs
     @latest_test_runs ||= ClearImage::TestRun.where.not(id:).order(id: :desc).limit(latest_size).to_a
   end
+
+  def prev_test_run_id
+    ClearImage::TestRun.where('id < ?', id).order(id: :desc).limit(1).pick(:id)
+  end
+
+  def next_test_run_id
+    ClearImage::TestRun.where('id > ?', id).order(id: :asc).limit(1).pick(:id)
+  end
 end
