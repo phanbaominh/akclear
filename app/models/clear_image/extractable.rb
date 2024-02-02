@@ -139,10 +139,16 @@ class ClearImage
       name_lines.map(&:merge)
     end
 
+    def final_name_lines?
+      @extract_name_line_count == 3
+    end
+
     def extract_name_lines(boundary_lines = nil)
       @extract_name_line_count ||= 0
       @extract_name_line_count += 1
       all_word_lines = extract_word_lines
+      all_word_lines.each { |line| line.keep_evenly_high_boxes } unless @extract_name_line_count == 1
+      all_word_lines.each { |line| line.remove_outlier! } unless final_name_lines?
       logger.log('all_word_lines:', all_word_lines)
       @name_lines = all_word_lines
                     .sort_by { |line| line.merge.word.length }
@@ -151,7 +157,7 @@ class ClearImage
       return unless boundary_lines
 
       @name_lines.each_with_index do |line, i|
-        line.y = boundary_lines[i].first
+        line.y = line.center_y || boundary_lines[i].first # POINT
       end
     end
 
@@ -169,11 +175,14 @@ class ClearImage
     end
 
     def extract_words
+      small_squad = @name_lines && @name_lines.map(&:size).sum < 5
       ocr_word_boxes = @lined ? reader.read_lined_names(tmp_file_path) : reader.read_sparse_names(tmp_file_path)
-      word_bounding_boxes = ocr_word_boxes
-                            .map { |box| Extracting::WordBoundingBox.new(box) }
-                            .reject { |box| box.near_end?(image) }
-      Extracting::WordProcessor.group_near_words_in_same_line(word_bounding_boxes)
+      word_bounding_boxes = ocr_word_boxes.map { |box| Extracting::WordBoundingBox.new(box) }
+      ap ['raw words', word_bounding_boxes] if @extract_name_line_count == 3
+      word_bounding_boxes.reject! { |box| box.near_end?(image) }
+      word_bounding_boxes.reject! { |box| box.word.length < 3 } if language == :en
+      Extracting::WordProcessor.group_near_words_in_same_line(word_bounding_boxes,
+                                                              all_same_line: false) # POINT @extract_name_line_count >= 2
     end
 
     def image_filename
