@@ -113,9 +113,14 @@ class ClearImage::TestResult
 
     FileUtils.mkdir_p(data_folder_path)
     File.write(data_path, { status: COMPUTING }.to_json)
-    result = Clears::GetClearImageFromVideo.call(test_case.video, clear_image_path:)
+    result =
+      if clear_image_path.exist?
+        Dry::Monads::Success()
+      else
+        Clears::GetClearImageFromVideo.call(test_case.video, clear_image_path:)
+      end
     if result.success?
-      clear_image = ClearImage.new(clear_image_path, test_run.configuration)
+      clear_image = ClearImage.new(clear_image_path, data_folder_path, test_run.configuration)
       used_operators_data = clear_image.used_operators_data
       language = clear_image.language
       File.write(data_path, { status: PASSED, used_operators_data:, language: }.to_json)
@@ -141,7 +146,7 @@ class ClearImage::TestResult
   end
 
   def clear_image_path
-    @clear_image_path ||= data_folder_path.join('clear.jpg')
+    @clear_image_path ||= test_case.clear_image_path
   end
 
   def test_case
@@ -156,6 +161,7 @@ class ClearImage::TestResult
 
     @test_run ||= ClearImage::TestRun.find_by(id: test_run_id)
   end
+
   def rerun!
     destroy_data_folder
     compute!
