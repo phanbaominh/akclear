@@ -16,6 +16,7 @@ class Admin::ClearTestResultsController < ApplicationController
 
   def update
     get_clear_test_result
+    @clear_test_result.configuration = params[:clear_test_result][:configuration].permit!.to_h
     @clear_test_result.rerun!
     redirect_to admin_clear_test_run_clear_test_result_path(@clear_test_run, @clear_test_result.test_case_id)
   end

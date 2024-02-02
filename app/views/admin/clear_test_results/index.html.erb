@@ -1,4 +1,7 @@
-<%= link_to t('.view_test_run'), admin_clear_test_run_path(@clear_test_run), class: 'btn btn-neutral w-fit mb-2' %>
+<div class="flex justify-between">
+  <%= link_to t('.view_test_run'), admin_clear_test_run_path(@clear_test_run), class: 'btn btn-neutral w-fit mb-2' %>
+  <%= button_to t('.destroy_test_run'), admin_clear_test_run_path(@clear_test_run), method: :delete, class: 'btn btn-error w-fit mb-2' %>
+</div>
 <section>
   <div class="card bg-base-200 ">
     <div class="card-body p-2">
