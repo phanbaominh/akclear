@@ -25,6 +25,11 @@
     <div class="flex items-center space-x-2">
       <%= render Admin::ClearImage::TestResultSummaryComponent.new(test_result: @clear_test_result) %>
     </div>
+    <% if @clear_test_result.failed? %>
+      <div class="alert alert-error">
+        <%= @clear_test_result.error_message  %>
+      </div>
+    <% end %>
     <div>
       <%= render Admin::ClearImage::TestRunCorrectRatioComponent.new(test_result: @clear_test_result) %>
     </div>
@@ -123,10 +128,14 @@
       </section>
     <% end %>
   </div>
-  <%= button_to admin_clear_test_case_path(@clear_test_result.test_case_id), method: :PATCH, class: 'btn btn-primary self-end' do |f|%>
-    <%= simple_fields_for ClearImage::TestCase.new  do |f| %>
-      <%= f.input :test_run_id, as: :hidden, input_html: { value: @clear_test_result.test_run_id }  %>
-      <%= t('.update_test_case') %>
+  <div class="flex justify-between mt-2">
+    <%= button_to t('.rerun'), admin_clear_test_run_clear_test_result_path(@clear_test_run, @clear_test_result.test_case_id),
+    method: :patch, class: 'btn btn-primary  mb-2' %>
+    <%= button_to admin_clear_test_case_path(@clear_test_result.test_case_id), method: :PATCH, class: 'btn btn-warning' do |f|%>
+      <%= simple_fields_for ClearImage::TestCase.new  do |f| %>
+        <%= f.input :test_run_id, as: :hidden, input_html: { value: @clear_test_result.test_run_id }  %>
+        <%= t('.update_test_case') %>
+      <% end %>
     <% end %>
-  <% end %>
+  </div>
 </section>

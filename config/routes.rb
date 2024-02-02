@@ -19,7 +19,7 @@ Rails.application.routes.draw do
       resources :users, only: %i[index update edit show]
       resources :clear_test_cases, only: %i[index show update destroy]
       resources :clear_test_runs, only: %i[new create show destroy update] do
-        resources :clear_test_results, only: %i[index show]
+        resources :clear_test_results, only: %i[index show update]
       end
     end
     resources :sessions, only: %i[index show destroy]

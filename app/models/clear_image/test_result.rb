@@ -54,6 +54,10 @@ class ClearImage::TestResult
     data[:used_operators_data] || []
   end
 
+  def error_message
+    data[:error_message]
+  end
+
   def test_case_operator_data
     test_case.used_operators_data
   end
@@ -152,6 +156,11 @@ class ClearImage::TestResult
 
     @test_run ||= ClearImage::TestRun.find_by(id: test_run_id)
   end
+  def rerun!
+    destroy_data_folder
+    compute!
+    read_from_file
+  end
 
   def destroy_data_folder
     FileUtils.rm_rf(data_folder_path)
@@ -181,8 +190,12 @@ class ClearImage::TestResult
     end.reject { |path| path.include?(ClearImage::Logger::NAME_BOX) }
   end
 
+  def name_box_file_paths
+    Dir[data_folder_path.join("#{ClearImage::Logger::NAME_BOX}_*.png")]
+  end
+
   def name_box_image_srcs
-    Dir[data_folder_path.join("#{ClearImage::Logger::NAME_BOX}_*.png")].map do |file_path|
+    name_box_file_paths.map do |file_path|
       file_path.gsub(Rails.public_path.to_s, '')
     end
   end
@@ -206,6 +219,8 @@ class ClearImage::TestResult
   end
 
   def log_text
+    return unless log_path.exist?
+
     @log_text ||= File.read(log_path)
   end
 

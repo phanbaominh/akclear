@@ -10,7 +10,19 @@ class Admin::ClearTestResultsController < ApplicationController
   end
 
   def show
-    @clear_test_result = ClearImage::TestResult.new(test_case_id: params[:id], test_run_id: @clear_test_run.id)
+    get_clear_test_result
+    preload_operators_data
+  end
+
+  def update
+    get_clear_test_result
+    @clear_test_result.rerun!
+    redirect_to admin_clear_test_run_clear_test_result_path(@clear_test_run, @clear_test_result.test_case_id)
+  end
+
+  private
+
+  def preload_operators_data
     I18n.with_locale(@clear_test_result.language) do
       Operator.build_translations_cache(Operator.where(id: @clear_test_result.all_operators.pluck(:operator_id)))
     end
@@ -18,5 +30,9 @@ class Admin::ClearTestResultsController < ApplicationController
       records: @clear_test_result.all_operators,
       associations: [:operator]
     ).call
+  end
+
+  def get_clear_test_result
+    @clear_test_result = ClearImage::TestResult.new(test_case_id: params[:id], test_run_id: @clear_test_run.id)
   end
 end
