@@ -25,6 +25,12 @@ class Admin::ClearTestRunsController < ApplicationController
     end
   end
 
+  def destroy
+    @test_run = ClearImage::TestRun.find(params[:id])
+    @test_run.destroy
+    redirect_to new_admin_clear_test_run_url
+  end
+
   private
 
   def clear_test_run_params
