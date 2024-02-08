@@ -19,7 +19,8 @@ class ClearImage
       def extract
         I18n.with_locale(language) do
           operator = match_operator_with_long_enough_name(box_word) || find_operator(box_word, 0.8) ||
-                     find_operator(get_word_from_box)
+                     find_operator(detected_word = get_word_from_box) || match_special_operators(box_word,
+                                                                                                 detected_word)
 
           log_box(operator)
           next unless operator
@@ -37,6 +38,17 @@ class ClearImage
       private
 
       attr_reader :operator_card_bounding_box, :image, :reader, :operators, :elite_0_image, :elite_1_image
+
+      def match_special_operators(*words)
+        if reader.jp?
+
+          return unless words.any? { |w| w.include?('Rヤ') }
+
+          find_operator('キリンRヤトウ', 1)
+        elsif reader.en?
+          find_operator('Młynar') if words.any? { |w| w.include?('Miynar') }
+        end
+      end
 
       def box_word
         operator_card_bounding_box.word

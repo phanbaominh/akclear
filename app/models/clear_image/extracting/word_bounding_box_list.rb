@@ -72,7 +72,7 @@ class ClearImage
 
       def real_dists_between_words
         list.each_cons(2).filter_map do |first_name_box, second_name_box|
-          dist = second_name_box.x_end - first_name_box.x
+          dist = second_name_box.x - first_name_box.x_end
           dist < 0 ? 0 : dist
         end
       end

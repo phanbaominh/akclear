@@ -157,7 +157,7 @@ class ClearImage
       return unless boundary_lines
 
       @name_lines.each_with_index do |line, i|
-        line.y = line.center_y || boundary_lines[i].first # POINT
+        line.y = line.center_y || boundary_lines[i].first
       end
     end
 
@@ -175,14 +175,13 @@ class ClearImage
     end
 
     def extract_words
-      small_squad = @name_lines && @name_lines.map(&:size).sum < 5
-      ocr_word_boxes = @lined ? reader.read_lined_names(tmp_file_path) : reader.read_sparse_names(tmp_file_path)
+      small_squad = @name_lines && @name_lines.map(&:size).sum < 6
+      ocr_word_boxes = @lined && !small_squad ? reader.read_lined_names(tmp_file_path) : reader.read_sparse_names(tmp_file_path)
       word_bounding_boxes = ocr_word_boxes.map { |box| Extracting::WordBoundingBox.new(box) }
       ap ['raw words', word_bounding_boxes] if @extract_name_line_count == 3
       word_bounding_boxes.reject! { |box| box.near_end?(image) }
       word_bounding_boxes.reject! { |box| box.word.length < 3 } if language == :en
-      Extracting::WordProcessor.group_near_words_in_same_line(word_bounding_boxes,
-                                                              all_same_line: false) # POINT @extract_name_line_count >= 2
+      Extracting::WordProcessor.group_near_words_in_same_line(word_bounding_boxes) # POINT
     end
 
     def image_filename

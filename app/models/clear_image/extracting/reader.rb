@@ -9,6 +9,12 @@ class ClearImage
       class << self
         include TmpFileStorable
 
+        LOCALE_TO_TESSERACT_LANG.each_key do |locale|
+          define_method("#{locale}?") do
+            language == locale
+          end
+        end
+
         def read_digits_only(path)
           RTesseract.new(path, config_file: :digits, psm: '7').to_s.to_i
         end
@@ -29,6 +35,7 @@ class ClearImage
                       .strip
                       .tr('一', 'ー') # ichi vs long dahsh
                       .tr('夕', 'タ') # yuu vs ta
+                      .tr('ヵ', 'カ') # yuu vs ta
                       .gsub(/^ー*/, '')
                       .gsub(/^[^\p{Latin}\p{Hiragana}\p{Katakana}\p{Han}]*/, '')
           else
