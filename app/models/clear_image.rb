@@ -2,7 +2,7 @@ class ClearImage
   include Extractable
   include TmpFileStorable
 
-  def initialize(image_path, data_path, options = nil)
+  def initialize(image_path, data_path = nil, options = {})
     @image_path = image_path
     @data_path = data_path
     Logger.dir_path_for_current_thread = data_path.to_s

@@ -157,7 +157,7 @@ class ClearImage
         cur = nil
         translated = [15]
         chosen_image = nil
-        [[10, 5], [5, 10], [10, 10], [15, 0]].each do |(w_border, b_border)|
+        [[10, 10], [15, 0]].each do |(w_border, b_border)|
           crop_img = processed_image.crop(0, line[0] - 2, processed_image.columns, line[1] - line[0] + 2).border(
             w_border, w_border, 'white'
           ).border(
