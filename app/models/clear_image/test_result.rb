@@ -233,7 +233,7 @@ class ClearImage::TestResult
   end
 
   def name_box_file_paths
-    Dir[data_folder_path.join("#{ClearImage::Logger::NAME_BOX}_*.png")]
+    Dir[data_folder_path.join("*#{ClearImage::Logger::NAME_BOX}_*.png")]
   end
 
   def name_box_image_srcs

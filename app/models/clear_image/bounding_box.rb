@@ -35,6 +35,12 @@ class ClearImage::BoundingBox
     new_box
   end
 
+  def translate!(x: 0, y: 0)
+    self.x += x
+    self.y += y
+    self
+  end
+
   def inside?(image)
     x >= 0 && y >= 0 && x_end < image.columns && y_end < image.rows
   end

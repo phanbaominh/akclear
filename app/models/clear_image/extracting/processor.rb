@@ -62,6 +62,10 @@ class ClearImage
           image.unsharp_mask(6.8, 1, 2.69, 0).reduce_noise(0)
         end
 
+        def make_border(image)
+          image.border(10, 10, 'black')
+        end
+
         private
 
         def get_inbetween_boxes(line)

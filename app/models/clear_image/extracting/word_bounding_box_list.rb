@@ -100,7 +100,7 @@ class ClearImage
       end
 
       def remove_outlier!
-        keep_evenly_wide_boxes
+        # keep_evenly_wide_boxes
         return unless center_y
 
         list.reject! { |box| (box.y - center_y).abs > 5 }

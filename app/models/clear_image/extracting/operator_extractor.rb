@@ -18,9 +18,14 @@ class ClearImage
 
       def extract
         I18n.with_locale(language) do
-          operator = match_operator_with_long_enough_name(box_word) || find_operator(box_word, 0.8) ||
-                     find_operator(detected_word = get_word_from_box) || match_special_operators(box_word,
-                                                                                                 detected_word)
+          operator = match_operator_with_long_enough_name(box_word) || find_operator(box_word,
+                                                                                     0.8) || match_special_operators(box_word)
+          unless operator
+            detected_word = reader.process_name(get_word_from_box)
+            operator = match_operator_with_long_enough_name(detected_word) || find_operator(detected_word) || match_special_operators(
+              box_word, detected_word
+            )
+          end
 
           log_box(operator)
           next unless operator
@@ -51,7 +56,7 @@ class ClearImage
       end
 
       def box_word
-        operator_card_bounding_box.word
+        @box_word ||= reader.process_name(operator_card_bounding_box.word)
       end
 
       def name_bounding_box
@@ -106,12 +111,14 @@ class ClearImage
       end
 
       def get_word_from_box
-        return if name_bounding_box.invalid?
+        return '' if name_bounding_box.invalid?
 
-        Extracting::Processor
-          .make_names_white_on_black(
-            image.crop(*name_bounding_box.to_arr), floodfill_x: name_bounding_box.width * 1.2 / 2, floodfill_y: 0
-          ).write(tmp_file_path)
+        box_image = Extracting::Processor
+                    .make_names_white_on_black(
+                      image.crop(*name_bounding_box.to_arr), floodfill_x: name_bounding_box.width * 1.1 / 2, floodfill_y: 0
+                    ).color_floodfill(0, 0, 'white').border(10, 10, 'white')
+        Logger.copy_image(box_image, "processed_#{Logger.name_box_file_name(box_word)}")
+        box_image.write(tmp_file_path)
         reader.read_single_name(tmp_file_path)
       end
 

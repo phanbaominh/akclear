@@ -20,7 +20,9 @@ class ClearImage
         end
 
         def read_lined_names(path)
-          RTesseract.new(path, psm: '3', oem: 1, lang: tess_language_code).to_box
+          r1 = RTesseract.new(path, psm: '7', oem: 1, lang: tess_language_code).to_box
+          r2 = RTesseract.new(path, psm: '11', oem: 1, lang: tess_language_code).to_box
+          r1.pluck(:word).join.length > r2.pluck(:word).join.length ? r1 : r2
         end
 
         def read_sparse_names(path)
@@ -30,16 +32,23 @@ class ClearImage
         def read_single_name(path)
           if tess_language_code == 'jpn'
             # run both oem version?
-            RTesseract.new(path, psm: '8', lang: tess_language_code, oem: '0')
-                      .to_s
-                      .strip
-                      .tr('一', 'ー') # ichi vs long dahsh
-                      .tr('夕', 'タ') # yuu vs ta
-                      .tr('ヵ', 'カ') # yuu vs ta
-                      .gsub(/^ー*/, '')
-                      .gsub(/^[^\p{Latin}\p{Hiragana}\p{Katakana}\p{Han}]*/, '')
+            process_name(RTesseract.new(path, psm: '3', lang: tess_language_code, oem: 1).to_s)
           else
-            RTesseract.new(path, psm: '11', lang: tess_language_code).to_s.gsub(/\W/, '')
+            process_name(RTesseract.new(path, psm: '11', lang: tess_language_code).to_s)
+          end
+        end
+
+        def process_name(name)
+          if jp?
+            name.strip
+                .tr('一', 'ー') # ichi vs long dahsh
+                .tr('夕', 'タ') # yuu vs ta
+                .tr('ヵ', 'カ') # yuu vs ta
+                .gsub(/^ー*/, '')
+                .gsub(/\s/, '')
+                .gsub(/^[^\p{Latin}\p{Hiragana}\p{Katakana}\p{Han}]*/, '')
+          else
+            name.gsub(/\W/, '')
           end
         end
 
