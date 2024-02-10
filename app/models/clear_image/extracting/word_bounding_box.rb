@@ -53,6 +53,10 @@ class ClearImage
         confidence.is_a?(Array) ? confidence.sum * 1.0 / confidence.size : confidence
       end
 
+      def valid?
+        !(average_confidence < 20 || character_only_word.blank?)
+      end
+
       def inspect
         "word: #{word}, x: #{x}, y: #{y}, x_end: #{x_end}, y_end: #{y_end}, width: #{width}, height: #{height},char_w: #{average_character_width}, confidence: #{confidence}
         , parts: xs: #{parts.map(&:x)} ys: #{parts.map(&:y)}"

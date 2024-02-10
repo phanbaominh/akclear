@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ClearImage
   module Extracting
     class OperatorExtractor
@@ -5,12 +7,23 @@ class ClearImage
       include TmpFileStorable
 
       SKILL_IMAGE_PATH = Rails.root.join('app/javascript/images/skills/')
+      ELITE_0_REFERENCE_IMAGE_PATH = Rails.root.join('app/javascript/images/elite0_reference.png')
+      ELITE_1_REFERENCE_IMAGE_PATH = Rails.root.join('app/javascript/images/elite1_reference.png')
       NAME_SIMILARITY_THRESHOLD = 0.7
 
-      def initialize(operator_card_bounding_box, image, reader, operators, elite_0_image, elite_1_image)
+      class << self
+        def elite_1_image
+          Magick::ImageList.new(ELITE_1_REFERENCE_IMAGE_PATH).first
+        end
+
+        def elite_0_image
+          Magick::ImageList.new(ELITE_0_REFERENCE_IMAGE_PATH).first
+        end
+      end
+
+      def initialize(operator_card_bounding_box, image, operators, elite_0_image, elite_1_image)
         @operator_card_bounding_box = operator_card_bounding_box
         @image = image
-        @reader = reader
         @operators = operators || Operator.i18n.pluck(:id, :name).map { |id, name| [id, name.gsub(/\s+/, '')] }
         @elite_0_image = elite_0_image
         @elite_1_image = elite_1_image
@@ -18,14 +31,8 @@ class ClearImage
 
       def extract
         I18n.with_locale(language) do
-          operator = match_operator_with_long_enough_name(box_word) || find_operator(box_word,
-                                                                                     0.8) || match_special_operators(box_word)
-          unless operator
-            detected_word = reader.process_name(get_word_from_box)
-            operator = match_operator_with_long_enough_name(detected_word) || find_operator(detected_word) || match_special_operators(
-              box_word, detected_word
-            )
-          end
+          operator =
+            match_operator(box_word, similarity_threshold: 0.8) || match_operator(redetect_word_from_cropped_box_image)
 
           log_box(operator)
           next unless operator
@@ -34,7 +41,7 @@ class ClearImage
           %i[skill level elite].each do |component|
             result[component] =
               send(:"get_#{component}_from_image", image.crop(*operator_card_bounding_box.send("#{component}_bounding_box").to_arr),
-                   operator)
+                   operator, result)
           end
           result
         end
@@ -42,21 +49,62 @@ class ClearImage
 
       private
 
-      attr_reader :operator_card_bounding_box, :image, :reader, :operators, :elite_0_image, :elite_1_image
+      attr_reader :operator_card_bounding_box, :image, :operators, :elite_0_image, :elite_1_image
 
-      def match_special_operators(*words)
+      def reader
+        ClearImage::Extracting::Reader
+      end
+
+      def match_operator(word, similarity_threshold: NAME_SIMILARITY_THRESHOLD)
+        word = reader.process_name(word)
+
+        match_name_containing(word) || match_special_name(word) || match_name_with_highest_similarity(word,
+                                                                                                      similarity_threshold)
+      end
+
+      def match_special_name(word)
         if reader.jp?
 
-          return unless words.any? { |w| w.include?('Rヤ') }
+          return unless word.include?('Rヤ')
 
-          find_operator('キリンRヤトウ', 1)
+          match_name_with_highest_similarity('キリンRヤトウ', 1)
         elsif reader.en?
-          find_operator('Młynar') if words.any? { |w| w.include?('Miynar') }
+          match_name_with_highest_similarity('Młynar') if word.include?('Miynar')
         end
       end
 
+      def match_name_containing(word)
+        return unless word.length >= 4
+
+        id = operators.find { |_id, name| name.include?(word) }&.first
+
+        return unless id
+
+        Operator.find(id)
+      end
+
+      def find_most_matched_name(word, similarity_threshold)
+        most_matched_name = operator_names.min_by do |name|
+          Amatch::Levenshtein.new(name).match(word)
+        end
+        similarity = most_matched_name.levenshtein_similar(word)
+        Logger.log(word, ['simlarity', word, most_matched_name, similarity])
+
+        most_matched_name if similarity >= similarity_threshold
+      end
+
+      def match_name_with_highest_similarity(word, similarity_threshold = NAME_SIMILARITY_THRESHOLD)
+        return unless word
+
+        most_matched_name = find_most_matched_name(word, similarity_threshold)
+
+        return unless most_matched_name
+
+        Operator.find(operators.find { |_id, name| name == most_matched_name }.first)
+      end
+
       def box_word
-        @box_word ||= reader.process_name(operator_card_bounding_box.word)
+        operator_card_bounding_box.word
       end
 
       def name_bounding_box
@@ -72,36 +120,6 @@ class ClearImage
         reader.language
       end
 
-      def match_operator_with_long_enough_name(detected_name)
-        return unless detected_name.length >= 4
-
-        id = operators.find { |_id, name| name.include?(detected_name) }&.first
-
-        return unless id
-
-        Operator.find(id)
-      end
-
-      def find_most_matched_name(detected_name, similarity_threshold)
-        most_matched_name = operator_names.min_by do |name|
-          Amatch::Levenshtein.new(name).match(detected_name)
-        end
-        similarity = most_matched_name.levenshtein_similar(detected_name)
-        Logger.log(detected_name, ['simlarity', detected_name, most_matched_name, similarity])
-
-        most_matched_name if similarity >= similarity_threshold
-      end
-
-      def find_operator(detected_name, similarity_threshold = NAME_SIMILARITY_THRESHOLD)
-        return unless detected_name
-
-        most_matched_name = find_most_matched_name(detected_name, similarity_threshold)
-
-        return unless most_matched_name
-
-        Operator.find(operators.find { |_id, name| name == most_matched_name }.first)
-      end
-
       def compare_image(target_image, source_image, scaled: false)
         target_image = ImageList.new(target_image) unless target_image.is_a?(Image)
         source_image = ImageList.new(source_image) unless source_image.is_a?(Image)
@@ -110,7 +128,7 @@ class ClearImage
         target_image.difference(source_image)
       end
 
-      def get_word_from_box
+      def redetect_word_from_cropped_box_image
         return '' if name_bounding_box.invalid?
 
         box_image = Extracting::Processor
@@ -122,8 +140,9 @@ class ClearImage
         reader.read_single_name(tmp_file_path)
       end
 
-      def get_skill_from_image(image, operator)
+      def get_skill_from_image(image, operator, _extracted_data)
         return if operator.skill_game_ids.blank?
+        return 1 if operator.skill_game_ids.size == 1
 
         operator.skill_game_ids.map.with_index do |game_id, index|
           reference_skill_image = SKILL_IMAGE_PATH.join("#{game_id}.png")
@@ -131,26 +150,47 @@ class ClearImage
         end.min_by { |a| a[0] }[1]
       end
 
-      def get_level_from_image(image, _operator)
+      def get_level_from_image(image, operator, _extracted_data)
+        return 30 if operator.one_star? || operator.two_stars?
+
         image.write(tmp_file_path)
-        reader.read_digits_only(tmp_file_path)
+        detected = reader.read_digits_only(tmp_file_path)
+        return 55 if detected == 5 && operator.three_stars
+        return detected * 10 if (4..7).cover?(detected)
+
+        detected
       end
 
-      def get_elite_from_image(image, operator)
+      def get_elite_from_image(image, operator, extracted_data)
+        return 0 unless operator.max_elite.positive?
+        return 1 if operator.three_stars? # should elite 1 be most of the times
+
+        possible_elites = operator.possible_elite_with_level(extracted_data[:level])
+        return possible_elites.first if possible_elites.size == 1
+
         greyscaled_image = image.quantize(2, GRAYColorspace)
-        detected_elite = if compare_image(greyscaled_image,
-                                          elite_0_image, scaled: true)[0] < compare_image(greyscaled_image,
-                                                                                          elite_1_image, scaled: true)[0]
-                           0
-                         else
-                           color_histogram = greyscaled_image.color_histogram.transform_keys(&:to_color)
-                           color_histogram['white'] * 1.1 > color_histogram['black'] ? 2 : 1
-                         end
-        [detected_elite, operator.max_elite].min
+
+        if possible_elites.include?(0)
+          return 0 if is_elite_0?(greyscaled_image)
+
+          possible_elites.delete(0)
+        end
+        return possible_elites.first if possible_elites.size == 1
+
+        guess_elite_1_or_2(greyscaled_image)
       end
 
       def operator_names
         @operator_names ||= operators.map(&:second)
+      end
+
+      def is_elite_0?(image)
+        compare_image(image, elite_0_image, scaled: true)[0] < compare_image(image, elite_1_image, scaled: true)[0]
+      end
+
+      def guess_elite_1_or_2(image)
+        color_histogram = image.color_histogram.transform_keys(&:to_color)
+        color_histogram['white'] * 1.1 > color_histogram['black'] ? 2 : 1
       end
     end
   end

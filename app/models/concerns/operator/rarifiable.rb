@@ -70,6 +70,14 @@ module Operator::Rarifiable
     RARITIES_TO_MAX_SKILL_LEVEL[rarity][elite]
   end
 
+  def possible_elite_with_level(level)
+    possible_elites = Array.new(max_elite + 1, 0)
+    RARITIES_TO_MAX_LEVEL[rarity].each_with_index do |max_level, elite|
+      possible_elites.delete(elite) if level > max_level
+    end
+    possible_elites
+  end
+
   def has_skills?
     skill_game_ids&.length&.positive?
   end

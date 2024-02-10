@@ -34,14 +34,14 @@ class ClearImage
 
         Logger.log('lower_bound_of_dist', lower_bound_of_dist)
 
-        dists_between_words = (first_name_line + second_name_line).dists_between_words(lower_bound_of_dist)
-        Logger.log('dist between words', dists_between_words)
+        dist_between_word_ends = (first_name_line + second_name_line).dist_between_word_ends(lower_bound_of_dist)
+        Logger.log('dist between words', dist_between_word_ends)
 
         max_size = 0
         result = lower_bound_of_dist
-        dists_between_words.sort.each do |dist|
+        dist_between_word_ends.sort.each do |dist|
           lower_bound_of_dist = dist
-          within_current_min = dists_between_words.select do |d|
+          within_current_min = dist_between_word_ends.select do |d|
             d < lower_bound_of_dist * Configuration.max_largest_card_dist_to_smallest_dist_ratio_to_guess_dist_between_card &&
               d >= lower_bound_of_dist
           end

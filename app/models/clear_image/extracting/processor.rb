@@ -14,19 +14,12 @@ class ClearImage
             .tap { |i| i.alpha(OffAlphaChannel) } # remove alpha
         end
 
-        def get_name_boundary_lines(image, first_name_line, second_name_line)
-          [first_name_line, second_name_line].map do |line|
-            [get_line(image, line), get_line(image, line, reverse: true)]
-          end
-        end
-
         def paint_white_over_non_names(image, first_name_line, second_name_line)
-          first_line, second_line = get_name_boundary_lines(image, first_name_line, second_name_line)
-          p ['first_line', first_line, 'second_line', second_line]
+          first_line = [first_name_line.y, first_name_line.y_end]
 
           topline_1 = BoundingBox.new(0, first_line[0] - 2, image.columns, 1)
           first_non_name_bounding_box =
-            (if first_line[0] > 0
+            (if first_line[0].positive?
                BoundingBox.new(0, 0, image.columns,
                                y_end: first_line[0] - 1)
              end)
@@ -34,6 +27,8 @@ class ClearImage
             0, first_line[1] + 3, image.columns, y_end: second_line[0] - 1
           )
           underline_1 = BoundingBox.new(0, first_line[1] + 1, image.columns, 1)
+
+          second_line = [second_name_line.y, second_name_line.y_end]
           topline_2 = BoundingBox.new(0, second_line[0] - 2, image.columns, 1)
           last_non_name_bounding_box = (if second_line[0] < image.rows
                                           BoundingBox.new(
@@ -72,15 +67,6 @@ class ClearImage
           line.each_cons(2).map do |first_box, second_box|
             BoundingBox.new(first_box.x_end + 1, first_box.y, second_box.x - first_box.x_end - 1, first_box.height)
           end
-        end
-
-        def get_line(_image, line_bounding_box, reverse: false)
-          part = if reverse
-                   line_bounding_box.max_by { |part| part.y + part.height }
-                 else
-                   line_bounding_box.max_by(&:y)
-                 end
-          reverse ? part.y_end : part.y
         end
 
         def get_last_white_line(image, box, reverse: false)

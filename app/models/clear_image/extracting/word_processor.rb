@@ -6,8 +6,7 @@ class ClearImage
           processed_boxes = []
           prev_near_boxes = WordBoundingBoxList.new
           words_bounding_boxes.each do |box|
-            # convert circled number to normal number
-            next if (box.average_confidence < 20) || box.character_only_word.blank?
+            next unless box.valid?
 
             if prev_near_boxes.present? &&
                !prev_near_boxes.near?(box) &&

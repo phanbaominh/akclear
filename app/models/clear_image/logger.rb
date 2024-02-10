@@ -65,7 +65,7 @@ class ClearImage
       end
 
       def should_log?
-        Rails.env.development?
+        ENV['CLEAR_IMAGE_LOG'] == 'true'
       end
     end
   end

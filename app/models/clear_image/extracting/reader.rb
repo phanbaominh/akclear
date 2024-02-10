@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ClearImage
   module Extracting
     class Reader
@@ -20,9 +22,9 @@ class ClearImage
         end
 
         def read_lined_names(path)
-          r1 = RTesseract.new(path, psm: '7', oem: 1, lang: tess_language_code).to_box
-          r2 = RTesseract.new(path, psm: '11', oem: 1, lang: tess_language_code).to_box
-          r1.pluck(:word).join.length > r2.pluck(:word).join.length ? r1 : r2
+          [7, 11].map do |psm|
+            RTesseract.new(path, psm:, oem: 1, lang: tess_language_code).to_box
+          end.max_by { |result| result.pluck(:word).join.length }
         end
 
         def read_sparse_names(path)
@@ -43,7 +45,7 @@ class ClearImage
             name.strip
                 .tr('一', 'ー') # ichi vs long dahsh
                 .tr('夕', 'タ') # yuu vs ta
-                .tr('ヵ', 'カ') # yuu vs ta
+                .tr('ヵ', 'カ')
                 .gsub(/^ー*/, '')
                 .gsub(/\s/, '')
                 .gsub(/^[^\p{Latin}\p{Hiragana}\p{Katakana}\p{Han}]*/, '')
