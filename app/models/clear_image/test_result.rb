@@ -149,7 +149,7 @@ class ClearImage::TestResult
                            else
                              test_run.configuration
                            end
-      clear_image = ClearImage.new(clear_image_path, data_folder_path, used_configuration)
+      clear_image = ClearImage.new(clear_image_path, used_configuration, log_data_path: data_folder_path)
       used_operators_data = clear_image.used_operators_data
       language = clear_image.language
       File.write(data_path, { status: PASSED, used_operators_data:, language:, original_correct_ratio: }.to_json)

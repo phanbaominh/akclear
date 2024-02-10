@@ -58,7 +58,13 @@ class ClearImage
           Thread.current[:clear_image_language]
         end
 
+        def language=(language)
+          Thread.current[:clear_image_language] = language
+        end
+
         def extract_language(processed_image: nil)
+          return if language
+
           Extracting::Processor.make_names_white_on_black(image).write(tmp_file_path) unless processed_image
           all_characters_regex = /[^\p{Latin}\p{Hiragana}\p{Katakana}\p{Han}]+/u
           Thread.current[:clear_image_language] = LOCALE_TO_TESSERACT_LANG.max_by do |_locale, tess_lang_code|

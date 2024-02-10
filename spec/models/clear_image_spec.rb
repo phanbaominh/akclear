@@ -5,8 +5,8 @@ def generate_test_from_name(name, locale:)
   [operator.name(locale:), operator.skill_game_ids, operator.rarity]
 end
 
-describe ClearImage, :slow do
-  let(:clear_image) { described_class.new(Pathname.new(image_path), Rails.root.join('tmp'), {}) }
+describe ClearImage do
+  let(:clear_image) { described_class.new(Pathname.new(image_path), language: I18n.locale) }
 
   # problem: ignore frequents words? case in point La Pluma turned into La Plum
   # reduce confidence threshold for group line? at least for english

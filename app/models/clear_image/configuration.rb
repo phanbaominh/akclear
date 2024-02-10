@@ -11,6 +11,7 @@ class ClearImage::Configuration
 
   DEFAULTS = {
     en: {
+      word_in_line_first_pass_confidence_threshold: 40,
       word_in_line_second_pass_confidence_threshold: 30
     }
   }.freeze

@@ -84,8 +84,10 @@ class ClearImage
       end
 
       def find_most_matched_name(word, similarity_threshold)
+        matcher = Amatch::Levenshtein.new(word)
+        # can optimize here by filter out name with appropriate length
         most_matched_name = operator_names.min_by do |name|
-          Amatch::Levenshtein.new(name).match(word)
+          matcher.match(name)
         end
         similarity = most_matched_name.levenshtein_similar(word)
         Logger.log(word, ['simlarity', word, most_matched_name, similarity])
