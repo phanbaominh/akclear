@@ -38,6 +38,9 @@ class ClearImage
           next unless operator
 
           result = { operator_id: operator.id }
+
+          return result if Configuration.operator_name_only
+
           %i[skill level elite].each do |component|
             result[component] =
               send(:"get_#{component}_from_image", image.crop(*operator_card_bounding_box.send("#{component}_bounding_box").to_arr),
@@ -161,8 +164,9 @@ class ClearImage
 
         image.write(tmp_file_path)
         detected = reader.read_digits_only(tmp_file_path)
-        return 55 if detected == 5 && operator.three_stars
+        return 55 if [0, 5].include?(detected) && operator.three_stars?
         return detected * 10 if (4..7).cover?(detected)
+        return 60 if detected == 0
 
         detected
       end

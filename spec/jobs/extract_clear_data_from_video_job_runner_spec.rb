@@ -1,12 +1,13 @@
 require 'rails_helper'
 
 RSpec.describe ExtractClearDataFromVideoJobRunner do
+  let_it_be(:channel) { create(:channel, clear_language: 'jp') }
   let_it_be(:job, reload: true) do
     create(
       :extract_clear_data_from_video_job,
       video_url: 'https://www.youtube.com/watch?v=9bZkp7q19f0',
       status: :started,
-      channel: create(:channel),
+      channel:,
       data: { 'name' => 'title' }
     )
   end
@@ -43,8 +44,8 @@ RSpec.describe ExtractClearDataFromVideoJobRunner do
 
       it 'extracts clear data from video' do
         described_class.perform_later(job.id)
-        expect(Clears::BuildClearFromVideo).to have_received(:call).with(job.video,
-                                                                         operator_name_only: job.operator_name_only)
+        expect(Clears::BuildClearFromVideo).to have_received(:call)
+          .with(job.video, operator_name_only: job.operator_name_only, language: 'jp')
         expect(job.reload.data).to eq(
           result.value!.attributes.slice('link')
             .merge('used_operators_attributes' => [], 'channel_id' => job.channel_id, 'name' => 'title', 'stage_id' => job.stage.id)
@@ -58,8 +59,8 @@ RSpec.describe ExtractClearDataFromVideoJobRunner do
 
       it 'stores error' do
         described_class.perform_later(job.id)
-        expect(Clears::BuildClearFromVideo).to have_received(:call).with(job.video,
-                                                                         operator_name_only: job.operator_name_only)
+        expect(Clears::BuildClearFromVideo).to have_received(:call)
+          .with(job.video, operator_name_only: job.operator_name_only, language: 'jp')
         expect(job.reload.data).to eq({ 'error' => 'invalid_video', 'name' => 'title' })
         expect(job).to be_failed
       end
@@ -74,8 +75,8 @@ RSpec.describe ExtractClearDataFromVideoJobRunner do
 
       it 'stores error' do
         described_class.perform_later(job.id)
-        expect(Clears::BuildClearFromVideo).to have_received(:call).with(job.video,
-                                                                         operator_name_only: job.operator_name_only)
+        expect(Clears::BuildClearFromVideo).to have_received(:call)
+          .with(job.video, operator_name_only: job.operator_name_only, language: 'jp')
         expect(job.reload.data).to eq({ 'error' => 'error', 'name' => 'title' })
         expect(job).to be_failed
       end

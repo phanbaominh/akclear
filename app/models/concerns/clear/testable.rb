@@ -2,7 +2,7 @@ module Clear::Testable
   extend ActiveSupport::Concern
 
   included do
-    has_one :test_case, dependent: :destroy
+    has_one :test_case, dependent: :destroy, class_name: 'ClearImage::TestCase'
 
     after_save :create_test_case_using_job_id, if: :use_for_test_case
   end
