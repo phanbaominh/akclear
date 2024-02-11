@@ -80,17 +80,16 @@ class ExtractClearDataFromVideoJob < ApplicationRecord
 
     return unless may_mark_clear_created?
 
-    if data&.dig('used_operators_attributes').blank?
-      name = data['name'] if data
-      self.data = {
-        stage_id:,
-        link: Video.new(video_url).to_url(normalized: true),
-        channel_id:,
-        name:
-      }
-    end
+    clear_data = {
+      stage_id:,
+      link: Video.new(video_url).to_url(normalized: true),
+      channel_id:,
+      name: data&.dig('name')
+    }
+    used_operators_attributes = data&.dig('used_operators_attributes')
+    clear_data.merge!(used_operators_attributes:) if used_operators_attributes.present?
 
-    @clear ||= Clear.new(data)
+    @clear ||= Clear.new(clear_data)
     # preload data
     operators = Operator.where(id: @clear.used_operators.map(&:operator_id))
     @clear.used_operators.each { |uo| uo.operator = operators.find { |o| o.id == uo.operator_id } }
