@@ -7,7 +7,7 @@ class ClearImage
       logger.start(image_filename)
       p 'Processing image for extraction...'
 
-      processed_image = Extracting::Processor.make_names_white_on_black(image).write(tmp_file_path)
+      processed_image = Extracting::Processor.make_names_white_on_black(image, double_fill: true).write(tmp_file_path)
       reader.extract_language(processed_image:)
 
       set_name_line_extractor(processed_image)

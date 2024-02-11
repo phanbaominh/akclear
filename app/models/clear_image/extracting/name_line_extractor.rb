@@ -70,13 +70,19 @@ class ClearImage
         all_word_lines.each(&:remove_outlier!) unless final_name_lines?
         logger.log('all_word_lines:', all_word_lines)
         all_word_lines
-          .sort_by { |line| line.merge.word.length }
+          .sort_by do |line|
+            merged_word = line.merge.word
+            merged_word = merged_word.gsub(/\w+/, 'a') if reader.zh_cn? # count a continuous latin string as one word
+            merged_word.length
+          end
           .last(2)
           .sort_by { |line| line.merge.y }
       end
 
       def extract_word_lines(lined_up: false)
-        words = extract_words(lined_up:).reject { |box| box.word =~ /Unit/i }
+        words = extract_words(lined_up:).reject do |box|
+          box.word =~ /Unit/i || box.word =~ /star/i || box.word =~ /快捷编队/
+        end
         logger.log('words:', words)
         Extracting::WordProcessor
           .group_words_into_lines(words, allowed_box_conf)
@@ -94,6 +100,11 @@ class ClearImage
         word_bounding_boxes = ocr_word_boxes.map { |box| Extracting::WordBoundingBox.new(box) }
         word_bounding_boxes.reject! { |box| box.near_end?(image) }
         word_bounding_boxes.reject! { |box| box.word.length < 3 } if reader.en?
+        if reader.zh_cn?
+          word_bounding_boxes.reject! do |box|
+            box.word =~ /LV\d+/ || box.word =~ /M\d+/ || box.word =~ /^\d+\w{0,1}/
+          end
+        end
         Extracting::WordProcessor.group_near_words_in_same_line(word_bounding_boxes)
       end
 

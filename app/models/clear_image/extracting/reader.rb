@@ -12,7 +12,7 @@ class ClearImage
         include TmpFileStorable
 
         LOCALE_TO_TESSERACT_LANG.each_key do |locale|
-          define_method("#{locale}?") do
+          define_method("#{locale.to_s.underscore}?") do
             language == locale
           end
         end
@@ -32,9 +32,11 @@ class ClearImage
         end
 
         def read_single_name(path)
-          if tess_language_code == 'jpn'
+          if jp?
             # run both oem version?
             process_name(RTesseract.new(path, psm: '3', lang: tess_language_code, oem: 1).to_s)
+          elsif zh_cn?
+            process_name(RTesseract.new(path, psm: '7', lang: tess_language_code).to_s)
           else
             process_name(RTesseract.new(path, psm: '11', lang: tess_language_code).to_s)
           end
@@ -49,6 +51,8 @@ class ClearImage
                 .gsub(/^ー*/, '')
                 .gsub(/\s/, '')
                 .gsub(/^[^\p{Latin}\p{Hiragana}\p{Katakana}\p{Han}]*/, '')
+          elsif zh_cn?
+            name.gsub(/\s/, '').gsub(/^[^\p{Latin}\p{Han}]*/, '')
           else
             name.gsub(/\W/, '')
           end

@@ -6,11 +6,16 @@ class ClearImage::Configuration
   attribute :word_in_line_second_pass_confidence_threshold, :integer, default: 70
   attribute :max_largest_card_dist_to_smallest_dist_ratio_to_guess_dist_between_card, :float, default: 1.2
   attribute :max_character_distance_to_width_ratio_to_be_near, :float, default: 1.5
+  attribute :operator_name_only, :boolean, default: false
 
   attr_accessor :language
 
   DEFAULTS = {
     en: {
+      word_in_line_first_pass_confidence_threshold: 40,
+      word_in_line_second_pass_confidence_threshold: 30
+    },
+    'zh-CN': {
       word_in_line_first_pass_confidence_threshold: 40,
       word_in_line_second_pass_confidence_threshold: 30
     }

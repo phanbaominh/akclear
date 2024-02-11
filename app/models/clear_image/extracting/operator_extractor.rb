@@ -68,6 +68,10 @@ class ClearImage
           return unless word.include?('Rヤ')
 
           match_name_with_highest_similarity('キリンRヤトウ', 1)
+        elsif reader.zh_cn?
+          return unless word.include?('X夜')
+
+          match_name_with_highest_similarity('麒麟R夜刀', 1)
         elsif reader.en?
           match_name_with_highest_similarity('Młynar') if word.include?('Miynar')
         end

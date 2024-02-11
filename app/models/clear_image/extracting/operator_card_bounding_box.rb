@@ -35,6 +35,7 @@ class ClearImage
         Logger.log('lower_bound_of_dist', lower_bound_of_dist)
 
         dist_between_word_ends = (first_name_line + second_name_line).dist_between_word_ends(lower_bound_of_dist)
+        dist_between_word_ends.reject! { |d| d > lower_bound_of_dist * 3 } if Reader.zh_cn?
         Logger.log('dist between words', dist_between_word_ends)
 
         max_size = 0
