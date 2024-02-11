@@ -179,6 +179,8 @@ en:
         passed_operators: "Passed operators"
         failed_operators: "Failed operators"
         missing_operators: "Missing operators"
+        extra_operators: "Extra operators"
+        rerun: "Rerun"
     users:
       title: "Users"
       update:

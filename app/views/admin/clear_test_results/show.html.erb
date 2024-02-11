@@ -2,15 +2,15 @@
 <%= link_to t('.view_other_results'), admin_clear_test_run_clear_test_results_path(@clear_test_run), class: 'btn btn-neutral w-fit' %>
 <section class="test-result">
   <div class="flex justify-between">
-    <% if @clear_test_result.prev_result_test_case_id %>
-      <%= link_to admin_clear_test_run_clear_test_result_path(@clear_test_run, @clear_test_result.prev_result_test_case_id), class: 'btn' do %>
+    <% if @clear_test_run.prev_test_run_id %>
+      <%= link_to admin_clear_test_run_clear_test_result_path(@clear_test_run.prev_test_run_id, @clear_test_result.test_case_id), class: 'btn' do %>
         <%= heroicon 'arrow-left' %>
       <% end %>
     <% else %>
       <div></div>
     <% end %>
-    <% if @clear_test_result.next_result_test_case_id %>
-      <%= link_to admin_clear_test_run_clear_test_result_path(@clear_test_run, @clear_test_result.next_result_test_case_id), class: 'btn' do %>
+    <% if @clear_test_run.next_test_run_id%>
+      <%= link_to admin_clear_test_run_clear_test_result_path(@clear_test_run.next_test_run_id, @clear_test_result.test_case_id), class: 'btn' do %>
         <%= heroicon 'arrow-right' %>
       <% end %>
     <% else %>

@@ -56,8 +56,14 @@ class ClearImage::TestRun < ApplicationRecord
     super || (@all_test_case_ids ||= ClearImage::TestCase.pluck(:id))
   end
 
+  def study(languages)
+    self.test_case_ids =
+      ClearImage::TestCase.where(id: test_case_ids)
+                          .joins(clear: :channel).where(channels: { clear_language: languages }).pluck(:id)
+  end
+
   def test_results
-    @test_results ||= test_case_ids.map do |test_case_id|
+    @test_results ||= ClearImage::TestCase.where(id: test_case_ids).pluck(:id).map do |test_case_id|
       test_result = ClearImage::TestResult.new(test_case_id:, test_run: self)
       test_result
     end
@@ -73,7 +79,8 @@ class ClearImage::TestRun < ApplicationRecord
   end
 
   def latest_test_runs
-    @latest_test_runs ||= ClearImage::TestRun.where.not(id:).order(id: :desc).limit(latest_size).to_a
+    @latest_test_runs ||= ClearImage::TestRun.where.not(id:)
+                                             .where('test_case_ids @> ARRAY[?]::bigint[]', test_case_ids).order(id: :desc).limit(latest_size).to_a
   end
 
   def prev_test_run_id
