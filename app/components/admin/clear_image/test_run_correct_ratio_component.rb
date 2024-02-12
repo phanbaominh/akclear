@@ -29,7 +29,7 @@ class Admin::ClearImage::TestRunCorrectRatioComponent < ApplicationComponent
   end
 
   def correct_ratio_diff
-    @correct_ratio_diff ||= (correct_ratio - max_latest_correct_ratio).round(2)
+    @correct_ratio_diff ||= (correct_ratio.to_f - max_latest_correct_ratio.to_f).round(2)
   end
 
   def correct_name_ratio

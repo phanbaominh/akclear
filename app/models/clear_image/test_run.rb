@@ -10,7 +10,7 @@ class ClearImage::TestRun < ApplicationRecord
 
   attr_reader :test_count
 
-  attribute :all, :boolean, default: true
+  attribute :all, :boolean, default: false
   attribute :latest_size, :integer, default: 5
 
   def test_cases
@@ -67,6 +67,11 @@ class ClearImage::TestRun < ApplicationRecord
       test_result = ClearImage::TestResult.new(test_case_id:, test_run: self)
       test_result
     end
+  end
+
+  def all=(value)
+    super
+    self.test_case_ids = ClearImage::TestCase.pluck(:id) if all?
   end
 
   def get_test_result(test_case_or_id)

@@ -33,8 +33,8 @@
           <%= f.label :correct_ratio, class: 'simple_form__label' %>
           <div class="outline w-fit outline-neutral rounded p-2">
             <%= render Admin::ClearImage::TestRunCorrectRatioComponent.new(
-            correct_ratio: @clear_test_results.map(&:correct_ratio).sum.round(2),
-            max_latest_correct_ratio: @clear_test_results.map(&:max_latest_correct_ratio).sum.round(2),
+            correct_ratio: @clear_test_results.map(&:correct_ratio).compact.sum.round(2),
+            max_latest_correct_ratio: @clear_test_results.map(&:max_latest_correct_ratio).compact.sum.round(2),
             correct_name_ratio: 
               (@clear_test_results.map(&:correct_name_op_count).sum.to_f / @clear_test_results.map(&:total_op_count).sum).round(2) * 100
           ) %>
