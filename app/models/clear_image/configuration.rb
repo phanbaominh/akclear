@@ -6,6 +6,8 @@ class ClearImage::Configuration
   attribute :word_in_line_second_pass_confidence_threshold, :integer, default: 70
   attribute :max_largest_card_dist_to_smallest_dist_ratio_to_guess_dist_between_card, :float, default: 1.2
   attribute :max_character_distance_to_width_ratio_to_be_near, :float, default: 1.5
+  attribute :first_pass_detected_name_similarity_threshold, :float, default: 0.8
+  attribute :second_pass_detected_name_similarity_threshold, :float, default: 0.7
   attribute :operator_name_only, :boolean, default: false
 
   attr_accessor :language
@@ -17,7 +19,9 @@ class ClearImage::Configuration
     },
     'zh-CN': {
       word_in_line_first_pass_confidence_threshold: 40,
-      word_in_line_second_pass_confidence_threshold: 30
+      word_in_line_second_pass_confidence_threshold: 30,
+      first_pass_detected_name_similarity_threshold: 0.7,
+      second_pass_detected_name_similarity_threshold: 0.66
     }
   }.freeze
 

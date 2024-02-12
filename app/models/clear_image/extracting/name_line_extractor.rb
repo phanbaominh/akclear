@@ -119,9 +119,7 @@ class ClearImage
 
         end
         if lined_up && reader.zh_cn?
-          ap "psm: #{psm}"
           words = reader.read_lined_names_text(tmp_file_path, psm:)
-          ap words
           Extracting::WordProcessor.group_based_on_read_words(word_bounding_boxes, words)
         else
           Extracting::WordProcessor.group_near_words_in_same_line(word_bounding_boxes)

@@ -9,7 +9,6 @@ class ClearImage
       SKILL_IMAGE_PATH = Rails.root.join('app/javascript/images/skills/')
       ELITE_0_REFERENCE_IMAGE_PATH = Rails.root.join('app/javascript/images/elite0_reference.png')
       ELITE_1_REFERENCE_IMAGE_PATH = Rails.root.join('app/javascript/images/elite1_reference.png')
-      NAME_SIMILARITY_THRESHOLD = 0.7
 
       class << self
         def elite_1_image
@@ -32,7 +31,10 @@ class ClearImage
       def extract
         I18n.with_locale(language) do
           operator =
-            match_operator(box_word, similarity_threshold: 0.8) || match_operator(redetect_word_from_cropped_box_image)
+            match_operator(box_word,
+                           Configuration.first_pass_detected_name_similarity_threshold) ||
+            match_operator(redetect_word_from_cropped_box_image,
+                           Configuration.second_pass_detected_name_similarity_threshold)
 
           log_box(operator)
           next unless operator
@@ -58,7 +60,7 @@ class ClearImage
         ClearImage::Extracting::Reader
       end
 
-      def match_operator(word, similarity_threshold: NAME_SIMILARITY_THRESHOLD)
+      def match_operator(word, similarity_threshold)
         word = reader.process_name(word)
 
         match_name_containing(word) || match_special_name(word) || match_name_with_highest_similarity(word,
@@ -70,11 +72,11 @@ class ClearImage
 
           return unless word.include?('Rヤ')
 
-          match_name_with_highest_similarity('キリンRヤトウ', 1)
+          match_name_with_highest_similarity('キリンRヤトウ')
         elsif reader.zh_cn?
           return unless word.include?('X夜')
 
-          match_name_with_highest_similarity('麒麟R夜刀', 1)
+          match_name_with_highest_similarity('麒麟R夜刀')
         elsif reader.en?
           match_name_with_highest_similarity('Młynar') if word.include?('Miynar')
         end
@@ -102,7 +104,7 @@ class ClearImage
         most_matched_name if similarity >= similarity_threshold
       end
 
-      def match_name_with_highest_similarity(word, similarity_threshold = NAME_SIMILARITY_THRESHOLD)
+      def match_name_with_highest_similarity(word, similarity_threshold = 1)
         return unless word
 
         most_matched_name = find_most_matched_name(word, similarity_threshold)
@@ -200,7 +202,7 @@ class ClearImage
 
       def guess_elite_1_or_2(image)
         color_histogram = image.color_histogram.transform_keys(&:to_color)
-        color_histogram['white'] * 1.1 > color_histogram['black'] ? 2 : 1
+        color_histogram['white'].to_i * 1.1 > color_histogram['black'].to_i ? 2 : 1
       end
     end
   end

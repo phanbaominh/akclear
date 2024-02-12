@@ -8,6 +8,7 @@ class ClearImage
         jp: 'jpn',
         'zh-CN': 'chi_sim'
       }.freeze
+      NON_CHARACTERS_REGEX = /[^0-9\p{Latin}\p{Hiragana}\p{Katakana}\p{Han}ー-]+/u
       class << self
         include TmpFileStorable
 
@@ -24,12 +25,12 @@ class ClearImage
         def read_lined_names(path)
           [7, 11].map do |psm|
             [RTesseract.new(path, psm:, oem: 1, lang: tess_language_code).to_box, psm]
-          end.max_by { |result| result.first.pluck(:word).join.length }
+          end.max_by { |result| result.first.pluck(:word).join.gsub(NON_CHARACTERS_REGEX, '').bytesize }
         end
 
         def read_lined_names_text(path, psm:)
           RTesseract.new(path, psm:, oem: 1, lang: tess_language_code).to_s.split(/\s+/).map do |word|
-            word.gsub(/[^0-9\p{Latin}\p{Hiragana}\p{Katakana}\p{Han}ー-]+/u, '')
+            word.gsub(NON_CHARACTERS_REGEX, '')
           end
         end
 

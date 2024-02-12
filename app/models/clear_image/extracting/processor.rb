@@ -4,11 +4,11 @@ class ClearImage
       class << self
         include Magick
 
-        def make_names_white_on_black(image, double_fill: false, floodfill_x: nil, floodfill_y: nil)
+        def make_names_white_on_black(image, double_fill: false, floodfill_x: nil, floodfill_y: nil, colors: 2)
           floodfill_x ||= image.columns / 2
           floodfill_y ||= image.rows / 2
           image = image
-                  .quantize(2, GRAYColorspace) # greyscale
+                  .quantize(colors, GRAYColorspace) # greyscale
                   .negate_channel(false, RedChannel, GreenChannel, BlueChannel) # invert color so that names are white and bg black
                   .color_floodfill(floodfill_x, floodfill_y, white_pixel) # remove black color as much as possible
           image = image.color_floodfill(floodfill_x - 80, floodfill_y, white_pixel) if double_fill

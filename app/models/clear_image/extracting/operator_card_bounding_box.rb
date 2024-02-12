@@ -16,7 +16,7 @@ class ClearImage
         SKILL => BoundingBox.new(125.0, 315.0, 53.0, 53.0),
         LEVEL => BoundingBox.new(7.0, 319.0, 58.0, 42.0), # [11.0, 328.0, 50.0, 34.0]]
         ELITE => BoundingBox.new(0, 239.0, 75.0, 62.0),
-        NAME => BoundingBox.new(0, 373, BASE_WIDTH, 28)
+        NAME => BoundingBox.new(0, 373, BASE_WIDTH, 30) # ori h = 28
       }.freeze
       BASE_CARD_DIST = 230.0 # from end of name to next end of name = from top left point to next top left point
       BASE_VERTICAL_CARD_DIST = 434.0 # from top left point to next top left point

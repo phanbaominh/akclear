@@ -17,7 +17,6 @@ class ClearImage
             prev_near_boxes << box
           end
           processed_boxes << prev_near_boxes.merge if prev_near_boxes.present?
-          ap processed_boxes
           processed_boxes.select! do |box|
             words.find { |word| word.include?(box.word) }
           end
@@ -40,7 +39,6 @@ class ClearImage
             end
           end
           result << cur if cur
-          ap result
           result.each(&:trust)
           result
         end

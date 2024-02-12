@@ -71,7 +71,7 @@ module Operator::Rarifiable
   end
 
   def possible_elite_with_level(level)
-    possible_elites = Array.new(max_elite + 1, 0)
+    possible_elites = (max_elite + 1).times.to_a
     RARITIES_TO_MAX_LEVEL[rarity].each_with_index do |max_level, elite|
       possible_elites.delete(elite) if level > max_level
     end
