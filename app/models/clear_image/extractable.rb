@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ClearImage
   module Extractable
     delegate :language, to: :reader

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ClearImage
   module Extracting
     class WordBoundingBox < BoundingBox
