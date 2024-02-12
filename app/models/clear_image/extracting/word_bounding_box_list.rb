@@ -9,7 +9,7 @@ class ClearImage
       NEAR_ALLOWED_DIFFERENCE = 1
       MOST_COMMON_Y_THRESHOLD = 3
       EVENLY_SPACED_RATIO = 0.5
-      delegate :pop, :<<, :present?, :last, :size, :max_by, to: :list
+      delegate :pop, :<<, :present?, :last, :size, :max_by, :reject!, :empty?, to: :list
       delegate :near?, :overlapping?, to: :last
 
       def initialize(list = [])

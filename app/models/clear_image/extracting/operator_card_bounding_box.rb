@@ -27,10 +27,11 @@ class ClearImage
 
       def self.guess_dist(first_name_line, second_name_line, _image)
         all_name_boxes = first_name_line + second_name_line
-        lower_bound_of_dist = all_name_boxes.max_by(&:width).width
+        average_cw = all_name_boxes.map(&:average_character_width).sum.to_f / all_name_boxes.size
+        widest_box = all_name_boxes.max_by(&:width)
+        lower_bound_of_dist =
+          widest_box.average_character_width > average_cw ? widest_box.word.length * average_cw : widest_box.width
         # figure out a way to deal with word missing
-        # [first_name_line, second_name_line]
-        #   .map { |line| line.minimum_dist_between_word(lower_bound_of_dist) }.min
 
         Logger.log('lower_bound_of_dist', lower_bound_of_dist)
 

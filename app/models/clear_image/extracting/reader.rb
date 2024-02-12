@@ -23,12 +23,18 @@ class ClearImage
 
         def read_lined_names(path)
           [7, 11].map do |psm|
-            RTesseract.new(path, psm:, oem: 1, lang: tess_language_code).to_box
-          end.max_by { |result| result.pluck(:word).join.length }
+            [RTesseract.new(path, psm:, oem: 1, lang: tess_language_code).to_box, psm]
+          end.max_by { |result| result.first.pluck(:word).join.length }
+        end
+
+        def read_lined_names_text(path, psm:)
+          RTesseract.new(path, psm:, oem: 1, lang: tess_language_code).to_s.split(/\s+/).map do |word|
+            word.gsub(/[^0-9\p{Latin}\p{Hiragana}\p{Katakana}\p{Han}ー-]+/u, '')
+          end
         end
 
         def read_sparse_names(path)
-          RTesseract.new(path, psm: '11', oem: 1, lang: tess_language_code).to_box
+          [RTesseract.new(path, psm: '11', oem: 1, lang: tess_language_code).to_box, 11]
         end
 
         def read_single_name(path)

@@ -53,8 +53,8 @@ class ClearImage
         confidence.is_a?(Array) ? confidence.sum * 1.0 / confidence.size : confidence
       end
 
-      def valid?
-        !(average_confidence < 20 || character_only_word.blank?)
+      def trust
+        @confidence = [100]
       end
 
       def inspect
