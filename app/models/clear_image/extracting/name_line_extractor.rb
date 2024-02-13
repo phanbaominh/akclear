@@ -82,23 +82,10 @@ class ClearImage
       end
 
       def extract_word_lines(lined_up: false)
-        words = extract_words(lined_up:).reject do |box|
-          box.word =~ /Unit/i || box.word =~ /star/i || box.word =~ /快捷编队/
-        end
+        words = extract_word_bounding_boxes(lined_up:)
         logger.log('words:', words)
-        word_lines = Extracting::WordProcessor
-                     .group_words_into_lines(words, allowed_box_conf)
-        return word_lines unless reader.zh_cn?
-
-        word_lines.reject! do |line|
-          line.reject! do |box|
-            next false if box.word.include?('X')
-
-            box.word =~ /\p{Latin}+/ && box.word =~ /\p{Han}+/
-          end
-          line.empty?
-        end
-        word_lines
+        Extracting::WordProcessor
+          .group_words_into_lines(words, allowed_box_conf)
       end
 
       def allowed_box_conf
@@ -107,25 +94,20 @@ class ClearImage
         Configuration.word_in_line_second_pass_confidence_threshold
       end
 
-      def extract_words(lined_up: false)
+      def extract_word_bounding_boxes(lined_up: false)
         # small_squad = @name_lines && @name_lines.map(&:size).sum < 6
         ocr_word_boxes, psm = lined_up ? reader.read_lined_names(tmp_file_path) : reader.read_sparse_names(tmp_file_path)
         word_bounding_boxes = ocr_word_boxes.map { |box| Extracting::WordBoundingBox.new(box) }
         # ap word_bounding_boxes
         word_bounding_boxes.reject! { |box| box.near_end?(image) }
-        word_bounding_boxes.reject! { |box| box.word.length < 3 } if reader.en?
-        if reader.zh_cn?
-          word_bounding_boxes.reject! do |box|
-            box.word =~ /LV\d+/ || box.word =~ /M\d+/ || box.word =~ /^\d+\w{0,1}/
-          end
+        word_bounding_boxes = group_near_word_bounding_boxes(word_bounding_boxes, lined_up, psm)
+        word_bounding_boxes.reject { |box| box.word =~ /Unit/i }
+      end
 
-        end
-        if lined_up && reader.zh_cn?
-          words = reader.read_lined_names_text(tmp_file_path, psm:)
-          Extracting::WordProcessor.group_based_on_read_words(word_bounding_boxes, words)
-        else
-          Extracting::WordProcessor.group_near_words_in_same_line(word_bounding_boxes)
-        end
+      def group_near_word_bounding_boxes(word_bounding_boxes, _lined_up, _psm)
+        word_bounding_boxes.reject! { |box| box.word.length < 3 } if reader.en?
+
+        Extracting::WordProcessor.group_near_words_in_same_line(word_bounding_boxes)
       end
 
       def logger

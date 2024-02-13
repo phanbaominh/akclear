@@ -1,8 +1,11 @@
+# frozen_string_literal: true
+
+# rubocop:disable Metrics/PerceivedComplexity
 class ClearImage
   module Extracting
     class WordProcessor
       class << self
-        def group_based_on_read_words(words_bounding_boxes, words)
+        def group_near_words_boxes_matching_detected_words(words_bounding_boxes, words)
           processed_boxes = []
           prev_near_boxes = WordBoundingBoxList.new
           words_bounding_boxes.each do |box|
@@ -17,28 +20,8 @@ class ClearImage
             prev_near_boxes << box
           end
           processed_boxes << prev_near_boxes.merge if prev_near_boxes.present?
-          processed_boxes.select! do |box|
-            words.find { |word| word.include?(box.word) }
-          end
-          result = [] # processed_boxes
-          cur = nil
-          0.upto(processed_boxes.size - 1) do |i|
-            prev_cur = cur
-            cur = if cur
-                    cur.merge(processed_boxes[i])
-                  else
-                    processed_boxes[i]
-                  end
-            if words.find { |word| word == cur.word }
-              result << cur
-              cur = nil
-            elsif !words.find { |word| word.start_with?(cur.word) }
-              result << (prev_cur || cur)
-              i -= 1 if prev_cur
-              cur = nil
-            end
-          end
-          result << cur if cur
+
+          result = merge_word_boxes_to_match_detected_words(processed_boxes, words)
           result.each(&:trust)
           result
         end
@@ -88,7 +71,39 @@ class ClearImage
           end
           lines_of_words
         end
+
+        private
+
+        def merge_word_boxes_to_match_detected_words(processed_boxes, words)
+          processed_boxes.select! do |box|
+            words.find { |word| word.include?(box.word) }
+          end
+          result = []
+          current_merged_box = nil
+          i = 0
+          while i < processed_boxes.size
+            previous_merged_box = current_merged_box
+            current_merged_box = if current_merged_box
+                                   current_merged_box.merge(processed_boxes[i])
+                                 else
+                                   processed_boxes[i]
+                                 end
+            if words.find { |word| word == current_merged_box.word }
+              result << current_merged_box
+              current_merged_box = nil
+            elsif !words.find { |word| word.start_with?(current_merged_box.word) }
+              result << (previous_merged_box || current_merged_box)
+              i -= 1 if previous_merged_box
+              current_merged_box = nil
+            end
+            i += 1
+          end
+          result << current_merged_box if current_merged_box
+          result
+        end
       end
     end
   end
 end
+
+# rubocop:enable Metrics/PerceivedComplexity

@@ -55,7 +55,14 @@ class ClearImage
     end
 
     def set_name_line_extractor(image)
-      @name_line_extractor = Extracting::NameLineExtractor.new(image)
+      return @name_line_extractor if @name_line_extractor
+
+      extractor_klass = "ClearImage::Extracting::#{reader.language.to_s.delete('-').capitalize}::NameLineExtractor"
+      @name_line_extractor = if Object.const_defined?(extractor_klass)
+                               extractor_klass.constantize.new(image)
+                             else
+                               Extracting::NameLineExtractor.new(image)
+                             end
     end
 
     def extract_operators_data_based_on_name_lines(name_lines)
