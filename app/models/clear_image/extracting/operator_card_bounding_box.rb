@@ -27,34 +27,42 @@ class ClearImage
 
       attr_reader :word
 
-      def self.guess_dist(first_name_line, second_name_line, _image)
-        all_name_boxes = first_name_line + second_name_line
-        average_cw = all_name_boxes.map(&:average_character_width).sum.to_f / all_name_boxes.size
-        widest_box = all_name_boxes.max_by(&:width)
-        lower_bound_of_dist =
-          widest_box.average_character_width > average_cw ? widest_box.word.length * average_cw : widest_box.width
+      def self.guess_dist(first_name_line, second_name_line = [])
+        lowest_bound_of_dist = guess_lowest_card_dist(first_name_line + second_name_line)
+
         # figure out a way to deal with word missing
 
-        Logger.log('lower_bound_of_dist', lower_bound_of_dist)
+        Logger.log('lowest_bound_of_dist', lowest_bound_of_dist)
 
-        dist_between_word_ends = (first_name_line + second_name_line).dist_between_word_ends(lower_bound_of_dist)
-        dist_between_word_ends.reject! { |d| d > lower_bound_of_dist * 3 } if Reader.zh_cn?
+        dist_between_word_ends = (first_name_line + second_name_line).dist_between_word_ends(lowest_bound_of_dist)
+        dist_between_word_ends.reject! { |d| d > lowest_bound_of_dist * 3 } if Reader.zh_cn?
         Logger.log('dist between words', dist_between_word_ends)
 
         max_size = 0
-        result = lower_bound_of_dist
+        result = lowest_bound_of_dist
         dist_between_word_ends.sort.each do |dist|
-          lower_bound_of_dist = dist
+          lowest_bound_of_dist = dist
           within_current_min = dist_between_word_ends.select do |d|
-            d < lower_bound_of_dist * Configuration.max_largest_card_dist_to_smallest_dist_ratio_to_guess_dist_between_card &&
-              d >= lower_bound_of_dist
+            d < lowest_bound_of_dist * Configuration.max_largest_card_dist_to_smallest_dist_ratio_to_guess_dist_between_card &&
+              d >= lowest_bound_of_dist
           end
-          if within_current_min.size >= max_size
+          if within_current_min.size > max_size
             max_size = within_current_min.size
             result = Utils.average(within_current_min)
           end
         end
         result
+      end
+
+      def self.guess_lowest_card_dist(all_name_boxes)
+        average_cw = all_name_boxes.sum(&:average_character_width).to_f / all_name_boxes.size
+        widest_box = all_name_boxes.max_by(&:width)
+        if widest_box.average_character_width > average_cw
+          [widest_box.relative_word_length * average_cw,
+           all_name_boxes.sum(&:width).to_f / all_name_boxes.size].max
+        else
+          widest_box.width
+        end
       end
 
       def self.guest_most_accurate_name_bounding_box(name_bounding_boxes)

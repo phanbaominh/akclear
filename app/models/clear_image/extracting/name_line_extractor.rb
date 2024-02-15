@@ -7,6 +7,7 @@ class ClearImage
 
       def initialize(image)
         @image = image
+        @logged_image = @image
         @extract_name_line_count = 0
       end
 
@@ -34,6 +35,8 @@ class ClearImage
         name_lines.each_with_index do |line, i|
           name_line, border_thickness, chosen_image = extract_from_cropped_image(line)
 
+          next if name_line.nil?
+
           name_line.each do |box|
             box.translate!(y: line.y - 2 - border_thickness.sum, x: -border_thickness.sum)
           end
@@ -52,6 +55,7 @@ class ClearImage
           ).border(
             b_border, b_border, 'black'
           )
+          @logged_image = bordered_crop_image
           bordered_crop_image.write(tmp_file_path)
           word_lines = extract_word_lines(lined_up: true)
           word_line = word_lines.first
@@ -62,20 +66,22 @@ class ClearImage
           # word_line.remove_outlier! # unless final_name_lines?
           logger.log("word line w#{w_border} b#{b_border}", word_line)
 
-          [word_line, [w_border, b_border], bordered_crop_image]
-        end.max_by { |(word_line, _, _)| word_line.map(&:word).join.length }
+          [word_line, [w_border, b_border], bordered_crop_image, @word_size]
+        end.max_by { |(word_line, _, _, word_size)| [word_line.map(&:word).join.length, word_size.to_i] }
       end
 
       def extract_all_from_full_image
+        @logged_image = @image
         all_word_lines = extract_word_lines
         all_word_lines.each(&:keep_evenly_high_boxes) unless @extract_name_line_count == 1
         all_word_lines.each(&:remove_outlier!) unless final_name_lines?
         logger.log('all_word_lines:', all_word_lines)
         all_word_lines
           .sort_by do |line|
-            merged_word = line.merge.word
-            merged_word = merged_word.gsub(/\w+/, 'a') if reader.zh_cn? # count a continuous latin string as one word
-            merged_word.length
+            merged_box = line.merge
+            merged_word = merged_box.character_only_word
+            # merged_word = merged_word.gsub(/\w+/, 'a') if reader.zh_cn? # count a continuous latin string as one word
+            [reader.zh_cn? ? merged_box.relative_word_length : merged_word.length, merged_box.parts.size]
           end
           .last(2)
           .sort_by { |line| line.merge.y }
@@ -98,10 +104,13 @@ class ClearImage
         # small_squad = @name_lines && @name_lines.map(&:size).sum < 6
         ocr_word_boxes, psm = lined_up ? reader.read_lined_names(tmp_file_path) : reader.read_sparse_names(tmp_file_path)
         word_bounding_boxes = ocr_word_boxes.map { |box| Extracting::WordBoundingBox.new(box) }
-        # ap word_bounding_boxes
-        word_bounding_boxes.reject! { |box| box.near_end?(image) }
+        @word_size = word_bounding_boxes.sum(&:confidence).to_f / word_bounding_boxes.size
+        logger.log('raw word_bounding_boxes:', word_bounding_boxes)
+        logger.draw_boxes_on_image(@logged_image, word_bounding_boxes, "green_boxes_#{lined_up}.png")
+        word_bounding_boxes.reject! { |box| box.near_edge?(image) } unless lined_up
+        word_bounding_boxes.reject! { |box| box.word =~ /&.*?;/ }
         word_bounding_boxes = group_near_word_bounding_boxes(word_bounding_boxes, lined_up, psm)
-        word_bounding_boxes.reject { |box| box.word =~ /Unit/i }
+        word_bounding_boxes.reject { |box| box.word =~ /Unit/i  }
       end
 
       def group_near_word_bounding_boxes(word_bounding_boxes, _lined_up, _psm)

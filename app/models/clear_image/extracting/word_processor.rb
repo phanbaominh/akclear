@@ -76,7 +76,7 @@ class ClearImage
 
         def merge_word_boxes_to_match_detected_words(processed_boxes, words)
           processed_boxes.select! do |box|
-            words.find { |word| word.include?(box.word) }
+            words.find { |word| word.include?(box.word) || box.word.include?(word) }
           end
           result = []
           current_merged_box = nil
@@ -88,7 +88,7 @@ class ClearImage
                                  else
                                    processed_boxes[i]
                                  end
-            if words.find { |word| word == current_merged_box.word }
+            if find_matching_combined_word(current_merged_box.word, words)
               result << current_merged_box
               current_merged_box = nil
             elsif !words.find { |word| word.start_with?(current_merged_box.word) }
@@ -100,6 +100,24 @@ class ClearImage
           end
           result << current_merged_box if current_merged_box
           result
+        end
+
+        def find_matching_combined_word(current_box_word, words)
+          words.each_with_index do |word, si|
+            next unless current_box_word.start_with?(word)
+
+            current_word = ''
+            si.upto(words.size - 1) do |j|
+              current_word += words[j]
+              if current_word == current_box_word
+                return true
+              elsif !current_box_word.start_with?(current_word)
+                break
+              end
+            end
+          end
+
+          false
         end
       end
     end

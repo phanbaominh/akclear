@@ -26,6 +26,7 @@ class ClearImage
         @operators = operators || Operator.i18n.pluck(:id, :name).map { |id, name| [id, name.gsub(/\s+/, '')] }
         @elite_0_image = elite_0_image
         @elite_1_image = elite_1_image
+        @guesses = []
       end
 
       def extract
@@ -33,8 +34,9 @@ class ClearImage
           operator =
             match_operator(box_word,
                            Configuration.first_pass_detected_name_similarity_threshold) ||
-            match_operator(redetect_word_from_cropped_box_image,
-                           Configuration.second_pass_detected_name_similarity_threshold)
+            match_operator(redetected_word_from_cropped_box_image,
+                           Configuration.second_pass_detected_name_similarity_threshold) ||
+            guess_operator
 
           log_box(operator)
           next unless operator
@@ -60,11 +62,24 @@ class ClearImage
         ClearImage::Extracting::Reader
       end
 
+      def guess_operator
+        return if @guesses.empty?
+
+        Logger.log('guesses', @guesses)
+
+        get_operator_with_name(@guesses.min_by { |_, edit_dist, _| edit_dist }.first)
+      end
+
       def match_operator(word, similarity_threshold)
         word = reader.process_name(word)
 
-        match_name_containing(word) || match_special_name(word) || match_name_with_highest_similarity(word,
-                                                                                                      similarity_threshold)
+        if word.blank?
+          Logger.log('word is blank', word)
+          return
+        end
+
+        match_name_containing(word) || match_special_name(word) ||
+          match_name_with_highest_similarity(word, similarity_threshold)
       end
 
       def match_special_name(word)
@@ -77,6 +92,10 @@ class ClearImage
           return unless word.include?('X夜')
 
           match_name_with_highest_similarity('麒麟R夜刀')
+        elsif reader.ko?
+          return unless word == '머를' # Myrtle
+
+          match_name_with_highest_similarity('머틀')
         elsif reader.en?
           match_name_with_highest_similarity('Młynar') if word.include?('Miynar')
         end
@@ -95,13 +114,63 @@ class ClearImage
       def find_most_matched_name(word, similarity_threshold)
         matcher = Amatch::Levenshtein.new(word)
         # can optimize here by filter out name with appropriate length
+        names_start_or_end_with_sub_word = [] if guessable?
         most_matched_name = operator_names.min_by do |name|
-          matcher.match(name)
+          # TODO: compare with length diff <=2
+          result = matcher.match(name)
+          names_start_or_end_with_sub_word << [name, result] if guessable? && start_or_end_with?(name, word)
+          result
         end
         similarity = most_matched_name.levenshtein_similar(word)
         Logger.log(word, ['simlarity', word, most_matched_name, similarity])
+        update_guess(names_start_or_end_with_sub_word, word)
 
-        most_matched_name if similarity >= similarity_threshold
+        similarity_threshold = re_calculate_similarity_threshold(similarity_threshold, most_matched_name, word)
+
+        return unless similarity >= similarity_threshold
+
+        most_matched_name
+      end
+
+      def re_calculate_similarity_threshold(similarity_threshold, most_matched_name, word)
+        if reader.ko? && most_matched_name.length >= 9 && word.length >= 9
+          0.4
+        else
+          similarity_threshold
+        end
+      end
+
+      def guessable?
+        !reader.en?
+      end
+
+      def update_guess(names_start_or_end_with_sub_word, word)
+        last_guess = @guesses.last
+        @guesses.pop if last_guess && last_guess.length < word.length
+
+        return if names_start_or_end_with_sub_word.blank?
+
+        @guesses << (names_start_or_end_with_sub_word.min_by { |_, result| result } + [word])
+      end
+
+      def start_or_end_with?(name, word)
+        return false if name.length != word.length
+
+        i = 0
+        while i < name.length
+          break if name[i] != word[i]
+
+          i += 1
+        end
+        start_len = i
+        j = name.length - 1
+        while j >= 0
+          break if name[j] != word[j]
+
+          j -= 1
+        end
+        end_len = name.length - j - 1
+        [start_len, end_len].max >= (word.length / 2.0).ceil
       end
 
       def match_name_with_highest_similarity(word, similarity_threshold = 1)
@@ -111,7 +180,11 @@ class ClearImage
 
         return unless most_matched_name
 
-        Operator.find(operators.find { |_id, name| name == most_matched_name }.first)
+        get_operator_with_name(most_matched_name)
+      end
+
+      def get_operator_with_name(name)
+        Operator.find(operators.find { |_id, n| n == name }.first)
       end
 
       def box_word
@@ -139,7 +212,8 @@ class ClearImage
         target_image.difference(source_image)
       end
 
-      def redetect_word_from_cropped_box_image
+      def redetected_word_from_cropped_box_image
+        return @redetected_word_from_cropped_box_image if @redetected_word_from_cropped_box_image
         return '' if name_bounding_box.invalid?
 
         box_image = Extracting::Processor
@@ -148,7 +222,7 @@ class ClearImage
                     ).color_floodfill(0, 0, 'white').border(10, 10, 'white')
         Logger.copy_image(box_image, "processed_#{Logger.name_box_file_name(box_word)}")
         box_image.write(tmp_file_path)
-        reader.read_single_name(tmp_file_path)
+        @redetected_word_from_cropped_box_image = reader.read_single_name(tmp_file_path)
       end
 
       def get_skill_from_image(image, operator, _extracted_data)

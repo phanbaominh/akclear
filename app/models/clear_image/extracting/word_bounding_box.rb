@@ -3,7 +3,7 @@
 class ClearImage
   module Extracting
     class WordBoundingBox < BoundingBox
-      NON_CHARACTERS_REGEX = /[^\p{Latin}\p{Hiragana}\p{Katakana}\p{Han}ー-]+/u
+      NON_CHARACTERS_REGEX = /[^\p{Latin}\p{Hiragana}\p{Katakana}\p{Han}\p{Hangul}ー-]+/u
 
       attr_reader :word, :confidence, :parts
 
@@ -43,12 +43,23 @@ class ClearImage
         x_end >= other_box.x
       end
 
-      def near_end?(image)
-        y_end + (1 * height) >= image.rows
+      def near_edge?(image)
+        near_end = y_end + (1 * height) >= image.rows
+        near_start = y < (image.rows / 3.0)
+        near_end || near_start
       end
 
       def average_character_width
         width * 1.0 / word.length
+      end
+
+      def relative_word_length
+        if Reader.en? || Reader.jp?
+          word.length
+        else
+          alphanumeric_char_size = word.chars.count { |c| c.match?(/[a-zA-Z0-9-]/) }
+          word.length - (alphanumeric_char_size / 2.0)
+        end
       end
 
       def average_confidence

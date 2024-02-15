@@ -6,9 +6,10 @@ class ClearImage
       LOCALE_TO_TESSERACT_LANG = {
         en: 'eng',
         jp: 'jpn',
-        'zh-CN': 'chi_sim'
+        'zh-CN': 'chi_sim',
+        ko: 'kor'
       }.freeze
-      NON_CHARACTERS_REGEX = /[^0-9\p{Latin}\p{Hiragana}\p{Katakana}\p{Han}ー-]+/u
+      NON_CHARACTERS_REGEX = /[^0-9\p{Latin}\p{Hiragana}\p{Katakana}\p{Han}\p{Hangul}ー-]+/u
       class << self
         include TmpFileStorable
 
@@ -31,7 +32,7 @@ class ClearImage
         def read_lined_names_text(path, psm:)
           RTesseract.new(path, psm:, oem: 1, lang: tess_language_code).to_s.split(/\s+/).map do |word|
             word.gsub(NON_CHARACTERS_REGEX, '')
-          end
+          end.compact_blank
         end
 
         def read_sparse_names(path)
@@ -60,6 +61,8 @@ class ClearImage
                 .gsub(/^[^\p{Latin}\p{Hiragana}\p{Katakana}\p{Han}]*/, '')
           elsif zh_cn?
             name.gsub(/\s/, '').gsub(/^[^\p{Latin}\p{Han}]*/, '')
+          elsif ko?
+            name.gsub(/\s/, '').gsub(/^[^\p{Latin}\p{Hangul}]*/, '')
           else
             name.gsub(/\W/, '')
           end
@@ -77,7 +80,7 @@ class ClearImage
           return if language
 
           Extracting::Processor.make_names_white_on_black(image).write(tmp_file_path) unless processed_image
-          all_characters_regex = /[^\p{Latin}\p{Hiragana}\p{Katakana}\p{Han}]+/u
+          all_characters_regex = /[^\p{Latin}\p{Hiragana}\p{Katakana}\p{Han}\p{Hangul}]+/u
           Thread.current[:clear_image_language] = LOCALE_TO_TESSERACT_LANG.max_by do |_locale, tess_lang_code|
             RTesseract.new(tmp_file_path.to_s, psm: '11', lang: tess_lang_code).to_box
                       .select { |box| box[:confidence] > 80 }

@@ -35,6 +35,8 @@ class ClearImage
 
       logger.log('Third name lines', name_lines)
 
+      return [] if name_lines.blank?
+
       result = extract_operators_data_based_on_name_lines(name_lines)
 
       logger.log('result:', result)
@@ -104,7 +106,7 @@ class ClearImage
     end
 
     def get_distance_between_operator_card(name_lines)
-      Extracting::OperatorCardBoundingBox.guess_dist(*name_lines, image)
+      Extracting::OperatorCardBoundingBox.guess_dist(*name_lines)
     end
 
     def image_filename

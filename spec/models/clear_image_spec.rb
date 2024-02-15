@@ -6,8 +6,11 @@ def generate_test_from_name(name, locale:)
 end
 
 describe ClearImage do
+  let(:log_data_path) { "tmp/clear_image_test/#{I18n.locale.to_s.underscore}/" }
   let(:clear_image) do
-    described_class.new(Pathname.new(image_path), language: I18n.locale, log_data_path: 'tmp/clear_image_test/')
+    FileUtils.rm_rf(log_data_path) if ClearImage::Logger.should_log?
+    FileUtils.mkdir_p(log_data_path) if ClearImage::Logger.should_log?
+    described_class.new(Pathname.new(image_path), language: I18n.locale, log_data_path:)
   end
 
   # problem: ignore frequents words? case in point La Pluma turned into La Plum
@@ -80,6 +83,32 @@ describe ClearImage do
 
       it 'returns correct attributes' do
         I18n.with_locale(:jp) do
+          get_expected_result
+          expect(received_result).to include(*get_expected_result)
+        end
+      end
+    end
+
+    context 'when language is korean' do
+      let(:operators) do
+        # name, level, elite, skill, skill_game_ids
+        [['머틀', 1, 2, 1, ['skcom_assist_cost[2]', 'skchr_myrtle_2'], 'four_stars'],
+         ['쏜즈', 20, 2, 3, ['skcom_atk_up[3]', 'skchr_thorns_2', 'skchr_thorns_3'], 'six_stars'],
+         ['사리아', 20, 2, 1, %w[skchr_demkni_1 skchr_demkni_2 skchr_demkni_3], 'six_stars'],
+         ['혼', 60, 2, 1, %w[skchr_horn_1 skchr_horn_2 skchr_horn_3], 'six_stars'], # l: 1
+         ['프틸롭시스', 41, 2, 2, ['skcom_heal_up[3]', 'skchr_plosis_2'], 'five_stars'], # l: 1
+         #  ['Lancet-2', 30, 0, nil, [], 'one_star'],
+         ['수르트', 1, 0, 1, %w[skchr_surtr_1 skchr_surtr_2 skchr_surtr_3], 'six_stars'], # skill: 3, e: 0
+         ['마운틴', 20, 2, 2, %w[skchr_f12yin_1 skchr_f12yin_2 skchr_f12yin_3], 'six_stars'],
+         ['머드락', 41, 2, 2, ['skcom_def_up[3]', 'skchr_mudrok_2', 'skchr_mudrok_3'], 'six_stars'], # l: 1
+         #  ['굼', 60, 1, 1, %w[skchr_sunbr_1 skchr_sunbr_2], 'four_stars'],
+         ['카디건', 55, 1, 1, ['skcom_heal_self[1]'], 'three_stars']]
+      end
+
+      let(:image_path) { 'spec/fixtures/images/ko_clear.jpg' }
+
+      it 'returns correct attributes' do
+        I18n.with_locale(:ko) do
           get_expected_result
           expect(received_result).to include(*get_expected_result)
         end

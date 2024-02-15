@@ -118,6 +118,36 @@ describe FetchGameData::FetchLatestOperatorsData do
     end
   end
 
+  context 'when locale is ko' do
+    before do
+      allow(FetchGameData::FetchJson)
+        .to receive(:call)
+        .with('https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData_YoStar/main/ko_KR/gamedata/excel/character_table.json')
+        .and_return(Dry::Monads::Success(file_content))
+    end
+
+    it 'fetches from correct link' do
+      I18n.with_locale(:ko) { service.call }
+      expect(FetchGameData::FetchJson)
+        .to have_received(:call)
+        .with('https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData_YoStar/main/ko_KR/gamedata/excel/character_table.json')
+    end
+
+    it 'creates operator correctly' do
+      I18n.with_locale(:ko) do
+        service.call
+        expect(operator =
+                 Operator.i18n.find_by(
+                   name: 'Texas', game_id: 'char_102_texas', rarity: 4,
+                   skill_game_ids: %w[skchr_texas_1 skchr_texas_2],
+                   skill_icon_ids: %w[skchr_texas_1_icon skchr_texas_2]
+                 )).to be_present
+        expect(operator.name).to eq('Texas')
+        expect(operator.name(locale: :en)).to eq(nil)
+      end
+    end
+  end
+
   context 'when locale is zh-cn' do
     before do
       allow(FetchGameData::FetchJson)

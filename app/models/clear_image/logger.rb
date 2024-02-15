@@ -44,6 +44,20 @@ class ClearImage
         (block_given? ? yield : image).write("#{dir_path}/#{new_name}")
       end
 
+      def draw_boxes_on_image(image, boxes, name)
+        return unless should_log?
+
+        logged_image = image.copy
+        boxes.each do |box|
+          rectangle = Magick::Draw.new
+          rectangle.stroke('green')
+          rectangle.fill('transparent')
+          rectangle.rectangle(box.x, box.y, box.x_end, box.y_end)
+          rectangle.draw(logged_image)
+        end
+        copy_image(logged_image, name)
+      end
+
       def finish
         return unless should_log?
 
@@ -54,6 +68,10 @@ class ClearImage
         Thread.current[LOG_DIR_THREAD_KEY] = dir_path
       end
 
+      def should_log?
+        ENV['CLEAR_IMAGE_LOG'] == 'true'
+      end
+
       private
 
       def log_file_path
@@ -62,10 +80,6 @@ class ClearImage
 
       def dir_path
         Thread.current[LOG_DIR_THREAD_KEY] || LOG_DIR
-      end
-
-      def should_log?
-        ENV['CLEAR_IMAGE_LOG'] == 'true'
       end
     end
   end

@@ -84,7 +84,7 @@ class ClearImage
         cur_len = 1
         0.upto(sorted_width_boxes.size - 2) do |i|
           if Utils.within_ratio?(
-            sorted_width_boxes[i].average_character_width, sorted_width_boxes[i + 1].average_character_width, 0.3
+            sorted_width_boxes[i].average_character_width, sorted_width_boxes[i + 1].average_character_width, Reader.ko? ? 0.5 : 0.3
           )
             cur_len += 1
           else
