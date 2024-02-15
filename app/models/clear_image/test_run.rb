@@ -85,14 +85,18 @@ class ClearImage::TestRun < ApplicationRecord
 
   def latest_test_runs
     @latest_test_runs ||= ClearImage::TestRun.where.not(id:)
-                                             .where('test_case_ids @> ARRAY[?]::bigint[]', test_case_ids).order(id: :desc).limit(latest_size).to_a
+                                             .where('test_case_ids @> ARRAY[?]::bigint[]', test_case_ids).where('id < ?', id).order(id: :desc).limit(latest_size).to_a
   end
 
-  def prev_test_run_id
-    ClearImage::TestRun.where('id < ?', id).order(id: :desc).limit(1).pick(:id)
+  def prev_test_run_id(test_case_id: nil)
+    scope = ClearImage::TestRun.where('id < ?', id).order(id: :desc).limit(1)
+    scope = scope.where('test_case_ids @> ARRAY[?]::bigint[]', test_case_id) if test_case_id
+    scope.pick(:id)
   end
 
-  def next_test_run_id
-    ClearImage::TestRun.where('id > ?', id).order(id: :asc).limit(1).pick(:id)
+  def next_test_run_id(test_case_id: nil)
+    scope = ClearImage::TestRun.where('id > ?', id).order(id: :asc).limit(1)
+    scope = scope.where('test_case_ids @> ARRAY[?]::bigint[]', test_case_id) if test_case_id
+    scope.pick(:id)
   end
 end
