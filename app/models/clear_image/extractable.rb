@@ -4,17 +4,26 @@ class ClearImage
   module Extractable
     delegate :language, to: :reader
 
+    attr_reader :benchmark_result
+
     def extract
       create_tmp_file
       logger.start(image_filename)
       p 'Processing image for extraction...'
 
-      processed_image = Extracting::Processor.make_names_white_on_black(image, double_fill: true).write(tmp_file_path)
-      reader.extract_language(processed_image:)
+      processed_image = benchmark('white_on_black') do
+        Extracting::Processor.make_names_white_on_black(image, double_fill: true).write(tmp_file_path)
+      end
+
+      benchmark('extract_language') do
+        reader.extract_language(processed_image:)
+      end
 
       set_name_line_extractor(processed_image)
 
-      name_lines = name_line_extractor.extract
+      name_lines = benchmark('extract_name_lines') do
+        name_line_extractor.extract
+      end
 
       logger.copy_image(processed_image, Logger::NAME_BLACK_ON_WHITE)
       logger.log('First name lines', name_lines)
@@ -31,13 +40,18 @@ class ClearImage
 
       # return [] if name_lines.size != 2
 
-      name_lines = name_line_extractor.extract(existing_name_lines: name_lines)
+      name_lines = benchmark('extract_name_lines_2') do
+        name_line_extractor.extract(existing_name_lines: name_lines)
+      end
 
       logger.log('Third name lines', name_lines)
 
       return [] if name_lines.blank?
 
-      result = extract_operators_data_based_on_name_lines(name_lines)
+      result =
+        benchmark('extract_data') do
+          extract_operators_data_based_on_name_lines(name_lines)
+        end
 
       logger.log('result:', result)
       result
@@ -51,6 +65,18 @@ class ClearImage
     private
 
     attr_reader :operators_data_from_all_possible_operator_cards_bounding_boxes, :name_line_extractor
+
+    def benchmark(name, &)
+      return yield unless ENV['CLEAR_IMAGE_BENCHMARK']
+
+      @benchmark_result ||= []
+      result = nil
+      benchmark_time = Benchmark.measure do
+        result = yield
+      end
+      @benchmark_result << [name, benchmark_time.real]
+      result
+    end
 
     def logger
       Logger
