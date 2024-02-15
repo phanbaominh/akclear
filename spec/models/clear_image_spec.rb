@@ -92,15 +92,15 @@ describe ClearImage do
     context 'when language is korean' do
       let(:operators) do
         # name, level, elite, skill, skill_game_ids
-        [['머틀', 1, 2, 1, ['skcom_assist_cost[2]', 'skchr_myrtle_2'], 'four_stars'],
-         ['쏜즈', 20, 2, 3, ['skcom_atk_up[3]', 'skchr_thorns_2', 'skchr_thorns_3'], 'six_stars'],
+        [['머틀', 60, 2, 1, ['skcom_assist_cost[2]', 'skchr_myrtle_2'], 'four_stars'], # l: 1
+         ['쏜즈', 20, 2, 2, ['skcom_atk_up[3]', 'skchr_thorns_2', 'skchr_thorns_3'], 'six_stars'], # s: 2
          ['사리아', 20, 2, 1, %w[skchr_demkni_1 skchr_demkni_2 skchr_demkni_3], 'six_stars'],
-         ['혼', 60, 2, 1, %w[skchr_horn_1 skchr_horn_2 skchr_horn_3], 'six_stars'], # l: 1
-         ['프틸롭시스', 41, 2, 2, ['skcom_heal_up[3]', 'skchr_plosis_2'], 'five_stars'], # l: 1
+         ['혼', 1, 2, 1, %w[skchr_horn_1 skchr_horn_2 skchr_horn_3], 'six_stars'],
+         ['프틸롭시스', 40, 2, 2, ['skcom_heal_up[3]', 'skchr_plosis_2'], 'five_stars'], # l: 1
          #  ['Lancet-2', 30, 0, nil, [], 'one_star'],
          ['수르트', 1, 0, 1, %w[skchr_surtr_1 skchr_surtr_2 skchr_surtr_3], 'six_stars'], # skill: 3, e: 0
          ['마운틴', 20, 2, 2, %w[skchr_f12yin_1 skchr_f12yin_2 skchr_f12yin_3], 'six_stars'],
-         ['머드락', 41, 2, 2, ['skcom_def_up[3]', 'skchr_mudrok_2', 'skchr_mudrok_3'], 'six_stars'], # l: 1
+         ['머드락', 1, 2, 2, ['skcom_def_up[3]', 'skchr_mudrok_2', 'skchr_mudrok_3'], 'six_stars'],
          #  ['굼', 60, 1, 1, %w[skchr_sunbr_1 skchr_sunbr_2], 'four_stars'],
          ['카디건', 55, 1, 1, ['skcom_heal_self[1]'], 'three_stars']]
       end

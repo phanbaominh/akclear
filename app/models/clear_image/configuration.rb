@@ -24,6 +24,10 @@ class ClearImage::Configuration
       word_in_line_second_pass_confidence_threshold: 30,
       first_pass_detected_name_similarity_threshold: 0.7,
       second_pass_detected_name_similarity_threshold: 0.66
+    },
+    ko: {
+      word_in_line_first_pass_confidence_threshold: 40,
+      word_in_line_second_pass_confidence_threshold: 30
     }
   }.freeze
 
