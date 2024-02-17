@@ -31,12 +31,7 @@ class ClearImage
 
         def read_lined_names_text(path, psm:)
           text = RTesseract.new(path, psm:, oem: 1, lang: tess_language_code).to_s
-          words = if jp?
-                    # text.tr(' 一 ', '   ').gsub(/([\p{Katakana}\p{Han}])\s/, '\0')
-                    text.split(/\s+/)
-                  else
-                    text.split(/\s+/)
-                  end
+          words = text.split(/\s+/)
           words.map do |word|
             word.gsub(NON_CHARACTERS_REGEX, '')
           end.compact_blank

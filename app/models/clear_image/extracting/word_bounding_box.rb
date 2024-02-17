@@ -32,27 +32,26 @@ class ClearImage
         @character_only_word ||= @word.gsub(NON_CHARACTERS_REGEX, '')
       end
 
-      def near_jp?(other_box, same_line: false)
-        return false if same_line && (y - other_box.y).abs >= 10
-        return true if same_line && overlapping?(other_box)
+      def near_jp?(other_box, lined_up: false)
+        return false if lined_up && (y - other_box.y).abs >= 10
+        return true if lined_up && overlapping?(other_box)
 
         widths = [average_character_width, other_box.average_character_width]
 
         return false if widths.min * 2 < widths.max
 
-        largest_possible_distance_between_character =
-          widths.max # Configuration.max_character_distance_to_width_ratio_to_be_near
+        largest_possible_distance_between_character = widths.max
 
         dist(other_box) <= largest_possible_distance_between_character
       end
 
-      def near?(other_box, same_line: false)
-        return near_jp?(other_box, same_line:) if Reader.jp?
+      def near?(other_box, lined_up: false)
+        return near_jp?(other_box, lined_up:) if Reader.jp?
 
         largest_possible_distance_between_character =
           [average_character_width,
            other_box.average_character_width].min * Configuration.max_character_distance_to_width_ratio_to_be_near
-        dist(other_box) <= largest_possible_distance_between_character # && (!same_line || (y - other_box.y).abs < 10)
+        dist(other_box) <= largest_possible_distance_between_character # && (!lined_up || (y - other_box.y).abs < 10)
       end
 
       def overlapping?(other_box)
@@ -69,19 +68,19 @@ class ClearImage
         return width * 1.0 / word.length if parts.size == 1 || !Reader.jp?
 
         i = 0
-        widths = []
+        part_character_widths = []
         while i < parts.size
           j = i + 1
-          count = parts[i].word
+          overlapped_word = parts[i].word
           while j < parts.size && parts[i].overlapping?(parts[j])
-            count += parts[j].word
+            overlapped_word += parts[j].word
             j += 1
           end
-          widths << (parts[i].width / count.length.to_f)
+          part_character_widths << (parts[i].width / overlapped_word.length.to_f)
           i = j
         end
 
-        widths.sum / widths.size.to_f
+        part_character_widths.sum / part_character_widths.size.to_f
       end
 
       def relative_word_length

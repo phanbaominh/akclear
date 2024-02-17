@@ -21,14 +21,12 @@ class ClearImage
           end
           processed_boxes << prev_near_boxes.merge if prev_near_boxes.present?
 
-          ap ['before', words, processed_boxes]
           result = merge_word_boxes_to_match_detected_words(processed_boxes, words)
-          ap result
           result.each(&:trust)
           result
         end
 
-        def group_near_words_in_same_line_jp(words_bounding_boxes, all_same_line: false, same_line: false)
+        def group_near_words_in_same_line_jp(words_bounding_boxes, fully_lined_up: false, lined_up: false)
           processed_boxes = []
           prev_near_boxes = WordBoundingBoxList.new
           words_bounding_boxes.each do |box|
@@ -39,23 +37,24 @@ class ClearImage
               next
             end
 
-            last_box = prev_near_boxes
-
-            while last_box
+            should_check_if_current_box_is_near = true
+            while should_check_if_current_box_is_near
               is_near =
-                if all_same_line
-                  prev_near_boxes.near?(box, same_line:)
+                if fully_lined_up
+                  prev_near_boxes.near?(box, lined_up:)
                 else
-                  prev_near_boxes.evenly_spaced?(box, same_line:)
+                  prev_near_boxes.evenly_spaced?(box, lined_up:)
                 end
 
               if is_near
-                last_box = nil
+                should_check_if_current_box_is_near = false
               else
-                last_box = (prev_near_boxes.pop if !all_same_line && prev_near_boxes.split_off_last_box?(box))
+                last_box = (prev_near_boxes.pop if !fully_lined_up && prev_near_boxes.split_off_last_box?(box))
                 processed_boxes << prev_near_boxes.merge
                 prev_near_boxes = WordBoundingBoxList.new
+
                 prev_near_boxes << last_box if last_box
+                should_check_if_current_box_is_near = last_box.present?
               end
             end
 
@@ -65,10 +64,10 @@ class ClearImage
           processed_boxes
         end
 
-        def group_near_words_in_same_line(words_bounding_boxes, all_same_line: false, same_line: false)
+        def group_near_words_in_same_line(words_bounding_boxes, fully_lined_up: false, lined_up: false)
           if Reader.jp?
-            return group_near_words_in_same_line_jp(words_bounding_boxes, all_same_line:,
-                                                                          same_line:)
+            return group_near_words_in_same_line_jp(words_bounding_boxes, fully_lined_up:,
+                                                                          lined_up:)
           end
 
           processed_boxes = []
@@ -78,7 +77,7 @@ class ClearImage
 
             if prev_near_boxes.present? &&
                !prev_near_boxes.near?(box) &&
-               (!all_same_line || !prev_near_boxes.overlapping?(box))
+               (!fully_lined_up || !prev_near_boxes.overlapping?(box))
               processed_boxes << prev_near_boxes.merge(filter_noise: true)
               prev_near_boxes = WordBoundingBoxList.new
             end
@@ -110,7 +109,7 @@ class ClearImage
               end
             end
             current_line = WordBoundingBoxList.new(group_near_words_in_same_line(current_line.sort_by!(&:x),
-                                                                                 all_same_line: true, same_line: true))
+                                                                                 fully_lined_up: true, lined_up: true))
             lines_of_words << current_line
           end
           lines_of_words

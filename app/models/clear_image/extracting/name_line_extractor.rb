@@ -81,7 +81,6 @@ class ClearImage
         @logged_image_name = 'full_image'
         logger.log_new_section('extract full_image', nil)
         all_word_lines = extract_word_lines
-        ap ['raw all_word_lines', all_word_lines]
         all_word_lines.each(&:keep_evenly_high_boxes) unless @extract_name_line_count == 1
         all_word_lines.each(&:remove_outlier!) unless final_name_lines?
         logger.log('all_word_lines:', all_word_lines)
@@ -123,16 +122,10 @@ class ClearImage
         word_bounding_boxes.reject { |box| box.word =~ /Unit/i  }
       end
 
-      def group_near_word_bounding_boxes(word_bounding_boxes, lined_up, psm)
+      def group_near_word_bounding_boxes(word_bounding_boxes, lined_up, _psm)
         word_bounding_boxes.reject! { |box| box.word.length < 3 } if reader.en?
 
-        result = if false
-                   words = reader.read_lined_names_text(tmp_file_path, psm:)
-                   Extracting::WordProcessor.group_near_words_boxes_matching_detected_words(word_bounding_boxes,
-                                                                                            words)
-                 else
-                   Extracting::WordProcessor.group_near_words_in_same_line(word_bounding_boxes, same_line: lined_up)
-                 end
+        Extracting::WordProcessor.group_near_words_in_same_line(word_bounding_boxes, lined_up:)
       end
 
       def logger

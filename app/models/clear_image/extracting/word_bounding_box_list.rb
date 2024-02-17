@@ -8,6 +8,7 @@ class ClearImage
       include Enumerable
       NEAR_ALLOWED_DIFFERENCE = 1
       MOST_COMMON_Y_THRESHOLD = 3
+      COMMON_Y_DIFFERENCE_THRESHOLD = 5
       EVENLY_SPACED_RATIO = 0.5
       delegate :pop, :<<, :present?, :last, :size, :max_by, :reject!, :empty?, to: :list
       delegate :near?, :overlapping?, to: :last
@@ -16,24 +17,31 @@ class ClearImage
         @list = list
       end
 
-      def evenly_spaced?(box, same_line: false)
-        left_most_box = list.max_by(&:x_end)
-        return true if left_most_box.overlapping?(box) && same_line
+      def left_most_box
+        list.max_by(&:x_end)
+      end
 
+      def evenly_spaced?(box, lined_up: false)
+        return true if lined_up && left_most_box.overlapping?(box)
+
+        last.near?(box, lined_up:) && similar_spacing_to_existing_boxes?(box)
+      end
+
+      def similar_spacing_to_existing_boxes?(box)
         valid_dist = []
         list.each_cons(2) do |word_1, word_2|
-          valid_dist << word_1.dist(word_2) unless word_1.overlapping?(word_2)
+          next if word_1.overlapping?(word_2)
+
+          valid_dist << word_1.dist(word_2)
         end
-        last_dist = valid_dist.min
+        min_dist = valid_dist.min
 
         new_dist = box.x - left_most_box.x_end
-
-        last.near?(box, same_line:) &&
-          (!last_dist || if new_dist < last_dist
-                           Utils.within_ratio?(last_dist, new_dist, 0.3)
-                         else
-                           (last_dist * 2) > new_dist
-                         end)
+        (!min_dist || if new_dist < min_dist
+                        Utils.within_ratio?(min_dist, new_dist, 0.3)
+                      else
+                        (min_dist * 2) > new_dist
+                      end)
       end
 
       def split_off_last_box?(box)
@@ -41,7 +49,6 @@ class ClearImage
 
         return false if list[-2].overlapping?(list[-1])
 
-        # list[-2].dist_between_word_end(list[-1]) > box.dist_between_word_end(list[-1])
         list[-2].dist(list[-1]) > list[-1].dist(box)
       end
 
@@ -100,7 +107,7 @@ class ClearImage
 
       def remove_outlier!
         # keep_evenly_high_boxes
-        most_common_box_y && list.reject! { |box| (box.y - most_common_box_y).abs > 5 }
+        most_common_box_y && list.reject! { |box| (box.y - most_common_box_y).abs > COMMON_Y_DIFFERENCE_THRESHOLD }
         keep_evenly_wide_boxes
       end
 
@@ -134,37 +141,7 @@ class ClearImage
         end
       end
 
-      def keep_evenly_high_boxes
-        return if list.size < 2
-
-        sorted_width_boxes = list.sort_by(&:height)
-        start = 0
-        max_len = 0
-        cur_start = 0
-        cur_len = 1
-        0.upto(sorted_width_boxes.size - 2) do |i|
-          if Utils.within_ratio?(
-            sorted_width_boxes[i].height, sorted_width_boxes[i + 1].height, 0.5
-          )
-            cur_len += 1
-          else
-            if cur_len > max_len
-              max_len = cur_len
-              start = cur_start
-            end
-            cur_len = 1
-            cur_start = i + 1
-          end
-        end
-        if cur_len > max_len
-          max_len = cur_len
-          start = cur_start
-        end
-        avg_h = sorted_width_boxes[start...start + max_len].sum(&:height) / max_len.to_f
-        list.reject! do |box|
-          !Utils.within_ratio?(avg_h, box.height, 0.5)
-        end
-      end
+      def keep_evenly_high_boxes; end
 
       def each(&)
         list.each(&)

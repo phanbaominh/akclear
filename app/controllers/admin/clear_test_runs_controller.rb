@@ -11,6 +11,7 @@ class Admin::ClearTestRunsController < ApplicationController
 
   def create
     @test_run = ClearImage::TestRun.new(clear_test_run_params)
+    # @test_run.study(%i[ko])
     @test_run.save!
     Clears::StartTestRunJob.perform_later(@test_run.id)
     redirect_to admin_clear_test_run_path(@test_run)
