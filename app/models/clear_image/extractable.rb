@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ClearImage
-  module Extractable
+  module Extractable # rubocop:disable Metrics/ModuleLength
     delegate :language, to: :reader
 
     attr_reader :benchmark_result
@@ -99,16 +99,28 @@ class ClearImage
             elite_0_image = elite_0_image.scale(elite_bb.width, elite_bb.height)
             elite_1_image = elite_1_image.scale(elite_bb.width, elite_bb.height)
           end
-          Extracting::OperatorExtractor.new(box, image, operators, elite_0_image, elite_1_image).extract
+          Extracting::OperatorExtractor.new(box, image, operators, elite_0_image, elite_1_image,
+                                            similarity_comparable_mapper).extract
         end
       end.flatten.compact
     end
 
     def operators
+      return @operators if @operators
+
       @operators ||=
         I18n.with_locale(reader.language) do
-          Operator.i18n.pluck(:id, :name).map { |id, name| [id, name.gsub(/\s+/, '')] }
+          Operator.i18n.eager_load(:string_translations).to_a
         end
+      @operators.each do |operator|
+        operator.name = operator.name(locale: reader.language).gsub(/\s+/, '')
+
+        operator.similarity_comparable_name = similarity_comparable_mapper.map(operator.name)
+      end
+    end
+
+    def similarity_comparable_mapper
+      @similarity_comparable_mapper ||= ClearImage::Extracting::SimilarityComparableMapper.new(operators)
     end
 
     def max_possible_operator_cards

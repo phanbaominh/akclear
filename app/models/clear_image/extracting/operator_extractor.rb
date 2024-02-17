@@ -20,13 +20,15 @@ class ClearImage
         end
       end
 
-      def initialize(operator_card_bounding_box, image, operators, elite_0_image, elite_1_image)
+      def initialize(operator_card_bounding_box, image, operators, elite_0_image, elite_1_image,
+                     similarity_comparable_mapper)
         @operator_card_bounding_box = operator_card_bounding_box
         @image = image
         @operators = operators || Operator.i18n.pluck(:id, :name).map { |id, name| [id, name.gsub(/\s+/, '')] }
         @elite_0_image = elite_0_image
         @elite_1_image = elite_1_image
         @guesses = []
+        @similarity_comparable_mapper = similarity_comparable_mapper
       end
 
       def extract
@@ -56,7 +58,8 @@ class ClearImage
 
       private
 
-      attr_reader :operator_card_bounding_box, :image, :operators, :elite_0_image, :elite_1_image
+      attr_reader :operator_card_bounding_box, :image, :operators, :elite_0_image, :elite_1_image,
+                  :similarity_comparable_mapper
 
       def reader
         ClearImage::Extracting::Reader
@@ -67,7 +70,7 @@ class ClearImage
 
         Logger.log('guesses', @guesses)
 
-        get_operator_with_name(@guesses.min_by { |_, edit_dist, _| edit_dist }.first)
+        @guesses.min_by { |_, edit_dist, _| edit_dist }.first
       end
 
       def match_operator(word, similarity_threshold)
@@ -104,32 +107,38 @@ class ClearImage
       def match_name_containing(word)
         return unless word.length >= 4
 
-        id = operators.find { |_id, name| name.include?(word) }&.first
-
-        return unless id
-
-        Operator.find(id)
+        operators.find { |operator| operator.name.include?(word) }
       end
 
-      def find_most_matched_name(word, similarity_threshold)
-        matcher = Amatch::Levenshtein.new(word)
+      def get_similarity_comparable(word)
+        similarity_comparable_mapper.map(word)
+      end
+
+      def find_most_matched_operator(word, similarity_threshold)
+        similarity_comparable_word = get_similarity_comparable(word)
+        matcher = Amatch::Levenshtein.new(similarity_comparable_word)
         # can optimize here by filter out name with appropriate length
         names_start_or_end_with_sub_word = [] if guessable?
-        most_matched_name = operator_names.min_by do |name|
+        most_matched_operator = operators.min_by do |operator|
           # TODO: compare with length diff <=2
-          result = matcher.match(name)
-          names_start_or_end_with_sub_word << [name, result] if guessable? && start_or_end_with?(name, word)
+          result = matcher.match(operator.similarity_comparable_name)
+          names_start_or_end_with_sub_word << [operator, result] if guessable? && start_or_end_with?(
+            operator.name, word
+          )
           result
         end
-        similarity = most_matched_name.levenshtein_similar(word)
-        Logger.log(word, ['simlarity', word, most_matched_name, similarity])
+
+        similarity = most_matched_operator.similarity_comparable_name.levenshtein_similar(similarity_comparable_word)
+        Logger.log(word,
+                   ['simlarity', word, most_matched_operator.name, similarity_comparable_word,
+                    most_matched_operator.similarity_comparable_name, similarity].join(', '))
         update_guess(names_start_or_end_with_sub_word, word)
 
-        similarity_threshold = re_calculate_similarity_threshold(similarity_threshold, most_matched_name, word)
+        similarity_threshold = re_calculate_similarity_threshold(similarity_threshold, most_matched_operator.name, word)
 
         return unless similarity >= similarity_threshold
 
-        most_matched_name
+        most_matched_operator
       end
 
       def re_calculate_similarity_threshold(similarity_threshold, most_matched_name, word)
@@ -146,7 +155,7 @@ class ClearImage
 
       def update_guess(names_start_or_end_with_sub_word, word)
         last_guess = @guesses.last
-        @guesses.pop if last_guess && last_guess.length < word.length
+        @guesses.pop if last_guess && last_guess.first.name.length < word.length
 
         return if names_start_or_end_with_sub_word.blank?
 
@@ -176,11 +185,7 @@ class ClearImage
       def match_name_with_highest_similarity(word, similarity_threshold = 1)
         return unless word
 
-        most_matched_name = find_most_matched_name(word, similarity_threshold)
-
-        return unless most_matched_name
-
-        get_operator_with_name(most_matched_name)
+        find_most_matched_operator(word, similarity_threshold)
       end
 
       def get_operator_with_name(name)
@@ -264,10 +269,6 @@ class ClearImage
         return possible_elites.first if possible_elites.size == 1
 
         guess_elite_1_or_2(greyscaled_image)
-      end
-
-      def operator_names
-        @operator_names ||= operators.map(&:second)
       end
 
       def is_elite_0?(image)

@@ -8,6 +8,8 @@ class Operator < ApplicationRecord
                            where(id: UsedOperator.where(used_operators: { clear_id: clear_ids }).select(:operator_id))
                          }
 
+  attr_accessor :similarity_comparable_name
+
   def avatar
     "https://raw.githubusercontent.com/Aceship/Arknight-Images/main/avatars/#{game_id}.png"
   end
