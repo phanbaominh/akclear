@@ -30,7 +30,14 @@ class ClearImage
         end
 
         def read_lined_names_text(path, psm:)
-          RTesseract.new(path, psm:, oem: 1, lang: tess_language_code).to_s.split(/\s+/).map do |word|
+          text = RTesseract.new(path, psm:, oem: 1, lang: tess_language_code).to_s
+          words = if jp?
+                    # text.tr(' 一 ', '   ').gsub(/([\p{Katakana}\p{Han}])\s/, '\0')
+                    text.split(/\s+/)
+                  else
+                    text.split(/\s+/)
+                  end
+          words.map do |word|
             word.gsub(NON_CHARACTERS_REGEX, '')
           end.compact_blank
         end
@@ -56,9 +63,9 @@ class ClearImage
                 .tr('一', 'ー') # ichi vs long dahsh
                 .tr('夕', 'タ') # yuu vs ta
                 .tr('ヵ', 'カ')
-                .gsub(/^ー*/, '')
+                # .gsub(/^ー*/, '')
                 .gsub(/\s/, '')
-                .gsub(/^[^\p{Latin}\p{Hiragana}\p{Katakana}\p{Han}]*/, '')
+                .gsub(/^[^\p{Latin}\p{Hiragana}\p{Katakana}\p{Han}ー]*/, '')
           elsif zh_cn?
             name.gsub(/\s/, '').gsub(/^[^\p{Latin}\p{Han}]*/, '')
           elsif ko?

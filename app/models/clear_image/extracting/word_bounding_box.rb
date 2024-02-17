@@ -32,15 +32,31 @@ class ClearImage
         @character_only_word ||= @word.gsub(NON_CHARACTERS_REGEX, '')
       end
 
-      def near?(other_box)
+      def near_jp?(other_box, same_line: false)
+        return false if same_line && (y - other_box.y).abs >= 10
+        return true if same_line && overlapping?(other_box)
+
+        widths = [average_character_width, other_box.average_character_width]
+
+        return false if widths.min * 2 < widths.max
+
         largest_possible_distance_between_character =
-          [average_character_width,
-           other_box.average_character_width].min * Configuration.max_character_distance_to_width_ratio_to_be_near
+          widths.max # Configuration.max_character_distance_to_width_ratio_to_be_near
+
         dist(other_box) <= largest_possible_distance_between_character
       end
 
+      def near?(other_box, same_line: false)
+        return near_jp?(other_box, same_line:) if Reader.jp?
+
+        largest_possible_distance_between_character =
+          [average_character_width,
+           other_box.average_character_width].min * Configuration.max_character_distance_to_width_ratio_to_be_near
+        dist(other_box) <= largest_possible_distance_between_character # && (!same_line || (y - other_box.y).abs < 10)
+      end
+
       def overlapping?(other_box)
-        x_end >= other_box.x
+        x_end > other_box.x && x < other_box.x_end
       end
 
       def near_edge?(image)
@@ -50,7 +66,22 @@ class ClearImage
       end
 
       def average_character_width
-        width * 1.0 / word.length
+        return width * 1.0 / word.length if parts.size == 1 || !Reader.jp?
+
+        i = 0
+        widths = []
+        while i < parts.size
+          j = i + 1
+          count = parts[i].word
+          while j < parts.size && parts[i].overlapping?(parts[j])
+            count += parts[j].word
+            j += 1
+          end
+          widths << (parts[i].width / count.length.to_f)
+          i = j
+        end
+
+        widths.sum / widths.size.to_f
       end
 
       def relative_word_length
@@ -68,6 +99,10 @@ class ClearImage
 
       def trust
         @confidence = [100]
+      end
+
+      def dist_between_word_end(other_box)
+        (x_end - other_box.x_end).abs
       end
 
       def inspect

@@ -56,6 +56,7 @@ class ClearImage
             b_border, b_border, 'black'
           )
           @logged_image = bordered_crop_image
+          @logged_image_name = "crop_image_y#{line.y}_w#{w_border}_b#{b_border}"
           bordered_crop_image.write(tmp_file_path)
           word_lines = extract_word_lines(lined_up: true)
           word_line = word_lines.first
@@ -67,12 +68,18 @@ class ClearImage
           logger.log("word line w#{w_border} b#{b_border}", word_line)
 
           [word_line, [w_border, b_border], bordered_crop_image, @word_size]
-        end.max_by { |(word_line, _, _, word_size)| [word_line.map(&:word).join.length, word_size.to_i] }
+        end.max_by do |(word_line, (w_border, b_border), _, word_size)|
+          sort_criteria = [word_line.map(&:word).join.length, word_size.to_i]
+          logger.log("word line w#{w_border} b#{b_border} - sort by", sort_criteria.join(', '))
+          sort_criteria
+        end
       end
 
       def extract_all_from_full_image
         @logged_image = @image
+        @logged_image_name = 'full_image'
         all_word_lines = extract_word_lines
+        ap ['raw all_word_lines', all_word_lines]
         all_word_lines.each(&:keep_evenly_high_boxes) unless @extract_name_line_count == 1
         all_word_lines.each(&:remove_outlier!) unless final_name_lines?
         logger.log('all_word_lines:', all_word_lines)
@@ -106,17 +113,24 @@ class ClearImage
         word_bounding_boxes = ocr_word_boxes.map { |box| Extracting::WordBoundingBox.new(box) }
         @word_size = word_bounding_boxes.sum(&:confidence).to_f / word_bounding_boxes.size
         logger.log('raw word_bounding_boxes:', word_bounding_boxes)
-        logger.draw_boxes_on_image(@logged_image, word_bounding_boxes, "green_boxes_#{lined_up}.png")
+        logger.draw_boxes_on_image(@logged_image, word_bounding_boxes, "green_boxes_#{@logged_image_name}.png")
         word_bounding_boxes.reject! { |box| box.near_edge?(image) } unless lined_up
         word_bounding_boxes.reject! { |box| box.word =~ /&.*?;/ }
+        # word_bounding_boxes.reject! { |box| box.word =~ /[a-z]+/ } unless reader.en?
         word_bounding_boxes = group_near_word_bounding_boxes(word_bounding_boxes, lined_up, psm)
         word_bounding_boxes.reject { |box| box.word =~ /Unit/i  }
       end
 
-      def group_near_word_bounding_boxes(word_bounding_boxes, _lined_up, _psm)
+      def group_near_word_bounding_boxes(word_bounding_boxes, lined_up, psm)
         word_bounding_boxes.reject! { |box| box.word.length < 3 } if reader.en?
 
-        Extracting::WordProcessor.group_near_words_in_same_line(word_bounding_boxes)
+        result = if false
+                   words = reader.read_lined_names_text(tmp_file_path, psm:)
+                   Extracting::WordProcessor.group_near_words_boxes_matching_detected_words(word_bounding_boxes,
+                                                                                            words)
+                 else
+                   Extracting::WordProcessor.group_near_words_in_same_line(word_bounding_boxes, same_line: lined_up)
+                 end
       end
 
       def logger

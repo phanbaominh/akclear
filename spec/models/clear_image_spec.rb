@@ -57,6 +57,7 @@ describe ClearImage do
 
       it 'returns correct attributes' do
         get_expected_result
+        expect(received_result.size).to eq(get_expected_result.size + 1)
         expect(received_result).to include(*get_expected_result)
         # expect(received_result).to match_array(get_expected_result)
       end
@@ -71,9 +72,9 @@ describe ClearImage do
           ['ラヴァ', 55, 1, 1, ['skcom_magic_rage[1]'], Operator::Rarifiable::THREE_STARS],
           ['ミッドナイト', 55, 1, 1, ['skchr_midn_1'], Operator::Rarifiable::THREE_STARS],
           ['プリュム', 55, 1, 1, ['skcom_quickattack[1]'], Operator::Rarifiable::THREE_STARS],
-          ['カシャ', 60, 2, 2, ['skcom_atk_up[2]', 'skchr_cammou_2'], Operator::Rarifiable::FOUR_STARS], # correct elite: 1
-          # ['ハイビスカス', 55, 1, 1, ['skcom_heal_up[1]'], Operator::Rarifiable::THREE_STARS],
-          # ['クルース', 55, 1, 1, ['skchr_kroos_1'], Operator::Rarifiable::THREE_STARS],
+          ['カシャ', 60, 2, 1, ['skcom_atk_up[2]', 'skchr_cammou_2'], Operator::Rarifiable::FOUR_STARS], # correct elite: 1, s: 2
+          ['ハイビスカス', 55, 1, 1, ['skcom_heal_up[1]'], Operator::Rarifiable::THREE_STARS],
+          ['クルース', 55, 1, 1, ['skchr_kroos_1'], Operator::Rarifiable::THREE_STARS],
           ['カーディ', 55, 1, 1, ['skcom_heal_self[1]'], Operator::Rarifiable::THREE_STARS],
           ['メランサ', 55, 1, 1, %w[skcom_atk_up[1]], Operator::Rarifiable::THREE_STARS],
           ['フェン', 55, 1, 1, ['skcom_charge_cost[1]'], Operator::Rarifiable::THREE_STARS]
@@ -84,6 +85,7 @@ describe ClearImage do
       it 'returns correct attributes' do
         I18n.with_locale(:jp) do
           get_expected_result
+          expect(received_result.size).to eq(get_expected_result.size)
           expect(received_result).to include(*get_expected_result)
         end
       end
@@ -110,6 +112,7 @@ describe ClearImage do
       it 'returns correct attributes' do
         I18n.with_locale(:ko) do
           get_expected_result
+          expect(received_result.size).to eq(get_expected_result.size)
           expect(received_result).to include(*get_expected_result)
         end
       end
@@ -134,6 +137,7 @@ describe ClearImage do
       it 'returns correct attributes' do
         I18n.with_locale(:'zh-CN') do
           get_expected_result
+          expect(received_result.size).to eq(get_expected_result.size)
           expect(received_result).to include(*get_expected_result)
         end
       end
