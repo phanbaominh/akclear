@@ -26,25 +26,13 @@ class ClearImage
       end
 
       logger.copy_image(processed_image, Logger::NAME_BLACK_ON_WHITE)
-      logger.log('First name lines', name_lines)
-      # processed_image = Extracting::Processor.paint_white_in_between_names(processed_image, *name_lines)
-
-      # processed_image_2 = Extracting::Processor
-      #                     .paint_white_over_non_names(processed_image, *name_lines).write(tmp_file_path)
-      # logger.copy_image(processed_image_2, Logger::WHITE_OVER_NON_NAMES_1)
-
-      # @lined = true
-
-      # extract_name_lines
-      # logger.log('Second name lines', name_lines)
-
-      # return [] if name_lines.size != 2
+      logger.log_new_section('First name lines', name_lines)
 
       name_lines = benchmark('extract_name_lines_2') do
         name_line_extractor.extract(existing_name_lines: name_lines)
       end
 
-      logger.log('Third name lines', name_lines)
+      logger.log_new_section('Second name lines', name_lines)
 
       return [] if name_lines.blank?
 
@@ -53,7 +41,7 @@ class ClearImage
           extract_operators_data_based_on_name_lines(name_lines)
         end
 
-      logger.log('result:', result)
+      logger.log_new_section('result:', result)
       result
       # extract_operators_data_from_all_possible_operator_cards_bounding_boxes
       # combine_extracted_operators_data

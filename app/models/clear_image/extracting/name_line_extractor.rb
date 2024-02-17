@@ -33,6 +33,7 @@ class ClearImage
         result = []
 
         name_lines.each_with_index do |line, i|
+          logger.log_new_section("extract cropped image #{i}", nil)
           name_line, border_thickness, chosen_image = extract_from_cropped_image(line)
 
           next if name_line.nil?
@@ -78,6 +79,7 @@ class ClearImage
       def extract_all_from_full_image
         @logged_image = @image
         @logged_image_name = 'full_image'
+        logger.log_new_section('extract full_image', nil)
         all_word_lines = extract_word_lines
         ap ['raw all_word_lines', all_word_lines]
         all_word_lines.each(&:keep_evenly_high_boxes) unless @extract_name_line_count == 1

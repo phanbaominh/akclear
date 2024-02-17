@@ -268,6 +268,12 @@ class ClearImage::TestResult
     @log_text ||= File.read(log_path)
   end
 
+  def log_sections
+    return unless log_text
+
+    log_text.split('[NEW SECTION]').map(&:strip)
+  end
+
   delegate :latest_test_runs, to: :test_run
 
   def latest_test_results

@@ -26,10 +26,15 @@ class ClearImage
         end
       end
 
-      def log(message, object)
+      def log_new_section(message, object)
+        log(message, object, new_section: true)
+      end
+
+      def log(message, object, new_section: false)
         return unless should_log?
 
         File.open(log_file_path, 'a') do |f|
+          f.puts '[NEW SECTION]' if new_section
           f.puts message
           f.puts(object.awesome_inspect(plain: true, index: false))
         end
