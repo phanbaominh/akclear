@@ -12,6 +12,8 @@
       <%= f.input :all, as: :boolean, input_html: { class: '!toggle', data: { **stimulus_attrs(:click_other, actions: { click: 'clickOther' }) } } %>
       <% unless @test_run.all %>
         <%= f.input :test_count, as: :integer %>
+      <% else%>
+        <%= f.input :languages, as: :select, collection: Channel.clear_languages, selected: Channel.clear_languages.values, input_html: { multiple: true } %>
       <% end %>
       <%= f.label :configuration, class: 'simple_form__label' %>
       <div class="grid grid-cols-3 gap-2">

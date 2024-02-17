@@ -13,6 +13,8 @@ class ClearImage::TestRun < ApplicationRecord
   attribute :all, :boolean, default: false
   attribute :latest_size, :integer, default: 5
 
+  attribute :languages, default: -> { Channel.clear_languages.keys.map(&:to_s) }
+
   def test_cases
     @test_cases ||= ClearImage::TestCase.where(id: test_case_ids)
   end
@@ -56,7 +58,7 @@ class ClearImage::TestRun < ApplicationRecord
     super || (@all_test_case_ids ||= ClearImage::TestCase.pluck(:id))
   end
 
-  def study(languages)
+  def study
     self.test_case_ids =
       ClearImage::TestCase.where(id: test_case_ids)
                           .joins(clear: :channel).where(channels: { clear_language: languages }).pluck(:id)

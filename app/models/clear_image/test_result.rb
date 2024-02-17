@@ -19,6 +19,8 @@ class ClearImage::TestResult
   attr_writer :latest_test_runs, :test_case, :configuration
 
   def self.preload_test_case(test_results)
+    return if test_results.empty?
+
     test_run = test_results.first.test_run
     case_to_result = test_results.index_by(&:test_case_id)
     test_run.test_cases.each do |test_case|
