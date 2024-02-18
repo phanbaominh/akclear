@@ -1,37 +1,44 @@
+<% if used_operator.operator %>
   <article
   class="operators__card flex flex-col relative justify-center items-center "
   id="<%= (dom_id(used_operator.operator, :basic) if deletable?)%>"
-  
->
-  <div class="p-2" >
-    <%= image_tag avatar,
+  >
+    <div class="p-2" >
+      <%= image_tag avatar,
     alt: name,
     class: "w-14 rounded-full operators__highlightable #{used_operator.verification_color('outline', require_prefix: true) if show_verification_status}", 
     data: { operator_id: used_operator.operator_id } %>
-  </div>
-  <div class="absolute grid grid-cols-2 gap-4 text-base-content font-bold h-full ml-2">
-    <% if elite %>
-      <%= vite_image_tag elite_image_url, alt: t(:elite_number, elite: elite), class: "w-6 -mt-1" if elite %>
-    <% else %>
-      <span></span>
-    <% end %>
-    <% if level %>
-      <span class="-mt-1"><%= level %></span>
-    <% elsif deletable? %>
-      <%= render Clears::UsedOperatorDeleteBtnComponent.new(used_operator: used_operator, class: 'bg-transparent border-none', icon: 'x-mark') %>
-    <% end %>
-    <% if skill %>
-      <span class="-mb-6 sm:-mb-8">S<%= skill %></span>
-    <% else %>
-      <span></span>
-    <% end %>
-    <% if skill && skill_level %>
-      <span class="-mb-6 sm:-mb-8"><%= used_operator.skill_level_code %></span>
-    <% end %>
-  </div>
-  <% if used_operator.verified? %>
-    <div class="w-fit self-center absolute z-1">
-      <%= heroicon used_operator.verification_icon, options: { class: "#{used_operator.verification_color('text')} !w-14 !h-14 font-bold", alt: used_operator.verification_text } %>
     </div>
-  <% end %>
-</article>
+    <div class="absolute grid grid-cols-2 gap-4 text-base-content font-bold h-full ml-2">
+      <% if elite %>
+        <%= vite_image_tag elite_image_url, alt: t(:elite_number, elite: elite), class: "w-6 -mt-1" if elite %>
+      <% else %>
+        <span></span>
+      <% end %>
+      <% if level %>
+        <span class="-mt-1"><%= level %></span>
+      <% elsif deletable? %>
+        <%= render Clears::UsedOperatorDeleteBtnComponent.new(used_operator: used_operator, class: 'bg-transparent border-none', icon: 'x-mark') %>
+      <% end %>
+      <% if skill %>
+        <span class="-mb-6 sm:-mb-8">S<%= skill %></span>
+      <% else %>
+        <span></span>
+      <% end %>
+      <% if skill && skill_level %>
+        <span class="-mb-6 sm:-mb-8"><%= used_operator.skill_level_code %></span>
+      <% end %>
+    </div>
+    <% if used_operator.verified? %>
+      <div class="w-fit self-center absolute z-1">
+        <%= heroicon used_operator.verification_icon, options: { class: "#{used_operator.verification_color('text')} !w-14 !h-14 font-bold", alt: used_operator.verification_text } %>
+      </div>
+    <% end %>
+  </article>
+<% else %>
+  <article
+    class="operators__card flex flex-col relative justify-center items-center "
+  >
+    MISSING
+  </article>
+<% end %>

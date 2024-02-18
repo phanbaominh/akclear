@@ -141,8 +141,19 @@ class ExtractClearDataFromVideoJob < ApplicationRecord
     self.stage_game_id = stage&.game_id
     if used_operators_attributes.present?
       self.data['used_operators_attributes'] =
-        used_operators_attributes&.map(&:compact_blank)
+        used_operators_attributes.map(&:compact_blank)
+      replace_operator_id_with_game_id
     end
     URI::UID.build(self, options).to_s
+  end
+
+  def replace_operator_id_with_game_id
+    return if used_operators_attributes.blank?
+
+    operator_id_to_game_id =
+      Operator.where(id: used_operators_attributes.pluck('operator_id')).pluck(:id, :game_id).to_h
+    used_operators_attributes.each do |uo|
+      uo['operator_game_id'] = operator_id_to_game_id[uo.delete('operator_id')]
+    end
   end
 end
