@@ -53,10 +53,17 @@ class ExtractClearResultImporter
     channel_external_to_id_mapping = Channel.where(external_id: jobs.map(&:channel_external_id)).pluck(:external_id,
                                                                                                        :id).to_h
     stage_code_to_id_mapping = Stage.where(game_id: jobs.map(&:stage_game_id)).pluck(:game_id, :id).to_h
+    operator_game_ids = jobs.map(&:used_operators_attributes).flatten.compact_blank.uniq.pluck('operator_game_id').compact
+    operator_game_id_to_id_mapping = Operator.where(game_id: operator_game_ids).pluck(
+      :game_id, :id
+    ).to_h
 
     jobs.each do |job|
       job.channel_id = channel_external_to_id_mapping[job.channel_external_id]
       job.stage_id = stage_code_to_id_mapping[job.stage_game_id]
+      job.used_operators_attributes&.each do |attrs|
+        attrs['operator_id'] = operator_game_id_to_id_mapping[attrs.delete('operator_game_id')]
+      end
     end
   end
 
