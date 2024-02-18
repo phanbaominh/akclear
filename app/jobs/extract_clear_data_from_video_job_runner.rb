@@ -9,6 +9,7 @@ class ExtractClearDataFromVideoJobRunner < ApplicationJob
   )
 
   def perform(job_id)
+    # TODO: handle retries
     job = ExtractClearDataFromVideoJob.find_by(id: job_id)
 
     # TODO: handle possible race condition if more than 1 job performed at the same time
@@ -22,7 +23,7 @@ class ExtractClearDataFromVideoJobRunner < ApplicationJob
       job.data = {
         stage_id: job.stage_id,
         link: clear.link,
-        used_operators_attributes: clear.used_operators.map(&:attributes),
+        used_operators_attributes: clear.used_operators.map { |op| op.attributes.compact_blank },
         channel_id: job.channel_id,
         name: job.data&.dig('name')
       }

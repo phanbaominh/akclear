@@ -40,7 +40,14 @@ RSpec.describe ExtractClearDataFromVideoJobRunner do
     end
 
     context 'when success' do
-      let(:result) { Dry::Monads::Success(build(:clear)) }
+      let(:clear) do
+        tmp = build(:clear)
+        tmp.used_operators_attributes = [
+          { operator_id: 1, level: nil }, { operator_id: 2, level: 1 }
+        ]
+        tmp
+      end
+      let(:result) { Dry::Monads::Success(clear) }
 
       it 'extracts clear data from video' do
         described_class.perform_later(job.id)
@@ -48,7 +55,9 @@ RSpec.describe ExtractClearDataFromVideoJobRunner do
           .with(job.video, operator_name_only: job.operator_name_only, language: 'jp')
         expect(job.reload.data).to eq(
           result.value!.attributes.slice('link')
-            .merge('used_operators_attributes' => [], 'channel_id' => job.channel_id, 'name' => 'title', 'stage_id' => job.stage.id)
+            .merge('used_operators_attributes' => [{ 'operator_id' => 1 },
+                                                   { 'operator_id' => 2,
+                                                     'level' => 1 }], 'channel_id' => job.channel_id, 'name' => 'title', 'stage_id' => job.stage.id)
         )
         expect(job.reload).to be_completed
       end
