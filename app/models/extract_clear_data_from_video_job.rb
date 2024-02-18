@@ -49,6 +49,11 @@ class ExtractClearDataFromVideoJob < ApplicationRecord
 
   validates :video_url, presence: true, uniqueness: true
   validate :valid_video
+  before_validation :fetch_data_from_video
+
+  # for importing/exporting
+  attribute :channel_external_id, :string
+  attribute :stage_game_id, :string
 
   def video
     @video ||= Video.new(video_url)
@@ -62,13 +67,15 @@ class ExtractClearDataFromVideoJob < ApplicationRecord
         video_or_url
       end
     super video.to_url
+  end
 
-    # this is for making sure it is only set when creating the job from scratch as querying stage_id from video costs a api call
-    return if stage_id || !video.valid?
+  def fetch_data_from_video
+    return unless video.valid?
 
-    self.stage_id = video.stage_id
+    self.stage_id = video.stage_id unless stage_id || stage
     self.channel = Channel.find_by(external_id: video.channel_external_id) unless channel
-    self.data = { name: video.title }
+    self.data ||= {}
+    self.data['name'] = video.title if data['name'].blank?
   end
 
   def valid_video

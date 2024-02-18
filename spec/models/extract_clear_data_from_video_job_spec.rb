@@ -43,7 +43,7 @@ RSpec.describe ExtractClearDataFromVideoJob, type: :model do
     before { allow(Video).to receive(:new).with(video_url).and_return(video) }
 
     context 'when video is url' do
-      let(:job) { described_class.new(video_url:) }
+      let(:job) { described_class.create(video_url:) }
 
       it 'sets the stage_id' do
         expect(job.stage_id).to eq(1)
@@ -59,7 +59,7 @@ RSpec.describe ExtractClearDataFromVideoJob, type: :model do
     end
 
     context 'when video is Video' do
-      let(:job) { described_class.new(video_url: video) }
+      let(:job) { described_class.create(video_url: video) }
 
       it 'sets the stage_id' do
         expect(job.stage_id).to eq(1)

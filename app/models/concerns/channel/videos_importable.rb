@@ -23,7 +23,6 @@ module Channel::VideosImportable
       # reuse to avoid calling API to get video
       video.metadata = playlist_item
 
-      # need to assign channel first so that it is available in video_url=
       ExtractClearDataFromVideoJob.new(channel: self, video_url: video)
     end.map(&:save)
   end

@@ -406,7 +406,8 @@ describe 'Clears' do
                        link: example_link,
                        stage_id: job_stage.id,
                        used_operators_attributes: used_operators.map(&:attributes),
-                       channel_id: channel.id
+                       channel_id: channel.id,
+                       name: 'Test Video'
                      }, stage: job_stage, video_url: example_link, channel:)
 
         admin = sign_in_as_admin
@@ -417,7 +418,7 @@ describe 'Clears' do
 
         within("#extract_clear_data_from_video_job_#{job.id}") do
           expect(page).to have_content('0-1')
-          expect(page).to have_content(example_link)
+          expect(page).to have_content('Test Video')
           click_link 'Create clear'
         end
 
