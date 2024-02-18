@@ -1,12 +1,13 @@
 require 'rails_helper'
 
 RSpec.describe ExtractClearDataFromVideoJobRunner do
+  let_it_be(:channel) { create(:channel, clear_languages: ['jp']) }
   let_it_be(:job, reload: true) do
     create(
       :extract_clear_data_from_video_job,
       video_url: 'https://www.youtube.com/watch?v=9bZkp7q19f0',
       status: :started,
-      channel: create(:channel),
+      channel:,
       data: { 'name' => 'title' }
     )
   end
@@ -39,15 +40,24 @@ RSpec.describe ExtractClearDataFromVideoJobRunner do
     end
 
     context 'when success' do
-      let(:result) { Dry::Monads::Success(build(:clear)) }
+      let(:clear) do
+        tmp = build(:clear)
+        tmp.used_operators_attributes = [
+          { operator_id: 1, level: nil }, { operator_id: 2, level: 1 }
+        ]
+        tmp
+      end
+      let(:result) { Dry::Monads::Success(clear) }
 
       it 'extracts clear data from video' do
         described_class.perform_later(job.id)
-        expect(Clears::BuildClearFromVideo).to have_received(:call).with(job.video,
-                                                                         operator_name_only: job.operator_name_only)
+        expect(Clears::BuildClearFromVideo).to have_received(:call)
+          .with(job.video, operator_name_only: job.operator_name_only, languages: ['jp'])
         expect(job.reload.data).to eq(
           result.value!.attributes.slice('link')
-            .merge('used_operators_attributes' => [], 'channel_id' => job.channel_id, 'name' => 'title', 'stage_id' => job.stage.id)
+            .merge('used_operators_attributes' => [{ 'operator_id' => 1 },
+                                                   { 'operator_id' => 2,
+                                                     'level' => 1 }], 'channel_id' => job.channel_id, 'name' => 'title', 'stage_id' => job.stage.id)
         )
         expect(job.reload).to be_completed
       end
@@ -58,8 +68,8 @@ RSpec.describe ExtractClearDataFromVideoJobRunner do
 
       it 'stores error' do
         described_class.perform_later(job.id)
-        expect(Clears::BuildClearFromVideo).to have_received(:call).with(job.video,
-                                                                         operator_name_only: job.operator_name_only)
+        expect(Clears::BuildClearFromVideo).to have_received(:call)
+          .with(job.video, operator_name_only: job.operator_name_only, languages: ['jp'])
         expect(job.reload.data).to eq({ 'error' => 'invalid_video', 'name' => 'title' })
         expect(job).to be_failed
       end
@@ -74,8 +84,8 @@ RSpec.describe ExtractClearDataFromVideoJobRunner do
 
       it 'stores error' do
         described_class.perform_later(job.id)
-        expect(Clears::BuildClearFromVideo).to have_received(:call).with(job.video,
-                                                                         operator_name_only: job.operator_name_only)
+        expect(Clears::BuildClearFromVideo).to have_received(:call)
+          .with(job.video, operator_name_only: job.operator_name_only, languages: ['jp'])
         expect(job.reload.data).to eq({ 'error' => 'error', 'name' => 'title' })
         expect(job).to be_failed
       end

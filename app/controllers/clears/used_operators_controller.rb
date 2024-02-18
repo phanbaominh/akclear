@@ -63,6 +63,7 @@ class Clears::UsedOperatorsController < ApplicationController
     used_operators_session.update(used_operator_params)
     load_squad
 
+    # TODO: go to next operator
     respond_to do |format|
       format.html { redirect_to clears_operators_select_path(clear: clear_spec_session) }
       format.turbo_stream do

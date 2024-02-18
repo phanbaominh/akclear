@@ -1,0 +1,65 @@
+<div class="flex justify-between">
+  <%= link_to t('.view_test_run'), admin_clear_test_run_path(@clear_test_run), class: 'btn btn-neutral w-fit mb-2' %>
+  <%= button_to t('.destroy_test_run'), admin_clear_test_run_path(@clear_test_run), method: :delete, class: 'btn btn-error w-fit mb-2' %>
+</div>
+<div class="flex justify-between">
+  <% if @clear_test_run.prev_test_run_id %>
+    <%= link_to admin_clear_test_run_clear_test_results_path(@clear_test_run.prev_test_run_id), class: 'btn' do %>
+      <%= heroicon 'arrow-left' %>
+    <% end %>
+  <% else %>
+    <div></div>
+  <% end %>
+  <% if @clear_test_run.next_test_run_id %>
+    <%= link_to admin_clear_test_run_clear_test_results_path(@clear_test_run.next_test_run_id), class: 'btn' do %>
+      <%= heroicon 'arrow-right' %>
+    <% end %>
+  <% else %>
+    <div></div>
+  <% end %>
+</div>
+<section>
+  <div class="card bg-base-200 ">
+    <h2 class="text-2xl mb-2"> TR: <%= @clear_test_run.name || @clear_test_run.id %></h2>
+    <div class="card-body p-2">
+      <%= render Admin::ClearImage::TestRunConfigurationComponent.new(test_run: @clear_test_run) %>
+    </div>
+  </div>
+  <div class="card bg-base-200 mt-4">
+    <div class="card-body">
+      <%= turbo_frame_tag @clear_test_run do  %>
+        <%= simple_form_for @clear_test_run, as: :clear_test_run, url: admin_clear_test_run_path(@clear_test_run), data: { **stimulus(:click_other) } do |f| %>
+          <%= f.input :latest_size, input_html: { data: { **stimulus_attrs(:click_other, actions: { 'focusout': 'clickOther' }) } } %>
+          <%= f.label :correct_ratio, class: 'simple_form__label' %>
+          <div class="outline w-fit outline-neutral rounded p-2">
+            <%= render Admin::ClearImage::TestRunCorrectRatioComponent.new(
+            correct_ratio: @clear_test_results.map(&:correct_ratio).compact.sum.round(2),
+            max_latest_correct_ratio: @clear_test_results.map(&:max_latest_correct_ratio).compact.sum.round(2),
+            correct_name_ratio: 
+              (@clear_test_results.map(&:correct_name_op_count).sum.to_f / @clear_test_results.map(&:total_op_count).sum).round(2) * 100
+          ) %>
+          </div>
+          <%= content_tag :button, class: 'hidden', data: { **stimulus_attrs(:click_other, target: 'clickable'), turbo_frame: '_top' },
+        formmethod: :get, formaction: admin_clear_test_run_clear_test_results_url(@clear_test_run) do %>
+          <% end %>
+          <%= f.input :note, input_html: { class: 'w-full' } %>
+          <%= f.button :submit, class: 'self-end mt-2' %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+  <div class="grid grid-cols-5 gap-2">
+    <% @clear_test_results.each do |test_result| %>
+      <%= link_to admin_clear_test_run_clear_test_result_path(@clear_test_run, test_result.test_case_id) do %>
+        <article class="card bg-base-200 mt-2">
+          <div class="card-body">
+            <div class="flex justify-start space-x-2 items-center">
+              <%= render Admin::ClearImage::TestResultSummaryComponent.new(test_result: test_result) %>
+            </div>
+            <%= render Admin::ClearImage::TestRunCorrectRatioComponent.new(test_result: test_result) %>
+          </div>
+        </article>
+      <% end %>
+    <% end %>
+  </div>
+</section>

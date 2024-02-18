@@ -1,0 +1,14 @@
+<%= f.simple_fields_for :configuration do |sf| %>
+  <% ClearImage::Extracting::Reader::LOCALE_TO_TESSERACT_LANG.each_key do |language| %>
+    <div class="card bg-base-200  ">
+      <div class="card-body">
+        <h3 class="card-title"><%= language %></h3>
+        <%= sf.simple_fields_for language, ClearImage::Configuration.new(f.object.configuration&.dig(language.to_s) || { language: language }) do |conf_f|  %>
+          <% conf_f.object.attributes.each_key do |attr| %>
+            <%= conf_f.input attr %>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+<% end %>

@@ -56,7 +56,11 @@ class ClearsController < ApplicationController
     if @clear.save
       duplicated_clears = @clear.duplicate_for_stage_ids(@clear.stage_ids)
       delete_clear_spec_session
-      redirect_to @clear, notice: t('.success', count: duplicated_clears.count(&:persisted?) + 1)
+      redirect_path = @clear
+      if @clear.job_id && (latest_completed_job = ExtractClearDataFromVideoJob.completed.last)
+        redirect_path = new_admin_clear_from_job_path(job_id: latest_completed_job.id)
+      end
+      redirect_to redirect_path, notice: t('.success', count: duplicated_clears.count(&:persisted?) + 1)
     else
       flash.now[:error] = @clear.errors.first.full_message
       render 'new', status: :unprocessable_entity

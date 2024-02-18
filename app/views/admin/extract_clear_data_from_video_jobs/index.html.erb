@@ -13,6 +13,9 @@
   <%= turbo_frame_tag ExtractClearDataFromVideoJob.new do %>
     <%= render 'new_btn' %>
   <% end %>
+  <div class="flex justify-end">
+    <%= link_to t(:export), admin_extract_clear_result_export_path, class: 'btn btn-warning mt-2' %>
+  </div>
   <div class="p-2"></div>
   <%= turbo_frame_tag 'jobs_frame', data: { turbo_action: 'advance' } do  %>
     <div id="jobs" class="space-x-2" >

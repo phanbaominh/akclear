@@ -191,3 +191,7 @@ Only when the view mode is `grid` and the screen size is at least md (meaning th
 .main-heading {
   @apply text-2xl;
 }
+
+#image_frame {
+  transform: translate(-50%, -50%);
+}

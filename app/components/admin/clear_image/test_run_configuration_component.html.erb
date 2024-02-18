@@ -1,0 +1,25 @@
+<details class="collapse">
+  <summary class="collapse-title">
+    <h3 class="card-title !list-item">Configuration</h3>
+  </summary>
+  <table class="table ">
+    <thead>
+      <tr>
+        <th> Option</th>
+        <% configuration.each_key do |language| %>
+          <th><%= language %></th>
+        <% end %>
+      </tr>
+    </thead>
+    <tbody>
+      <% ClearImage::Configuration.attribute_names.each do |option| %>
+        <tr>
+          <td><%= option %></td>
+          <% configuration.each do |language, config| %>
+            <td><%= config[option] if config %></td>
+          <% end %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</details>

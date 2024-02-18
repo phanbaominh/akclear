@@ -1,0 +1,32 @@
+<section class="space-y-4">
+  <h2><%= t('.title') %></h2>
+  <% @clear_test_cases.each do |test_case| %>
+    <div class="card">
+      <details class="collapse card-body bg-base-200">
+        <summary class="collapse-title text-xl font-medium justify-between !list-item cursor-pointer">
+          <div class="inline-flex">
+            <span>
+              <%= "#{t('.test_case', id: test_case.id)} - #{test_case.video_url}" %>
+            </span>
+            <%= button_to admin_clear_test_case_path(test_case), method: :delete, class: 'btn btn-error btn-circle btn-sm ml-2' do %>
+              <%= heroicon 'x-mark' %>
+            <% end %>
+          </div>
+          <div class="divider m-0"></div>
+        </summary>
+        <div class="collapse-content">
+          <div class="flex">
+            <div class="iframe-responsive-container">
+              <iframe src="<%= Video.new(test_case.video_url).embed_link %>" class="iframe-responsive">
+              </iframe>
+            </div>
+            <div>
+              <%= ap(test_case.used_operators_data).html_safe %>
+            </div>
+          </div>
+        </div>
+      </details>
+    </div>
+  <% end %>
+  <div class="mt-4 w-full flex justify-end"><%== render Primer::PagyComponent.new(pagy: @pagy) %></div>
+</section>

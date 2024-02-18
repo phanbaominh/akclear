@@ -1,6 +1,7 @@
 class ClearImage::BoundingBox
   # rubocop:disable Metrics/ParameterLists
-  attr_reader :x, :y, :width, :height
+  attr_accessor :x, :y
+  attr_reader :width, :height
 
   def initialize(x, y, width = nil, height = nil, x_end: nil, y_end: nil)
     @x = x
@@ -34,11 +35,17 @@ class ClearImage::BoundingBox
     new_box
   end
 
+  def translate!(x: 0, y: 0)
+    self.x += x
+    self.y += y
+    self
+  end
+
   def inside?(image)
     x >= 0 && y >= 0 && x_end < image.columns && y_end < image.rows
   end
 
-  protected
-
-  attr_writer :x, :y
+  def invalid?
+    x < 0 || y < 0
+  end
 end
