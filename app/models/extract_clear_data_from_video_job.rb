@@ -102,4 +102,18 @@ class ExtractClearDataFromVideoJob < ApplicationRecord
 
     ExtractClearDataFromVideoJobRunner.perform_later(id)
   end
+
+  def used_operators_attributes
+    data&.dig('used_operators_attributes')
+  end
+
+  def to_uid(options = {})
+    self.channel_external_id = channel&.external_id
+    self.stage_game_id = stage&.game_id
+    if used_operators_attributes.present?
+      self.data['used_operators_attributes'] =
+        used_operators_attributes&.map(&:compact_blank)
+    end
+    URI::UID.build(self, options).to_s
+  end
 end

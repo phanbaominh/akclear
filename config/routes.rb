@@ -21,6 +21,7 @@ Rails.application.routes.draw do
       resources :clear_test_runs, only: %i[new create show destroy update] do
         resources :clear_test_results, only: %i[index show update]
       end
+      resource :extract_clear_result_export, only: %i[show]
     end
     resources :sessions, only: %i[index show destroy]
     resource  :password, only: %i[edit update]

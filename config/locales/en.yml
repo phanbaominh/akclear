@@ -332,6 +332,7 @@ en:
   website_name: 'Battle Records'
   start_video_job: 'Start video job'
   filters: 'Filters'
+  export: 'Export'
   cancel: 'Cancel'
   error: 'Error'
   clear: 'Clear'
