@@ -1,19 +1,24 @@
 class Channel::VideosImportSpecification
   MAX_RESULTS_PER_PAGE = 50
   include StageSpecifiable
-  attr_reader :channel_ids, :all_channels, :full_pages
+  attr_reader :channel_ids, :all_channels, :full_pages, :clear_languages
 
   def initialize(params)
     @params = params
     @all_channels = ActiveRecord::Type::Boolean.new.cast(params[:all_channels])
     @full_pages = ActiveRecord::Type::Boolean.new.cast(params[:full_pages])
+    @clear_languages = params[:clear_languages]
     @check_count = 0
     @satisfy_count = 0
     set_stage_attrs_from_params(params)
   end
 
   def channels
-    @channels ||= params[:channel_ids].present? ? Channel.where(id: params[:channel_ids]) : Channel.all
+    return @channels if @channels
+
+    @channels = params[:channel_ids].present? ? Channel.where(id: params[:channel_ids]) : Channel.all
+    @channels = @channels.have_any_clear_languages(clear_languages) if clear_languages.present?
+    @channels
   end
 
   def satisfy?(video_data)

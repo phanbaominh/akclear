@@ -9,5 +9,15 @@
         <%= f.button :submit, t('.submit') %>
       </div>
     <% end %>
+    <% if can?(ExtractClearDataFromVideoJob, :import) %>
+      <%=  simple_form_for ExtractClearResultImporter.new,
+            url: admin_extract_clear_result_imports_path, html: { class: 'card-body' } do |f| %>
+        <h2 class="card-title"> <%= t('.import_title') %></h2>
+        <div class="flex gap-2 items-center">
+          <%= f.input :file, as: :file %>
+          <%= f.button :submit, t(:import), class: 'w-fit' %>
+        </div>
+      <% end %>
+    <% end %>
   </div>
 <% end %>

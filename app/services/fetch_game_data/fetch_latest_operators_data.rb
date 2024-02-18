@@ -6,7 +6,9 @@ module FetchGameData
   class FetchLatestOperatorsData < ApplicationService
     SOURCES = {
       en: 'https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData_YoStar/main/en_US/gamedata/excel/character_table.json',
-      jp: 'https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData_YoStar/main/ja_JP/gamedata/excel/character_table.json'
+      jp: 'https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData_YoStar/main/ja_JP/gamedata/excel/character_table.json',
+      ko: 'https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData_YoStar/main/ko_KR/gamedata/excel/character_table.json',
+      'zh-CN': 'https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/zh_CN/gamedata/excel/character_table.json'
     }
     SKILL_DATA_URL = 'https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData_YoStar/main/en_US/gamedata/excel/skill_table.json'
 
@@ -25,7 +27,7 @@ module FetchGameData
       fetch_logger = FetchLogger.new(Operator.name)
 
       operator_table.each do |game_id, operator|
-        valid = valid_operator?(operator)
+        valid = valid_operator?(operator, game_id)
         unless valid
           delete_invalid_operators(game_id) if destroy_invalid
           next
@@ -65,7 +67,17 @@ module FetchGameData
       operator['skills'].map { |skill| skill['skillId'] }
     end
 
-    def valid_operator?(operator)
+    def current_game_ids
+      @current_game_ids ||= Operator.pluck(:game_id)
+    end
+
+    def cn_locale?
+      I18n.locale == :'zh-CN'
+    end
+
+    def valid_operator?(operator, game_id)
+      return false if cn_locale? && current_game_ids.exclude?(game_id)
+
       !operator['subProfessionId']&.start_with?('notchar') && # Everyone's summon
         operator['profession'] != 'TOKEN' && # Phantom's summon
         !operator['isNotObtainable'] # IS extra ops

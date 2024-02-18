@@ -25,7 +25,7 @@ describe ImportChannelsJob do
     allow(Yt::Collections::SimpleVideos)
       .to receive(:new)
       .and_return(where_simple_videos)
-    allow(where_simple_videos).to receive(:where).with(id: %w[new existing]).and_return(
+    allow(where_simple_videos).to receive(:where).with(id: match_array(%w[new existing])).and_return(
       [
         instance_double(Yt::Video, channel_id: 'new_channel', id: 'new'),
         instance_double(Yt::Video, channel_id: 'existing', id: 'existing')

@@ -1,0 +1,8 @@
+  <% if can?(:create, Channel) %>
+  <div class="flex gap-2 items-center">
+    <p> <%= "#{t('channels.show.clear_language')}: #{@channel.clear_languages.presence&.join(', ') || "n/a"}"  %> </p>
+    <%= link_to edit_channel_path(@channel), class: 'btn btn-circle btn-sm btn-outline' do %>
+      <%= heroicon 'pencil' %>
+    <% end %>
+  </div>
+<% end %>

@@ -44,6 +44,7 @@ module Admin
           format.turbo_stream
         end
       else
+        flash.now[:alert] = @extract_clear_data_from_video_job.errors.full_messages.join(', ')
         render :new
       end
     end

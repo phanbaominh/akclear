@@ -8,12 +8,14 @@ class Operator < ApplicationRecord
                            where(id: UsedOperator.where(used_operators: { clear_id: clear_ids }).select(:operator_id))
                          }
 
+  attr_accessor :similarity_comparable_name
+
   def avatar
     "https://raw.githubusercontent.com/Aceship/Arknight-Images/main/avatars/#{game_id}.png"
   end
 
   def inspect
-    "OP-#{game_id} #{skill_game_ids}"
+    "OP-#{name} #{skill_game_ids}"
   end
 
   # put here instead of Translatable because of to override reader of Mobility

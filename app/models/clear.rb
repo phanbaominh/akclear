@@ -8,6 +8,7 @@ class Clear < ApplicationRecord
   include Youtubeable
   include Duplicatable
   include Verifiable
+  include Testable
   belongs_to :submitter, class_name: 'User'
   belongs_to :stage
   belongs_to :channel, optional: true
@@ -26,7 +27,7 @@ class Clear < ApplicationRecord
   after_commit :assign_channel, if: :trigger_assign_channel
 
   # considering separate spec logic from model
-  attr_accessor :job_id, :self_only, :favorited, :trigger_assign_channel
+  attr_accessor :job_id, :self_only, :favorited, :trigger_assign_channel, :use_for_test_case
 
   def submitted_by?(user = Current.user)
     submitter == user

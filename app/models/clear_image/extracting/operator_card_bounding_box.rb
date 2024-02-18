@@ -1,4 +1,5 @@
-# rubocop:disable Metrics/ClassLength
+# frozen_string_literal: true
+
 class ClearImage
   module Extracting
     class OperatorCardBoundingBox
@@ -13,11 +14,11 @@ class ClearImage
         NAME = :name
       ].freeze
       COMPONENTS_TO_BASE_BOUNDING_BOXES = {
-        # x, y, width, height
+        # x, y, width, height counting from top left of card
         SKILL => BoundingBox.new(125.0, 315.0, 53.0, 53.0),
         LEVEL => BoundingBox.new(7.0, 319.0, 58.0, 42.0), # [11.0, 328.0, 50.0, 34.0]]
         ELITE => BoundingBox.new(0, 239.0, 75.0, 62.0),
-        NAME => BoundingBox.new(0, 373, BASE_WIDTH, 28)
+        NAME => BoundingBox.new(0, 373, BASE_WIDTH, 30) # ori h = 28
       }.freeze
       BASE_CARD_DIST = 230.0 # from end of name to next end of name = from top left point to next top left point
       BASE_VERTICAL_CARD_DIST = 434.0 # from top left point to next top left point
@@ -26,17 +27,42 @@ class ClearImage
 
       attr_reader :word
 
-      def self.guess_dist(first_name_line, second_name_line)
-        all_name_boxes = first_name_line + second_name_line
-        lower_bound_of_dist = all_name_boxes.max_by(&:width).width
+      def self.guess_dist(first_name_line, second_name_line = [])
+        lowest_bound_of_dist = guess_lowest_card_dist(first_name_line + second_name_line)
+
         # figure out a way to deal with word missing
-        # [first_name_line, second_name_line]
-        #   .map { |line| line.minimum_dist_between_word(lower_bound_of_dist) }.min
-        dists_between_words = (first_name_line + second_name_line).dists_between_words(lower_bound_of_dist)
-        lower_bound_of_dist = dists_between_words.min
-        Utils.average(dists_between_words.select do |dist|
-                        dist < lower_bound_of_dist * Constants::UPPER_BOUND_CARD_DIST_RATIO
-                      end)
+
+        Logger.log('lowest_bound_of_dist', lowest_bound_of_dist)
+
+        dist_between_word_ends = (first_name_line + second_name_line).dist_between_word_ends(lowest_bound_of_dist)
+        dist_between_word_ends.reject! { |d| d > lowest_bound_of_dist * 3 } if Reader.zh_cn?
+        Logger.log('dist between words', dist_between_word_ends)
+
+        max_size = 0
+        result = lowest_bound_of_dist
+        dist_between_word_ends.sort.each do |dist|
+          lowest_bound_of_dist = dist
+          within_current_min = dist_between_word_ends.select do |d|
+            d < lowest_bound_of_dist * Configuration.max_largest_card_dist_to_smallest_dist_ratio_to_guess_dist_between_card &&
+              d >= lowest_bound_of_dist
+          end
+          if within_current_min.size > max_size
+            max_size = within_current_min.size
+            result = Utils.average(within_current_min)
+          end
+        end
+        result
+      end
+
+      def self.guess_lowest_card_dist(all_name_boxes)
+        average_cw = all_name_boxes.sum(&:average_character_width).to_f / all_name_boxes.size
+        widest_box = all_name_boxes.max_by(&:width)
+        if widest_box.average_character_width > average_cw
+          [widest_box.relative_word_length * average_cw,
+           all_name_boxes.sum(&:width).to_f / all_name_boxes.size].max
+        else
+          widest_box.width
+        end
       end
 
       def self.guest_most_accurate_name_bounding_box(name_bounding_boxes)
@@ -124,6 +150,13 @@ class ClearImage
         @components_to_real_bounding_boxes ||=
           COMPONENTS_TO_BASE_BOUNDING_BOXES.transform_values do |base_bounding_box|
             real_bounding_box(base_bounding_box).translate(x:, y:)
+
+            # Translate A to the correct real position of  T
+            #  ----------
+            # |A|
+            # |  |T|
+            # |
+            #  ----------
           end
       end
 

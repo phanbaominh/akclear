@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_12_24_094336) do
+ActiveRecord::Schema[7.1].define(version: 2024_02_18_150445) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -59,8 +59,24 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_24_094336) do
     t.string "thumbnail_url"
     t.string "banner_url"
     t.string "uploads_playlist_id"
+    t.string "clear_languages", array: true
     t.index ["external_id"], name: "index_channels_on_external_id", unique: true
     t.index ["user_id"], name: "index_channels_on_user_id"
+  end
+
+  create_table "clear_test_cases", force: :cascade do |t|
+    t.bigint "clear_id", null: false
+    t.string "video_url"
+    t.jsonb "used_operators_data"
+    t.index ["clear_id"], name: "index_clear_test_cases_on_clear_id"
+  end
+
+  create_table "clear_test_runs", force: :cascade do |t|
+    t.bigint "test_case_ids", array: true
+    t.jsonb "data"
+    t.jsonb "configuration"
+    t.string "name"
+    t.text "note"
   end
 
   create_table "clears", force: :cascade do |t|
@@ -347,6 +363,7 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_24_094336) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "channels", "users"
+  add_foreign_key "clear_test_cases", "clears"
   add_foreign_key "clears", "channels"
   add_foreign_key "clears", "stages"
   add_foreign_key "clears", "users", column: "submitter_id"

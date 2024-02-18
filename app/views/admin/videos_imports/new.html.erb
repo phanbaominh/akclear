@@ -11,6 +11,8 @@
         <% unless @spec.all_channels? %>
           <%= f.input :channel_ids, label: 'Channels', as: :select, collection: Channel.all,
             input_html: { multiple: true }, wrapper_html: { data: { **stimulus(:choices, values: { choices_options: { removeItemButton: true }}) } } %>
+        <% else %>
+          <%= f.input :clear_languages, include_hidden: false, as: :select, collection: Channel.clear_languages, input_html: { multiple: true } %>
         <% end %>
       <% end %>
     <% end %>

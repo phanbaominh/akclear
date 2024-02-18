@@ -49,6 +49,7 @@ gem 'bootsnap', require: false
 # gem "image_processing", "~> 1.2"
 
 gem 'aasm'
+gem 'activerecord-import'
 gem 'acts-as-taggable-on'
 gem 'after_commit_everywhere', '~> 1.0'
 gem 'amatch'
@@ -70,12 +71,14 @@ gem 'rmagick'
 gem 'route_translator'
 gem 'rtesseract'
 gem 'simple_form'
+gem 'universalid'
 gem 'view_component'
 gem 'vite_rails'
 gem 'yt'
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
+  gem 'awesome_print'
   gem 'debug', platforms: %i[mri mingw x64_mingw]
   gem 'dotenv-rails'
   gem 'factory_bot_rails'
@@ -115,6 +118,11 @@ group :test do
   gem 'selenium-webdriver'
   gem 'test-prof'
   gem 'timecop'
-  gem 'webdrivers'
+  # gem 'webdrivers' have to remove and upgrade selenium-webdriver to latest version to avoid the request to GET latest_patch_version which is blocked by netskope? (failed due to SSL error)
   gem 'webmock'
+end
+
+group :debug, optional: true do
+  gem 'stackprof'
+  gem 'stackprof-webnav'
 end

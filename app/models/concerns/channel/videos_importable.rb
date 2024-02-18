@@ -12,6 +12,7 @@ module Channel::VideosImportable
 
   def import_videos(spec)
     selected_playlist_items =
+      # TODO: OPTIMIZE API call BY BATCHING MULTIPLE channels in 1 request
       Yt::Playlist.new(id: uploads_playlist_id).playlist_items.each.with_object([]) do |video_data, selected_videos|
         selected_videos << video_data if spec.satisfy?(video_data)
         break selected_videos if spec.stop?
@@ -22,7 +23,6 @@ module Channel::VideosImportable
       # reuse to avoid calling API to get video
       video.metadata = playlist_item
 
-      # need to assign channel first so that it is available in video_url=
       ExtractClearDataFromVideoJob.new(channel: self, video_url: video)
     end.map(&:save)
   end

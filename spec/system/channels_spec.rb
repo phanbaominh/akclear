@@ -15,6 +15,8 @@ describe 'Channels', :js do
 
       visit channels_path
 
+      expect(page).not_to have_content('Clear languages')
+
       click_link 'Test Channel'
 
       expect(page).not_to have_button('Delete')
@@ -35,9 +37,10 @@ describe 'Channels', :js do
 
       visit channels_path
 
+      expect(page).to have_content('Clear languages')
       click_link 'Test Channel'
 
-      expect(page).to have_button('Delete')
+      expect(page).not_to have_button('Delete')
     end
   end
 end

@@ -1,0 +1,25 @@
+<section>
+  <div><span>
+      <%= t('.test_case_count', count: ClearImage::TestCase.count) %>
+    </span>
+    <%= link_to t('view'), admin_clear_test_cases_path, class: 'btn btn-neutral' %>
+  </div>
+  <div><%= link_to t('.latest_test_run'), admin_clear_test_run_path(ClearImage::TestRun.order(:id).last) %></div>
+  <%= simple_form_for @test_run, as: :clear_test_run, url: admin_clear_test_runs_url do |f| %>
+    <%= content_tag :div, data: { **stimulus(:click_other) } do %>
+      <%= content_tag :button, nil, formmethod: "GET", formaction: new_admin_clear_test_run_path, data: { **stimulus_attrs(:click_other, target: 'clickable') } %>
+      <%= f.input :name %>
+      <%= f.input :all, as: :boolean, input_html: { class: '!toggle', data: { **stimulus_attrs(:click_other, actions: { click: 'clickOther' }) } } %>
+      <% unless @test_run.all %>
+        <%= f.input :test_count, as: :integer %>
+      <% else%>
+        <%= f.input :languages, as: :select, collection: Channel.clear_languages, selected: Channel.clear_languages, include_hidden: false, input_html: { multiple: true } %>
+      <% end %>
+      <%= f.label :configuration, class: 'simple_form__label' %>
+      <div class="grid grid-cols-3 gap-2">
+        <%= render partial: 'configuration_form', locals: { f: f } %>
+      </div>
+    <% end %>
+    <%= f.button :submit, t(".submit") %>
+  <% end %>
+</section>

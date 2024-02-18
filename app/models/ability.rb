@@ -23,7 +23,7 @@ class Ability
     cannot %i[create], Verification, clear: { channel_id: nil }
     can %i[update destroy], Verification, verifier: user # TODO: allow other users to edit too? (if clear is flagged)
     # will move it down to admin only depending on how it goes
-    can %i[create destroy], Channel
+    can %i[create], Channel
 
     return unless user.admin?
 

@@ -1,122 +1,145 @@
+# frozen_string_literal: true
+
 class ClearImage
-  module Extractable
+  module Extractable # rubocop:disable Metrics/ModuleLength
+    delegate :language, to: :reader
+
+    attr_reader :benchmark_result
+
     def extract
+      create_tmp_file
+      logger.start(image_filename)
       p 'Processing image for extraction...'
 
-      processed_image = Extracting::Processor.make_names_white_on_black(image).write(tmp_file_path)
+      processed_image = benchmark('white_on_black') do
+        Extracting::Processor.make_names_white_on_black(image, double_fill: true).write(tmp_file_path)
+      end
 
-      extract_name_lines
-      # binding.pry
-      processed_image = Extracting::Processor
-                        .paint_white_in_between_names(processed_image, *name_lines)
+      benchmark('extract_language') do
+        reader.extract_language(processed_image:, possible_languages:)
+      end
+      @used_language = reader.language
+      ap "Language: #{reader.language}"
 
-      processed_image = Extracting::Processor
-                        .paint_white_over_non_names(processed_image, *name_lines_bounding_boxes).write(tmp_file_path)
+      set_name_line_extractor(processed_image)
 
-      @lined = true
-      p 'Extracting image...'
+      name_lines = benchmark('extract_name_lines') do
+        name_line_extractor.extract
+      end
 
-      extract_name_lines
+      logger.copy_image(processed_image, Logger::NAME_BLACK_ON_WHITE)
+      logger.log_new_section('First name lines', name_lines)
 
-      # binding.pry
+      name_lines = benchmark('extract_name_lines_2') do
+        name_line_extractor.extract(existing_name_lines: name_lines)
+      end
 
-      extract_operators_data_based_on_name_lines
+      logger.log_new_section('Second name lines', name_lines)
 
+      return [] if name_lines.blank?
+
+      result =
+        benchmark('extract_data') do
+          extract_operators_data_based_on_name_lines(name_lines)
+        end
+
+      logger.log_new_section('result:', result)
+      result
       # extract_operators_data_from_all_possible_operator_cards_bounding_boxes
-
       # combine_extracted_operators_data
+    ensure
+      logger.finish
+      reader.language = nil
+      delete_tmp_file
     end
 
     private
 
-    attr_reader :name_lines, :operators_data_from_all_possible_operator_cards_bounding_boxes
+    attr_reader :operators_data_from_all_possible_operator_cards_bounding_boxes, :name_line_extractor
 
-    def extract_operators_data_based_on_name_lines
+    def benchmark(name, &)
+      return yield unless ENV['CLEAR_IMAGE_BENCHMARK']
+
+      @benchmark_result ||= []
+      result = nil
+      benchmark_time = Benchmark.measure do
+        result = yield
+      end
+      @benchmark_result << [name, benchmark_time.real]
+      result
+    end
+
+    def logger
+      Logger
+    end
+
+    def set_name_line_extractor(image)
+      return @name_line_extractor if @name_line_extractor
+
+      extractor_klass = "ClearImage::Extracting::#{reader.language.to_s.delete('-').capitalize}::NameLineExtractor"
+      @name_line_extractor = if Object.const_defined?(extractor_klass)
+                               extractor_klass.constantize.new(image)
+                             else
+                               Extracting::NameLineExtractor.new(image)
+                             end
+    end
+
+    def extract_operators_data_based_on_name_lines(name_lines)
+      distance_between_operator_card = get_distance_between_operator_card(name_lines)
+      logger.log('final distance_between_operator_card:', distance_between_operator_card)
+      first = true
+      elite_0_image = Extracting::OperatorExtractor.elite_0_image
+      elite_1_image = Extracting::OperatorExtractor.elite_1_image
       name_lines.map do |line|
-        # line = line.filter_out_noises(distance_between_operator_card, image.columns)
+        line.all_boxes_y = line.most_common_box_y || line.y
         line.map do |name_box|
           box = Extracting::OperatorCardBoundingBox.new(distance_between_operator_card,
                                                         name_bounding_box: name_box)
-          Extracting::OperatorExtractor.new(box, image, reader).extract
+
+          if first
+            elite_bb = box.elite_bounding_box
+            first = false
+            elite_0_image = elite_0_image.scale(elite_bb.width, elite_bb.height)
+            elite_1_image = elite_1_image.scale(elite_bb.width, elite_bb.height)
+          end
+          Extracting::OperatorExtractor.new(box, image, operators, elite_0_image, elite_1_image,
+                                            similarity_comparable_mapper).extract
         end
-      end.flatten
+      end.flatten.compact
     end
 
-    def extract_operators_data_from_all_possible_operator_cards_bounding_boxes
-      @operators_data_from_all_possible_operator_cards_bounding_boxes =
-        name_lines.each_with_object([]) do |line, result|
-          # line = line.filter_out_noises(distance_between_operator_card, image.columns)
-          line.each do |name_box|
-            ref_card_box = Extracting::OperatorCardBoundingBox.new(distance_between_operator_card,
-                                                                   name_bounding_box: name_box)
-            operators_data_based_on_ref_box =
-              Extracting::OperatorCardBoundingBox.guess_all_boxes(ref_card_box, image).map do |box|
-                Extracting::OperatorExtractor.new(box, image, reader).extract
-              end
-            result << operators_data_based_on_ref_box
-          end
+    def operators
+      return @operators if @operators
+
+      @operators ||=
+        I18n.with_locale(reader.language) do
+          Operator.i18n.eager_load(:string_translations).to_a
         end
+      @operators.each do |operator|
+        operator.name = operator.name(locale: reader.language).gsub(/\s+/, '')
+
+        operator.similarity_comparable_name = similarity_comparable_mapper.map(operator.name)
+      end
+    end
+
+    def similarity_comparable_mapper
+      @similarity_comparable_mapper ||= ClearImage::Extracting::SimilarityComparableMapper.new(operators)
     end
 
     def max_possible_operator_cards
       operators_data_from_all_possible_operator_cards_bounding_boxes.first.size
     end
 
-    def combine_extracted_operators_data
-      Array.new(max_possible_operator_cards) do |i|
-        all_ith_operator_card_data = operators_data_from_all_possible_operator_cards_bounding_boxes
-                                     .map { |possible_data| possible_data[i] }.compact
-        next if all_ith_operator_card_data.empty?
-
-        result = {}
-        %i[operator skill level elite].each do |attr|
-          most_common_attr_value = all_ith_operator_card_data.pluck(attr).tally.first.first
-          result[attr] = most_common_attr_value
-        end
-        result
-      end.compact
-    end
-
     def reader
-      @reader ||= Extracting::Reader.new(image)
+      Extracting::Reader
     end
 
-    def distance_between_operator_card
+    def get_distance_between_operator_card(name_lines)
       Extracting::OperatorCardBoundingBox.guess_dist(*name_lines)
     end
 
-    def name_lines_bounding_boxes
-      name_lines.map(&:merge)
-      # name_lines.map do |line|
-      #   merged = line.merge
-      #   BoundingBox.new(
-      #     merged.x,
-      #     merged.parts.sum(&:y) / merged.parts.size,
-      #     x_end: merged.x_end,
-      #     y_end: merged.parts.sum(&:y_end) / merged.parts.size
-      #   )
-      # end
-    end
-
-    def extract_name_lines
-      @name_lines = extract_word_lines
-                    .sort_by { |line| line.merge.word.length }
-                    .last(2)
-                    .sort_by { |line| line.merge.y }
-    end
-
-    def extract_word_lines
-      Extracting::WordProcessor.group_words_into_lines(extract_words)
-    end
-
-    def extract_words
-      ocr_word_boxes = @lined ? reader.read_lined_names(tmp_file_path) : reader.read_sparse_names(tmp_file_path)
-      word_bounding_boxes = ocr_word_boxes.map { |box| Extracting::WordBoundingBox.new(box) }
-      Extracting::WordProcessor.group_near_words_in_same_line(word_bounding_boxes)
-    end
-
-    def tmp_file_path
-      @tmp_file_path = 'extract_result.png' # Utils.generate_tmp_path(prefix: 'clear_image_extracting', suffix: '.png')
+    def image_filename
+      image.filename.split('/').last.split('.').first
     end
   end
 end

@@ -17,6 +17,12 @@ Rails.application.routes.draw do
       resources :videos_imports, only: %i[new create]
       resource :clear_from_job, only: %i[new]
       resources :users, only: %i[index update edit show]
+      resources :clear_test_cases, only: %i[index show update destroy]
+      resources :clear_test_runs, only: %i[new create show destroy update] do
+        resources :clear_test_results, only: %i[index show update]
+      end
+      resource :extract_clear_result_export, only: %i[show]
+      resources :extract_clear_result_imports, only: %i[create]
     end
     resources :sessions, only: %i[index show destroy]
     resource  :password, only: %i[edit update]
@@ -32,7 +38,7 @@ Rails.application.routes.draw do
     root 'home#index'
     resources :healthz, only: %i[index]
 
-    resources :channels, only: %i[index show new create destroy]
+    resources :channels
     namespace :clears do
       resource :filters, only: %i[show]
       resource :stage_select, only: %i[show]

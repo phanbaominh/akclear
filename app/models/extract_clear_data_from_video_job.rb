@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class ExtractClearDataFromVideoJob < ApplicationRecord
+  include Dry::Monads[:result]
   include Specifiable
   belongs_to :stage
   belongs_to :channel, optional: true
@@ -49,6 +50,11 @@ class ExtractClearDataFromVideoJob < ApplicationRecord
 
   validates :video_url, presence: true, uniqueness: true
   validate :valid_video
+  before_validation :fetch_data_from_video
+
+  # for importing/exporting
+  attribute :channel_external_id, :string
+  attribute :stage_game_id, :string
 
   def video
     @video ||= Video.new(video_url)
@@ -62,13 +68,15 @@ class ExtractClearDataFromVideoJob < ApplicationRecord
         video_or_url
       end
     super video.to_url
+  end
 
-    # this is for making sure it is only set when creating the job from scratch as querying stage_id from video costs a api call
-    return if stage_id || !video.valid?
+  def fetch_data_from_video
+    return unless video.valid?
 
-    self.stage_id = video.stage_id
+    self.stage_id = video.stage_id unless stage_id || stage
     self.channel = Channel.find_by(external_id: video.channel_external_id) unless channel
-    self.data = { name: video.title }
+    self.data ||= {}
+    self.data['name'] = video.title if data['name'].blank?
   end
 
   def valid_video
@@ -80,17 +88,16 @@ class ExtractClearDataFromVideoJob < ApplicationRecord
 
     return unless may_mark_clear_created?
 
-    if data&.dig('used_operators_attributes').blank?
-      name = data['name'] if data
-      self.data = {
-        stage_id:,
-        link: Video.new(video_url).to_url(normalized: true),
-        channel_id:,
-        name:
-      }
-    end
+    clear_data = {
+      stage_id:,
+      link: Video.new(video_url).to_url(normalized: true),
+      channel_id:,
+      name: data&.dig('name')
+    }
+    used_operators_attributes = data&.dig('used_operators_attributes')
+    clear_data.merge!(used_operators_attributes:) if used_operators_attributes.present?
 
-    @clear ||= Clear.new(data)
+    @clear ||= Clear.new(clear_data)
     # preload data
     operators = Operator.where(id: @clear.used_operators.map(&:operator_id))
     @clear.used_operators.each { |uo| uo.operator = operators.find { |o| o.id == uo.operator_id } }
@@ -102,5 +109,40 @@ class ExtractClearDataFromVideoJob < ApplicationRecord
     return unless started?
 
     ExtractClearDataFromVideoJobRunner.perform_later(id)
+  end
+
+  def extract_from_video
+    case Clears::BuildClearFromVideo.call(video, operator_name_only:,
+                                                 languages: channel&.clear_languages)
+    in Success(clear)
+      self.data = {
+        stage_id:,
+        link: clear.link,
+        used_operators_attributes: clear.used_operators.map { |op| op.attributes.compact_blank },
+        channel_id:,
+        name: data&.dig('name')
+      }.with_indifferent_access
+    in Failure(error)
+      self.data ||= {}
+      self.data['error'] = error
+    end
+  end
+
+  def error?
+    data&.dig('error').present?
+  end
+
+  def used_operators_attributes
+    data&.dig('used_operators_attributes')
+  end
+
+  def to_uid(options = {})
+    self.channel_external_id = channel&.external_id
+    self.stage_game_id = stage&.game_id
+    if used_operators_attributes.present?
+      self.data['used_operators_attributes'] =
+        used_operators_attributes&.map(&:compact_blank)
+    end
+    URI::UID.build(self, options).to_s
   end
 end
