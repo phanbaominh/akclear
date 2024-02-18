@@ -27,7 +27,8 @@ RSpec.describe 'Authorization' do
       new_clear_job_path: new_admin_clear_job_path,
       edit_clear_job_path: edit_admin_clear_job_path(clear_job),
       users_page: admin_users_path,
-      edit_user_page: edit_admin_user_path(any_user)
+      edit_user_page: edit_admin_user_path(any_user),
+      export_extract_clear_result_page: admin_extract_clear_result_export_path
     }
   end
 
