@@ -17,25 +17,12 @@ class ExtractClearDataFromVideoJobRunner < ApplicationJob
 
     job.process!
 
-    case Clears::BuildClearFromVideo.call(job.video, operator_name_only: job.operator_name_only,
-                                                     language: job.channel&.clear_language)
-    in Success(clear)
-      job.data = {
-        stage_id: job.stage_id,
-        link: clear.link,
-        used_operators_attributes: clear.used_operators.map { |op| op.attributes.compact_blank },
-        channel_id: job.channel_id,
-        name: job.data&.dig('name')
-      }
-      job.complete!
-    in Failure(error)
-      job.data ||= {}
-      job.data[:error] = error
-      job.fail!
-    end
+    job.extract_from_video
+
+    job.error? ? job.fail! : job.complete!
   rescue StandardError => e
     job.data ||= {}
-    job.data[:error] = e.message
+    job.data['error'] = e.message
     job.fail!
   end
 end

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class ExtractClearDataFromVideoJob < ApplicationRecord
+  include Dry::Monads[:result]
   include Specifiable
   belongs_to :stage
   belongs_to :channel, optional: true
@@ -108,6 +109,27 @@ class ExtractClearDataFromVideoJob < ApplicationRecord
     return unless started?
 
     ExtractClearDataFromVideoJobRunner.perform_later(id)
+  end
+
+  def extract_from_video
+    case Clears::BuildClearFromVideo.call(video, operator_name_only:,
+                                                 languages: channel&.clear_languages)
+    in Success(clear)
+      self.data = {
+        stage_id:,
+        link: clear.link,
+        used_operators_attributes: clear.used_operators.map { |op| op.attributes.compact_blank },
+        channel_id:,
+        name: data&.dig('name')
+      }.with_indifferent_access
+    in Failure(error)
+      self.data ||= {}
+      self.data['error'] = error
+    end
+  end
+
+  def error?
+    data&.dig('error').present?
   end
 
   def used_operators_attributes
