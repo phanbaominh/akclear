@@ -132,7 +132,12 @@ en:
         submit: "Start import"
       create:
         success: "Videos import was successfully started."
+    extract_clear_result_imports:
+      create:
+        success: "Importing clear extraction results started!"
+        failed: "Importing clear extraction results in progress!"
     extract_clear_data_from_video_jobs:
+    
       title: "Import clear jobs"
       job_started: "Job already started"
       new_btn: "New"
@@ -145,6 +150,7 @@ en:
       new:
         submit: 'Start job'
         title: 'New job'
+        import_title: 'Or import from file'
       create:
         success: "Job was successfully created."
       destroy:
@@ -332,6 +338,7 @@ en:
   website_name: 'Battle Records'
   start_video_job: 'Start video job'
   filters: 'Filters'
+  import: 'Import'
   export: 'Export'
   cancel: 'Cancel'
   error: 'Error'

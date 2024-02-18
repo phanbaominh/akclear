@@ -49,6 +49,7 @@ gem 'bootsnap', require: false
 # gem "image_processing", "~> 1.2"
 
 gem 'aasm'
+gem 'activerecord-import'
 gem 'acts-as-taggable-on'
 gem 'after_commit_everywhere', '~> 1.0'
 gem 'amatch'
