@@ -4,7 +4,8 @@
     <p ><%= @channel.clear_count_text %></p>
     <%= turbo_frame_tag @channel do %>
       <%= simple_form_for @channel do |f| %>
-        <%= f.input :clear_language, as: :select, collection: Channel.clear_languages, selected: Channel.clear_languages[@channel.clear_language], wrapper_html: { class: 'inline-block' }, input_html: { } %>
+        <%= f.input :clear_languages, as: :select, collection: Channel.clear_languages,
+          selected: @channel.clear_languages, include_hidden: false, wrapper_html: { class: 'inline-block' }, input_html: { multiple: true } %>
         <%= content_tag :button, type: :submit, class: 'btn btn-circle btn-primary' do %>
           <%= heroicon "check", options: { class: "h-4" } %>
         <% end %>

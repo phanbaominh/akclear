@@ -19,8 +19,8 @@
           <p class="font-bold text-base p-0"><%= channel.title %></p>
           <div class="text-base-content-subdued text-sm">
             <p class="p-0"><%= channel.clear_count_text %> </p>
-            <% if can?(:create, Clear) %>
-              <p > <%= "#{t('channels.show.clear_language')}: #{channel.clear_language || "n/a"}"  %> </p>
+            <% if can?(:create, Channel) %>
+              <p > <%= "#{t('channels.show.clear_language')}: #{channel.clear_languages.presence&.join(', ') || "n/a"}"  %> </p>
             <% end %>
           </div>
         </div>

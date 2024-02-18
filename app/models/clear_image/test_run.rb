@@ -59,9 +59,11 @@ class ClearImage::TestRun < ApplicationRecord
   end
 
   def study
+    return if languages.blank?
+
     self.test_case_ids =
       ClearImage::TestCase.where(id: test_case_ids)
-                          .joins(clear: :channel).where(channels: { clear_language: languages }).pluck(:id)
+                          .joins(clear: :channel).merge(Channel.have_any_clear_languages(languages)).pluck(:id)
   end
 
   def test_results

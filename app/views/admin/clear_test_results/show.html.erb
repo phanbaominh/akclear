@@ -57,7 +57,7 @@
   </section>
   <section>
     <h3>View logs</h3>
-    <% @clear_test_result.log_sections.each do |log_section| %>
+    <% @clear_test_result.log_sections&.each do |log_section| %>
       <%= content_tag :details,  class: 'collapse overflow-auto' do%>
         <%= content_tag :summary, class: 'collapse-title !list-item ' do %>
           <%= log_section.split("\n").first %>

@@ -16,8 +16,10 @@ class ClearImage
       end
 
       benchmark('extract_language') do
-        reader.extract_language(processed_image:)
+        reader.extract_language(processed_image:, possible_languages:)
       end
+      @used_language = reader.language
+      ap "Language: #{reader.language}"
 
       set_name_line_extractor(processed_image)
 
@@ -47,6 +49,7 @@ class ClearImage
       # combine_extracted_operators_data
     ensure
       logger.finish
+      reader.language = nil
       delete_tmp_file
     end
 

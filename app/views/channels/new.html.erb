@@ -4,7 +4,7 @@
     <%= simple_form_for @channel, html: { class: 'card-body' } do |f| %>
       <h2 class="card-title"> <%= t(:new_channel) %></h2>
       <%= f.input :external_id, input_html: { class: 'w-full' } %>
-      <%= f.input :clear_language, as: :select, collection: Channel.clear_languages, input_html: { class: 'w-full' } %>
+      <%= f.input :clear_languages, as: :select, collection: Channel.clear_languages, include_hidden: false, input_html: { class: 'w-full', multiple: true } %>
       <div class="self-end mt-2">
         <%= link_to t(:cancel), channels_path, class: 'btn', data: { turbo_stream: true } %>
         <%= f.button :submit, class: 'self-end mt-2' %>

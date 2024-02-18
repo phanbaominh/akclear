@@ -26,7 +26,7 @@ class ChannelsController < ApplicationController
 
   def create
     @channel = Channel.from_external_id(@channel.external_id)
-    @channel.clear_language = channel_params[:clear_language]
+    @channel.clear_languages = channel_params[:clear_languages]
     if !@channel.persisted? && @channel.save
       respond_to do |format|
         format.html { redirect_to @channel, notice: t('.success') }
@@ -60,8 +60,6 @@ class ChannelsController < ApplicationController
   private
 
   def channel_params
-    p = params.require(:channel).permit(:external_id, :clear_language)
-    p[:clear_language] = p[:clear_language].to_i if p[:clear_language].present?
-    p
+    params.require(:channel).permit(:external_id, clear_languages: [])
   end
 end

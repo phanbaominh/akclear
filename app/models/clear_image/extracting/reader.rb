@@ -78,12 +78,14 @@ class ClearImage
           Thread.current[:clear_image_language] = language
         end
 
-        def extract_language(processed_image: nil)
+        def extract_language(processed_image: nil, possible_languages: [])
           return if language
 
           Extracting::Processor.make_names_white_on_black(image).write(tmp_file_path) unless processed_image
           all_characters_regex = /[^\p{Latin}\p{Hiragana}\p{Katakana}\p{Han}\p{Hangul}]+/u
-          Thread.current[:clear_image_language] = LOCALE_TO_TESSERACT_LANG.max_by do |_locale, tess_lang_code|
+          Thread.current[:clear_image_language] = LOCALE_TO_TESSERACT_LANG.max_by do |locale, tess_lang_code|
+            next 0 if possible_languages.map(&:to_s).exclude?(locale.to_s)
+
             RTesseract.new(tmp_file_path.to_s, psm: '11', lang: tess_lang_code).to_box
                       .select { |box| box[:confidence] > 80 }
                       .pluck(:word)

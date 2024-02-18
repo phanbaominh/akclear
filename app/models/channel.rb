@@ -3,11 +3,17 @@
 class Channel < ApplicationRecord
   include VideosImportable
 
-  enum :clear_language, en: 0, jp: 1, 'zh-CN': 2, ko: 3
-
   belongs_to :user, optional: true
   has_many :clears, dependent: :nullify
   validates :external_id, presence: true, uniqueness: true
+
+  scope :have_any_clear_languages, ->(languages) { where('clear_languages &&  ARRAY[?]::varchar[]', languages) }
+
+  def self.clear_languages
+    {
+      en: :en, jp: :jp, 'zh-CN': :'zh-CN', ko: :ko
+    }
+  end
 
   def link
     "https://www.youtube.com/channel/#{external_id}"

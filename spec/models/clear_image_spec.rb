@@ -10,8 +10,11 @@ describe ClearImage do
   let(:clear_image) do
     FileUtils.rm_rf(log_data_path) if ClearImage::Logger.should_log?
     FileUtils.mkdir_p(log_data_path) if ClearImage::Logger.should_log?
-    described_class.new(Pathname.new(image_path), language: I18n.locale, log_data_path:)
+    described_class.new(Pathname.new(image_path), possible_languages:, log_data_path:)
   end
+  let(:possible_languages) { [I18n.locale] }
+
+  after { ClearImage::Extracting::Reader.language = nil }
 
   # problem: ignore frequents words? case in point La Pluma turned into La Plum
   # reduce confidence threshold for group line? at least for english
@@ -37,6 +40,7 @@ describe ClearImage do
     end
 
     context 'when language is english' do
+      let(:possible_languages) { %w[en jp] }
       let(:operators) do
         [
           # name, level, elite, skill, skill_game_ids
